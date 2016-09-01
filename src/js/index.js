@@ -166,9 +166,3 @@ function setStageDimensions(stage) {
     // Place the cube in the middle of the scene, at user height.
 //  cube.position.set(0, controls.userHeight, 0);
 }
-
-
-var gago = new RODIN.CubeObject();
-
-gago.getLog();
-
