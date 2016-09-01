@@ -35,10 +35,6 @@ export class Sculpt {
         this.touchY = 0;
 
         let touchStartTime = 0;
-<<<<<<< HEAD
-        this.events = {};
-=======
->>>>>>> origin/master
 
         this.style = {
             cursor: "default"
@@ -181,16 +177,10 @@ export class Sculpt {
      * @param callback
      */
     removeEventListener(evt, callback) {
-<<<<<<< HEAD
-        let i = this.events[evt].indexOf(callback);
-        if (this.events[evt] && i !== -1) {
-            this.events[evt].splice(i, 1);
-=======
         let events = this.getEvents();
         let i = events[evt].indexOf(callback);
         if (events[evt] && i !== -1) {
             events[evt].splice(i, 1);
->>>>>>> origin/master
         }
     }
 
@@ -200,18 +190,11 @@ export class Sculpt {
      * @param param
      */
     emit(evt, param) {
-<<<<<<< HEAD
-        if (this.events[evt] && this.events[evt].length > 0) {
-            for (let f = 0; f < this.events[evt].length; f++) {
-                if (typeof this.events[evt][f] === "function")
-                    this.events[evt][f](param);
-=======
         let events = this.getEvents();
         if (events[evt] && events[evt].length > 0) {
             for (let f = 0; f < events[evt].length; f++) {
                 if (typeof events[evt][f] === "function")
                     events[evt][f](param);
->>>>>>> origin/master
             }
         }
     }
@@ -222,14 +205,9 @@ export class Sculpt {
      * @param evt
      */
     removeAllListeners(evt) {
-<<<<<<< HEAD
-        if (this.events[evt]) {
-            delete this.events[evt];
-=======
         let events = this.getEvents();
         if (events[evt]) {
             delete events[evt];
->>>>>>> origin/master
         }
     }
 
