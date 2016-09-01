@@ -35,7 +35,10 @@ export class Sculpt {
         this.touchY = 0;
 
         let touchStartTime = 0;
+<<<<<<< HEAD
         this.events = {};
+=======
+>>>>>>> origin/master
 
         this.style = {
             cursor: "default"
