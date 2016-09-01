@@ -40,10 +40,10 @@ const connect = require('gulp-connect');
 const JS =            [ 'src/js/**/*.js', '!src/js/systemjs/system.js', '!src/js/systemjs/glsl.js', '!src/js/{vendor,vendor/**}', '!src/js/Three.custom.js', '!src/js/THREE.GLOBAL.js' ];
 const JS_THREE =      [ 'node_modules/three/src/**/*.js' ];
 const JS_THREE_GLOB = [ 'src/js/Three.custom.js', 'src/js/THREE.GLOBAL.js' ];
+const THREE_GLSL =    [ 'node_modules/three/src/**/*.glsl' ];
 const SYSTEMJS =      [ 'src/js/systemjs/*.js' ];
 const SASS =          [ 'src/sass/**/*.scss', '!src/sass/{vendor,vendor/**}' ];
 const SASS_VENDOR =   [ 'src/sass/vendor/**/*.scss' ];
-const THREE_GLSL =    [ 'node_modules/three/src/**/*.glsl' ];
 const FONT =          [ 'src/font/**/*.{ttf,woff,woff2,eof,svg}' ];
 const IMG =           [ 'src/img/**/*.{jpg,jpeg,ico,png}' ];
 const SHADER =        [ 'src/shader/**/*' ];
@@ -89,7 +89,7 @@ gulp.task('js', () => {
     .pipe(plumber(ERROR_MESSAGE))
     .pipe(babel())
     .pipe(s)
-    .pipe(gulp.dest('./_rodin/js'))
+    .pipe(gulp.dest('./_build/js'))
     .pipe(notify({
       onLast: true,
       message: () => `JS - Total size ${s.prettySize}`
@@ -101,19 +101,25 @@ gulp.task('js-three', () => {
     .pipe(plumber(ERROR_MESSAGE))
     .pipe(babel())
     .pipe(uglify(UGLIFY_AGRESIVE))
-    .pipe(gulp.dest('./_rodin/js/three'));
+    .pipe(gulp.dest('./_build/js/three'));
+});
+
+gulp.task('glsl', () => {
+  return gulp.src(THREE_GLSL)
+    .pipe(gulp.dest('./_build/js/three'));
 });
 
 gulp.task('three-global', () => {
   return gulp.src(JS_THREE_GLOB)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/js/three'));
+    .pipe(babel())
+    .pipe(gulp.dest('./_build/js/three'));
 });
 
 gulp.task('systemjs', () => {
   return gulp.src(SYSTEMJS)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/js/systemjs'));
+    .pipe(gulp.dest('./_build/js/systemjs'));
 });
 
 gulp.task('js-prod', () => {
@@ -125,7 +131,7 @@ gulp.task('js-prod', () => {
     .pipe(uglify(UGLIFY_AGRESIVE))
     .pipe(sourcemaps.write('.'))
     .pipe(s)
-    .pipe(gulp.dest('./_rodin/js'))
+    .pipe(gulp.dest('./_build/js'))
     .pipe(notify({
       onLast: true,
       message: () => `JS(prod) - Total size ${s.prettySize}`
@@ -142,7 +148,7 @@ gulp.task('sass', () => {
     .pipe(autoprefixer(AUTOPREFIXER_BROWSERS))
     .pipe(sourcemaps.write())
     .pipe(s)
-    .pipe(gulp.dest('./_rodin/css'))
+    .pipe(gulp.dest('./_build/css'))
     .pipe(notify({
       onLast: true,
       message: () => `SASS - Total size ${s.prettySize}`
@@ -160,7 +166,7 @@ gulp.task('sass-prod', () => {
     .pipe(cleanCSS())
     .pipe(sourcemaps.write())
     .pipe(s)
-    .pipe(gulp.dest('./_rodin/css'))
+    .pipe(gulp.dest('./_build/css'))
     .pipe(notify({
       onLast: true,
       message: () => `SASS(prod) - Total size ${s.prettySize}`
@@ -170,31 +176,31 @@ gulp.task('sass-prod', () => {
 gulp.task('font', () => {
    gulp.src(FONT)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/font'));
+    .pipe(gulp.dest('./_build/font'));
 });
 
 gulp.task('img', () => {
    gulp.src(IMG)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/img'));
+    .pipe(gulp.dest('./_build/img'));
 });
 
 gulp.task('video', () => {
    gulp.src(VIDEO)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/video'));
+    .pipe(gulp.dest('./_build/video'));
 });
 
 gulp.task('model', () => {
    gulp.src(MODEL)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/model'));
+    .pipe(gulp.dest('./_build/model'));
 });
 
 gulp.task('shader', () => {
    gulp.src(SHADER)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/shader'));
+    .pipe(gulp.dest('./_build/shader'));
     // .pipe(connect.reload());
 });
 
@@ -210,7 +216,7 @@ gulp.task('watch', () =>  {
 });
 
 gulp.task('clean', () =>  {
-  return del(['./_rodin']);
+  return del(['./_build']);
 });
 
 gulp.task('examples', () => {
@@ -237,9 +243,9 @@ gulp.task('connect', () => {
 
 
 gulp.task('prod', (done) => {
-  sequence('clean', ['js-prod', 'js-three', 'three-global','systemjs', 'examples', 'sass-prod', 'font', 'img'], done);
+  sequence('clean', ['js-prod', 'js-three', 'glsl', 'three-global','systemjs', 'examples', 'sass-prod', 'font', 'img'], done);
 });
 
 gulp.task('default', (done) => {
-  sequence('clean', ['js', 'js-three', 'three-global', 'systemjs', 'examples', 'sass', 'font', 'img', 'connect', 'watch'], done);
+  sequence('clean', ['js', 'js-three', 'glsl', 'three-global', 'systemjs', 'examples', 'sass', 'font', 'img', 'connect', 'watch'], done);
 });
