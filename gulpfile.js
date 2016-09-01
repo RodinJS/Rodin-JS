@@ -35,6 +35,7 @@ const del = require('del');
 const notify = require('gulp-notify');
 const plumber = require('gulp-plumber');
 const size = require('gulp-size');
+const connect = require('gulp-connect');
 
 const JS =            [ 'src/js/**/*.js', '!src/js/systemjs/system.js', '!src/js/{vendor,vendor/**}' ];
 const JS_THREE =      [ 'node_modules/three/src/**/*.js' ];
@@ -48,7 +49,7 @@ const IMG =           [ 'src/img/**/*.{jpg,jpeg,ico,png}' ];
 const SHADER =        [ 'src/shader/**/*' ];
 const MODEL =         [ 'src/model/**/*' ];
 const VIDEO =         [ 'src/video/**/*' ];
-const EX_JS =         [ 'examples/**/*.js' ];
+const EX_JS =         [ 'examples/**/index.js' ];
 
 const AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -91,7 +92,8 @@ gulp.task('js', () => {
     .pipe(notify({
       onLast: true,
       message: () => `JS - Total size ${s.prettySize}`
-    }));
+    }))
+    .pipe(connect.reload());
 });
 
 gulp.task('js-three', () => {
@@ -105,7 +107,8 @@ gulp.task('js-three', () => {
 gulp.task('three-global', () => {
   return gulp.src(JS_THREE_GLOB)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/js/three'));
+    .pipe(gulp.dest('./_rodin/js/three'))
+    .pipe(connect.reload());
 });
 
 gulp.task('systemjs', () => {
@@ -127,7 +130,8 @@ gulp.task('js-prod', () => {
     .pipe(notify({
       onLast: true,
       message: () => `JS(prod) - Total size ${s.prettySize}`
-    }));
+    }))
+    .pipe(connect.reload());
 });
 
 gulp.task('sass', () => {
@@ -144,7 +148,8 @@ gulp.task('sass', () => {
     .pipe(notify({
       onLast: true,
       message: () => `SASS - Total size ${s.prettySize}`
-    }));
+    }))
+    .pipe(connect.reload());
 });
 
 gulp.task('sass-prod', () => {
@@ -162,37 +167,43 @@ gulp.task('sass-prod', () => {
     .pipe(notify({
       onLast: true,
       message: () => `SASS(prod) - Total size ${s.prettySize}`
-    }));
+    }))
+    .pipe(connect.reload());
 });
 
 gulp.task('font', () => {
    gulp.src(FONT)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/font'));
+    .pipe(gulp.dest('./_rodin/font'))
+    .pipe(connect.reload());
 });
 
 gulp.task('img', () => {
    gulp.src(IMG)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/img'));
+    .pipe(gulp.dest('./_rodin/img'))
+    .pipe(connect.reload());
 });
 
 gulp.task('video', () => {
    gulp.src(VIDEO)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/video'));
+    .pipe(gulp.dest('./_rodin/video'))
+    .pipe(connect.reload());
 });
 
 gulp.task('model', () => {
    gulp.src(MODEL)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/model'));
+    .pipe(gulp.dest('./_rodin/model'))
+    .pipe(connect.reload());
 });
 
 gulp.task('shader', () => {
    gulp.src(SHADER)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(gulp.dest('./_rodin/shader'));
+    .pipe(gulp.dest('./_rodin/shader'))
+    .pipe(connect.reload());
 });
 
 gulp.task('watch', () =>  {
@@ -215,11 +226,20 @@ gulp.task('examples', () => {
     .pipe(plumber(ERROR_MESSAGE))
     .pipe(babel())
     .pipe(s)
+    .pipe(rename({suffix: '_c'}))
     .pipe(gulp.dest('./examples'))
     .pipe(notify({
       onLast: true,
       message: () => `Examples - Total size ${s.prettySize}`
     }));
+});
+
+gulp.task('connect', () => {
+  connect.server({
+    root: './examples',
+    port: 8000,
+    livereload: true
+  });
 });
 
 
@@ -228,5 +248,5 @@ gulp.task('prod', (done) => {
 });
 
 gulp.task('default', (done) => {
-  sequence('clean', ['js', 'js-three', 'systemjs', 'examples', 'sass', 'font', 'img', 'watch'], done);
+  sequence('clean', ['js', 'js-three', 'systemjs', 'examples', 'sass', 'font', 'img', 'connect', 'watch'], done);
 });

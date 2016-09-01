@@ -1,5 +1,5 @@
 {
-  "name": "rodin-apollo",
+  "name": "Rodin-JS",
   "version": "1.0.0",
   "description": "Build system for Rodin.js framework, based on Gulp.js",
   "main": "gulpfile.babel.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grigorkh/Rodin-apollo.git"
+    "url": "git+https://github.com/grigorkh/Rodin-JS.git"
   },
   "keywords": [
     "Rodin",
@@ -18,12 +18,12 @@
     "vr",
     "ar"
   ],
-  "author": "Grigor Khachatryan",
+  "author": "Grigor Khachatryan <g@yvn.io>",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/grigorkh/Rodin-apollo/issues"
+    "url": "https://github.com/grigorkh/Rodin-JS/issues"
   },
-  "homepage": "https://github.com/grigorkh/Rodin-apollo#readme",
+  "homepage": "https://github.com/grigorkh/Rodin-JS#readme",
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-systemjs": "^6.14.0",
     "babel-preset-es2015": "^6.14.0",
@@ -33,6 +33,7 @@
     "gulp-babel": "^6.1.2",
     "gulp-clean-css": "^2.0.12",
     "gulp-concat": "^2.6.0",
+    "gulp-connect": "^5.0.0",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
