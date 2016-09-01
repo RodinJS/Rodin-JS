@@ -1,3 +1,5 @@
+'use strict';
+
 import * as THREE from '../three/Three.custom.js';
 /**
  * @author qiao / https://github.com/qiao

@@ -1,3 +1,5 @@
+'use strict';
+
 import {THREE} from '../three/THREE.GLOBAL.js';
 import {WTF} from './logger/Logger.js';
 

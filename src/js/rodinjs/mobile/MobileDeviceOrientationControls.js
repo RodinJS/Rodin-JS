@@ -1,3 +1,5 @@
+'use strict';
+
 import * as THREE from '../../three/Three.custom.js';
 
 let instance = null;

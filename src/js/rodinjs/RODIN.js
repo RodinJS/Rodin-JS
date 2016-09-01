@@ -1,3 +1,5 @@
+'use strict';
+
 export { MobileDeviceOrientationControls } from './mobile/MobileDeviceOrientationControls.js';
 export { MobileCameraControls } from './mobile/MobileCameraControls.js';
 export { OrbitControls } from './OrbitControls.js';

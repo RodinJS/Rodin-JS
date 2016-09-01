@@ -1,3 +1,5 @@
+'use strict';
+
 import {THREE} from '../three/THREE.GLOBAL.js';
 import {Event} from './Event.js';
 import {Sculpt} from './Sculpt.js';
@@ -105,10 +107,4 @@ export class CubeObject extends Sculpt {
         texture.needsUpdate = true;
         return texture;
     }
-
-    getLog() {
-    	console.log(this.Sides, this.SIDENAMES);
-    }
-
-
 }
