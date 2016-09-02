@@ -155,10 +155,10 @@ export class Sculpt {
         });
         for (let i = 0; i < evts.length; i++) {
             let evt = evts[i];
-            if (!this.events[evt]) {
-                this.events[evt] = [callback];
-            } else if (this.events[evt].indexOf(callback) === -1) {
-                this.events[evt].push(callback);
+            if (!events[evt]) {
+                events[evt] = [callback];
+            } else if (events[evt].indexOf(callback) === -1) {
+                events[evt].push(callback);
             }
         }
     }

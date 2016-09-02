@@ -5,7 +5,7 @@ import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 
 export class CubeObject extends Sculpt {
-	constructor() {
+	constructor(size, textureURL) {
 		super();
 		let textures = [];
 	    for(let i = 0; i < 6; i ++) {
@@ -73,7 +73,7 @@ export class CubeObject extends Sculpt {
 	        for(let i = 0; i < this.Sides.order.length; i ++) {
 	            let side = this.Sides.order[i];
 	            materials.push(new THREE.MeshBasicMaterial({
-	                map: createMaterial(this.Sides.configs[side], imageObj),
+	                map: this.createMaterial(this.Sides.configs[side], imageObj),
 	                transparent: true
 	            }));
 	        }
