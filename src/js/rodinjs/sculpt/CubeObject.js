@@ -1,7 +1,7 @@
 'use strict';
 
 import {THREE} from '../three/THREE.GLOBAL.js';
-import {Event} from './Event.js';
+import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 
 export class CubeObject extends Sculpt {

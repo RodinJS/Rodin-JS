@@ -3,7 +3,7 @@
 System.register(['../../_build/js/three/THREE.GLOBAL.js', '../../_build/js/rodinjs/RODIN.js', '../../node_modules/three/examples/js/controls/VRControls.js', '../../node_modules/three/examples/js/effects/VREffect.js'], function (_export, _context) {
     "use strict";
 
-    var THREE, RODIN, renderer, scene, camera, controls, effect, distanceRatio, boxSize, loader, params, manager, boxCount, particleBoxSize, geometry, material, cubes, i, lastRender, display;
+    var THREE, RODIN, WTF, renderer, scene, camera, controls, effect, distanceRatio, boxSize, loader, params, manager, boxCount, particleBoxSize, geometry, material, cubes, i, lastRender, display;
 
 
     function onTextureLoaded(texture) {
@@ -93,12 +93,13 @@ System.register(['../../_build/js/three/THREE.GLOBAL.js', '../../_build/js/rodin
             THREE = _buildJsThreeTHREEGLOBALJs.THREE;
         }, function (_buildJsRodinjsRODINJs) {
             RODIN = _buildJsRodinjsRODINJs;
+            WTF = _buildJsRodinjsRODINJs.WTF;
         }, function (_node_modulesThreeExamplesJsControlsVRControlsJs) {}, function (_node_modulesThreeExamplesJsEffectsVREffectJs) {}],
         execute: function () {
 
             console.log(RODIN);
 
-            RODIN.WTF.is('Rodin.JS v0.0.1');
+            WTF.is('Rodin.JS v0.0.1');
 
             // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
             // Only enable it if you actually need to.
