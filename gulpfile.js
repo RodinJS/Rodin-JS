@@ -27,6 +27,7 @@ const sass = require('gulp-sass');
 const rename = require("gulp-rename");
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
+const watch = require('gulp-watch');
 const autoprefixer = require('gulp-autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
 const cleanCSS = require('gulp-clean-css');
@@ -43,7 +44,6 @@ const JS_THREE_GLOB = [ 'src/js/Three.custom.js', 'src/js/THREE.GLOBAL.js' ];
 const THREE_GLSL =    [ 'node_modules/three/src/**/*.glsl' ];
 const SYSTEMJS =      [ 'src/js/systemjs/*.js' ];
 const SASS =          [ 'src/sass/**/*.scss', '!src/sass/{vendor,vendor/**}' ];
-const SASS_VENDOR =   [ 'src/sass/vendor/**/*.scss' ];
 const FONT =          [ 'src/font/**/*.{ttf,woff,woff2,eof,svg}' ];
 const IMG =           [ 'src/img/**/*.{jpg,jpeg,ico,png}' ];
 const SHADER =        [ 'src/shader/**/*' ];
@@ -222,6 +222,7 @@ gulp.task('clean', () =>  {
 gulp.task('examples', () => {
   const s = size({title: 'Examples -> ', pretty: true});
   return gulp.src(EX_JS)
+    .pipe(watch(EX_JS))
     .pipe(plumber(ERROR_MESSAGE))
     .pipe(babel())
     .pipe(s)
