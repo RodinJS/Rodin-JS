@@ -49,3 +49,5 @@ Temporary Items
 node_modules
 .idea
 _build
+
+examples/**/*_c.js
