@@ -49,7 +49,7 @@ const IMG =           [ 'src/img/**/*.{jpg,jpeg,ico,png}' ];
 const SHADER =        [ 'src/shader/**/*' ];
 const MODEL =         [ 'src/model/**/*' ];
 const VIDEO =         [ 'src/video/**/*' ];
-const EX_JS =         [ 'examples/**/index.js' ];
+const EX_JS =         [ 'examples/**/index.js', '!examples/**/model/**/*.js' ];
 const EX_all =        [ 'examples/**/*' ];
 
 const AUTOPREFIXER_BROWSERS = [
