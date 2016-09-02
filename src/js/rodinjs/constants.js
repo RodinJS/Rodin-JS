@@ -3,4 +3,4 @@
 /**
  * env variables
  */
-export let env_mode = "development";
+export const env_mode = "development";

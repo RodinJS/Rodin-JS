@@ -84,17 +84,26 @@ scene.add(light2);
 var amlight = new THREE.AmbientLight(0x222222);
 scene.add(amlight);
 
-let cardboard = new CardboardObject();
-cardboard.on('ready', () => {
-    cardboard.object3D.position.x = -3;
-    cardboard.object3D.position.z = -5;
-    cardboard.object3D.scale.set(0.01, 0.01, 0.01);
-    scene.add(cardboard.object3D);
-});
+function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+}
 
-cardboard.on('update', () => {
-    cardboard.object3D && (cardboard.object3D.rotation.y += 0.01);
-});
+let cubesCount = 200;
+for(let i = 0; i < cubesCount; i ++) {
+    let cardboard = new CardboardObject();
+    cardboard.on('ready', () => {
+        cardboard.object3D.position.x = randomInRange(-5, 5);
+        cardboard.object3D.position.y = randomInRange(0 , 10);
+        cardboard.object3D.position.z = randomInRange(-5 ,5);
+        cardboard.object3D.rotation.y = randomInRange(0, 2 * Math.PI);
+        cardboard.object3D.scale.set(0.002, 0.002, 0.002);
+        scene.add(cardboard.object3D);
+    });
+
+    cardboard.on('update', () => {
+        cardboard.object3D && (cardboard.object3D.rotation.y += 0.01);
+    });
+}
 
 requestAnimationFrame(animate);
 
