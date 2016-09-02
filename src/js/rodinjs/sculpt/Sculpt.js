@@ -188,8 +188,8 @@ export class Sculpt {
 
     /**
      * emit Event Alias with params
-     * @param evt
-     * @param param
+     * @param {Event} evt
+     * @param {Object} param
      */
     emit(evt, param) {
         let events = this.getEvents();
@@ -204,7 +204,7 @@ export class Sculpt {
 
     /**
      * remove all listeners from Event Alias
-     * @param evt
+     * @param {Event} evt
      */
     removeAllListeners(evt) {
         let events = this.getEvents();
@@ -220,4 +220,119 @@ export class Sculpt {
     globalPosition() {
         return new THREE.Vector3().setFromMatrixPosition(this.object3D.matrixWorld);
     }
+
+    /**
+     * animate
+     * @param {Object} params
+     * @param next
+     */
+    animate(params, next) {
+        var supportedAnimationTypes = Object.keys(KNOX.ANIMATIONS.TYPES).map(function (key) {
+            return KNOX.ANIMATIONS.TYPES[key];
+        });
+
+        if (supportedAnimationTypes.indexOf(params.animateProperty) === -1) {
+            throw new Error("Invalid animation property " + params.animateProperty);
+        }
+
+        if (!params.endValue) {
+            throw new Error("Invalid end valus " + params.endValue);
+        }
+
+        var easing = params.easing || TWEEN.Easing.Elastic.Out;
+        var duration = params.duration || 1000;
+        var delay = params.delay || 0;
+        var animateProperty = params.animateProperty;
+
+        var startValue = params.startValue;
+        var endValue = params.endValue;
+
+        var onCompleteCallback = function () {
+            next && next();
+        };
+
+        let object = this.object;
+        if (animateProperty === KNOX.ANIMATIONS.TYPES.SCALE) {
+            if(!startValue) {
+                startValue = new THREE.Vector3().copy(this.object.scale)
+            }
+
+            if (this.scaleTween) {
+                this.scaleTween.stop();
+            }
+
+            var updateCallback = function () {
+                object.scale.copy(this);
+            };
+
+            this.scaleTween = new TWEEN.Tween(startValue)
+                .to(endValue, duration)
+                .delay(delay)
+                .onUpdate(updateCallback)
+                .easing(easing)
+                .start()
+                .onComplete(onCompleteCallback);
+        }
+
+        if(animateProperty === KNOX.ANIMATIONS.TYPES.POSITION) {
+            if(!startValue) {
+                startValue = new THREE.Vector3().copy(this.object.position)
+            }
+
+            if(this.positionTween) {
+                this.positionTween.stop();
+            }
+
+            var updateCallback = function () {
+                object.position.copy(this);
+            };
+
+            this.positionTween = new TWEEN.Tween(startValue)
+                .to(endValue, duration)
+                .delay(delay)
+                .onUpdate(updateCallback)
+                .easing(easing)
+                .start()
+                .onComplete(onCompleteCallback)
+        }
+    }
+
+    /**
+     * rotate around center
+     * @param {Object} params
+     * @param next
+     */
+    rotateAroundNull(params, next) {
+        var duration = params.duration || 500;
+        var delay = params.delay || 0;
+        var easing = params.easing || TWEEN.Easing.Quadratic.InOut;
+        var cycles = params.cycles || 1;
+
+        if(this.rotateTween) {
+            this.rotateTween.stop()
+        }
+
+        var elem = {
+            t: 0
+        };
+
+        var r = Math.sqrt(Math.pow(this.object.position.x, 2) + Math.pow(this.object.position.y, 2));
+
+        let object = this.object;
+        function updateCallback() {
+            var t = this.t; //check
+
+            object.position.y = r * Math.cos(t);
+            object.position.x = r * Math.sin(t);
+        }
+
+        this.rotateTween = new TWEEN.Tween(elem)
+            .to({t: 2 * cycles * Math.PI}, duration)
+            .delay(delay)
+            .onUpdate(updateCallback)
+            .easing(easing)
+            .start()
+            .onComplete(next);
+    }
+
 }
