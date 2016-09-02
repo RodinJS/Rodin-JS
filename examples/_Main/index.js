@@ -6,6 +6,7 @@ console.log(RODIN);
 
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
+import '../../node_modules/tween.js/src/tween.js';
 
 WTF.is('Rodin.JS v0.0.1');
 
