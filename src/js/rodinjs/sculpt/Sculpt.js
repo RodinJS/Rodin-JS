@@ -1,7 +1,6 @@
-'use strict';
-
-import {THREE} from '../../three/THREE.GLOBAL.js';
-import {WTF} from '../logger/Logger.js';
+import { THREE } from '../../three/THREE.GLOBAL.js';
+import { WTF } from '../logger/Logger.js';
+import { Objects } from '../objects.js';
 
 export class Sculpt {
     constructor() {
@@ -141,6 +140,7 @@ export class Sculpt {
     init(object3D) {
         this.object3D = object3D;
         this.object3D.Sculpt = this;
+        Objects.push(this);
     }
 
     /**
