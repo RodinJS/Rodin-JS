@@ -64,7 +64,7 @@ export class Sculpt {
          *
          * if delay between mousedown and mouseup actions is less, then emits click event
          */
-        this.on("mousedown", (evt) => {
+        this.on("mousedown", () => {
             this.isPressed = true;
             touchStartTime = Date.now();
         });
@@ -77,11 +77,11 @@ export class Sculpt {
             touchStartTime = 0;
         });
 
-        this.on("mouseenter", (evt) => {
+        this.on("mouseenter", () => {
             this.isMouseOvered = true;
         });
 
-        this.on("mouseleave", (evt) => {
+        this.on("mouseleave", () => {
             this.isMouseOvered = false;
         });
 
@@ -90,7 +90,7 @@ export class Sculpt {
          *
          * same MOUSE ACTIONS logic
          */
-        this.on("stereomousedown", (evt) => {
+        this.on("stereomousedown", () => {
             touchStartTime = Date.now();
         });
 
@@ -106,7 +106,7 @@ export class Sculpt {
          *
          * same MOUSE ACTIONS logic
          */
-        this.on("touchstart", (evt) => {
+        this.on("touchstart", () => {
             this.isTouched = true;
             touchStartTime = Date.now();
         });
