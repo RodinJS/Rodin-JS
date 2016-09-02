@@ -96,40 +96,6 @@ export var TWEEN = TWEEN || (function () {
 
 })();
 
-
-// Include a performance.now polyfill
-(function () {
-	// In node.js, use process.hrtime.
-	if (this.window === undefined && this.process !== undefined) {
-		TWEEN.now = function () {
-			var time = process.hrtime();
-
-			// Convert [seconds, microseconds] to milliseconds.
-			return time[0] * 1000 + time[1] / 1000;
-		};
-	}
-	// In a browser, use window.performance.now if it is available.
-	else if (this.window !== undefined &&
-	         window.performance !== undefined &&
-		 window.performance.now !== undefined) {
-
-		// This must be bound, because directly assigning this function
-		// leads to an invocation exception in Chrome.
-		TWEEN.now = window.performance.now.bind(window.performance);
-	}
-	// Use Date.now if it is available.
-	else if (Date.now !== undefined) {
-		TWEEN.now = Date.now;
-	}
-	// Otherwise, use 'new Date().getTime()'.
-	else {
-		TWEEN.now = function () {
-			return new Date().getTime();
-		};
-	}
-})();
-
-
 TWEEN.Tween = function (object) {
 
 	var _object = object;
