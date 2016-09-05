@@ -88,7 +88,7 @@ function randomInRange(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-let cubesCount = 200;
+let cubesCount = 500;
 for(let i = 0; i < cubesCount; i ++) {
     let cardboard = new CardboardObject();
     cardboard.on('ready', () => {
