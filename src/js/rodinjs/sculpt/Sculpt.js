@@ -195,8 +195,8 @@ export class Sculpt {
 
     /**
      * emit Event Alias with params
-     * @param {Event} evt
-     * @param {Object} param
+     * @param {String} evt
+     * @param {Event} param
      */
     emit(evt, param) {
         let events = this.getEvents();
