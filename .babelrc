@@ -2,6 +2,7 @@
 	"presets": ["es2015"], 
 	"plugins": [
 		"transform-es2015-modules-systemjs",
-		"transform-class-properties"
+		"transform-class-properties",
+		"undeclared-variables-check"
 	]
 }
