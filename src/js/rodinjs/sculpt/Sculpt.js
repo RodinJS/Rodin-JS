@@ -289,7 +289,7 @@ export class Sculpt {
                 .onUpdate(updateCallback)
                 .easing(easing)
                 .start()
-                .onComplete(onCompleteCallback)
+                .onComplete(onCompleteCallback);
         }
     }
 

@@ -2,11 +2,13 @@ import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
 import {ANIMATION_TYPES} from '../../_build/js/rodinjs/constants.js';
+import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 
 WTF.is(RODIN);
 
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
+import * as GUI from '../../node_modules/dat-gui/index.js';
 
 WTF.is('Rodin.JS v0.0.1');
 
@@ -93,17 +95,8 @@ cardboard.on('ready', () => {
     scene.add(cardboard.object3D);
 });
 
-document.getElementById('start').addEventListener('click', () => {
-    cardboard.animate(
-        {
-            to: new THREE.Vector3(0, 0, 0),
-            duration: 1000,
-            property: ANIMATION_TYPES.POSITION,
-        }
-    );
-});
-
 requestAnimationFrame(animate);
+generateGUI();
 
 window.addEventListener('resize', onResize, true);
 window.addEventListener('vrdisplaypresentchange', onResize, true);
@@ -116,6 +109,7 @@ function animate(timestamp) {
     controls.update();
     manager.render(scene, camera, timestamp);
     RODIN.Objects.map( obj => obj.emit('update', new RODIN.Event(obj)));
+    TWEEN.update();
     requestAnimationFrame(animate);
 }
 
@@ -149,5 +143,40 @@ function setStageDimensions(stage) {
 
     skybox.position.y = boxSize / 2;
     scene.add(skybox);
+}
 
+function generateGUI() {
+
+    var FizzyText = function() {
+        this.x = -3;
+        this.y = 0;
+        this.z = -5;
+        this.duration = 3000;
+        this.start = function () {
+            cardboard && cardboard.object3D && cardboard.animate(
+                {
+                    duration: this.duration,
+                    to: new THREE.Vector3(this.x, this.y, this.z),
+                    property: ANIMATION_TYPES.POSITION
+                }
+            )
+        }
+    };
+
+    let text = new FizzyText();
+
+    let gui = new GUI.GUI();
+    console.log(gui);
+    let events = 'click  mousedown';
+    events.split(' ').map( e =>
+        gui.domElement.addEventListener(e, (evt) => {
+            evt.stopPropagation();
+        })
+    );
+
+    gui.add(text, 'x', -5, 5);
+    gui.add(text, 'y', -5, 5);
+    gui.add(text, 'z', -5, 5);
+    gui.add(text, 'duration', 1, 20000);
+    gui.add(text, 'start');
 }
