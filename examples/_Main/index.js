@@ -7,18 +7,8 @@ console.log(RODIN);
 
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
-// import '../../node_modules/tween.js/src/tween.js';
 
 WTF.is('Rodin.JS v0.0.1');
-
-var tween = new TWEEN.Tween({ x: 0, y: 0 })
-    .to({ x: 100, y: 100 }, 1000)
-    .onUpdate(function() {
-        console.log(this.x, this.y);
-    })
-    .start();
-
-WTF.is(tween);
 
 // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
 // Only enable it if you actually need to.
