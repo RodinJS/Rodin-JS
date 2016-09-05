@@ -93,6 +93,7 @@ gulp.task('js', () => {
     .pipe(plumber(ERROR_MESSAGE))
     .pipe(babel())
     .pipe(s)
+    .pipe(plumber.stop())
     .pipe(gulp.dest('./_build/js'))
     .pipe(notify({
       onLast: true,
@@ -231,6 +232,7 @@ gulp.task('examples', () => {
     .pipe(babel())
     .pipe(s)
     .pipe(rename({suffix: '_c'}))
+    .pipe(plumber.stop())
     .pipe(gulp.dest('./examples'))
     .pipe(notify({
       onLast: true,
@@ -267,3 +269,4 @@ var stylish = require('jshint-stylish');
 
 
 */
+
