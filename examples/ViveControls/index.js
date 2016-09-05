@@ -93,7 +93,7 @@ line.scale.z = 5;
 controller1.add( line.clone() );
 controller2.add( line.clone() );
 
-raycaster = new THREE.Raycaster();
+raycaster = new RODIN.Raycaster();
 
 // Apply VR stereo rendering to renderer.
 var effect = new THREE.VREffect( renderer );

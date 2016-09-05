@@ -10,6 +10,7 @@ export { Event } from './Event.js';
 export { Sculpt } from './sculpt/Sculpt.js';
 export { CubeObject } from './sculpt/CubeObject.js';
 export { ObjectFromModel } from './sculpt/ObjectFromModel.js';
+export { Raycaster } from './raycaster/Raycaster.js';
 
 export { Objects } from './objects.js';
 export { Raycastables } from './objects.js';
