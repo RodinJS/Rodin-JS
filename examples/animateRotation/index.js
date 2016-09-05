@@ -148,16 +148,16 @@ function setStageDimensions(stage) {
 function generateGUI() {
 
     var FizzyText = function() {
-        this.x = -3;
+        this.x = 0;
         this.y = 0;
-        this.z = -5;
+        this.z = 0;
         this.duration = 3000;
         this.start = function () {
             cardboard && cardboard.object3D && cardboard.animate(
                 {
                     duration: this.duration,
                     to: new THREE.Vector3(this.x, this.y, this.z),
-                    property: ANIMATION_TYPES.POSITION
+                    property: ANIMATION_TYPES.ROTATION
                 }
             )
         }
@@ -173,9 +173,9 @@ function generateGUI() {
         })
     );
 
-    gui.add(text, 'x', -5, 5);
-    gui.add(text, 'y', -5, 5);
-    gui.add(text, 'z', -5, 5);
+    gui.add(text, 'x');
+    gui.add(text, 'y');
+    gui.add(text, 'z');
     gui.add(text, 'duration', 1, 20000);
     gui.add(text, 'start');
 }

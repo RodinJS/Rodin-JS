@@ -250,7 +250,7 @@ export class Sculpt {
         let object = this.object3D;
         if (animateProperty === ANIMATION_TYPES.SCALE) {
             if(!startValue) {
-                startValue = new THREE.Vector3().copy(this.object.scale)
+                startValue = new THREE.Vector3().copy(this.object3D.scale)
             }
 
             if (this.scaleTween) {
@@ -284,6 +284,30 @@ export class Sculpt {
             };
 
             this.positionTween = new TWEEN.Tween(startValue)
+                .to(endValue, duration)
+                .delay(delay)
+                .onUpdate(updateCallback)
+                .easing(easing)
+                .start()
+                .onComplete(onCompleteCallback);
+        }
+
+        if(animateProperty === ANIMATION_TYPES.ROTATION) {
+            if(!startValue) {
+                startValue = new THREE.Vector3().copy(this.object3D.rotation)
+            }
+
+            if(this.rotationTween) {
+                this.rotationTween.stop();
+            }
+
+            var updateCallback = function () {
+                object.rotation.x = this.x;
+                object.rotation.y = this.y;
+                object.rotation.z = this.z;
+            };
+
+            this.rotationTween = new TWEEN.Tween(startValue)
                 .to(endValue, duration)
                 .delay(delay)
                 .onUpdate(updateCallback)
