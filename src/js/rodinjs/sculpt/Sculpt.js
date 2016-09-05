@@ -5,7 +5,7 @@ import { ANIMATION_TYPES } from '../constants.js';
 import { TWEEN } from '../Tween.js';
 
 export class Sculpt {
-    constructor() {
+    constructor(id) {
         if (new.target == Sculpt) {
             throw new ErrorAbstractClassInstance();
         }
