@@ -1,15 +1,19 @@
-import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
-import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
+
+import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
+import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 
 console.log(RODIN);
 
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
-// import '../../node_modules/tween.js/src/tween.js';
 
 WTF.is('Rodin.JS v0.0.1');
+
+
+
+///////////////////////TWEEN EXAMPLE////////////////////////////////
 
 var tween = new TWEEN.Tween({ x: 0, y: 0 })
     .to({ x: 100, y: 100 }, 1000)
@@ -18,7 +22,12 @@ var tween = new TWEEN.Tween({ x: 0, y: 0 })
     })
     .start();
 
-WTF.is(tween);
+// WTF.is(tween);
+///////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////WebVR Example/////////////////////////////////////
 
 // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
 // Only enable it if you actually need to.
@@ -178,3 +187,5 @@ function setStageDimensions(stage) {
     // Place the cube in the middle of the scene, at user height.
 //  cube.position.set(0, controls.userHeight, 0);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////
