@@ -12,68 +12,15 @@ export class CubeObject extends Sculpt {
 	        textures.push(new THREE.Texture());
 	    }
 
-	    this.SIDENAMES = {
-		    FRONT: 'F',
-		    BACK: 'B',
-		    UP: 'U',
-		    DOWN: 'D',
-		    LEFT: 'L',
-		    RIGHT: 'R'
-		};
-
-		this.Sides = {
-		    order: [
-		        this.SIDENAMES.FRONT,
-		        this.SIDENAMES.BACK,
-		        this.SIDENAMES.UP,
-		        this.SIDENAMES.DOWN,
-		        this.SIDENAMES.LEFT,
-		        this.SIDENAMES.RIGHT
-		    ],
-
-		    configs: {
-		        F: {
-		            rotate: 0,
-		            translate: [0, 0],
-		            position: [0, 1]
-		        },
-		        B: {
-		            rotate: 0,
-		            translate: [0, 0],
-		            position: [2, 1]
-		        },
-		        U: {
-		            rotate: Math.PI,
-		            translate: [-1, -1],
-		            position: [1, 0]
-		        },
-		        D: {
-		            rotate: Math.PI,
-		            translate: [-1, -1],
-		            position: [1, 2]
-		        },
-		        L: {
-		            rotate: 0,
-		            translate: [0, 0],
-		            position: [3, 1]
-		        },
-		        R: {
-		            rotate: 0,
-		            translate: [0, 0],
-		            position: [1, 1]
-		        }
-		    }
-		}
-
 	    let materials = [];
 
 	    let imageObj = new Image();
 	    imageObj.onload = () => {
 
-	        for(let i = 0; i < this.Sides.order.length; i ++) {
-	            let side = this.Sides.order[i];
+	        for(let i = 0; i < CubeObject.Sides.order.length; i ++) {
+	            let side = CubeObject.Sides.order[i];
 	            materials.push(new THREE.MeshBasicMaterial({
-	                map: this.createMaterial(this.Sides.configs[side], imageObj),
+	                map: this.createMaterial(CubeObject.Sides.configs[side], imageObj),
 	                transparent: true
 	            }));
 	        }
@@ -88,6 +35,59 @@ export class CubeObject extends Sculpt {
 
 	    imageObj.src = textureURL;
 	}
+
+	static SIDENAMES = {
+		FRONT: 'F',
+		BACK: 'B',
+		UP: 'U',
+		DOWN: 'D',
+		LEFT: 'L',
+		RIGHT: 'R'
+	};
+
+	static Sides = {
+		order: [
+			CubeObject.SIDENAMES.FRONT,
+			CubeObject.SIDENAMES.BACK,
+			CubeObject.SIDENAMES.UP,
+			CubeObject.SIDENAMES.DOWN,
+			CubeObject.SIDENAMES.LEFT,
+			CubeObject.SIDENAMES.RIGHT
+		],
+
+		configs: {
+			F: {
+				rotate: 0,
+				translate: [0, 0],
+				position: [0, 1]
+			},
+			B: {
+				rotate: 0,
+				translate: [0, 0],
+				position: [2, 1]
+			},
+			U: {
+				rotate: Math.PI,
+				translate: [-1, -1],
+				position: [1, 0]
+			},
+			D: {
+				rotate: Math.PI,
+				translate: [-1, -1],
+				position: [1, 2]
+			},
+			L: {
+				rotate: 0,
+				translate: [0, 0],
+				position: [3, 1]
+			},
+			R: {
+				rotate: 0,
+				translate: [0, 0],
+				position: [1, 1]
+			}
+		}
+	};
 
     createMaterial(configs, imageObj) {
         let tileSize = imageObj.height / 3;
