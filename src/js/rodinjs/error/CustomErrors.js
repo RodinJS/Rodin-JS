@@ -28,3 +28,9 @@ export class ErrorMAPClassInstance extends CustomError {
         super(`Error making instance of MAP class, use static fields`);
     }
 }
+
+export class ErrorNoSceneProvided extends CustomError {
+    constructor() {
+        super(`Error no scene provided, use setScene method before raycastiong`);
+    }
+}
