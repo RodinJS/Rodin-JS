@@ -1,11 +1,18 @@
-import { THREE } from '../../three/THREE.GLOBAL.js';
-import { WTF } from '../logger/Logger.js';
-import { Objects } from '../objects.js';
-import { ANIMATION_TYPES } from '../constants.js';
-import { TWEEN } from '../Tween.js';
+import {THREE} from '../../three/THREE.GLOBAL.js';
+import {WTF} from '../logger/Logger.js';
+import {Objects} from '../objects.js';
+import {ANIMATION_TYPES} from '../constants.js';
+import {TWEEN} from '../Tween.js';
+import {ErrorAbstractClassInstance} from '../error/CustomErrors.js';
 
 export class Sculpt {
     constructor(id) {
+
+        if (new.target == Sculpt) {
+            throw new ErrorAbstractClassInstance();
+        }
+
+
         /**
          * private properties
          */
@@ -257,7 +264,7 @@ export class Sculpt {
 
         let object = this.object3D;
         if (animateProperty === ANIMATION_TYPES.SCALE) {
-            if(!startValue) {
+            if (!startValue) {
                 startValue = new THREE.Vector3().copy(this.object3D.scale)
             }
 
@@ -278,12 +285,12 @@ export class Sculpt {
                 .onComplete(onCompleteCallback);
         }
 
-        if(animateProperty === ANIMATION_TYPES.POSITION) {
-            if(!startValue) {
+        if (animateProperty === ANIMATION_TYPES.POSITION) {
+            if (!startValue) {
                 startValue = new THREE.Vector3().copy(this.object3D.position)
             }
 
-            if(this.positionTween) {
+            if (this.positionTween) {
                 this.positionTween.stop();
             }
 
@@ -300,12 +307,12 @@ export class Sculpt {
                 .onComplete(onCompleteCallback);
         }
 
-        if(animateProperty === ANIMATION_TYPES.ROTATION) {
-            if(!startValue) {
+        if (animateProperty === ANIMATION_TYPES.ROTATION) {
+            if (!startValue) {
                 startValue = new THREE.Vector3().copy(this.object3D.rotation)
             }
 
-            if(this.rotationTween) {
+            if (this.rotationTween) {
                 this.rotationTween.stop();
             }
 
@@ -339,7 +346,7 @@ export class Sculpt {
         var easing = params.easing || TWEEN.Easing.Quadratic.InOut;
         var cycles = params.cycles || 1;
 
-        if(this.rotateTween) {
+        if (this.rotateTween) {
             this.rotateTween.stop()
         }
 
@@ -350,6 +357,7 @@ export class Sculpt {
         var r = Math.sqrt(Math.pow(this.object3D.position.x, 2) + Math.pow(this.object3D.position.y, 2));
 
         let object = this.object3D;
+
         function updateCallback() {
             var t = this.t;
 
