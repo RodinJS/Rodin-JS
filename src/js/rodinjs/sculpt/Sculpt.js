@@ -363,5 +363,4 @@ export class Sculpt {
             .start()
             .onComplete(next);
     }
-
 }
