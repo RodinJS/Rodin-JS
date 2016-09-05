@@ -6,6 +6,11 @@ import { TWEEN } from '../Tween.js';
 
 export class Sculpt {
     constructor(id) {
+
+        if (new.target == Sculpt) {
+            throw new ErrorAbstractClassInstance();
+        }
+
         /**
          * private properties
          */
@@ -30,7 +35,7 @@ export class Sculpt {
          *
          * NODE: Dont change value here, only change value for custom objects, derived from this class
          *
-         * 
+         *
          */
         this.passActionToParent = true;
 
@@ -139,8 +144,7 @@ export class Sculpt {
     }
 
     /**
-     * @method init
-     * init function
+     * init
      */
     init(object3D) {
         this.object3D = object3D;
@@ -149,7 +153,6 @@ export class Sculpt {
     }
 
     /**
-     * @method on
      * add listener to Event Alias
      * @param evts
      * @param callback
@@ -171,7 +174,6 @@ export class Sculpt {
 
 
     /**
-     * @method addEventListener
      * add listener to Event Alias
      * @param evts
      * @param callback
@@ -181,7 +183,6 @@ export class Sculpt {
     }
 
     /**
-     * @method removeEventListener
      * remove specific listener from Event Alias
      * @param evt
      * @param callback
@@ -195,10 +196,9 @@ export class Sculpt {
     }
 
     /**
-     * @method emit
      * emit Event Alias with params
-     * @param {Event} evt
-     * @param {Object} param
+     * @param {String} evt
+     * @param {Event} param
      */
     emit(evt, param) {
         let events = this.getEvents();
@@ -212,7 +212,6 @@ export class Sculpt {
 
 
     /**
-     * @method removeAllListeners
      * remove all listeners from Event Alias
      * @param {Event} evt
      */
@@ -224,7 +223,6 @@ export class Sculpt {
     }
 
     /**
-     * @method globalPosition
      * get global position of object
      * @returns {THREE.Vector3}
      */
@@ -233,14 +231,13 @@ export class Sculpt {
     }
 
     /**
-     * @method animate
      * animate
      * @param {Object} params
      * @param next
      */
     animate(params, next) {
         if (!params.to) {
-            throw new Error("Invalid end values");
+            throw new Error("Invalid end valus");
         }
 
         var easing = params.easing || TWEEN.Easing.Elastic.Out;
@@ -328,7 +325,6 @@ export class Sculpt {
     }
 
     /**
-     * @method rotateAroundNull
      * rotate around center
      * @param {Object} params
      * @param next
