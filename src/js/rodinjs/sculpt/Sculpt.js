@@ -5,7 +5,6 @@ import { ANIMATION_TYPES } from '../constants.js';
 import { TWEEN } from '../Tween.js';
 
 export class Sculpt {
-     static myStaticProp = 21;
     constructor() {
         /**
          * private properties
@@ -355,5 +354,4 @@ export class Sculpt {
             .start()
             .onComplete(next);
     }
-
 }
