@@ -1,9 +1,8 @@
-import {THREE} from '../../three/THREE.GLOBAL.js';
-import {WTF} from '../logger/Logger.js';
-import {Objects} from '../objects.js';
-import {ANIMATION_TYPES} from '../constants.js';
-import {TWEEN} from '../Tween.js';
-import {ErrorAbstractClassInstance} from '../error/CustomErrors.js';
+import { THREE } from '../../three/THREE.GLOBAL.js';
+import { WTF } from '../logger/Logger.js';
+import { Objects } from '../objects.js';
+import { ANIMATION_TYPES } from '../constants.js';
+import { TWEEN } from '../Tween.js';
 
 export class Sculpt {
     constructor(id) {
@@ -11,7 +10,6 @@ export class Sculpt {
         if (new.target == Sculpt) {
             throw new ErrorAbstractClassInstance();
         }
-
 
         /**
          * private properties
@@ -37,7 +35,7 @@ export class Sculpt {
          *
          * NODE: Dont change value here, only change value for custom objects, derived from this class
          *
-         * 
+         *
          */
         this.passActionToParent = true;
 
@@ -146,8 +144,7 @@ export class Sculpt {
     }
 
     /**
-     * @method init
-     * init function
+     * init
      */
     init(object3D) {
         this.object3D = object3D;
@@ -156,7 +153,6 @@ export class Sculpt {
     }
 
     /**
-     * @method on
      * add listener to Event Alias
      * @param evts
      * @param callback
@@ -178,7 +174,6 @@ export class Sculpt {
 
 
     /**
-     * @method addEventListener
      * add listener to Event Alias
      * @param evts
      * @param callback
@@ -188,7 +183,6 @@ export class Sculpt {
     }
 
     /**
-     * @method removeEventListener
      * remove specific listener from Event Alias
      * @param evt
      * @param callback
@@ -202,7 +196,6 @@ export class Sculpt {
     }
 
     /**
-     * @method emit
      * emit Event Alias with params
      * @param {Event} evt
      * @param {Object} param
@@ -219,7 +212,6 @@ export class Sculpt {
 
 
     /**
-     * @method removeAllListeners
      * remove all listeners from Event Alias
      * @param {Event} evt
      */
@@ -231,7 +223,6 @@ export class Sculpt {
     }
 
     /**
-     * @method globalPosition
      * get global position of object
      * @returns {THREE.Vector3}
      */
@@ -240,14 +231,13 @@ export class Sculpt {
     }
 
     /**
-     * @method animate
      * animate
      * @param {Object} params
      * @param next
      */
     animate(params, next) {
         if (!params.to) {
-            throw new Error("Invalid end values");
+            throw new Error("Invalid end valus");
         }
 
         var easing = params.easing || TWEEN.Easing.Elastic.Out;
@@ -264,7 +254,7 @@ export class Sculpt {
 
         let object = this.object3D;
         if (animateProperty === ANIMATION_TYPES.SCALE) {
-            if (!startValue) {
+            if(!startValue) {
                 startValue = new THREE.Vector3().copy(this.object3D.scale)
             }
 
@@ -285,12 +275,12 @@ export class Sculpt {
                 .onComplete(onCompleteCallback);
         }
 
-        if (animateProperty === ANIMATION_TYPES.POSITION) {
-            if (!startValue) {
+        if(animateProperty === ANIMATION_TYPES.POSITION) {
+            if(!startValue) {
                 startValue = new THREE.Vector3().copy(this.object3D.position)
             }
 
-            if (this.positionTween) {
+            if(this.positionTween) {
                 this.positionTween.stop();
             }
 
@@ -307,12 +297,12 @@ export class Sculpt {
                 .onComplete(onCompleteCallback);
         }
 
-        if (animateProperty === ANIMATION_TYPES.ROTATION) {
-            if (!startValue) {
+        if(animateProperty === ANIMATION_TYPES.ROTATION) {
+            if(!startValue) {
                 startValue = new THREE.Vector3().copy(this.object3D.rotation)
             }
 
-            if (this.rotationTween) {
+            if(this.rotationTween) {
                 this.rotationTween.stop();
             }
 
@@ -335,7 +325,6 @@ export class Sculpt {
     }
 
     /**
-     * @method rotateAroundNull
      * rotate around center
      * @param {Object} params
      * @param next
@@ -346,7 +335,7 @@ export class Sculpt {
         var easing = params.easing || TWEEN.Easing.Quadratic.InOut;
         var cycles = params.cycles || 1;
 
-        if (this.rotateTween) {
+        if(this.rotateTween) {
             this.rotateTween.stop()
         }
 
@@ -357,7 +346,6 @@ export class Sculpt {
         var r = Math.sqrt(Math.pow(this.object3D.position.x, 2) + Math.pow(this.object3D.position.y, 2));
 
         let object = this.object3D;
-
         function updateCallback() {
             var t = this.t;
 
