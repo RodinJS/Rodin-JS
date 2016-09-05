@@ -9,6 +9,8 @@ export class Sculpt {
         /**
          * private properties
          */
+
+        this.id = id;
         let events = {};
         this.getEvents = () => events;
 
