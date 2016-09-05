@@ -230,7 +230,6 @@ export class Sculpt {
      * @param next
      */
     animate(params, next) {
-
         if (!params.to) {
             throw new Error("Invalid end valus");
         }
@@ -315,6 +314,8 @@ export class Sculpt {
                 .start()
                 .onComplete(onCompleteCallback);
         }
+
+        return this;
     }
 
     /**
