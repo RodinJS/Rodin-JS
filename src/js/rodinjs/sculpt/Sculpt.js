@@ -1,6 +1,8 @@
 import { THREE } from '../../three/THREE.GLOBAL.js';
 import { WTF } from '../logger/Logger.js';
 import { Objects } from '../objects.js';
+import { ANIMATION_TYPES } from '../constants.js';
+import { TWEEN } from '../Tween.js';
 
 export class Sculpt {
     constructor() {
@@ -227,32 +229,25 @@ export class Sculpt {
      * @param next
      */
     animate(params, next) {
-        var supportedAnimationTypes = Object.keys(KNOX.ANIMATIONS.TYPES).map(function (key) {
-            return KNOX.ANIMATIONS.TYPES[key];
-        });
 
-        if (supportedAnimationTypes.indexOf(params.animateProperty) === -1) {
-            throw new Error("Invalid animation property " + params.animateProperty);
-        }
-
-        if (!params.endValue) {
-            throw new Error("Invalid end valus " + params.endValue);
+        if (!params.to) {
+            throw new Error("Invalid end valus");
         }
 
         var easing = params.easing || TWEEN.Easing.Elastic.Out;
         var duration = params.duration || 1000;
         var delay = params.delay || 0;
-        var animateProperty = params.animateProperty;
+        var animateProperty = params.property;
 
-        var startValue = params.startValue;
-        var endValue = params.endValue;
+        var startValue = params.from;
+        var endValue = params.to;
 
         var onCompleteCallback = function () {
             next && next();
         };
 
-        let object = this.object;
-        if (animateProperty === KNOX.ANIMATIONS.TYPES.SCALE) {
+        let object = this.object3D;
+        if (animateProperty === ANIMATION_TYPES.SCALE) {
             if(!startValue) {
                 startValue = new THREE.Vector3().copy(this.object.scale)
             }
@@ -274,9 +269,9 @@ export class Sculpt {
                 .onComplete(onCompleteCallback);
         }
 
-        if(animateProperty === KNOX.ANIMATIONS.TYPES.POSITION) {
+        if(animateProperty === ANIMATION_TYPES.POSITION) {
             if(!startValue) {
-                startValue = new THREE.Vector3().copy(this.object.position)
+                startValue = new THREE.Vector3().copy(this.object3D.position)
             }
 
             if(this.positionTween) {
@@ -316,9 +311,9 @@ export class Sculpt {
             t: 0
         };
 
-        var r = Math.sqrt(Math.pow(this.object.position.x, 2) + Math.pow(this.object.position.y, 2));
+        var r = Math.sqrt(Math.pow(this.object3D.position.x, 2) + Math.pow(this.object3D.position.y, 2));
 
-        let object = this.object;
+        let object = this.object3D;
         function updateCallback() {
             var t = this.t; //check
 

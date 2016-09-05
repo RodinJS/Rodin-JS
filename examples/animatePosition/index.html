@@ -19,10 +19,22 @@
             padding: 0;
             overflow: hidden;
         }
+
+        button {
+            width: 200px;
+            height: 50px;
+            z-index: 1000;
+            position: fixed;
+            font-size: 2em;
+            bottom: 10px;
+            left: 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
+<button id="start">Start</button>
 <script type="text/javascript" src="../../_build/js/systemjs/system.js"></script>
 <script>
     System.import('../../_build/js/three/THREE.GLOBAL.js');
