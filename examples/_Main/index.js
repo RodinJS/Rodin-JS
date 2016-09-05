@@ -22,7 +22,7 @@ var tween = new TWEEN.Tween({ x: 0, y: 0 })
     })
     .start();
 
-WTF.is(tween);
+// WTF.is(tween);
 ///////////////////////////////////////////////////////////////////
 
 
