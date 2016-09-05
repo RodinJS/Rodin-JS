@@ -12,6 +12,6 @@ export class THREEObject extends Sculpt {
         this.init(threeObject);
         timeout(() => {
             this.emit('ready', new Event(this));
-        })
+        }, 0);
     }
 }
