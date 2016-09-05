@@ -1,24 +1,13 @@
 import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
-import {WTF} from '../../_build/js/rodinjs/RODIN.js';
-import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 
 console.log(RODIN);
 
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
-// import '../../node_modules/tween.js/src/tween.js';
 
-WTF.is('Rodin.JS v0.0.1');
+RODIN.WTF.is('Rodin.JS v0.0.1');
 
-var tween = new TWEEN.Tween({ x: 0, y: 0 })
-    .to({ x: 100, y: 100 }, 1000)
-    .onUpdate(function() {
-        console.log(this.x, this.y);
-    })
-    .start();
-
-WTF.is(tween);
 
 // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
 // Only enable it if you actually need to.
@@ -38,50 +27,26 @@ var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHei
 var controls = new THREE.VRControls(camera);
 controls.standing = true;
 
-/*var controls = new RODIN.MobileCameraControls(
- scene,
- camera,
- new THREE.Vector3(0, 0, 0),
- new THREE.Vector3(0, 0, -0.01),
- renderer.domElement,
- true
- );
- controls.userHeight = 1.6*/
-
-
 // Apply VR stereo rendering to renderer.
 var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
-var distanceRatio = 1;
+
+// Add a skybox.
+var boxSize = 15;
+
+var skybox = new RODIN.CubeObject(boxSize, 'img/boxW.png')
+
+skybox.on('ready', () => {
+    scene.add(skybox.object3D);
+    skybox.object3D.position.y = 0 + controls.userHeight;
+});
 
 
-// Add a repeating grid as a skybox.
-var boxSize = 15 * distanceRatio;
-var loader = new THREE.TextureLoader();
-loader.load('img/boxW.png', onTextureLoaded);
 
-function onTextureLoaded(texture) {
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(boxSize, boxSize);
-
-    var geometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
-    var material = new THREE.MeshBasicMaterial({
-        map: texture,
-//    color: 0x01BE00,
-        side: THREE.BackSide
-    });
-
-    // Align the skybox to the floor (which is at y=0).
-    var skybox = new THREE.Mesh(geometry, material);
-
-    scene.add(skybox);
-    skybox.position.y = boxSize / 2 - controls.userHeight;
-    // For high end VR devices like Vive and Oculus, take into account the stage
-    // parameters provided.
-    setupStage();
-}
+// For high end VR devices like Vive and Oculus, take into account the stage
+// parameters provided.
+setupStage()
 
 
 // Create a VR manager helper to enter and exit VR mode.
@@ -93,14 +58,14 @@ var manager = new WebVRManager(renderer, effect, params);
 
 // Create 3D objects.
 var boxCount = 1000;
-var particleBoxSize = 0.015 * distanceRatio;
+var particleBoxSize = 0.015;
 var geometry = new THREE.BoxGeometry(particleBoxSize, particleBoxSize, particleBoxSize);
 var material = new THREE.MeshNormalMaterial();
 //var cube = new THREE.Mesh(geometry, material);
 var cubes = [];
 for (var i = 0; i < boxCount; i++) {
     cubes.push(new THREE.Mesh(geometry, material));
-    cubes[i].position.set(1.5 * distanceRatio * (Math.random() - 0.5), controls.userHeight - 3 * distanceRatio * (Math.random() - 0.5), 1.5 * distanceRatio * (Math.random() - 0.5));
+    cubes[i].position.set(1.5 * (Math.random() - 0.5), controls.userHeight - 3 * (Math.random() - 0.5), 1.5 * (Math.random() - 0.5));
     scene.add(cubes[i]);
 }
 
@@ -121,7 +86,6 @@ var lastRender = 0;
 function animate(timestamp) {
     var delta = Math.min(timestamp - lastRender, 500);
     lastRender = timestamp;
-
     // Apply rotation to cube mesh
 //  cube.rotation.y += delta * 0.0006;
     for (var i = 0; i < boxCount; i++) {
@@ -164,16 +128,20 @@ function setStageDimensions(stage) {
     // Make the skybox fit the stage.
     if (stage.sizeX === 0 || stage.sizeZ === 0) return;
 
-    var material = skybox.material;
-    scene.remove(skybox);
+    scene.remove(skybox.object3D);
 
     // Size the skybox according to the size of the actual stage.
-    var geometry = new THREE.BoxGeometry(stage.sizeX, boxSize, stage.sizeZ);
-    skybox = new THREE.Mesh(geometry, material);
+    boxSize = Math.max(stage.sizeX, stage.sizeY);
+    var skybox = new RODIN.CubeObject(boxSize, 'img/boxW.png')
+
+    skybox.on('ready', () => {
+        scene.add(skybox.object3D);
+        skybox.object3D.position.y = boxSize / 2 - controls.userHeight;
+    });
 
     // Place it on the floor.
-    skybox.position.y = boxSize / 2;
-    scene.add(skybox);
+    skybox.object3D.position.y = boxSize / 2;
+    scene.add(skybox.object3D);
 
     // Place the cube in the middle of the scene, at user height.
 //  cube.position.set(0, controls.userHeight, 0);

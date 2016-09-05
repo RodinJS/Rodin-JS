@@ -40,8 +40,8 @@ const connect = require('gulp-connect');
 
 const JS =            [ 'src/js/**/*.js', '!src/js/systemjs/system.js', '!src/js/systemjs/glsl.js', '!src/js/{vendor,vendor/**}', '!src/js/Three.custom.js', '!src/js/THREE.GLOBAL.js' ];
 const JS_THREE =      [ 'node_modules/three/src/**/*.js' ];
+const JS_THREE_GLSL = [ 'node_modules/three/src/**/*.glsl' ];
 const JS_THREE_GLOB = [ 'src/js/Three.custom.js', 'src/js/THREE.GLOBAL.js' ];
-const THREE_GLSL =    [ 'node_modules/three/src/**/*.glsl' ];
 const SYSTEMJS =      [ 'src/js/systemjs/*.js' ];
 const SASS =          [ 'src/sass/**/*.scss', '!src/sass/{vendor,vendor/**}' ];
 const FONT =          [ 'src/font/**/*.{ttf,woff,woff2,eof,svg}' ];
@@ -65,6 +65,10 @@ const AUTOPREFIXER_BROWSERS = [
 ];
 
 const UGLIFY_AGRESIVE = {
+    // conditionals  : true,  // optimize if-s and conditional expressions
+    // comparisons   : true,  // optimize comparisons
+    // evaluate      : true,  // evaluate constant expressions
+    // booleans      : true  // optimize boolean expressions
     preserveComments: 'license',
     mangle: true,
     compress: true
@@ -105,7 +109,7 @@ gulp.task('js-three', () => {
 });
 
 gulp.task('glsl', () => {
-  return gulp.src(THREE_GLSL)
+  return gulp.src(JS_THREE_GLSL)
     .pipe(gulp.dest('./_build/js/three'));
 });
 
@@ -250,3 +254,16 @@ gulp.task('prod', (done) => {
 gulp.task('default', (done) => {
   sequence('clean', ['js', 'js-three', 'glsl', 'three-global', 'systemjs', 'examples', 'sass', 'font', 'img', 'connect', 'watch'], done);
 });
+
+
+/*
+npm install jshint gulp-jshint --save-dev
+var jshint = require('gulp-jshint');
+  .pipe(jshint())
+  .pipe(jshint.reporter('YOUR_REPORTER_HERE'));
+npm install --save-dev jshint-stylish
+var stylish = require('jshint-stylish');
+  .pipe(jshint.reporter(stylish))
+
+
+*/

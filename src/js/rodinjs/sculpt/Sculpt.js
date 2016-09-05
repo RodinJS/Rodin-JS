@@ -5,6 +5,7 @@ import { ANIMATION_TYPES } from '../constants.js';
 import { TWEEN } from '../Tween.js';
 
 export class Sculpt {
+     static myStaticProp = 21;
     constructor() {
         /**
          * private properties
@@ -315,7 +316,7 @@ export class Sculpt {
 
         let object = this.object3D;
         function updateCallback() {
-            var t = this.t; //check
+            var t = this.t;
 
             object.position.y = r * Math.cos(t);
             object.position.x = r * Math.sin(t);

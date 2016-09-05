@@ -96,6 +96,10 @@ export var TWEEN = TWEEN || (function () {
 
 })();
 
+TWEEN.now = function () {
+	return new Date().getTime();
+};
+
 TWEEN.Tween = function (object) {
 
 	var _object = object;
