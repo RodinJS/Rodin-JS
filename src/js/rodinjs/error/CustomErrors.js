@@ -34,3 +34,9 @@ export class ErrorNoSceneProvided extends CustomError {
         super(`Error no scene provided, use setScene method before raycastiong`);
     }
 }
+
+export class ErrorNoObjectProvided extends CustomError {
+    constructor() {
+        super(`Error no THREEJS object provided`);
+    }
+}

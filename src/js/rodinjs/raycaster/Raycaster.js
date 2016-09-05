@@ -33,7 +33,7 @@ export class Raycaster extends THREE.Raycaster {
 
             if (centerObj.stopPropagation) {
                 if (centerObj.isSculpt) {
-                    ret.push(centerObj.Sculpt);
+                    ret.push(intersects[i]);
                 }
                 continue;
             }
@@ -43,7 +43,7 @@ export class Raycaster extends THREE.Raycaster {
             var parentObj = centerObj.Sculpt.object3D.parent;
             while (parentObj) {
                 if (parentObj === scene) {
-                    ret.push(centerObj.Sculpt);
+                    ret.push(intersects[i]);
                     break;
                 }
                 parentObj = parentObj.parent;
