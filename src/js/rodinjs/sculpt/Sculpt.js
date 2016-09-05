@@ -5,7 +5,7 @@ import { ANIMATION_TYPES } from '../constants.js';
 import { TWEEN } from '../Tween.js';
 
 export class Sculpt {
-    constructor() {
+    constructor(id) {
         /**
          * private properties
          */
@@ -238,7 +238,7 @@ export class Sculpt {
      */
     animate(params, next) {
         if (!params.to) {
-            throw new Error("Invalid end valus");
+            throw new Error("Invalid end values");
         }
 
         var easing = params.easing || TWEEN.Easing.Elastic.Out;

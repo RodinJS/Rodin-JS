@@ -9,11 +9,11 @@ console.log(RODIN);
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
 
+WTF.is('Rodin.JS v0.0.1');
 
 
 
 ///////////////////////TWEEN EXAMPLE////////////////////////////////
-WTF.is('Rodin.JS v0.0.1');
 
 var tween = new TWEEN.Tween({ x: 0, y: 0 })
     .to({ x: 100, y: 100 }, 1000)
