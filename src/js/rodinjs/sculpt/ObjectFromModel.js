@@ -29,6 +29,7 @@ export class ObjectFromModel extends Sculpt {
                 (geometry, materials) => {
                     SubClass.geometry = geometry;
                     SubClass.materials = new THREE.MultiMaterial(materials);
+                    SubClass.objectLoaded = true;
 
                     for (let i = 0; i < _materials.length; i++) {
                         materials[i] = new THREE.MeshLambertMaterial(_materials[i]);

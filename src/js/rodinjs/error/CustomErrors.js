@@ -22,3 +22,9 @@ export class ErrorInvalidUrl extends CustomError {
         super(`Invalid URL for ${filed}`);
     }
 }
+
+export class ErrorMAPClassInstance extends CustomError {
+    constructor() {
+        super(`Error making instance of MAP class, use static fields`);
+    }
+}

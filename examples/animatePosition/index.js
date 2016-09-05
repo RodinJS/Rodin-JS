@@ -1,11 +1,14 @@
 import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
+import {ANIMATION_TYPES} from '../../_build/js/rodinjs/constants.js';
+import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 
 WTF.is(RODIN);
 
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
+import * as GUI from '../../node_modules/dat-gui/index.js';
 
 WTF.is('Rodin.JS v0.0.1');
 
@@ -84,28 +87,16 @@ scene.add(light2);
 var amlight = new THREE.AmbientLight(0x222222);
 scene.add(amlight);
 
-function randomInRange(min, max) {
-    return Math.random() * (max - min) + min;
-}
-
-let cubesCount = 500;
-for(let i = 0; i < cubesCount; i ++) {
-    let cardboard = new CardboardObject();
-    cardboard.on('ready', () => {
-        cardboard.object3D.position.x = randomInRange(-5, 5);
-        cardboard.object3D.position.y = randomInRange(0 , 10);
-        cardboard.object3D.position.z = randomInRange(-5 ,5);
-        cardboard.object3D.rotation.y = randomInRange(0, 2 * Math.PI);
-        cardboard.object3D.scale.set(0.002, 0.002, 0.002);
-        scene.add(cardboard.object3D);
-    });
-
-    cardboard.on('update', () => {
-        cardboard.object3D && (cardboard.object3D.rotation.y += 0.01);
-    });
-}
+let cardboard = new CardboardObject();
+cardboard.on('ready', () => {
+    cardboard.object3D.position.x = -3;
+    cardboard.object3D.position.z = -5;
+    cardboard.object3D.scale.set(0.01, 0.01, 0.01);
+    scene.add(cardboard.object3D);
+});
 
 requestAnimationFrame(animate);
+generateGUI();
 
 window.addEventListener('resize', onResize, true);
 window.addEventListener('vrdisplaypresentchange', onResize, true);
@@ -118,6 +109,7 @@ function animate(timestamp) {
     controls.update();
     manager.render(scene, camera, timestamp);
     RODIN.Objects.map( obj => obj.emit('update', new RODIN.Event(obj)));
+    TWEEN.update();
     requestAnimationFrame(animate);
 }
 
@@ -151,5 +143,39 @@ function setStageDimensions(stage) {
 
     skybox.position.y = boxSize / 2;
     scene.add(skybox);
+}
 
+function generateGUI() {
+
+    var FizzyText = function() {
+        this.x = -3;
+        this.y = 0;
+        this.z = -5;
+        this.duration = 3000;
+        this.start = function () {
+            cardboard && cardboard.object3D && cardboard.animate(
+                {
+                    duration: this.duration,
+                    to: new THREE.Vector3(this.x, this.y, this.z),
+                    property: ANIMATION_TYPES.POSITION
+                }
+            )
+        }
+    };
+
+    let text = new FizzyText();
+
+    let gui = new GUI.GUI();
+    let events = 'click  mousedown';
+    events.split(' ').map( e =>
+        gui.domElement.addEventListener(e, (evt) => {
+            evt.stopPropagation();
+        })
+    );
+
+    gui.add(text, 'x', -5, 5);
+    gui.add(text, 'y', -5, 5);
+    gui.add(text, 'z', -5, 5);
+    gui.add(text, 'duration', 1, 20000);
+    gui.add(text, 'start');
 }

@@ -24,8 +24,22 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 
 // Apply VR headset positional data to camera.
-var controls = new THREE.VRControls(camera);
-controls.standing = true;
+ var controls = new THREE.VRControls(camera);
+ controls.standing = true;
+
+/*
+var controls = new RODIN.MobileCameraControls(
+    scene,
+    camera,
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(0, 0, -0.01),
+    renderer.domElement,
+    true
+);
+//controls.standing = true;
+controls.userHeight = 1.6;
+controls.object.position.y = controls.userHeight;
+*/
 
 // Apply VR stereo rendering to renderer.
 var effect = new THREE.VREffect(renderer);
@@ -34,14 +48,12 @@ effect.setSize(window.innerWidth, window.innerHeight);
 
 // Add a skybox.
 var boxSize = 15;
-
 var skybox = new RODIN.CubeObject(boxSize, 'img/boxW.png')
 
 skybox.on('ready', () => {
     scene.add(skybox.object3D);
-    skybox.object3D.position.y = 0 + controls.userHeight;
+    skybox.object3D.position.y = controls.userHeight;
 });
-
 
 
 // For high end VR devices like Vive and Oculus, take into account the stage
@@ -57,7 +69,7 @@ var params = {
 var manager = new WebVRManager(renderer, effect, params);
 
 // Create 3D objects.
-var boxCount = 1000;
+var boxCount = 100;
 var particleBoxSize = 0.015;
 var geometry = new THREE.BoxGeometry(particleBoxSize, particleBoxSize, particleBoxSize);
 var material = new THREE.MeshNormalMaterial();

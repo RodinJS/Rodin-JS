@@ -3,7 +3,6 @@ import * as THREE from '../../three/Three.custom.js';
 import {OrbitControls} from '../OrbitControls.js';
 import {MobileDeviceOrientationControls} from './MobileDeviceOrientationControls.js';
 
-let instance = null;
 
 export class MobileCameraControls {
     /**
@@ -18,12 +17,8 @@ export class MobileCameraControls {
      * @param {Boolean} withOrientation - The withOrientation value.
      */
     constructor(scene, camera, position, offset, domElement, withOrientation) {
-        if(!instance){
-            instance = this;
-        }
 
         let cameraStand = new THREE.Object3D();
-
         this.object = cameraStand;
 
         this.horizontalPivot = new THREE.PerspectiveCamera(camera.fov, camera.aspect, camera.near, camera.far);
@@ -63,12 +58,7 @@ export class MobileCameraControls {
         this.dragControlHorizontal.enableZoom = false;
 
         window.addEventListener('deviceorientation', (e) => this.setOrientationControls(e), true);
-
-
         camera.updateMatrixWorld();
-
-        return instance;
-
     }
 
     setOrientationControls(e) {
@@ -76,13 +66,10 @@ export class MobileCameraControls {
             return;
         }
         this.object.rotation.y = Math.PI;
-            // alert("if - wow");
         this.orientationControl = new MobileDeviceOrientationControls(this.verticalPivot);
-        // alert("wow");
         this.orientationControl.connect();
         this.orientationControl.update();
         window.removeEventListener('deviceorientation', (e) => this.setOrientationControls(e), true);
-        // alert("wow2");
     }
     /**
      * Enable Draging by enabling dragControlVertical and dragControlHorizontal.
