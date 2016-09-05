@@ -3,6 +3,7 @@ import { WTF } from '../logger/Logger.js';
 import { Objects } from '../objects.js';
 
 export class Sculpt {
+     static myStaticProp = 21;
     constructor() {
         /**
          * private properties
@@ -320,7 +321,7 @@ export class Sculpt {
 
         let object = this.object;
         function updateCallback() {
-            var t = this.t; //check
+            var t = this.t;
 
             object.position.y = r * Math.cos(t);
             object.position.x = r * Math.sin(t);

@@ -65,13 +65,13 @@ const AUTOPREFIXER_BROWSERS = [
 ];
 
 const UGLIFY_AGRESIVE = {
+    // conditionals  : true,  // optimize if-s and conditional expressions
+    // comparisons   : true,  // optimize comparisons
+    // evaluate      : true,  // evaluate constant expressions
+    // booleans      : true  // optimize boolean expressions
     preserveComments: 'license',
     mangle: true,
-    compress: true,
-    conditionals  : true,  // optimize if-s and conditional expressions
-    comparisons   : true,  // optimize comparisons
-    evaluate      : true,  // evaluate constant expressions
-    booleans      : true  // optimize boolean expressions
+    compress: true
 };
 
 const SIZE_OPTIONS = {
