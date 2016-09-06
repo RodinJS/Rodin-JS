@@ -8,4 +8,12 @@ export class Animation {
     start() {
 
     }
+
+    stop() {
+
+    }
+
+    pause() {
+
+    }
 }

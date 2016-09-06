@@ -41,7 +41,6 @@ export class EVENT_NAMES extends PARAMS {
     static CLICK = 'click';
     static RIGHT_CLICK = 'rightclick';
 
-
     static STEREO_HOVER = 'stereohover';
     static STEREO_HOVER_OUT = 'stereohoverout';
     static STEREO_MOUSE_DOWN = 'stereomousedown';
