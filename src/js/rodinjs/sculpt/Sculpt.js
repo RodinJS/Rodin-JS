@@ -10,7 +10,7 @@ export class Sculpt {
         if (new.target == Sculpt) {
             throw new ErrorAbstractClassInstance();
         }
-        /**
+        /**git
          * private properties
          */
 
