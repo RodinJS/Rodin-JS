@@ -52,16 +52,16 @@ var controller1 = new THREE.ViveController( 0 );
 controller1.standingMatrix = controls.getStandingMatrix();
 controller1.addEventListener( 'triggerdown', onTriggerDown );
 controller1.addEventListener( 'triggerup', onTriggerUp );
-/*controller1.addEventListener( 'thumbpaddown', onTumbpadDown );
-controller1.addEventListener( 'thumbpadup', onTumbpadUp );*/
+controller1.addEventListener( 'thumbpadtouchdown', onTumbpadTouchDown );
+controller1.addEventListener( 'thumbpadtouchup', onTumbpadTouchUp );
 scene.add( controller1 );
 
 var controller2 = new THREE.ViveController( 1 );
 controller2.standingMatrix = controls.getStandingMatrix();
 controller2.addEventListener( 'triggerdown', onTriggerDown );
 controller2.addEventListener( 'triggerup', onTriggerUp );
-/*controller2.addEventListener( 'thumbpaddown', onTumbpadDown );
-controller2.addEventListener( 'thumbpadup', onTumbpadUp );*/
+controller2.addEventListener( 'thumbpadtouchdown', onTumbpadTouchDown );
+controller2.addEventListener( 'thumbpadtouchup', onTumbpadTouchUp );
 scene.add( controller2 );
 
 var loader = new THREE.OBJLoader();
@@ -296,7 +296,7 @@ function onTriggerUp( event ) {
 
 }
 
-function onTumbpadDown(event) {
+function onTumbpadTouchDown(event) {
 
     var controller = event.target;
 
@@ -320,7 +320,7 @@ function onTumbpadDown(event) {
 
 }
 
-function onTumbpadUp(event) {
+function onTumbpadTouchUp(event) {
 
     var controller = event.target;
 

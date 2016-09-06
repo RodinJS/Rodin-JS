@@ -16,6 +16,7 @@ THREE.ViveController = function ( id ) {
 
     var axes = [ 0, 0 ];
     var thumbpadIsPressed = false;
+    var thumbpadIsTouched = false;
     var triggerIsPressed = false;
     var gripsArePressed = false;
     var menuIsPressed = false;
@@ -55,6 +56,7 @@ THREE.ViveController = function ( id ) {
     this.getButtonState = function ( button ) {
 
         if ( button === 'thumbpad' ) return thumbpadIsPressed;
+        //if ( button === 'thumbpad' ) return thumbpadIsTouched;
         if ( button === 'trigger' ) return triggerIsPressed;
         if ( button === 'grips' ) return gripsArePressed;
         if ( button === 'menu' ) return menuIsPressed;
@@ -88,10 +90,19 @@ THREE.ViveController = function ( id ) {
 
             }
 
+            //
+
             if ( thumbpadIsPressed !== gamepad.buttons[ 0 ].pressed ) {
 
                 thumbpadIsPressed = gamepad.buttons[ 0 ].pressed;
                 scope.dispatchEvent( { type: thumbpadIsPressed ? 'thumbpaddown' : 'thumbpadup' } );
+
+            }
+            if ( thumbpadIsTouched !== gamepad.buttons[ 0 ].touched ) {
+                /*console.log(gamepad, gamepad.buttons[ 0 ].touched, navigator);
+                navigator.vibrate([1000]);*/
+                thumbpadIsTouched = gamepad.buttons[ 0 ].touched;
+                scope.dispatchEvent( { type: thumbpadIsTouched ? 'thumbpadtouchdown' : 'thumbpadtouchup' } );
 
             }
 
