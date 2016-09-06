@@ -34,7 +34,6 @@ export class EVENT_NAMES extends PARAMS {
 
     static HOVER = 'hover';
     static HOVER_OUT = 'hoverout';
-
     static MOUSE_DOWN = 'mousedown';
     static MOUSE_UP = 'mouseup';
     static MOUSE_ENTER = 'mouseeter';
@@ -42,6 +41,9 @@ export class EVENT_NAMES extends PARAMS {
     static CLICK = 'click';
     static RIGHT_CLICK = 'rightclick';
 
+
+    static STEREO_HOVER = 'stereohover';
+    static STEREO_HOVER_OUT = 'stereohoverout';
     static STEREO_MOUSE_DOWN = 'stereomousedown';
     static STEREO_MOUSE_UP = 'stereomouseup';
     static STEREO_CLICK = 'stereoclick';
@@ -49,4 +51,7 @@ export class EVENT_NAMES extends PARAMS {
     static TOUCH_START = 'touchstart';
     static TOUCH_END = 'touchend';
     static TAP = 'tap';
+
+    static CONTROLLER_HOVER = 'controllerhover';
+    static CONTROLLER_HOVER_OUT = 'controllerhoverout';
 }
