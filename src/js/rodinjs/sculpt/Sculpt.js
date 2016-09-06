@@ -112,7 +112,7 @@ export class Sculpt {
         });
 
         /**
-         * CONTROLLER ACTIONS
+         * CONTROLLER KEY ACTIONS
          *
          * same MOUSE ACTIONS logic
          */
@@ -123,6 +123,22 @@ export class Sculpt {
         this.on(EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
             if (Date.now() - keyDownStartTime[evt.keyCode] < 300) {
                 this.emit(EVENT_NAMES.CONTROLLER_CLICK, evt);
+            }
+            keyDownStartTime[evt.keyCode] = 0;
+        });
+
+        /**
+         * CONTROLLER TOUCH ACTIONS
+         *
+         * same MOUSE ACTIONS logic
+         */
+        this.on(EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
+            keyDownStartTime[evt.keyCode] = Date.now();
+        });
+
+        this.on(EVENT_NAMES.CONTROLLER_TOUCH_END, (evt) => {
+            if (Date.now() - keyDownStartTime[evt.keyCode] < 300) {
+                this.emit(EVENT_NAMES.CONTROLLER_TAP, evt);
             }
             keyDownStartTime[evt.keyCode] = 0;
         });

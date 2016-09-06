@@ -8,7 +8,7 @@ export class Event {
 	 * @param keyCode
 	 * @constructor
 	 */
-	constructor (target, domEvent, keyCode) {
+	constructor (target, domEvent = null, keyCode = null) {
 	    this.target = target;
 	    this.domEvent = domEvent;
 		this.keyCode = keyCode;

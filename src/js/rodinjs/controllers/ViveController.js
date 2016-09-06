@@ -1,141 +1,113 @@
-/**
- * Created by Knox on 9/2/2016.
- */
-/**
- * @author mrdoob / http://mrdoob.com
- * @author stewdio / http://stewd.io
- */
+import {THREE} from '../../three/THREE.GLOBAL.js';
+import {Controller} from './ViveControllerDef.js';
+import {EVENT_NAMES} from '../constants/constants.js';
+import {Event} from '../Event.js';
+import {Raycaster} from '../raycaster/Raycaster.js'
 
-//TODO to ES6
-THREE.ViveController = function ( id ) {
+export class ViveController extends Controller {
+    constructor(id) {
+        super(id);
 
-    THREE.Object3D.call( this );
+        this.addEventListener('triggerdown', this.onTriggerDown);
+        this.addEventListener('triggerup', this.onTriggerUp);
+        this.addEventListener('thumbpaddown', this.onTumbpadDown);
+        this.addEventListener('thumbpadup', this.onTumbpadUp);
+        this.addEventListener('thumbpadtouchdown', this.onTumbpadTouchDown);
+        this.addEventListener('thumbpadtouchup', this.onTumbpadTouchUp);
 
-    var scope = this;
-    var gamepad;
-
-    var axes = [ 0, 0 ];
-    var thumbpadIsPressed = false;
-    var thumbpadIsTouched = false;
-    var triggerIsPressed = false;
-    var gripsArePressed = false;
-    var menuIsPressed = false;
-
-    function findGamepad( id ) {
-
-        // Iterate across gamepads as Vive Controllers may not be
-        // in position 0 and 1.
-
-        var gamepads = navigator.getGamepads();
-
-        for ( var i = 0, j = 0; i < 4; i ++ ) {
-
-            var gamepad = gamepads[ i ];
-
-            if ( gamepad && gamepad.id === 'OpenVR Gamepad' ) {
-
-                if ( j === id ) return gamepad;
-
-                j ++;
-
-            }
-
-        }
-
+        this.tempMatrix = new THREE.Matrix4();
+        this.raycaster = new Raycaster();
+        this.intersected = [];
     }
 
-    this.matrixAutoUpdate = false;
-    this.standingMatrix = new THREE.Matrix4();
+    setRaycasterScene(scene) {
+        this.raycaster.setScene(scene);
+    }
 
-    this.getGamepad = function () {
+    getIntersections() {
+        this.tempMatrix.identity().extractRotation(this.matrixWorld);
+        this.raycaster.ray.origin.setFromMatrixPosition(this.matrixWorld);
+        this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+        return this.raycaster.raycast();
+    }
 
-        return gamepad;
+    intersectObjects() {
+        if (this.userData.selected !== undefined) return;
+        let line = this.getObjectByName('line');
+        let intersections = this.getIntersections(this);
 
-    };
+        if (intersections.length > 0) {
+            this.intersected.map(i => {
+                let found = false;
+                for (let i in intersections) {
+                    if (intersections[i].object.Sculpt === i)
+                        found = true;
+                }
+                if (!found) {
+                    i.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT);
+                }
+            });
 
-    this.getButtonState = function ( button ) {
-
-        if ( button === 'thumbpad' ) return thumbpadIsPressed;
-        //if ( button === 'thumbpad' ) return thumbpadIsTouched;
-        if ( button === 'trigger' ) return triggerIsPressed;
-        if ( button === 'grips' ) return gripsArePressed;
-        if ( button === 'menu' ) return menuIsPressed;
-
-    };
-
-    this.update = function () {
-
-        gamepad = findGamepad( id );
-
-        if ( gamepad !== undefined && gamepad.pose !== null ) {
-
-            //  Position and orientation.
-
-            var pose = gamepad.pose;
-
-            if ( pose.position !== null ) scope.position.fromArray( pose.position );
-            if ( pose.orientation !== null ) scope.quaternion.fromArray( pose.orientation );
-            scope.matrix.compose( scope.position, scope.quaternion, scope.scale );
-            scope.matrix.multiplyMatrices( scope.standingMatrix, scope.matrix );
-            scope.matrixWorldNeedsUpdate = true;
-            scope.visible = true;
-
-            //  Thumbpad and Buttons.
-
-            if ( axes[ 0 ] !== gamepad.axes[ 0 ] || axes[ 1 ] !== gamepad.axes[ 1 ] ) {
-
-                axes[ 0 ] = gamepad.axes[ 0 ]; //  X axis: -1 = Left, +1 = Right.
-                axes[ 1 ] = gamepad.axes[ 1 ]; //  Y axis: -1 = Bottom, +1 = Top.
-                scope.dispatchEvent( { type: 'axischanged', axes: axes } );
-
-            }
-
-            //
-
-            if ( thumbpadIsPressed !== gamepad.buttons[ 0 ].pressed ) {
-
-                thumbpadIsPressed = gamepad.buttons[ 0 ].pressed;
-                scope.dispatchEvent( { type: thumbpadIsPressed ? 'thumbpaddown' : 'thumbpadup' } );
-
-            }
-            if ( thumbpadIsTouched !== gamepad.buttons[ 0 ].touched ) {
-                /*console.log(gamepad, gamepad.buttons[ 0 ].touched, navigator);
-                navigator.vibrate([1000]);*/
-                thumbpadIsTouched = gamepad.buttons[ 0 ].touched;
-                scope.dispatchEvent( { type: thumbpadIsTouched ? 'thumbpadtouchdown' : 'thumbpadtouchup' } );
-
-            }
-
-            if ( triggerIsPressed !== gamepad.buttons[ 1 ].pressed ) {
-
-                triggerIsPressed = gamepad.buttons[ 1 ].pressed;
-                scope.dispatchEvent( { type: triggerIsPressed ? 'triggerdown' : 'triggerup' } );
-
-            }
-
-            if ( gripsArePressed !== gamepad.buttons[ 2 ].pressed ) {
-
-                gripsArePressed = gamepad.buttons[ 2 ].pressed;
-                scope.dispatchEvent( { type: gripsArePressed ? 'gripsdown' : 'gripsup' } );
-
-            }
-
-            if ( menuIsPressed !== gamepad.buttons[ 3 ].pressed ) {
-
-                menuIsPressed = gamepad.buttons[ 3 ].pressed;
-                scope.dispatchEvent( { type: menuIsPressed ? 'menudown' : 'menuup' } );
-
-            }
-
+            this.intersected = [];
+            intersections.map(intersect => {
+                intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, new Event(intersect.object.Sculpt));
+                this.intersected.push(intersect.object.Sculpt);
+            });
         } else {
-
-            scope.visible = false;
-
+            line.scale.z = 5;
         }
+    }
 
-    };
+    onTriggerDown(event) {
+        var intersections = this.getIntersections();
 
-};
+        if (intersections.length > 0) {
+            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_KEY_DOWN, new Event(i.object.Sculpt, event, 1)));
+        }
+    }
 
-THREE.ViveController.prototype = Object.create( THREE.Object3D.prototype );
-THREE.ViveController.prototype.constructor = THREE.ViveController;
+    onTriggerUp(event) {
+        var intersections = this.getIntersections();
+
+        if (intersections.length > 0) {
+            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_KEY_UP, new Event(i.object.Sculpt, event, 1)));
+        }
+    }
+
+    onTumbpadDown(event) {
+        var intersections = this.getIntersections();
+
+        if (intersections.length > 0) {
+            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_KEY_DOWN, new Event(i.object.Sculpt, event, 2)));
+        }
+    }
+
+    onTumbpadUp(event) {
+        var intersections = this.getIntersections();
+
+        if (intersections.length > 0) {
+            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_KEY_UP, new Event(i.object.Sculpt, event, 2)));
+        }
+    }
+
+    onTumbpadTouchDown(event) {
+        var intersections = this.getIntersections();
+
+        if (intersections.length > 0) {
+            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_TOUCH_START, new Event(i.object.Sculpt, event, 1)));
+        }
+    }
+
+    onTumbpadTouchUp(event) {
+        var intersections = this.getIntersections();
+
+        if (intersections.length > 0) {
+            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_TOUCH_END, new Event(i.object.Sculpt, event, 1)));
+        }
+    }
+
+    updateController() {
+        this.update();
+        this.intersectObjects();
+    }
+}
