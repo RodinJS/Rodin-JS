@@ -1,27 +1,4 @@
-'use strict';
-
-import { ErrorMAPClassInstance } from './error/CustomErrors.js';
-
-/**
- * env variables
- */
-export const env_mode = "development";
-
-class PARAMS {
-    constructor() {
-        throw new ErrorMAPClassInstance();
-    }
-}
-
-export class ANIMATION_TYPES extends PARAMS {
-    constructor() {
-        super();
-    }
-
-    static SCALE = 'scale';
-    static POSITION = 'position';
-    static ROTATION = 'rotation';
-}
+import {PARAMS} from './Params.js';
 
 export class EVENT_NAMES extends PARAMS {
     constructor() {
@@ -52,11 +29,11 @@ export class EVENT_NAMES extends PARAMS {
 
     static CONTROLLER_HOVER = 'controllerhover';
     static CONTROLLER_HOVER_OUT = 'controllerhoverout';
-    
+
     static CONTROLLER_KEY_DOWN = 'controllerkeydown';
     static CONTROLLER_KEY_UP = 'controllerkeyup';
     static CONTROLLER_CLICK = 'controllerclick';
-    
+
     static CONTROLLER_TOUCH_START = 'controllertouchstart';
     static CONTROLLER_TOUCH_END = 'controllertouchend';
     static CONTROLLER_TAP = 'controllertap';

@@ -1,5 +1,5 @@
 'use strict';
-import * as CONSTANTS from './constants.js';
+import * as CONSTANTS from './constants/constants.js';
 
 export { WTF } from './logger/Logger.js';
 

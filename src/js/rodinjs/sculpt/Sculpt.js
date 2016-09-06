@@ -1,9 +1,9 @@
 import {THREE} from '../../three/THREE.GLOBAL.js';
 import {WTF} from '../logger/Logger.js';
 import {Objects} from '../objects.js';
-import {ANIMATION_TYPES} from '../constants.js';
+import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
-import {EVENT_NAMES} from '../constants.js';
+import {EVENT_NAMES} from '../constants/constants.js';
 
 export class Sculpt {
     constructor(id) {

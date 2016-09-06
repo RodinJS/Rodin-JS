@@ -1,7 +1,6 @@
 import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
-import {ANIMATION_TYPES} from '../../_build/js/rodinjs/constants.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 
 WTF.is(RODIN);
@@ -157,7 +156,7 @@ function generateGUI() {
                 {
                     duration: this.duration,
                     to: new THREE.Vector3(this.x, this.y, this.z),
-                    property: ANIMATION_TYPES.SCALE
+                    property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE
                 }
             )
         }
