@@ -3,7 +3,8 @@ import {WTF} from '../logger/Logger.js';
 import {Objects} from '../objects.js';
 import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
-import {EVENT_NAMES} from '../constants/constants.js';
+import {EVENT_NAMES, KEY_CODES} from '../constants/constants.js';
+
 
 export class Sculpt {
     constructor(id) {
@@ -44,6 +45,7 @@ export class Sculpt {
         this.touchY = 0;
 
         let touchStartTime = 0;
+        let keyDownStartTime = {};
 
         this.style = {
             cursor: "default"
@@ -107,6 +109,22 @@ export class Sculpt {
                 this.emit(EVENT_NAMES.STEREO_CLICK, evt);
             }
             touchStartTime = 0;
+        });
+
+        /**
+         * CONTROLLER ACTIONS
+         *
+         * same MOUSE ACTIONS logic
+         */
+        this.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+            keyDownStartTime[evt.keyCode] = Date.now();
+        });
+
+        this.on(EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
+            if (Date.now() - keyDownStartTime[evt.keyCode] < 300) {
+                this.emit(EVENT_NAMES.CONTROLLER_CLICK, evt);
+            }
+            keyDownStartTime[evt.keyCode] = 0;
         });
 
         /**
