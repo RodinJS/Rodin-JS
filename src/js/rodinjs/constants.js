@@ -23,7 +23,6 @@ export class ANIMATION_TYPES extends PARAMS {
     static ROTATION = 'rotation';
 }
 
-
 export class EVENT_NAMES extends PARAMS {
     constructor() {
         super();

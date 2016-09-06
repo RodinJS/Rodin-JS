@@ -3,18 +3,14 @@
 export class Event {
 	/**
 	 * Event Class
-	 * @param target
-	 * @param {HTMLElement} domEvent
-	 * @param {THREE.PerspectiveCamera} camera
-	 * @param contols
-	 * @param custormData
+	 * @param {Sculpt} target
+	 * @param {DOMEvent} domEvent
 	 * @constructor
 	 */
-	constructor (target, domEvent, camera, contols, custormData) {
+	constructor (target, domEvent) {
 	    this.target = target;
 	    this.domEvent = domEvent;
-	    this.camera = camera;
-	    this.controls = contols;
-	    this.customData = custormData;
+
+		this.timeStamp = Date.now();
 	}
 }

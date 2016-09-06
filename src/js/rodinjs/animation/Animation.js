@@ -1,8 +1,8 @@
 import {TWEEN} from '../Tween.js';
 
 export class Animation {
-    constructor() {
-
+    constructor(animationParams) {
+        let duration = animationParams.duration;
     }
 
     start() {
