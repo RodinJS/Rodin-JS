@@ -1,4 +1,10 @@
 export class Timeout {
+    /**
+     *
+     * @param {Function} cb
+     * @param {number} delay
+     * @param {boolean} autorun
+     */
     constructor(cb = function(){}, delay = 1000, autorun = false) {
         this.timer = null;
         this.run = false;
@@ -22,6 +28,9 @@ export class Timeout {
         }, this.delay);
     }
 
+    /**
+     * Start timer
+     */
     start() {
         if(this.run){
             console.warn("Timer already is running!");
@@ -31,11 +40,14 @@ export class Timeout {
         }
     }
 
+    /**
+     * Stop timer
+     */
     stop() {
         this.run = false;
     }
 
-    isRunning() {
+    get running() {
         return this.run;
     }
 }
