@@ -1,5 +1,5 @@
 export const env_mode = "development";
 
-export {ANIMATION_TYPES} from './AnimationTypes.js';
-export {EVENT_NAMES} from './EventNames.js';
-export {KEY_CODES} from './KeyCodes.js';
+export * as ANIMATION_TYPES from './AnimationTypes.js';
+export * as EVENT_NAMES from './EventNames.js';
+export * as KEY_CODES from './KeyCodes.js';
