@@ -5,6 +5,14 @@ import {Event} from '../Event.js';
 import {Raycaster} from '../raycaster/Raycaster.js'
 
 export class ViveController extends Controller {
+
+    /**
+     * Controllers event
+     *
+     * @param {number} id controller id, can be 0 or 1, for left and right hands
+     *
+     */
+
     constructor(id) {
         super(id);
 
@@ -34,7 +42,7 @@ export class ViveController extends Controller {
     intersectObjects() {
         if (this.userData.selected !== undefined) return;
         let line = this.getObjectByName('line');
-        let intersections = this.getIntersections(this);
+        let intersections = this.getIntersections();
 
         if (intersections.length > 0) {
             this.intersected.map(i => {
@@ -58,52 +66,45 @@ export class ViveController extends Controller {
         }
     }
 
-    onTriggerDown(event) {
+    /**
+     * Controllers event
+     *
+     * @param {string} eventName name of event from controller
+     * @param {number} keyCode controller buttons key code
+     * @param {Event} DOMEvent
+     *
+     */
+
+    raycastAndEmitEvent(eventName, keyCode, DOMEvent) {
         var intersections = this.getIntersections();
 
         if (intersections.length > 0) {
-            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_KEY_DOWN, new Event(i.object.Sculpt, event, 1)));
+            intersections.map(i => i.object.Sculpt.emit(eventName, new Event(i.object.Sculpt, DOMEvent, keyCode)));
         }
+    }
+
+    onTriggerDown(event) {
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_DOWN, 1, event );
     }
 
     onTriggerUp(event) {
-        var intersections = this.getIntersections();
-
-        if (intersections.length > 0) {
-            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_KEY_UP, new Event(i.object.Sculpt, event, 1)));
-        }
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_UP, 1, event );
     }
 
     onTumbpadDown(event) {
-        var intersections = this.getIntersections();
-
-        if (intersections.length > 0) {
-            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_KEY_DOWN, new Event(i.object.Sculpt, event, 2)));
-        }
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_DOWN, 2, event );
     }
 
     onTumbpadUp(event) {
-        var intersections = this.getIntersections();
-
-        if (intersections.length > 0) {
-            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_KEY_UP, new Event(i.object.Sculpt, event, 2)));
-        }
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_UP, 2, event );
     }
 
     onTumbpadTouchDown(event) {
-        var intersections = this.getIntersections();
-
-        if (intersections.length > 0) {
-            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_TOUCH_START, new Event(i.object.Sculpt, event, 1)));
-        }
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_TOUCH_START, 1, event );
     }
 
     onTumbpadTouchUp(event) {
-        var intersections = this.getIntersections();
-
-        if (intersections.length > 0) {
-            intersections.map(i => i.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_TOUCH_END, new Event(i.object.Sculpt, event, 1)));
-        }
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_TOUCH_END, 1, event );
     }
 
     updateController() {

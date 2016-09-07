@@ -47,37 +47,10 @@ var tempMatrix = new THREE.Matrix4();
 
 // controllers
 
-var controller1 = new RODIN.ViveController(0);
-controller1.standingMatrix = controls.getStandingMatrix();
-controller1.setRaycasterScene(scene);
-scene.add( controller1 );
-
-var loader = new THREE.OBJLoader();
-loader.setPath( './object/' );
-loader.load( 'vr_controller_vive_1_5.obj', function ( object ) {
-
-    var loader = new THREE.TextureLoader();
-    loader.setPath( './img/' );
-
-    var controller = object.children[ 0 ];
-    controller.material.map = loader.load( 'onepointfive_texture.png' );
-    controller.material.specularMap = loader.load( 'onepointfive_spec.png' );
-
-    controller1.add( object.clone() );
-
-} );
-
-//
-
-var geometry = new THREE.Geometry();
-geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
-geometry.vertices.push( new THREE.Vector3( 0, 0, - 1 ) );
-
-var line = new THREE.Line( geometry );
-line.name = 'line';
-line.scale.z = 5;
-
-controller1.add( line.clone() );
+var controller = new RODIN.OculusController();
+controller.setRaycasterScene(scene);
+controller.setRaycasterCamera(camera);
+// scene.add( controller1 );
 
 raycaster = new RODIN.Raycaster( scene );
 
@@ -173,99 +146,16 @@ for ( var i = 0; i < 50; i ++ ) {
     // CONTROLLER_KEY
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-
-        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
-
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_KEY_DOWN");
-
-            obj.object3D.material.emissive.g = 0;
-
-        }
-        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
-
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_KEY_DOWN");
-
-            obj.object3D.material.emissive.b = 0;
-
-        }
+        console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN + " Event, KeyCode " + evt.keyCode);
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
-
-        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
-
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_KEY_UP");
-
-            obj.object3D.material.emissive.g = 1;
-        }
-
-        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
-
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_KEY_UP");
-
-            obj.object3D.material.emissive.b = 1;
-        }
+        console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP + " Event, KeyCode " + evt.keyCode);
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {
-
-        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
-
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_CLICK");
-
-        }
-
-        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
-
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_CLICK");
-
-        }
+        console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK + " Event, KeyCode " + evt.keyCode);
     });
-
-    // Controller touch
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
-
-        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
-
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_TOUCH_START");
-
-            obj.object3D.material.emissive.g = 0;
-
-        }
-
-    });
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, (evt) => {
-
-        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
-
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_TOUCH_END");
-
-            obj.object3D.material.emissive.g = 1;
-        }
-
-    });
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt) => {
-
-        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
-
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_TAP");
-
-        }
-
-    });
-
 }
 
 requestAnimationFrame(animate);
@@ -283,10 +173,11 @@ function animate() {
 
 function render() {
 
-    controller1.updateController();
+    controller.update();
     controls.update();
 
     let btns = navigator.getGamepads()[0].buttons;
+    
     effect.render( scene, camera );
 }
 
