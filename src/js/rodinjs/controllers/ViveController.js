@@ -1,6 +1,6 @@
 import {THREE} from '../../three/THREE.GLOBAL.js';
 import {Controller} from './ViveControllerDef.js';
-import {EVENT_NAMES} from '../constants/constants.js';
+import {EVENT_NAMES, KEY_CODES} from '../constants/constants.js';
 import {Event} from '../Event.js';
 import {Raycaster} from '../raycaster/Raycaster.js'
 
@@ -8,9 +8,7 @@ export class ViveController extends Controller {
 
     /**
      * Controllers event
-     *
      * @param {number} id controller id, can be 0 or 1, for left and right hands
-     *
      */
 
     constructor(id) {
@@ -84,27 +82,27 @@ export class ViveController extends Controller {
     }
 
     onTriggerDown(event) {
-        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_DOWN, 1, event );
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_DOWN, KEY_CODES.KEY1, event );
     }
 
     onTriggerUp(event) {
-        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_UP, 1, event );
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_UP, KEY_CODES.KEY1, event );
     }
 
     onTumbpadDown(event) {
-        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_DOWN, 2, event );
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_DOWN, KEY_CODES.KEY2, event );
     }
 
     onTumbpadUp(event) {
-        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_UP, 2, event );
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_KEY_UP, KEY_CODES.KEY2, event );
     }
 
     onTumbpadTouchDown(event) {
-        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_TOUCH_START, 1, event );
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_TOUCH_START, KEY_CODES.KEY1, event );
     }
 
     onTumbpadTouchUp(event) {
-        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_TOUCH_END, 1, event );
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_TOUCH_END, KEY_CODES.KEY1, event );
     }
 
     updateController() {
