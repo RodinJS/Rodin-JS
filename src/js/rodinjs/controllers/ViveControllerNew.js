@@ -1,25 +1,32 @@
-import {Raycaster} from '../raycaster/Raycaster.js';
+import {THREE} from '../../three/THREE.GLOBAL.js';
 import {EVENT_NAMES, KEY_CODES} from '../constants/constants.js';
 import {Event} from '../Event.js';
+import {Raycaster} from '../raycaster/Raycaster.js'
 
-export class OculusController {
+
+export class ViveController extends THREE.Object3D {
     constructor() {
-        if(!OculusController.getController()) {
+        if(!ViveController.getController()) {
             console.warn('Controller not found');
         }
 
-        this.buttonsPressed = [false, false, false, false, false, false];
+        super();
+
+        this.buttonsPressed = [false, false, false, false];
+        this.buttonsTouched = [false, false, false, false];
         this.raycaster = new Raycaster();
-        this.camera = null;
+        //this.camera = null;
         this.intersected = [];
+        this.tempMatrix = new THREE.Matrix4();
+
+        this.matrixAutoUpdate = false;
+        this.standingMatrix = new THREE.Matrix4();
 
         this.buttons = [
             KEY_CODES.KEY1,
             KEY_CODES.KEY2,
             KEY_CODES.KEY3,
-            KEY_CODES.KEY4,
-            KEY_CODES.KEY5,
-            KEY_CODES.KEY6
+            KEY_CODES.KEY4
         ];
     }
 
@@ -27,7 +34,7 @@ export class OculusController {
         let controllers = navigator.getGamepads();
         for(let i = 0; i < controllers.length; i ++) {
             let controller = controllers[i];
-            if(controller && controller.id && controller.id.match(/oculus/gi)) {
+            if(controller && controller.id && controller.id.match(/OpenVR/gi)) {
                 return controller;
             }
         }
@@ -36,32 +43,52 @@ export class OculusController {
     }
 
     update() {
-        let controller = OculusController.getController();
+        let controller = ViveController.getController();
         if (!controller) {
             console.warn('Controller not found');
             return;
         }
-
+        
         for (let i = 0; i < controller.buttons.length; i++) {
             if (this.buttonsPressed[i] !== controller.buttons[i].pressed) {
                 controller.buttons[i].pressed ? this.onKeyDown(this.buttons[i]) : this.onKeyUp(this.buttons[i]);
                 this.buttonsPressed[i] = controller.buttons[i].pressed;
+                /*console.log("btn pressed - " + this.buttonsPressed[i] );
+                console.log("btn i - " + controller.buttons[i] );*/
+            }
+
+            if (this.buttonsTouched !== controller.buttons[i].touched) {
+                controller.buttons[i].touched ? this.onTouchDown(this.buttons[i]) : this.onTouchUp(this.buttons[i]);
+                this.buttonsTouched = controller.buttons[i].touched;
+                //console.log("btn touched - " + this.buttonsTouched );
             }
         }
 
         this.intersectObjects();
+        this.updateObject(controller);
+    }
+
+    updateObject(controller) {
+        if(controller.pose !== null) {
+            var pose = controller.pose;
+
+            if ( pose.position !== null ) this.position.fromArray( pose.position );
+            if ( pose.orientation !== null ) this.quaternion.fromArray( pose.orientation );
+            this.matrix.compose( this.position, this.quaternion, this.scale );
+            this.matrix.multiplyMatrices( this.standingMatrix, this.matrix );
+            this.matrixWorldNeedsUpdate = true;
+            this.visible = true;
+        }
     }
 
     setRaycasterScene(scene) {
         this.raycaster.setScene(scene);
     }
 
-    setRaycasterCamera(camera) {
-        this.camera = camera;
-    }
-
     getIntersections(){
-        this.raycaster.set(this.camera.getWorldPosition(), this.camera.getWorldDirection());
+        this.tempMatrix.identity().extractRotation(this.matrixWorld);
+        this.raycaster.ray.origin.setFromMatrixPosition(this.matrixWorld);
+        this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
         return this.raycaster.raycast();
     }
 
@@ -113,5 +140,13 @@ export class OculusController {
 
     onKeyUp(keyCode) {
         this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode);
+    }
+
+    onTouchDown(keyCode) {
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_TOUCH_START, null, keyCode );
+    }
+
+    onTouchUp(keyCode) {
+        this.raycastAndEmitEvent( EVENT_NAMES.CONTROLLER_TOUCH_END, null, keyCode );
     }
 }

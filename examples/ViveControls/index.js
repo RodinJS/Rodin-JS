@@ -71,9 +71,8 @@ loader.load( 'vr_controller_vive_1_5.obj', function ( object ) {
     var loader = new THREE.TextureLoader();
     loader.setPath( './img/' );
 
-    var controller = object.children[ 0 ];
-    controller.material.map = loader.load( 'onepointfive_texture.png' );
-    controller.material.specularMap = loader.load( 'onepointfive_spec.png' );
+    object.children[ 0 ].material.map = loader.load( 'onepointfive_texture.png' );
+    object.children[ 0 ].material.specularMap = loader.load( 'onepointfive_spec.png' );
 
     controller1.add( object.clone() );
     controller2.add( object.clone() );
