@@ -4,6 +4,10 @@ import {Event} from '../Event.js';
 
 export class OculusController {
     constructor() {
+        if(!OculusController.getController()) {
+            console.warn('Controller not found');
+        }
+
         this.buttonsPressed = [false, false, false, false, false, false];
         this.raycaster = new Raycaster();
         this.camera = null;
@@ -19,10 +23,22 @@ export class OculusController {
         ];
     }
 
+    static getController() {
+        let controllers = navigator.getGamepads();
+        for(let i = 0; i < controllers.length; i ++) {
+            let controller = controllers[i];
+            if(controller && controller.id && !controller.id.match(/oculus/gi)) {
+                return controller;
+            }
+        }
+
+        return null;
+    }
+
     update() {
-        let controller = navigator.getGamepads()[0];
+        let controller = OculusController.getController();
         if (!controller) {
-            console.log('controller not detected');
+            console.warn('Controller not found');
             return;
         }
 
@@ -51,7 +67,7 @@ export class OculusController {
 
     intersectObjects() {
         let intersections = this.getIntersections();
-        
+
         this.intersected.map(i => {
             let found = false;
             for (let int = 0; int < intersections.length; int++) {
