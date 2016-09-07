@@ -1,6 +1,5 @@
 import {Raycaster} from '../raycaster/Raycaster.js';
-import {EVENT_NAMES} from '../constants/constants.js';
-import {KEY_CODES} from '../constants/KeyCodes.js';
+import {EVENT_NAMES, KEY_CODES} from '../constants/constants.js';
 import {Event} from '../Event.js';
 
 export class OculusController {
@@ -22,7 +21,10 @@ export class OculusController {
 
     update() {
         let controller = navigator.getGamepads()[0];
-        if (!controller) return;
+        if (!controller) {
+            console.log('controller not detected');
+            return;
+        }
 
         for (let i = 0; i < controller.buttons.length; i++) {
             if (this.buttonsPressed[i] !== controller.buttons[i].pressed) {
@@ -31,7 +33,7 @@ export class OculusController {
             }
         }
 
-        this.getIntersections();
+        this.intersectObjects();
     }
 
     setRaycasterScene(scene) {
@@ -48,29 +50,27 @@ export class OculusController {
     }
 
     intersectObjects() {
-        if (this.userData.selected !== undefined) return;
-        let line = this.getObjectByName('line');
         let intersections = this.getIntersections();
+        
+        this.intersected.map(i => {
+            let found = false;
+            for (let int = 0; int < intersections.length; int++) {
+                if (intersections[int].object.Sculpt === i)
+                    found = true;
+            }
+            if (!found) {
+                i.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT);
+            }
+        });
+
+        this.intersected = [];
 
         if (intersections.length > 0) {
-            this.intersected.map(i => {
-                let found = false;
-                for (let i in intersections) {
-                    if (intersections[i].object.Sculpt === i)
-                        found = true;
-                }
-                if (!found) {
-                    i.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT);
-                }
-            });
 
-            this.intersected = [];
             intersections.map(intersect => {
                 intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, new Event(intersect.object.Sculpt));
                 this.intersected.push(intersect.object.Sculpt);
             });
-        } else {
-            line.scale.z = 5;
         }
     }
 

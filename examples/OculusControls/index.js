@@ -38,6 +38,17 @@ scene.background = new THREE.Color( 0x808080 );
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
+var targetMap = new THREE.TextureLoader().load("./img/target.png");
+var targetMaterial = new THREE.SpriteMaterial({map: targetMap, color: 0xffffff, opacity: 1, depthTest: false});
+var target = new THREE.Sprite(targetMaterial);
+// var target = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide}));
+target.scale.set(0.01, 0.01, 0.01);
+target.position.set(0, 0, -1);
+camera.add(target);
+scene.add(camera);
+
+// scene.add(target)
+
 // Apply VR headset positional data to camera.
 var controls = new THREE.VRControls(camera);
 controls.standing = true;
@@ -175,9 +186,6 @@ function render() {
 
     controller.update();
     controls.update();
-
-    let btns = navigator.getGamepads()[0].buttons;
-    
     effect.render( scene, camera );
 }
 

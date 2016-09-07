@@ -42,19 +42,21 @@ export class ViveController extends Controller {
         let line = this.getObjectByName('line');
         let intersections = this.getIntersections();
 
-        if (intersections.length > 0) {
-            this.intersected.map(i => {
-                let found = false;
-                for (let i in intersections) {
-                    if (intersections[i].object.Sculpt === i)
-                        found = true;
-                }
-                if (!found) {
-                    i.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT);
-                }
-            });
+        this.intersected.map(i => {
+            let found = false;
+            for (let int = 0; int < intersections.length; int++) {
+                if (intersections[int].object.Sculpt === i)
+                    found = true;
+            }
+            if (!found) {
+                i.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT);
+            }
+        });
 
-            this.intersected = [];
+        this.intersected = [];
+
+        if (intersections.length > 0) {
+
             intersections.map(intersect => {
                 intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, new Event(intersect.object.Sculpt));
                 this.intersected.push(intersect.object.Sculpt);
