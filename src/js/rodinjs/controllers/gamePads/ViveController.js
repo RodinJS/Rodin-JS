@@ -11,7 +11,7 @@ export class ViveController extends GamePad {
             throw new ErrorNoValueProvided();
         }
 
-        if(hand === CONTROLLER_HANDS.LEFT && leftHandControllerCreated || hand === CONTROLLER_HANDS.RIGHT && rightHandControllerCreated) {
+        if (hand === CONTROLLER_HANDS.LEFT && leftHandControllerCreated || hand === CONTROLLER_HANDS.RIGHT && rightHandControllerCreated) {
             throw new ErrorViveControllerAlreadyExists(hand);
         }
 
