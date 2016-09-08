@@ -3,7 +3,7 @@ import {WTF} from '../logger/Logger.js';
 import {Objects} from '../objects.js';
 import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
-import {EVENT_NAMES, KEY_CODES} from '../constants/constants.js';
+import {EVENT_NAMES} from '../constants/constants.js';
 
 
 export class Sculpt {
