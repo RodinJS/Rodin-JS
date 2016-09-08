@@ -7,7 +7,6 @@ console.log(RODIN);
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
 import '../../node_modules/three/examples/js/loaders/OBJLoader.js';
-import '../../src/js/rodinjs/controllers/ViveControllerDef.js';
 import '../../node_modules/three/examples/js/WebVR.js';
 
 
@@ -48,21 +47,14 @@ var tempMatrix = new THREE.Matrix4();
 
 // controllers
 
-var controller1 = new THREE.ViveController( 0 );
-controller1.standingMatrix = controls.getStandingMatrix();
-controller1.addEventListener( 'triggerdown', onTriggerDown );
-controller1.addEventListener( 'triggerup', onTriggerUp );
-controller1.addEventListener( 'thumbpadtouchdown', onTumbpadTouchDown );
-controller1.addEventListener( 'thumbpadtouchup', onTumbpadTouchUp );
-scene.add( controller1 );
+var controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene);
+controllerL.standingMatrix = controls.getStandingMatrix();
 
-var controller2 = new THREE.ViveController( 1 );
-controller2.standingMatrix = controls.getStandingMatrix();
-controller2.addEventListener( 'triggerdown', onTriggerDown );
-controller2.addEventListener( 'triggerup', onTriggerUp );
-controller2.addEventListener( 'thumbpadtouchdown', onTumbpadTouchDown );
-controller2.addEventListener( 'thumbpadtouchup', onTumbpadTouchUp );
-scene.add( controller2 );
+var controllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene);
+controllerR.standingMatrix = controls.getStandingMatrix();
+
+scene.add( controllerL );
+scene.add( controllerR );
 
 var loader = new THREE.OBJLoader();
 loader.setPath( './object/' );
@@ -74,9 +66,8 @@ loader.load( 'vr_controller_vive_1_5.obj', function ( object ) {
     object.children[ 0 ].material.map = loader.load( 'onepointfive_texture.png' );
     object.children[ 0 ].material.specularMap = loader.load( 'onepointfive_spec.png' );
 
-    controller1.add( object.clone() );
-    controller2.add( object.clone() );
-
+    controllerL.add( object.clone() );
+    controllerR.add( object.clone() );
 } );
 
 //
@@ -89,10 +80,10 @@ var line = new THREE.Line( geometry );
 line.name = 'line';
 line.scale.z = 5;
 
-controller1.add( line.clone() );
-controller2.add( line.clone() );
+controllerL.add( line.clone() );
+controllerR.add( line.clone() );
 
-raycaster = new THREE.Raycaster();
+raycaster = new RODIN.Raycaster( scene );
 
 // Apply VR stereo rendering to renderer.
 var effect = new THREE.VREffect( renderer );
@@ -126,6 +117,8 @@ light.shadow.camera.right = 2;
 light.shadow.camera.left = -2;
 light.shadow.mapSize.set( 4096, 4096 );
 scene.add( light );
+
+// add raycastable objects to scene
 
 var group = new THREE.Group();
 scene.add( group );
@@ -162,7 +155,124 @@ for ( var i = 0; i < 50; i ++ ) {
     object.castShadow = true;
     object.receiveShadow = true;
 
-    group.add( object );
+    // group.add( object );
+
+    let obj = new RODIN.THREEObject(object);
+
+    obj.on('ready', () => {
+        group.add(obj.object3D);
+        RODIN.Raycastables.push(obj.object3D);
+    });
+
+    // hover
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, () => {
+        obj.object3D.material.emissive.r = 1;
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, () => {
+        obj.object3D.material.emissive.r = 0;
+    });
+
+    // CONTROLLER_KEY
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+
+        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - " , evt.keyCode);
+            console.log("EVENT_NAMES - " , "CONTROLLER_KEY_DOWN");
+
+            obj.object3D.material.emissive.g = 0;
+
+        }
+        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
+
+            console.log("keyCode - " , evt.keyCode);
+            console.log("EVENT_NAMES - " , "CONTROLLER_KEY_DOWN");
+
+            obj.object3D.material.emissive.b = 0;
+
+        }
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
+
+        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - " , evt.keyCode);
+            console.log("EVENT_NAMES - " , "CONTROLLER_KEY_UP");
+
+            obj.object3D.material.emissive.g = 1;
+        }
+
+        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
+
+            console.log("keyCode - " , evt.keyCode);
+            console.log("EVENT_NAMES - " , "CONTROLLER_KEY_UP");
+
+            obj.object3D.material.emissive.b = 1;
+        }
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {
+
+        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - " , evt.keyCode);
+            console.log("EVENT_NAMES - " , "CONTROLLER_CLICK");
+
+        }
+
+        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
+
+            console.log("keyCode - " , evt.keyCode);
+            console.log("EVENT_NAMES - " , "CONTROLLER_CLICK");
+
+        }
+    });
+
+    // Controller touch
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
+
+        console.log(evt);
+        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            if(evt.hand === RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT) {
+
+                /*console.log("keyCode - ", evt.keyCode);
+                console.log("hand - ", evt.hand);
+                console.log("EVENT_NAMES - ", "CONTROLLER_TOUCH_START");*/
+
+                obj.object3D.material.emissive.g = 0;
+            }
+        }
+
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, (evt) => {
+
+        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - " , evt.keyCode);
+            console.log("EVENT_NAMES - " , "CONTROLLER_TOUCH_END");
+
+            obj.object3D.material.emissive.g = 1;
+        }
+
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt) => {
+
+        if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - " , evt.keyCode);
+            console.log("EVENT_NAMES - " , "CONTROLLER_TAP");
+
+        }
+
+    });
 
 }
 
@@ -181,18 +291,10 @@ function animate() {
 
 function render() {
 
-    controller1.update();
-    controller2.update();
-
+    controllerL.update();
+    controllerR.update();
     controls.update();
-
-    cleanIntersected();
-
-    intersectObjects( controller1 );
-    intersectObjects( controller2 );
-
     effect.render( scene, camera );
-
 }
 
 function onResize(e) {
@@ -203,140 +305,5 @@ function onResize(e) {
     camera.updateProjectionMatrix();
 
 }
-
-function cleanIntersected() {
-
-    while ( intersected.length ) {
-
-        var object = intersected.pop();
-        object.material.emissive.r = 0;
-
-    }
-
-}
-
-function intersectObjects( controller ) {
-
-    // Do not highlight when already selected
-
-    if ( controller.userData.selected !== undefined ) return;
-
-    var line = controller.getObjectByName( 'line' );
-    var intersections = getIntersections( controller );
-
-    if ( intersections.length > 0 ) {
-
-        var intersection = intersections[ 0 ];
-
-        var object = intersection.object;
-        object.material.emissive.r = 1;
-        intersected.push( object );
-
-        line.scale.z = intersection.distance;
-
-    } else {
-
-        line.scale.z = 5;
-
-    }
-
-}
-
-function getIntersections( controller ) {
-
-    tempMatrix.identity().extractRotation( controller.matrixWorld );
-
-    raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
-    raycaster.ray.direction.set( 0, 0, -1 ).applyMatrix4( tempMatrix );
-
-    return raycaster.intersectObjects( group.children );
-
-}
-
-function onTriggerDown( event ) {
-
-    var controller = event.target;
-
-    var intersections = getIntersections( controller );
-
-    if ( intersections.length > 0 ) {
-
-        var intersection = intersections[ 0 ];
-
-        tempMatrix.getInverse( controller.matrixWorld );
-
-        var object = intersection.object;
-        object.matrix.premultiply( tempMatrix );
-        object.matrix.decompose( object.position, object.quaternion, object.scale );
-        object.material.emissive.b = 1;
-        controller.add( object );
-
-        controller.userData.selected = object;
-
-    }
-
-}
-
-function onTriggerUp( event ) {
-
-    var controller = event.target;
-
-    if ( controller.userData.selected !== undefined ) {
-
-        var object = controller.userData.selected;
-        object.matrix.premultiply( controller.matrixWorld );
-        object.matrix.decompose( object.position, object.quaternion, object.scale );
-        object.material.emissive.b = 0;
-        group.add( object );
-
-        controller.userData.selected = undefined;
-
-    }
-
-}
-
-function onTumbpadTouchDown(event) {
-
-    var controller = event.target;
-
-    var intersections = getIntersections( controller );
-
-    if ( intersections.length > 0 ) {
-
-        var intersection = intersections[ 0 ];
-
-        tempMatrix.getInverse( controller.matrixWorld );
-
-        var object = intersection.object;
-        object.matrix.premultiply( tempMatrix );
-        object.matrix.decompose( object.position, object.quaternion, object.scale );
-        object.material.emissive.g = 1;
-        controller.add( object );
-
-        controller.userData.selected = object;
-
-    }
-
-}
-
-function onTumbpadTouchUp(event) {
-
-    var controller = event.target;
-
-    if ( controller.userData.selected !== undefined ) {
-
-        var object = controller.userData.selected;
-        object.matrix.premultiply( controller.matrixWorld );
-        object.matrix.decompose( object.position, object.quaternion, object.scale );
-        object.material.emissive.g = 0;
-        group.add( object );
-
-        controller.userData.selected = undefined;
-
-    }
-
-}
-
-
 
 
