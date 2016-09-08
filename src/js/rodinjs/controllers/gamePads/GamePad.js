@@ -1,7 +1,8 @@
 import {THREE} from '../../../three/THREE.GLOBAL.js';
 import {Raycaster} from '../../raycaster/Raycaster.js';
-import {EVENT_NAMES} from '../../constants/constants.js';
+import {EVENT_NAMES, KEY_CODES} from '../../constants/constants.js';
 import {ErrorAbstractClassInstance} from '../../error/CustomErrors.js';
+import {Event} from '../../Event.js';
 
 export class GamePad extends THREE.Object3D {
 
@@ -33,7 +34,14 @@ export class GamePad extends THREE.Object3D {
         this.matrixAutoUpdate = false;
         this.standingMatrix = new THREE.Matrix4();
 
-        this.buttons = [];
+        this.buttons = [
+            KEY_CODES.KEY1,
+            KEY_CODES.KEY2,
+            KEY_CODES.KEY3,
+            KEY_CODES.KEY4,
+            KEY_CODES.KEY5,
+            KEY_CODES.KEY6
+        ];
     }
 
     /**
@@ -166,7 +174,7 @@ export class GamePad extends THREE.Object3D {
         var intersections = this.getIntersections();
 
         if (intersections.length > 0) {
-            intersections.map(i => i.object.Sculpt.emit(eventName, new Event(i.object.Sculpt, DOMEvent, keyCode, hand)));
+            intersections.map(i => i.object.Sculpt.emit(eventName, new Event(i.object.Sculpt, DOMEvent, keyCode, this.hand)));
         }
     }
 

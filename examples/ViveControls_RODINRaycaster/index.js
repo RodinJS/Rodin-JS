@@ -236,13 +236,17 @@ for ( var i = 0; i < 50; i ++ ) {
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
 
+        console.log(evt);
         if(evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
 
-            console.log("keyCode - " , evt.keyCode);
-            console.log("EVENT_NAMES - " , "CONTROLLER_TOUCH_START");
+            if(evt.hand === RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT) {
 
-            obj.object3D.material.emissive.g = 0;
+                /*console.log("keyCode - ", evt.keyCode);
+                console.log("hand - ", evt.hand);
+                console.log("EVENT_NAMES - ", "CONTROLLER_TOUCH_START");*/
 
+                obj.object3D.material.emissive.g = 0;
+            }
         }
 
     });
