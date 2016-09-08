@@ -273,19 +273,7 @@ for (var i = 0; i < 50; i++) {
 
 requestAnimationFrame(animate);
 
-window.addEventListener('resize', onResize, true);
-window.addEventListener('vrdisplaypresentchange', onResize, true);
-
-// Request animation frame loop function
-function animate() {
-
-    requestAnimationFrame(animate);
-    render();
-
-}
-
 function render() {
-
     controllerL.update();
     controllerR.update();
     controls.update();
@@ -293,12 +281,19 @@ function render() {
 }
 
 function onResize(e) {
-
     effect.setSize(window.innerWidth, window.innerHeight);
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
 }
+
+window.addEventListener('resize', onResize, true);
+window.addEventListener('vrdisplaypresentchange', onResize, true);
+
+function animate() {
+    requestAnimationFrame(animate);
+    render();
+}
+
 
 
