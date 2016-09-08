@@ -2,7 +2,7 @@ import {GamePad} from './GamePad.js';
 
 export class OculusController extends GamePad {
     constructor(scene = null, cameara = null) {
-        super('oculus', scene, cameara);
+        super('oculus', null, scene, cameara);
     }
 
     getIntersections() {

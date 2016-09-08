@@ -40,3 +40,9 @@ export class ErrorNoObjectProvided extends CustomError {
         super(`Error no THREEJS object provided`);
     }
 }
+
+export class ErrorNoValueProvided extends CustomError {
+    constructor(field) {
+        super(`Error no ${field} provided`);
+    }
+}

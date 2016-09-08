@@ -1,8 +1,13 @@
-import {GamePad} from './GamePad.js';
+import {GamePad} from "./GamePad.js";
+import {ErrorNoValueProvided} from "../../error/CustomErrors.js";
 
 export class ViveController extends GamePad {
-    constructor(scene = null, camera = null) {
-        super('openvr', scene, camera);
+    constructor(hand, scene = null, camera = null) {
+        if (!hand) {
+            throw new ErrorNoValueProvided('hand');
+        }
+
+        super('openvr', hand, scene, camera);
     }
 
     getIntersections() {

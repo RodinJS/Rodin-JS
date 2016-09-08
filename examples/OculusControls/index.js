@@ -53,8 +53,7 @@ scene.add(camera);
 var controls = new THREE.VRControls(camera);
 controls.standing = true;
 
-var raycaster, intersected = [];
-var tempMatrix = new THREE.Matrix4();
+var raycaster;
 
 // controllers
 

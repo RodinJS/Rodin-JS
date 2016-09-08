@@ -8,10 +8,11 @@ export class GamePad extends THREE.Object3D {
     /**
      *
      * @param {string} navigatorGamePadId Required
+     * @param {string, null} hand
      * @param {THREE.Scene} scene
      * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
      */
-    constructor(navigatorGamePadId = "", scene = null, camera = null) {
+    constructor(navigatorGamePadId = "", hand = null, scene = null, camera = null) {
         if (new.target === GamePad) {
             throw new ErrorAbstractClassInstance();
         }
@@ -19,12 +20,13 @@ export class GamePad extends THREE.Object3D {
         super();
 
         this.navigatorGamePadId = navigatorGamePadId;
+        this.hand = hand;
 
         this.buttonsPressed = [false, false, false, false, false, false];
         this.buttonsTouched = [false, false, false, false, false, false];
 
         this.raycaster = new Raycaster();
-        this.scene = scene;
+        this.raycaster.setScene(scene);
         this.camera = camera;
         this.intersected = [];
         this.tempMatrix = new THREE.Matrix4();
@@ -37,14 +39,21 @@ export class GamePad extends THREE.Object3D {
     /**
      * get controller from navigator
      * @param {string} id
+     * @param {string, null} hand
      * @returns {Object} controller or null
      */
-    static getControllerFromNavigator(id) {
+    static getControllerFromNavigator(id, hand = null) {
         let controllers = navigator.getGamepads();
         for (let i = 0; i < controllers.length; i++) {
             let controller = controllers[i];
             if (controller && controller.id && controller.id.match(new RegExp(id, 'gi'))) {
-                return controller;
+                if (hand === null) {
+                    return controller;
+                } else {
+                    if (controller.hand && controller.hand.match(new RegExp(hand, 'gi'))) {
+                        return controller;
+                    }
+                }
             }
         }
 
@@ -73,7 +82,7 @@ export class GamePad extends THREE.Object3D {
      * All logic goes here
      */
     update() {
-        let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId);
+        let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
         if (!controller) {
             return console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
         }
@@ -112,11 +121,11 @@ export class GamePad extends THREE.Object3D {
     }
 
     /**
-     * Chacks all intersect and emits hover and hoverout events
+     * Checks all intersect and emits hover and hoverout events
      */
     intersectObjects() {
         if (!this.getIntersections) {
-            console.warn(`getIntersections method is not overwrited`);
+            console.warn(`getIntersections method is not overwritten`);
         }
 
         let intersections = this.getIntersections();
@@ -151,13 +160,13 @@ export class GamePad extends THREE.Object3D {
      */
     raycastAndEmitEvent(eventName, DOMEvent, keyCode) {
         if (!this.getIntersections) {
-            console.warn(`getIntersections method is not overwrited`);
+            console.warn(`getIntersections method is not overwritten`);
         }
 
         var intersections = this.getIntersections();
 
         if (intersections.length > 0) {
-            intersections.map(i => i.object.Sculpt.emit(eventName, new Event(i.object.Sculpt, DOMEvent, keyCode)));
+            intersections.map(i => i.object.Sculpt.emit(eventName, new Event(i.object.Sculpt, DOMEvent, keyCode, hand)));
         }
     }
 

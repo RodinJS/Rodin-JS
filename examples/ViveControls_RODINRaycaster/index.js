@@ -47,10 +47,14 @@ var tempMatrix = new THREE.Matrix4();
 
 // controllers
 
-var controller = new RODIN.ViveController(0);
-controller.standingMatrix = controls.getStandingMatrix();
-controller.setRaycasterScene(scene);
-scene.add( controller );
+var controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene);
+controllerL.standingMatrix = controls.getStandingMatrix();
+
+var controllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene);
+controllerR.standingMatrix = controls.getStandingMatrix();
+
+scene.add( controllerL );
+scene.add( controllerR );
 
 var loader = new THREE.OBJLoader();
 loader.setPath( './object/' );
@@ -62,7 +66,8 @@ loader.load( 'vr_controller_vive_1_5.obj', function ( object ) {
     object.children[ 0 ].material.map = loader.load( 'onepointfive_texture.png' );
     object.children[ 0 ].material.specularMap = loader.load( 'onepointfive_spec.png' );
 
-    controller.add( object.clone() );
+    controllerL.add( object.clone() );
+    controllerR.add( object.clone() );
 } );
 
 //
@@ -75,7 +80,8 @@ var line = new THREE.Line( geometry );
 line.name = 'line';
 line.scale.z = 5;
 
-controller.add( line.clone() );
+controllerL.add( line.clone() );
+controllerR.add( line.clone() );
 
 raycaster = new RODIN.Raycaster( scene );
 
@@ -281,7 +287,8 @@ function animate() {
 
 function render() {
 
-    controller.update();
+    controllerL.update();
+    controllerR.update();
     controls.update();
     effect.render( scene, camera );
 }
