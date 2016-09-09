@@ -1,4 +1,4 @@
-export class Timeout {
+export class Interval {
     /**
      *
      * @param {Function} cb

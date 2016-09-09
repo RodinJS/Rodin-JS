@@ -9,10 +9,12 @@ export { ViveController } from './controllers/gamePads/ViveController.js';
 export { OculusController } from './controllers/gamePads/OculusController.js';
 
 export { OrbitControls } from './OrbitControls.js';
+
 export { Event } from './Event.js';
 export { Sculpt } from './sculpt/Sculpt.js';
 export { THREEObject } from './sculpt/THREEObject.js';
 export { CubeObject } from './sculpt/CubeObject.js';
+export { Snow } from './sculpt/Snow.js';
 export { ObjectFromModel } from './sculpt/ObjectFromModel.js';
 export { Raycaster } from './raycaster/Raycaster.js';
 
