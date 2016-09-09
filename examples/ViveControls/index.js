@@ -7,16 +7,15 @@ console.log(RODIN);
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
 import '../../node_modules/three/examples/js/loaders/OBJLoader.js';
-import '../../src/js/rodinjs/controllers/ViveController.js';
 import '../../node_modules/three/examples/js/WebVR.js';
 
 
 WTF.is('Rodin.JS v0.0.1');
 
 
-if ( WEBVR.isLatestAvailable() === false ) {
+if (WEBVR.isLatestAvailable() === false) {
 
-    document.body.appendChild( WEBVR.getMessage() );
+    document.body.appendChild(WEBVR.getMessage());
 
 }
 
@@ -34,121 +33,109 @@ document.body.appendChild(renderer.domElement);
 
 // Create a three.js scene.
 var scene = new THREE.Scene();
-scene.background = new THREE.Color( 0x808080 );
+scene.background = new THREE.Color(0x808080);
 
 // Create a three.js camera.
-var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000 );
+var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 // Apply VR headset positional data to camera.
 var controls = new THREE.VRControls(camera);
 controls.standing = true;
 
-var raycaster, intersected = [];
-var tempMatrix = new THREE.Matrix4();
+var raycaster;
 
-// controllers
+var controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene);
+controllerL.standingMatrix = controls.getStandingMatrix();
 
-var controller1 = new THREE.ViveController( 0 );
-controller1.standingMatrix = controls.getStandingMatrix();
-controller1.addEventListener( 'triggerdown', onTriggerDown );
-controller1.addEventListener( 'triggerup', onTriggerUp );
-/*controller1.addEventListener( 'thumbpaddown', onTumbpadDown );
-controller1.addEventListener( 'thumbpadup', onTumbpadUp );*/
-scene.add( controller1 );
+var controllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene);
+controllerR.standingMatrix = controls.getStandingMatrix();
 
-var controller2 = new THREE.ViveController( 1 );
-controller2.standingMatrix = controls.getStandingMatrix();
-controller2.addEventListener( 'triggerdown', onTriggerDown );
-controller2.addEventListener( 'triggerup', onTriggerUp );
-/*controller2.addEventListener( 'thumbpaddown', onTumbpadDown );
-controller2.addEventListener( 'thumbpadup', onTumbpadUp );*/
-scene.add( controller2 );
+scene.add(controllerL);
+scene.add(controllerR);
 
 var loader = new THREE.OBJLoader();
-loader.setPath( './object/' );
-loader.load( 'vr_controller_vive_1_5.obj', function ( object ) {
+loader.setPath('./object/');
+loader.load('vr_controller_vive_1_5.obj', function (object) {
 
     var loader = new THREE.TextureLoader();
-    loader.setPath( './img/' );
+    loader.setPath('./img/');
 
-    var controller = object.children[ 0 ];
-    controller.material.map = loader.load( 'onepointfive_texture.png' );
-    controller.material.specularMap = loader.load( 'onepointfive_spec.png' );
+    object.children[0].material.map = loader.load('onepointfive_texture.png');
+    object.children[0].material.specularMap = loader.load('onepointfive_spec.png');
 
-    controller1.add( object.clone() );
-    controller2.add( object.clone() );
+    controllerL.add(object.clone());
+    controllerR.add(object.clone());
+});
 
-} );
+geometry = new THREE.Geometry();
+geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+geometry.vertices.push(new THREE.Vector3(0, 0, -1));
 
-//
-
-var geometry = new THREE.Geometry();
-geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
-geometry.vertices.push( new THREE.Vector3( 0, 0, - 1 ) );
-
-var line = new THREE.Line( geometry );
+var line = new THREE.Line(geometry);
 line.name = 'line';
 line.scale.z = 5;
 
-controller1.add( line.clone() );
-controller2.add( line.clone() );
+controllerL.add(line.clone());
+controllerR.add(line.clone());
 
-raycaster = new THREE.Raycaster();
+raycaster = new RODIN.Raycaster(scene);
 
 // Apply VR stereo rendering to renderer.
-var effect = new THREE.VREffect( renderer );
+var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
-if ( WEBVR.isAvailable() === true ) {
+if (WEBVR.isAvailable() === true) {
 
-    document.body.appendChild( WEBVR.getButton( effect ) );
+    document.body.appendChild(WEBVR.getButton(effect));
 
 }
 
-var geometry = new THREE.PlaneGeometry( 4, 4 );
-var material = new THREE.MeshStandardMaterial( {
+var geometry = new THREE.PlaneGeometry(4, 4);
+var material = new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
     roughness: 1.0,
     metalness: 0.0
-} );
-var floor = new THREE.Mesh( geometry, material );
-floor.rotation.x = - Math.PI / 2;
+});
+var floor = new THREE.Mesh(geometry, material);
+floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
-scene.add( floor );
+scene.add(floor);
 
-scene.add( new THREE.HemisphereLight( 0x808080, 0x606060 ) );
+scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
 
-var light = new THREE.DirectionalLight( 0xffffff );
-light.position.set( 0, 6, 0 );
+var light = new THREE.DirectionalLight(0xffffff);
+light.position.set(0, 6, 0);
 light.castShadow = true;
 light.shadow.camera.top = 2;
 light.shadow.camera.bottom = -2;
 light.shadow.camera.right = 2;
 light.shadow.camera.left = -2;
-light.shadow.mapSize.set( 4096, 4096 );
-scene.add( light );
+light.shadow.mapSize.set(4096, 4096);
+scene.add(light);
+
+// add raycastable objects to scene
 
 var group = new THREE.Group();
-scene.add( group );
+scene.add(group);
 
 var geometries = [
-    new THREE.BoxGeometry( 0.2, 0.2, 0.2 ),
-    new THREE.ConeGeometry( 0.2, 0.2, 64 ),
-    new THREE.CylinderGeometry( 0.2, 0.2, 0.2, 64 ),
-    new THREE.IcosahedronGeometry( 0.2, 3 ),
-    new THREE.TorusGeometry( 0.2, 0.04, 64, 32 )
+    new THREE.BoxGeometry(0.2, 0.2, 0.2),
+    new THREE.ConeGeometry(0.2, 0.2, 64),
+    new THREE.CylinderGeometry(0.2, 0.2, 0.2, 64),
+    new THREE.IcosahedronGeometry(0.2, 3),
+    new THREE.TorusGeometry(0.2, 0.04, 64, 32)
 ];
 
-for ( var i = 0; i < 50; i ++ ) {
+for (var i = 0; i < 50; i++) {
 
-    var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
-    var material = new THREE.MeshStandardMaterial( {
+    var geometry = geometries[Math.floor(Math.random() * geometries.length)];
+    var material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
         roughness: 0.7,
         metalness: 0.0
-    } );
+    });
 
-    var object = new THREE.Mesh( geometry, material );
+    var object = new THREE.Mesh(geometry, material);
 
     object.position.x = Math.random() * 4 - 2;
     object.position.y = Math.random() * 2;
@@ -158,186 +145,155 @@ for ( var i = 0; i < 50; i ++ ) {
     object.rotation.y = Math.random() * 2 * Math.PI;
     object.rotation.z = Math.random() * 2 * Math.PI;
 
-    object.scale.setScalar( Math.random() + 0.5 );
+    object.scale.setScalar(Math.random() + 0.5);
 
     object.castShadow = true;
     object.receiveShadow = true;
 
-    group.add( object );
+    // group.add( object );
+
+    let obj = new RODIN.THREEObject(object);
+
+    obj.on('ready', () => {
+        group.add(obj.object3D);
+        RODIN.Raycastables.push(obj.object3D);
+    });
+
+    // hover
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, () => {
+        obj.object3D.material.emissive.r = 1;
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, () => {
+        obj.object3D.material.emissive.r = 0;
+    });
+
+    // CONTROLLER_KEY
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+
+        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - ", evt.keyCode);
+            console.log("EVENT_NAMES - ", "CONTROLLER_KEY_DOWN");
+
+            obj.object3D.material.emissive.g = 0;
+
+        }
+        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
+
+            console.log("keyCode - ", evt.keyCode);
+            console.log("EVENT_NAMES - ", "CONTROLLER_KEY_DOWN");
+
+            obj.object3D.material.emissive.b = 0;
+
+        }
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
+
+        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - ", evt.keyCode);
+            console.log("EVENT_NAMES - ", "CONTROLLER_KEY_UP");
+
+            obj.object3D.material.emissive.g = 1;
+        }
+
+        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
+
+            console.log("keyCode - ", evt.keyCode);
+            console.log("EVENT_NAMES - ", "CONTROLLER_KEY_UP");
+
+            obj.object3D.material.emissive.b = 1;
+        }
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {
+
+        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - ", evt.keyCode);
+            console.log("EVENT_NAMES - ", "CONTROLLER_CLICK");
+
+        }
+
+        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
+
+            console.log("keyCode - ", evt.keyCode);
+            console.log("EVENT_NAMES - ", "CONTROLLER_CLICK");
+
+        }
+    });
+
+    // Controller touch
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
+
+        console.log(evt);
+        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            if (evt.hand === RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT) {
+
+                /*console.log("keyCode - ", evt.keyCode);
+                 console.log("hand - ", evt.hand);
+                 console.log("EVENT_NAMES - ", "CONTROLLER_TOUCH_START");*/
+
+                obj.object3D.material.emissive.g = 0;
+            }
+        }
+
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, (evt) => {
+
+        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - ", evt.keyCode);
+            console.log("EVENT_NAMES - ", "CONTROLLER_TOUCH_END");
+
+            obj.object3D.material.emissive.g = 1;
+        }
+
+    });
+
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt) => {
+
+        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
+
+            console.log("keyCode - ", evt.keyCode);
+            console.log("EVENT_NAMES - ", "CONTROLLER_TAP");
+
+        }
+
+    });
 
 }
 
 requestAnimationFrame(animate);
 
-window.addEventListener('resize', onResize, true);
-window.addEventListener('vrdisplaypresentchange', onResize, true);
-
-// Request animation frame loop function
-function animate() {
-
-    requestAnimationFrame(animate);
-    render();
-
-}
-
 function render() {
-
-    controller1.update();
-    controller2.update();
-
+    controllerL.update();
+    controllerR.update();
     controls.update();
-
-    cleanIntersected();
-
-    intersectObjects( controller1 );
-    intersectObjects( controller2 );
-
-    effect.render( scene, camera );
-
+    effect.render(scene, camera);
 }
 
 function onResize(e) {
-
     effect.setSize(window.innerWidth, window.innerHeight);
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
 }
 
-function cleanIntersected() {
+window.addEventListener('resize', onResize, true);
+window.addEventListener('vrdisplaypresentchange', onResize, true);
 
-    while ( intersected.length ) {
-
-        var object = intersected.pop();
-        object.material.emissive.r = 0;
-
-    }
-
+function animate() {
+    requestAnimationFrame(animate);
+    render();
 }
-
-function intersectObjects( controller ) {
-
-    // Do not highlight when already selected
-
-    if ( controller.userData.selected !== undefined ) return;
-
-    var line = controller.getObjectByName( 'line' );
-    var intersections = getIntersections( controller );
-
-    if ( intersections.length > 0 ) {
-
-        var intersection = intersections[ 0 ];
-
-        var object = intersection.object;
-        object.material.emissive.r = 1;
-        intersected.push( object );
-
-        line.scale.z = intersection.distance;
-
-    } else {
-
-        line.scale.z = 5;
-
-    }
-
-}
-
-function getIntersections( controller ) {
-
-    tempMatrix.identity().extractRotation( controller.matrixWorld );
-
-    raycaster.ray.origin.setFromMatrixPosition( controller.matrixWorld );
-    raycaster.ray.direction.set( 0, 0, -1 ).applyMatrix4( tempMatrix );
-
-    return raycaster.intersectObjects( group.children );
-
-}
-
-function onTriggerDown( event ) {
-
-    var controller = event.target;
-
-    var intersections = getIntersections( controller );
-
-    if ( intersections.length > 0 ) {
-
-        var intersection = intersections[ 0 ];
-
-        tempMatrix.getInverse( controller.matrixWorld );
-
-        var object = intersection.object;
-        object.matrix.premultiply( tempMatrix );
-        object.matrix.decompose( object.position, object.quaternion, object.scale );
-        object.material.emissive.b = 1;
-        controller.add( object );
-
-        controller.userData.selected = object;
-
-    }
-
-}
-
-function onTriggerUp( event ) {
-
-    var controller = event.target;
-
-    if ( controller.userData.selected !== undefined ) {
-
-        var object = controller.userData.selected;
-        object.matrix.premultiply( controller.matrixWorld );
-        object.matrix.decompose( object.position, object.quaternion, object.scale );
-        object.material.emissive.b = 0;
-        group.add( object );
-
-        controller.userData.selected = undefined;
-
-    }
-
-}
-
-function onTumbpadDown(event) {
-
-    var controller = event.target;
-
-    var intersections = getIntersections( controller );
-
-    if ( intersections.length > 0 ) {
-
-        var intersection = intersections[ 0 ];
-
-        tempMatrix.getInverse( controller.matrixWorld );
-
-        var object = intersection.object;
-        object.matrix.premultiply( tempMatrix );
-        object.matrix.decompose( object.position, object.quaternion, object.scale );
-        object.material.emissive.g = 1;
-        controller.add( object );
-
-        controller.userData.selected = object;
-
-    }
-
-}
-
-function onTumbpadUp(event) {
-
-    var controller = event.target;
-
-    if ( controller.userData.selected !== undefined ) {
-
-        var object = controller.userData.selected;
-        object.matrix.premultiply( controller.matrixWorld );
-        object.matrix.decompose( object.position, object.quaternion, object.scale );
-        object.material.emissive.g = 0;
-        group.add( object );
-
-        controller.userData.selected = undefined;
-
-    }
-
-}
-
 
 
 

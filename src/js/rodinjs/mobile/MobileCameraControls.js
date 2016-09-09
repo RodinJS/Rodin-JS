@@ -6,7 +6,7 @@ import {MobileDeviceOrientationControls} from './MobileDeviceOrientationControls
 
 export class MobileCameraControls {
     /**
-     * MobileCameraControls Class 
+     * MobileCameraControls Class
      * Uses THREE.OrbitControlsCustom (modified for better UX) and RODIN.MobileDeviceOrientationControls libraries
      * Requires three cameras
      * @param {THREE.Scene} scene - The scene value.
@@ -57,7 +57,7 @@ export class MobileCameraControls {
         this.dragControlHorizontal.dampingFactor = 0.10;
         this.dragControlHorizontal.enableZoom = false;
 
-        window.addEventListener('deviceorientation', (e) => this.setOrientationControls(e), true);
+        window.addEventListener('deviceorientation', this.setOrientationControls, true);
         camera.updateMatrixWorld();
     }
 
@@ -69,8 +69,9 @@ export class MobileCameraControls {
         this.orientationControl = new MobileDeviceOrientationControls(this.verticalPivot);
         this.orientationControl.connect();
         this.orientationControl.update();
-        window.removeEventListener('deviceorientation', (e) => this.setOrientationControls(e), true);
+        window.removeEventListener('deviceorientation', this.setOrientationControls, true);
     }
+
     /**
      * Enable Draging by enabling dragControlVertical and dragControlHorizontal.
      */
@@ -96,7 +97,7 @@ export class MobileCameraControls {
         }
         else {
             this.withOrientation = true;
-            window.addEventListener('deviceorientation', (e) => this.setOrientationControls(e), true);
+            window.addEventListener('deviceorientation', this.setOrientationControls, true);
         }
     };
 
@@ -124,6 +125,7 @@ export class MobileCameraControls {
         }
         this.enabled = false;
     };
+
     /**
      * This is a funny function. Returns nothing.
      * @param {Number} angle - rotation angle

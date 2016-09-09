@@ -1,4 +1,4 @@
-import {env_mode} from "../constants.js";
+import {env_mode} from "../constants/constants.js";
 
 export class WTF {
     /**

@@ -40,3 +40,21 @@ export class ErrorNoObjectProvided extends CustomError {
         super(`Error no THREEJS object provided`);
     }
 }
+
+export class ErrorNoValueProvided extends CustomError {
+    constructor(field) {
+        super(`Error no ${field} provided`);
+    }
+}
+
+export class ErrorViveControllerAlreadyExists extends CustomError {
+    constructor(hand) {
+        super(`Error Vive controller already exists for ${hand} hand`);
+    }
+}
+
+export class ErrorOculusControllerAlreadyExists extends CustomError {
+    constructor() {
+        super(`Error Oculus controller already exists`)
+    }
+}

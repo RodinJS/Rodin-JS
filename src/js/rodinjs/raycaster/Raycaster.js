@@ -18,13 +18,13 @@ export class Raycaster extends THREE.Raycaster {
         }
 
         let ret = [];
-        let intersects = this.intersectObjects(Raycastables, true);
+        let intersects = this.intersectObjects(Raycastables);
 
         for (let i = 0; i < intersects.length; i++) {
             let centerObj = intersects[i].object;
             if (!centerObj) continue;
 
-            while (centerObj && !centerObj.isSculpt && centerObj.parent !== scene) {
+            while (centerObj && !centerObj.Sculpt && centerObj.parent !== scene) {
                 if (centerObj.stopPropagation) {
                     break;
                 }
@@ -32,13 +32,13 @@ export class Raycaster extends THREE.Raycaster {
             }
 
             if (centerObj.stopPropagation) {
-                if (centerObj.isSculpt) {
+                if (centerObj.Sculpt) {
                     ret.push(intersects[i]);
                 }
                 continue;
             }
 
-            if (!centerObj || !centerObj.isSculpt) continue;
+            if (!centerObj || !centerObj.Sculpt) continue;
 
             var parentObj = centerObj.Sculpt.object3D.parent;
             while (parentObj) {
@@ -49,5 +49,7 @@ export class Raycaster extends THREE.Raycaster {
                 parentObj = parentObj.parent;
             }
         }
+
+        return ret;
     }
 }

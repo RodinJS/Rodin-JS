@@ -1,8 +1,10 @@
-import { THREE } from '../../three/THREE.GLOBAL.js';
-import { WTF } from '../logger/Logger.js';
-import { Objects } from '../objects.js';
-import { ANIMATION_TYPES } from '../constants.js';
-import { TWEEN } from '../Tween.js';
+import {THREE} from '../../three/THREE.GLOBAL.js';
+import {WTF} from '../logger/Logger.js';
+import {Objects} from '../objects.js';
+import {ANIMATION_TYPES} from '../constants/constants.js';
+import {TWEEN} from '../Tween.js';
+import {EVENT_NAMES} from '../constants/constants.js';
+
 
 export class Sculpt {
     constructor(id) {
@@ -11,7 +13,7 @@ export class Sculpt {
             throw new ErrorAbstractClassInstance();
         }
 
-        /**
+        /**git
          * private properties
          */
 
@@ -45,6 +47,7 @@ export class Sculpt {
         this.touchY = 0;
 
         let touchStartTime = 0;
+        let keyDownStartTime = {};
 
         this.style = {
             cursor: "default"
@@ -55,11 +58,11 @@ export class Sculpt {
          * HOVER ACTIONS
          * use isHovered flag for check if object is hovered
          */
-        this.on("hover", () => {
+        this.on(EVENT_NAMES.HOVER, () => {
             this.isHovered = true;
         });
 
-        this.on("hoverout", () => {
+        this.on(EVENT_NAMES.HOVER_OUT, () => {
             this.isHovered = false;
         });
 
@@ -73,24 +76,24 @@ export class Sculpt {
          *
          * if delay between mousedown and mouseup actions is less, then emits click event
          */
-        this.on("mousedown", () => {
+        this.on(EVENT_NAMES.MOUSE_DOWN, () => {
             this.isPressed = true;
             touchStartTime = Date.now();
         });
 
-        this.on("mouseup", (evt) => {
+        this.on(EVENT_NAMES.MOUSE_UP, (evt) => {
             this.isPressed = false;
             if (Date.now() - touchStartTime < 200) {
-                this.emit("click", evt);
+                this.emit(EVENT_NAMES.CLICK, evt);
             }
             touchStartTime = 0;
         });
 
-        this.on("mouseenter", () => {
+        this.on(EVENT_NAMES.MOUSE_ENTER, () => {
             this.isMouseOvered = true;
         });
 
-        this.on("mouseleave", () => {
+        this.on(EVENT_NAMES.MOUSE_LEAVE, () => {
             this.isMouseOvered = false;
         });
 
@@ -99,15 +102,47 @@ export class Sculpt {
          *
          * same MOUSE ACTIONS logic
          */
-        this.on("stereomousedown", () => {
+        this.on(EVENT_NAMES.STEREO_MOUSE_DOWN, () => {
             touchStartTime = Date.now();
         });
 
-        this.on("stereomouseup", (evt) => {
+        this.on(EVENT_NAMES.STEREO_MOUSE_UP, (evt) => {
             if (Date.now() - touchStartTime < 200) {
-                this.emit("stereoclick", evt);
+                this.emit(EVENT_NAMES.STEREO_CLICK, evt);
             }
             touchStartTime = 0;
+        });
+
+        /**
+         * CONTROLLER KEY ACTIONS
+         *
+         * same MOUSE ACTIONS logic
+         */
+        this.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+            keyDownStartTime[evt.keyCode] = Date.now();
+        });
+
+        this.on(EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
+            if (Date.now() - keyDownStartTime[evt.keyCode] < 300) {
+                this.emit(EVENT_NAMES.CONTROLLER_CLICK, evt);
+            }
+            keyDownStartTime[evt.keyCode] = 0;
+        });
+
+        /**
+         * CONTROLLER TOUCH ACTIONS
+         *
+         * same MOUSE ACTIONS logic
+         */
+        this.on(EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
+            keyDownStartTime[evt.keyCode] = Date.now();
+        });
+
+        this.on(EVENT_NAMES.CONTROLLER_TOUCH_END, (evt) => {
+            if (Date.now() - keyDownStartTime[evt.keyCode] < 300) {
+                this.emit(EVENT_NAMES.CONTROLLER_TAP, evt);
+            }
+            keyDownStartTime[evt.keyCode] = 0;
         });
 
         /**
@@ -115,15 +150,15 @@ export class Sculpt {
          *
          * same MOUSE ACTIONS logic
          */
-        this.on("touchstart", () => {
+        this.on(EVENT_NAMES.TOUCH_START, () => {
             this.isTouched = true;
             touchStartTime = Date.now();
         });
 
-        this.on("touchend", (evt) => {
+        this.on(EVENT_NAMES.TOUCH_END, (evt) => {
             this.isTouched = false;
             if (Date.now() - touchStartTime < 200) {
-                this.emit("tap", evt);
+                this.emit(EVENT_NAMES.TAP, evt);
             }
             touchStartTime = 0;
         });
@@ -132,9 +167,9 @@ export class Sculpt {
         /**
          * CLICK ACTIONS
          */
-        this.on("click", (evt) => {
+        this.on(EVENT_NAMES.CLICK, (evt) => {
             if (evt.domEvent && evt.domEvent.which === 3) {
-                this.emit("rightclick", evt);
+                this.emit(EVENT_NAMES.RIGHT_CLICK, evt);
             }
         });
 
@@ -254,7 +289,7 @@ export class Sculpt {
 
         let object = this.object3D;
         if (animateProperty === ANIMATION_TYPES.SCALE) {
-            if(!startValue) {
+            if (!startValue) {
                 startValue = new THREE.Vector3().copy(this.object3D.scale)
             }
 
@@ -275,12 +310,12 @@ export class Sculpt {
                 .onComplete(onCompleteCallback);
         }
 
-        if(animateProperty === ANIMATION_TYPES.POSITION) {
-            if(!startValue) {
+        if (animateProperty === ANIMATION_TYPES.POSITION) {
+            if (!startValue) {
                 startValue = new THREE.Vector3().copy(this.object3D.position)
             }
 
-            if(this.positionTween) {
+            if (this.positionTween) {
                 this.positionTween.stop();
             }
 
@@ -297,12 +332,12 @@ export class Sculpt {
                 .onComplete(onCompleteCallback);
         }
 
-        if(animateProperty === ANIMATION_TYPES.ROTATION) {
-            if(!startValue) {
+        if (animateProperty === ANIMATION_TYPES.ROTATION) {
+            if (!startValue) {
                 startValue = new THREE.Vector3().copy(this.object3D.rotation)
             }
 
-            if(this.rotationTween) {
+            if (this.rotationTween) {
                 this.rotationTween.stop();
             }
 
@@ -335,7 +370,7 @@ export class Sculpt {
         var easing = params.easing || TWEEN.Easing.Quadratic.InOut;
         var cycles = params.cycles || 1;
 
-        if(this.rotateTween) {
+        if (this.rotateTween) {
             this.rotateTween.stop()
         }
 
@@ -346,6 +381,7 @@ export class Sculpt {
         var r = Math.sqrt(Math.pow(this.object3D.position.x, 2) + Math.pow(this.object3D.position.y, 2));
 
         let object = this.object3D;
+
         function updateCallback() {
             var t = this.t;
 
