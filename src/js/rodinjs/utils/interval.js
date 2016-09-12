@@ -5,13 +5,14 @@ export class Interval {
      * @param {number} delay
      * @param {boolean} autorun
      */
-    constructor(cb = function(){}, delay = 1000, autorun = false) {
+    constructor(cb = function () {
+    }, delay = 1000, autorun = false) {
         this.timer = null;
         this.run = false;
         this.cb = cb;
         this.delay = delay;
 
-        if(autorun) {
+        if (autorun) {
             this.start();
         }
     }
@@ -19,9 +20,9 @@ export class Interval {
     startTimer() {
         this.timer = setTimeout(() => {
             clearTimeout(this.timer);
-            if(this.run) {
+            if (this.run) {
                 this.cb();
-            }else{
+            } else {
                 return;
             }
             this.startTimer();
@@ -32,9 +33,9 @@ export class Interval {
      * Start timer
      */
     start() {
-        if(this.run){
+        if (this.run) {
             console.warn("Timer already is running!");
-        }else{
+        } else {
             this.run = true;
             this.startTimer();
         }

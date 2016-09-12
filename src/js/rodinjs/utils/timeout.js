@@ -1,4 +1,5 @@
-export let timeout = (cb, delay) => {
+export let timeout = (cb = function () {
+}, delay = 1000) => {
     let timer = setTimeout(() => {
         cb();
         clearTimeout(timer);
