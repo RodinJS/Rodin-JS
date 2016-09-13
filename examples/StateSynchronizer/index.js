@@ -176,10 +176,6 @@ function drawCardboardsFromSocketData(data) {
 }
 
 
-
-
-
-
 let cardboard = new CardboardObject();
 cardboard.on('ready', () => {
     cardboard.object3D.position.x = -3;
@@ -191,19 +187,6 @@ cardboard.on('ready', () => {
 cardboard.on('update', () => {
     cardboard.object3D && (cardboard.object3D.rotation.y += 0.01);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 requestAnimationFrame(animate);
@@ -218,7 +201,7 @@ function animate(timestamp) {
 
     controls.update();
     manager.render(scene, camera, timestamp);
-    RODIN.Objects.map( obj => obj.emit('update', new RODIN.Event(obj)));
+    RODIN.Objects.map(obj => obj.emit('update', new RODIN.Event(obj)));
     requestAnimationFrame(animate);
 }
 
