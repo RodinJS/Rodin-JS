@@ -12,11 +12,12 @@ export class GamePad extends THREE.Object3D {
      * @param {string, null} hand
      * @param {THREE.Scene} scene
      * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
+     * @todo: new.target safari problem
      */
     constructor(navigatorGamePadId = "", hand = null, scene = null, camera = null) {
-        if (new.target === GamePad) {
+/*        if (new.target === GamePad) {
             throw new ErrorAbstractClassInstance();
-        }
+        }*/
 
         super();
 

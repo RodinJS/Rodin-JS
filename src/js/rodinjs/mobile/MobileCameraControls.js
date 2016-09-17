@@ -57,20 +57,22 @@ export class MobileCameraControls {
         this.dragControlHorizontal.dampingFactor = 0.10;
         this.dragControlHorizontal.enableZoom = false;
 
+        this.setOrientationControls = (e) => {
+            if (!e.alpha || !this.withOrientation) {
+                return;
+            }
+            this.object.rotation.y = Math.PI;
+            this.orientationControl = new MobileDeviceOrientationControls(this.verticalPivot);
+            this.orientationControl.connect();
+            this.orientationControl.update();
+            window.removeEventListener('deviceorientation', this.setOrientationControls, true);
+        };
+
         window.addEventListener('deviceorientation', this.setOrientationControls, true);
         camera.updateMatrixWorld();
+
     }
 
-    setOrientationControls(e) {
-        if (!e.alpha || !this.withOrientation) {
-            return;
-        }
-        this.object.rotation.y = Math.PI;
-        this.orientationControl = new MobileDeviceOrientationControls(this.verticalPivot);
-        this.orientationControl.connect();
-        this.orientationControl.update();
-        window.removeEventListener('deviceorientation', this.setOrientationControls, true);
-    }
 
     /**
      * Enable Draging by enabling dragControlVertical and dragControlHorizontal.
