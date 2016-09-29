@@ -11,13 +11,13 @@ export class WTF {
 
     static is() {
         if(env_mode === "development") {
-            console.log.apply(null, arguments);
+            console.log.apply(console, arguments);
         }
     }
 
     static warn() {
         if(env_mode === "development") {
-            console.warn.apply(null, arguments);
+            console.warn.apply(console, arguments);
         }
     }
 
