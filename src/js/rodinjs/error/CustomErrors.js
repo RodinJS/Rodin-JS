@@ -58,3 +58,9 @@ export class ErrorOculusControllerAlreadyExists extends CustomError {
         super(`Error Oculus controller already exists`)
     }
 }
+
+export class ErrorInvalidFileFormat extends CustomError {
+    constructor() {
+        super(`Invalid URL for ${filed}`)
+    }
+}

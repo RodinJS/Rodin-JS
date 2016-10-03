@@ -197,9 +197,9 @@ export class Sculpt {
      */
     on(evts, callback) {
         let events = this.getEvents();
-        evts = evts.split(" ").map((evt) => {
-            return evt.trim();
-        });
+        if(!Array.isArray(events)) {
+            evts = [evts];
+        }
         for (let i = 0; i < evts.length; i++) {
             let evt = evts[i];
             if (!events[evt]) {
@@ -236,14 +236,16 @@ export class Sculpt {
     /**
      * emit Event Alias with params
      * @param {String} evt
-     * @param {Event} param
+     * @param {Event} customEvt
+     * @param {Array} args
      */
-    emit(evt, param) {
+    emit(evt, customEvt, ...args) {
         let events = this.getEvents();
         if (events[evt] && events[evt].length > 0) {
             for (let f = 0; f < events[evt].length; f++) {
-                if (typeof events[evt][f] === "function")
-                    events[evt][f](param);
+                if (typeof events[evt][f] === "function") {
+                    events[evt][f].apply((customEvt && customEvt.target), [customEvt].concat(args));
+                }
             }
         }
     }

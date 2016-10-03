@@ -18,6 +18,8 @@ var scene = new THREE.Scene();
 
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 10000);
 
+var skybox;
+
 var controls = new THREE.VRControls(camera);
 controls.standing = true;
 
@@ -41,7 +43,7 @@ function onTextureLoaded(texture) {
         side: THREE.BackSide
     });
 
-    var skybox = new THREE.Mesh(geometry, material);
+    skybox = new THREE.Mesh(geometry, material);
 
     scene.add(skybox);
     skybox.position.y = boxSize / 2 - controls.userHeight;
@@ -59,8 +61,10 @@ class CardboardObject extends RODIN.ObjectFromModel {
         super(
             CardboardObject,
             {
-                url: "./model/cardboard/cardboard.js"
-            },
+                url: "./model/cardboard/man.jd",
+                type: RODIN.CONSTANTS.SUPPORTED_MODEL_TYPES.JD
+            }
+            /*,
             [
                 {
                     url: "./model/cardboard/cardboard_m.jpg"
@@ -68,7 +72,7 @@ class CardboardObject extends RODIN.ObjectFromModel {
                 {
                     color: 0xaaaaaa
                 }
-            ]
+            ]*/
         );
     }
 }
@@ -86,14 +90,16 @@ scene.add(amlight);
 
 let cardboard = new CardboardObject();
 cardboard.on('ready', () => {
-    cardboard.object3D.position.x = -3;
-    cardboard.object3D.position.z = -5;
-    cardboard.object3D.scale.set(0.01, 0.01, 0.01);
+    //console.log(cardboard.object3D);
+    cardboard.object3D.position.x = 0;
+    cardboard.object3D.position.z = 0;
+    cardboard.object3D.position.y = controls.userHeight - 1;
+    cardboard.object3D.scale.set( 0.005, 0.005, 0.005 );
     scene.add(cardboard.object3D);
 });
 
 cardboard.on('update', () => {
-    cardboard.object3D && (cardboard.object3D.rotation.y += 0.01);
+    cardboard.object3D && (cardboard.object3D.rotation.y += 0);
 });
 
 requestAnimationFrame(animate);
@@ -103,8 +109,10 @@ window.addEventListener('vrdisplaypresentchange', onResize, true);
 
 var lastRender = 0;
 function animate(timestamp) {
-    var delta = Math.min(timestamp - lastRender, 500);
+    //todo create cardboardObject update for play animation
+    /*var delta = Math.min(timestamp - lastRender, 500);
     lastRender = timestamp;
+    cardboardObject.update(  new THREE.Clock().getDelta() );*/
 
     controls.update();
     manager.render(scene, camera, timestamp);

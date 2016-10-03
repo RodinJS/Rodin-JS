@@ -21,6 +21,7 @@ var tween = new TWEEN.Tween({ x: 0, y: 0 })
         console.log(this.x, this.y);
     })
     .start();
+var skybox = null;
 
 // WTF.is(tween);
 ///////////////////////////////////////////////////////////////////
@@ -83,7 +84,7 @@ function onTextureLoaded(texture) {
     });
 
     // Align the skybox to the floor (which is at y=0).
-    var skybox = new THREE.Mesh(geometry, material);
+    skybox = new THREE.Mesh(geometry, material);
 
     scene.add(skybox);
     skybox.position.y = boxSize / 2 - controls.userHeight;

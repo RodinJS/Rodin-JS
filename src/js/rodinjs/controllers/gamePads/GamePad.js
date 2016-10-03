@@ -12,12 +12,10 @@ export class GamePad extends THREE.Object3D {
      * @param {string, null} hand
      * @param {THREE.Scene} scene
      * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
+     * @param {number} raycastLayers
      * @todo: new.target safari problem
      */
-    constructor(navigatorGamePadId = "", hand = null, scene = null, camera = null) {
-/*        if (new.target === GamePad) {
-            throw new ErrorAbstractClassInstance();
-        }*/
+    constructor(navigatorGamePadId = "", hand = null, scene = null, camera = null, raycastLayers = 1) {
 
         super();
 
@@ -30,10 +28,12 @@ export class GamePad extends THREE.Object3D {
         this.raycaster = new Raycaster();
         this.raycaster.setScene(scene);
         this.camera = camera;
+        this.raycastLayers = raycastLayers;
         this.intersected = [];
         this.tempMatrix = new THREE.Matrix4();
         this.matrixAutoUpdate = false;
         this.standingMatrix = new THREE.Matrix4();
+        this.engaged = false;
 
         this.buttons = [
             KEY_CODES.KEY1,
@@ -44,6 +44,7 @@ export class GamePad extends THREE.Object3D {
             KEY_CODES.KEY6
         ];
     }
+
 
     /**
      * get controller from navigator
@@ -97,14 +98,32 @@ export class GamePad extends THREE.Object3D {
         }
 
         for (let i = 0; i < controller.buttons.length; i++) {
+
+            // Handle controller button pressed event
+            // Vibrate the gamepad using to the value of the button as
+            // the vibration intensity.
             if (this.buttonsPressed[i] !== controller.buttons[i].pressed) {
                 controller.buttons[i].pressed ? this.onKeyDown(this.buttons[i]) : this.onKeyUp(this.buttons[i]);
                 this.buttonsPressed[i] = controller.buttons[i].pressed;
+
+                if ("haptics" in controller && controller.haptics.length > 0) {
+                    if (controller.buttons[i]) {
+                        controller.haptics[0].vibrate(controller.buttons[i].value, 50);
+                        break;
+                    }
+                }
             }
 
-            if (this.buttonsTouched !== controller.buttons[i].touched) {
-                controller.buttons[i].touched ? this.onTouchDown(this.buttons[i]) : this.onTouchUp(this.buttons[i]);
-                this.buttonsTouched = controller.buttons[i].touched;
+            // Handle controller button touch event
+            // Vibrate the gamepad using to the value of the button as
+            // the vibration intensity.
+            if (this.buttonsTouched[i] !== controller.buttons[i].touched ) {
+                controller.buttons[i].touched ? this.onTouchDown(this.buttons[i], controller) : this.onTouchUp(this.buttons[i], controller);
+                this.buttonsTouched[i] = controller.buttons[i].touched;
+            }
+
+            if (controller.buttons[i].touched ) {
+                this.onTouchDown(this.buttons[i], controller);
             }
         }
 
@@ -134,21 +153,28 @@ export class GamePad extends THREE.Object3D {
      */
     intersectObjects() {
         if (!this.getIntersections) {
-            console.warn(`getIntersections method is not overwritten`);
+            console.warn(`getIntersections method is not defined`);
         }
 
+        if (this.engaged)return;
         let intersections = this.getIntersections();
 
-        this.intersected.map(i => {
+        if (intersections.length > 0) {
+            if (intersections.length > this.raycastLayers) {
+                intersections.splice(this.raycastLayers, (intersections.length - this.raycastLayers));
+            }
+        }
+
+        this.intersected.map(intersect => {
             let found = false;
             for (let int = 0; int < intersections.length; int++) {
-                if (intersections[int].object.Sculpt === i) {
+                if (intersections[int].object.Sculpt === intersect) {
                     found = true;
                 }
             }
-
             if (!found) {
-                i.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT);
+                this.gampadHoverOut();
+                intersect.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT, this);
             }
         });
 
@@ -156,8 +182,11 @@ export class GamePad extends THREE.Object3D {
 
         if (intersections.length > 0) {
             intersections.map(intersect => {
-                intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, new Event(intersect.object.Sculpt));
+                let evt = new Event(intersect.object.Sculpt);
+                evt.distance = intersect.distance;
                 this.intersected.push(intersect.object.Sculpt);
+                this.gampadHover(intersect);
+                intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, evt, this);
             });
         }
     }
@@ -166,44 +195,43 @@ export class GamePad extends THREE.Object3D {
      * @param {string} eventName
      * @param {*} DOMEvent
      * @param {number} keyCode
+     * @param {null} controller
      */
-    raycastAndEmitEvent(eventName, DOMEvent, keyCode) {
-        if (!this.getIntersections) {
-            console.warn(`getIntersections method is not overwritten`);
-        }
-
-        var intersections = this.getIntersections();
-
-        if (intersections.length > 0) {
-            intersections.map(i => i.object.Sculpt.emit(eventName, new Event(i.object.Sculpt, DOMEvent, keyCode, this.hand)));
+    raycastAndEmitEvent(eventName, DOMEvent, keyCode, controller = null) {
+        if (this.intersected && this.intersected.length > 0) {
+            this.intersected.map(intersect => {
+                let evt = new Event(intersect.object3D.Sculpt, DOMEvent, keyCode, this.hand);
+                evt.distance = intersect.distance;
+                intersect.object3D.Sculpt.emit(eventName, evt, controller);
+            });
         }
     }
+
 
     /**
      * @param {number} keyCode
      */
     onKeyDown(keyCode) {
-        this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_KEY_DOWN, null, keyCode);
     }
 
     /**
      * @param {number} keyCode
      */
     onKeyUp(keyCode) {
-        this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode);
     }
 
     /**
      * @param {number} keyCode
+     * @param {object} gamepad
      */
-    onTouchDown(keyCode) {
-        this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_TOUCH_START, null, keyCode);
+    onTouchDown(keyCode, gamepad) {
     }
 
     /**
      * @param {number} keyCode
+     * @param {object} gamepad
      */
-    onTouchUp(keyCode) {
-        this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_TOUCH_END, null, keyCode);
+    onTouchUp(keyCode, gamepad) {
     }
+
 }
