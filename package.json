@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "dat-gui": "^0.5.0",
-    "es6-promise": "^3.3.1",
+    "es6-promise": "^4.0.0",
     "three": "^0.81.0",
     "tween.js": "^16.3.5",
     "webvr-boilerplate": "^0.4.6",
