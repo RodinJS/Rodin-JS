@@ -224,9 +224,11 @@ export class ObjectFromModel extends Sculpt {
                     objectGeometry.url,
 
                     ( data ) => { // data: { materials, geometries, boundingSphere }
+
                         var multiMaterial = new THREE.MultiMaterial(data.materials);
                         for (var i = 0; i < data.geometries.length; ++i)
                         {
+
                             var mesh = new THREE.SkinnedMesh(data.geometries[i], multiMaterial);
                             meshes.add(mesh);
 

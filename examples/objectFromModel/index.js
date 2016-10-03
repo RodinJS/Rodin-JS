@@ -61,8 +61,8 @@ class CardboardObject extends RODIN.ObjectFromModel {
         super(
             CardboardObject,
             {
-                url: "./model/cardboard/man.jd",
-                type: RODIN.CONSTANTS.SUPPORTED_MODEL_TYPES.JD
+                url: "./model/cardboard/Tree.jd", // or tree.obj
+                type: RODIN.CONSTANTS.SUPPORTED_MODEL_TYPES.JD  // or .OBJ
             }
             /*,
             [
