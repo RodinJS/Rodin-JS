@@ -68,7 +68,7 @@ const UGLIFY_AGRESIVE = {
     // comparisons   : true,  // optimize comparisons
     // evaluate      : true,  // evaluate constant expressions
     // booleans      : true  // optimize boolean expressions
-    preserveComments: 'license',
+    // preserveComments: 'license',
     mangle: true,
     compress: true
 };
@@ -91,7 +91,9 @@ gulp.task('js', () => {
   return gulp.src(JS)
     .pipe(plumber(ERROR_MESSAGE))
     .pipe(babel())
+
     .pipe(s)
+      // .pipe(uglify(UGLIFY_AGRESIVE))
     .pipe(plumber.stop())
     .pipe(gulp.dest('./_build/js'))
     .pipe(notify({
