@@ -2,9 +2,10 @@ import {ErrorAbstractClassInstance} from '../error/CustomErrors.js';
 
 class Cookie {
     constructor() {
-        if (new.target === Cookie) {
+        //todo "new.target" issue
+/*        if (new.target === Cookie) {
             throw new ErrorAbstractClassInstance();
-        }
+        }*/
     }
 
     static getCookies() {

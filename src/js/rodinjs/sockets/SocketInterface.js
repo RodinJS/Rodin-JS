@@ -2,9 +2,10 @@ import {ErrorAbstractClassInstance} from '../error/CustomErrors.js';
 
 class SocketInterface {
     constructor(channel = "", room = "") {
-        if (new.target === SocketInterface) {
+        //todo "new.target" issue
+/*        if (new.target === SocketInterface) {
             throw new ErrorAbstractClassInstance();
-        }
+        }*/
         this.channel = channel;
         this.room = room;
     }
