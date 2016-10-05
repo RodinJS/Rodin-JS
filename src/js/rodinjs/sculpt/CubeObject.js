@@ -20,8 +20,7 @@ export class CubeObject extends Sculpt {
 	        for(let i = 0; i < CubeObject.Sides.order.length; i ++) {
 	            let side = CubeObject.Sides.order[i];
 	            materials.push(new THREE.MeshBasicMaterial({
-	                map: this.createMaterial(CubeObject.Sides.configs[side], imageObj),
-	                transparent: true
+	                map: this.createMaterial(CubeObject.Sides.configs[side], imageObj)
 	            }));
 	        }
 
