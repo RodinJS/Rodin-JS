@@ -20,6 +20,10 @@ document.body.appendChild(renderer.domElement);
 // Create a three.js scene.
 var scene = new THREE.Scene();
 
+// Add a skybox.
+var boxSize = 15;
+var skybox = new RODIN.CubeObject(boxSize, 'img/boxW.png');
+
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 
@@ -45,21 +49,15 @@ controls.object.position.y = controls.userHeight;
 var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
-
-// Add a skybox.
-var boxSize = 15;
-var skybox = new RODIN.CubeObject(boxSize, 'img/boxW.png')
-
 skybox.on('ready', () => {
     scene.add(skybox.object3D);
     skybox.object3D.position.y = controls.userHeight;
+    setupStage();
 });
 
 
 // For high end VR devices like Vive and Oculus, take into account the stage
 // parameters provided.
-setupStage()
-
 
 // Create a VR manager helper to enter and exit VR mode.
 var params = {
@@ -81,7 +79,7 @@ for (var i = 0; i < boxCount; i++) {
     scene.add(cubes[i]);
 }
 
-// Position cube mesh to be right in front of you.
+//Position cube mesh to be right in front of you.
 //cube.position.set(0, controls.userHeight, -1);
 
 // Add cube mesh to your three.js scene
@@ -98,8 +96,7 @@ var lastRender = 0;
 function animate(timestamp) {
     var delta = Math.min(timestamp - lastRender, 500);
     lastRender = timestamp;
-    // Apply rotation to cube mesh
-//  cube.rotation.y += delta * 0.0006;
+    //Apply rotation to cube mesh
     for (var i = 0; i < boxCount; i++) {
         cubes[i].rotation.y += delta * 0.001;
     }
@@ -143,17 +140,14 @@ function setStageDimensions(stage) {
     scene.remove(skybox.object3D);
 
     // Size the skybox according to the size of the actual stage.
-    boxSize = Math.max(stage.sizeX, stage.sizeY);
-    var skybox = new RODIN.CubeObject(boxSize, 'img/boxW.png')
+    boxSize = Math.max(stage.sizeX, stage.sizeZ);
+    skybox = new RODIN.CubeObject(boxSize, 'img/boxW.png');
 
     skybox.on('ready', () => {
+        // Place it on the floor.
         scene.add(skybox.object3D);
-        skybox.object3D.position.y = boxSize / 2 - controls.userHeight;
+        skybox.object3D.position.y = controls.userHeight;
     });
-
-    // Place it on the floor.
-    skybox.object3D.position.y = boxSize / 2;
-    scene.add(skybox.object3D);
 
     // Place the cube in the middle of the scene, at user height.
 //  cube.position.set(0, controls.userHeight, 0);
