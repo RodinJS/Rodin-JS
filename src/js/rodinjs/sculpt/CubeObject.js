@@ -5,89 +5,89 @@ import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 
 export class CubeObject extends Sculpt {
-	constructor(size, textureURL) {
-		super();
-		let textures = [];
-	    for(let i = 0; i < 6; i ++) {
-	        textures.push(new THREE.Texture());
-	    }
+    constructor(size, textureURL) {
+        super();
+        let textures = [];
+        for (let i = 0; i < 6; i++) {
+            textures.push(new THREE.Texture());
+        }
 
-	    let materials = [];
+        let materials = [];
 
-	    let imageObj = new Image();
-	    imageObj.onload = () => {
+        let imageObj = new Image();
+        imageObj.onload = () => {
 
-	        for(let i = 0; i < CubeObject.Sides.order.length; i ++) {
-	            let side = CubeObject.Sides.order[i];
-	            materials.push(new THREE.MeshBasicMaterial({
-	                map: this.createMaterial(CubeObject.Sides.configs[side], imageObj),
-	                transparent: true
-	            }));
-	        }
+            for (let i = 0; i < CubeObject.Sides.order.length; i++) {
+                let side = CubeObject.Sides.order[i];
+                materials.push(new THREE.MeshBasicMaterial({
+                    map: this.createMaterial(CubeObject.Sides.configs[side], imageObj),
+                    transparent: true
+                }));
+            }
 
-	        let cube = new THREE.Mesh(new THREE.CubeGeometry(size, size, size), new THREE.MeshFaceMaterial(materials));
-	        cube.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
+            let cube = new THREE.Mesh(new THREE.CubeGeometry(size, size, size), new THREE.MeshFaceMaterial(materials));
+            cube.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
 
-	        super.init(cube);
+            super.init(cube);
 
-	        return this.emit("ready", new Event(this));
-	    };
+            return this.emit("ready", new Event(this));
+        };
 
-	    imageObj.src = textureURL;
-	}
+        imageObj.src = textureURL;
+    }
 
-	static SIDENAMES = {
-		FRONT: 'F',
-		BACK: 'B',
-		UP: 'U',
-		DOWN: 'D',
-		LEFT: 'L',
-		RIGHT: 'R'
-	};
+    static SIDENAMES = {
+        FRONT: 'F',
+        BACK: 'B',
+        UP: 'U',
+        DOWN: 'D',
+        LEFT: 'L',
+        RIGHT: 'R'
+    };
 
-	static Sides = {
-		order: [
-			CubeObject.SIDENAMES.FRONT,
-			CubeObject.SIDENAMES.BACK,
-			CubeObject.SIDENAMES.UP,
-			CubeObject.SIDENAMES.DOWN,
-			CubeObject.SIDENAMES.LEFT,
-			CubeObject.SIDENAMES.RIGHT
-		],
+    static Sides = {
+        order: [
+            CubeObject.SIDENAMES.FRONT,
+            CubeObject.SIDENAMES.BACK,
+            CubeObject.SIDENAMES.UP,
+            CubeObject.SIDENAMES.DOWN,
+            CubeObject.SIDENAMES.LEFT,
+            CubeObject.SIDENAMES.RIGHT
+        ],
 
-		configs: {
-			F: {
-				rotate: 0,
-				translate: [0, 0],
-				position: [0, 1]
-			},
-			B: {
-				rotate: 0,
-				translate: [0, 0],
-				position: [2, 1]
-			},
-			U: {
-				rotate: Math.PI,
-				translate: [-1, -1],
-				position: [1, 0]
-			},
-			D: {
-				rotate: Math.PI,
-				translate: [-1, -1],
-				position: [1, 2]
-			},
-			L: {
-				rotate: 0,
-				translate: [0, 0],
-				position: [3, 1]
-			},
-			R: {
-				rotate: 0,
-				translate: [0, 0],
-				position: [1, 1]
-			}
-		}
-	};
+        configs: {
+            F: {
+                rotate: 0,
+                translate: [0, 0],
+                position: [0, 1]
+            },
+            B: {
+                rotate: 0,
+                translate: [0, 0],
+                position: [2, 1]
+            },
+            U: {
+                rotate: Math.PI,
+                translate: [-1, -1],
+                position: [1, 0]
+            },
+            D: {
+                rotate: Math.PI,
+                translate: [-1, -1],
+                position: [1, 2]
+            },
+            L: {
+                rotate: 0,
+                translate: [0, 0],
+                position: [3, 1]
+            },
+            R: {
+                rotate: 0,
+                translate: [0, 0],
+                position: [1, 1]
+            }
+        }
+    };
 
     createMaterial(configs, imageObj) {
         let tileSize = imageObj.height / 3;
@@ -98,10 +98,36 @@ export class CubeObject extends Sculpt {
 
         canvas.width = tileSize;
         canvas.height = tileSize;
+
+
+        canvas.style.position = "absolute";
+        canvas.style.left = "-150%";
+        canvas.style.top = "-150%";
+
         context.rotate(configs.rotate);
         context.translate(configs.translate[0] * tileSize, configs.translate[1] * tileSize);
         context.drawImage(imageObj, left, top, tileSize - 2, tileSize - 2, 0, 0, tileSize, tileSize);
-        document.body.appendChild(canvas);
+
+        let cont = document.querySelector("#material-canvases-temporary-container");
+
+        if (!cont) {
+            cont = document.createElement('div');
+            cont.setAttribute("id", "material-canvases-temporary-container");
+
+            cont.style.position = "absolute";
+            cont.style.left = "-150%";
+            cont.style.top = "-150%";
+
+            cont.style.width = "0";
+            cont.style.height = "0";
+
+            document.body.appendChild(cont);
+        }
+
+
+        cont.appendChild(canvas);
+
+
         let texture = new THREE.Texture();
         texture.image = canvas;
         texture.needsUpdate = true;
