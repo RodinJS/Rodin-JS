@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/grigorkh/Rodin-JS#readme",
   "devDependencies": {
-    "babel-plugin-transform-class-properties": "^6.16.0",
+    "babel-plugin-transform-class-properties": "^6.18.0",
     "babel-plugin-transform-es2015-modules-systemjs": "^6.14.0",
     "babel-plugin-undeclared-variables-check": "^6.8.0",
     "babel-preset-es2015": "^6.16.0",
