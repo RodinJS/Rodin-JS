@@ -4,11 +4,11 @@ import {ErrorOculusControllerAlreadyExists} from '../../error/CustomErrors.js';
 let controllerCreated = false;
 
 export class OculusController extends GamePad {
-    constructor(scene = null, cameara = null) {
+    constructor(scene = null, camera = null) {
         if(controllerCreated) {
             throw new ErrorOculusControllerAlreadyExists();
         }
-        super('oculus', null, scene, cameara);
+        super('oculus', null, scene, camera);
     }
 
     getIntersections() {

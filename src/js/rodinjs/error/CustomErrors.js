@@ -47,6 +47,12 @@ export class ErrorNoValueProvided extends CustomError {
     }
 }
 
+export class ErrorMouseControllerAlreadyExists extends CustomError {
+    constructor() {
+        super(`Error Mouse controller already exists`);
+    }
+}
+
 export class ErrorViveControllerAlreadyExists extends CustomError {
     constructor(hand) {
         super(`Error Vive controller already exists for ${hand} hand`);

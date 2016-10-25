@@ -45,7 +45,6 @@ export class GamePad extends THREE.Object3D {
         ];
     }
 
-
     /**
      * get controller from navigator
      * @param {string} id
@@ -71,6 +70,22 @@ export class GamePad extends THREE.Object3D {
     }
 
     /**
+     * get mouse controller event
+     * @param {string} id
+     * @returns {Object} controller or null
+     */
+    static MouseControllerEvent(id){
+        let mouseEvent = new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+        //console.log(mouseEvent);
+
+        return mouseEvent;
+    }
+
+    /**
      * Set scene for raycaster
      *
      * @param {THREE.Scene} scene
@@ -92,10 +107,17 @@ export class GamePad extends THREE.Object3D {
      * All logic goes here
      */
     update() {
-        let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
-        if (!controller) {
-            return console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
+        let controller;
+        if (this.navigatorGamePadId !== "MouseEvent")
+        {
+            controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
+            if (!controller) {
+                return console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
+           }
+        } else {
+            controller = GamePad.MouseControllerEvent(this.navigatorGamePadId);
         }
+
 
         for (let i = 0; i < controller.buttons.length; i++) {
 
@@ -136,8 +158,8 @@ export class GamePad extends THREE.Object3D {
      * @param {Object} controller
      */
     updateObject(controller) {
-        if (controller.pose !== null) {
-            var pose = controller.pose;
+        if (controller.pose) {
+            let pose = controller.pose;
 
             if (pose.position !== null) this.position.fromArray(pose.position);
             if (pose.orientation !== null) this.quaternion.fromArray(pose.orientation);
