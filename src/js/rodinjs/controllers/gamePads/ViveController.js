@@ -39,11 +39,11 @@ export class ViveController extends GamePad {
         return this.raycaster.raycast();
     }
 
-    gampadHover(intersect){
+    gamepadHover(intersect){
         this.reycastingLine.geometry.vertices[1].z = -intersect.distance;
         this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
-    gampadHoverOut(){
+    gamepadHoverOut(){
         this.reycastingLine.geometry.vertices[1].z = -50;
         this.reycastingLine.geometry.verticesNeedUpdate = true;
     }

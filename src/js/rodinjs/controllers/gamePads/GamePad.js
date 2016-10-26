@@ -75,12 +75,11 @@ export class GamePad extends THREE.Object3D {
      * @returns {Object} controller or null
      */
     static MouseControllerEvent(id){
-        let mouseEvent = new MouseEvent("click", {
+        let mouseEvent = new MouseEvent("move", {
             bubbles: true,
             cancelable: true,
             view: window
         });
-        //console.log(mouseEvent);
 
         return mouseEvent;
     }
@@ -108,49 +107,47 @@ export class GamePad extends THREE.Object3D {
      */
     update() {
         let controller;
-        if (this.navigatorGamePadId !== "MouseEvent")
-        {
+        //console.log(this.navigatorGamePadId);
+        if (this.navigatorGamePadId !== "mouse") {
             controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
             if (!controller) {
                 return console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
-           }
-        } else {
-            controller = GamePad.MouseControllerEvent(this.navigatorGamePadId);
-        }
+            }
 
+            console.log(controller.buttons.length);
 
-        for (let i = 0; i < controller.buttons.length; i++) {
+            for (let i = 0; i < controller.buttons.length; i++) {
 
-            // Handle controller button pressed event
-            // Vibrate the gamepad using to the value of the button as
-            // the vibration intensity.
-            if (this.buttonsPressed[i] !== controller.buttons[i].pressed) {
-                controller.buttons[i].pressed ? this.onKeyDown(this.buttons[i]) : this.onKeyUp(this.buttons[i]);
-                this.buttonsPressed[i] = controller.buttons[i].pressed;
+                // Handle controller button pressed event
+                // Vibrate the gamepad using to the value of the button as
+                // the vibration intensity.
+                if (this.buttonsPressed[i] !== controller.buttons[i].pressed) {
+                    controller.buttons[i].pressed ? this.onKeyDown(this.buttons[i]) : this.onKeyUp(this.buttons[i]);
+                    this.buttonsPressed[i] = controller.buttons[i].pressed;
 
-                if ("haptics" in controller && controller.haptics.length > 0) {
-                    if (controller.buttons[i]) {
-                        controller.haptics[0].vibrate(controller.buttons[i].value, 50);
-                        break;
+                    if ("haptics" in controller && controller.haptics.length > 0) {
+                        if (controller.buttons[i]) {
+                            controller.haptics[0].vibrate(controller.buttons[i].value, 50);
+                            break;
+                        }
                     }
                 }
-            }
 
-            // Handle controller button touch event
-            // Vibrate the gamepad using to the value of the button as
-            // the vibration intensity.
-            if (this.buttonsTouched[i] !== controller.buttons[i].touched ) {
-                controller.buttons[i].touched ? this.onTouchDown(this.buttons[i], controller) : this.onTouchUp(this.buttons[i], controller);
-                this.buttonsTouched[i] = controller.buttons[i].touched;
-            }
+                // Handle controller button touch event
+                // Vibrate the gamepad using to the value of the button as
+                // the vibration intensity.
+                if (this.buttonsTouched[i] !== controller.buttons[i].touched) {
+                    controller.buttons[i].touched ? this.onTouchDown(this.buttons[i], controller) : this.onTouchUp(this.buttons[i], controller);
+                    this.buttonsTouched[i] = controller.buttons[i].touched;
+                }
 
-            if (controller.buttons[i].touched ) {
-                this.onTouchDown(this.buttons[i], controller);
+                if (controller.buttons[i].touched) {
+                    this.onTouchDown(this.buttons[i], controller);
+                }
             }
+            this.updateObject(controller);
         }
-
-        this.intersectObjects();
-        this.updateObject(controller);
+            this.intersectObjects();
     }
 
     /**
@@ -195,7 +192,7 @@ export class GamePad extends THREE.Object3D {
                 }
             }
             if (!found) {
-                this.gampadHoverOut();
+                this.gamepadHoverOut();
                 intersect.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT, this);
             }
         });
@@ -207,7 +204,7 @@ export class GamePad extends THREE.Object3D {
                 let evt = new Event(intersect.object.Sculpt);
                 evt.distance = intersect.distance;
                 this.intersected.push(intersect.object.Sculpt);
-                this.gampadHover(intersect);
+                this.gamepadHover(intersect);
                 intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, evt, this);
             });
         }
@@ -256,4 +253,9 @@ export class GamePad extends THREE.Object3D {
     onTouchUp(keyCode, gamepad) {
     }
 
+    gamepadHover(intersect){
+    }
+
+    gamepadHoverOut(){
+    }
 }
