@@ -114,8 +114,6 @@ export class GamePad extends THREE.Object3D {
                 return console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
             }
 
-            console.log(controller.buttons.length);
-
             for (let i = 0; i < controller.buttons.length; i++) {
 
                 // Handle controller button pressed event
