@@ -1,6 +1,7 @@
 import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
+import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
 console.log(RODIN);
 
@@ -140,6 +141,7 @@ for ( var i = 0; i < 50; i ++ ) {
 
     obj.on('ready', () => {
         group.add(obj.object3D);
+        obj.object3D.initialParent = obj.object3D.parent;
         RODIN.Raycastables.push(obj.object3D);
     });
 
@@ -168,6 +170,56 @@ for ( var i = 0; i < 50; i ++ ) {
     });
 }
 
+controller.onKeyDown = controllerKeyDown;
+controller.onKeyUp = controllerKeyUp;
+
+function controllerKeyDown(keyCode) {
+    console.log(controls);
+    //if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
+    this.engaged = true;
+    if (!this.pickedItems) {
+        this.pickedItems = [];
+    }
+
+    if (this.intersected && this.intersected.length > 0) {
+        this.intersected.map(intersect => {
+            console.log(intersect.object3D.parent,intersect)
+            if (intersect.object3D.parent != intersect.object3D.initialParent) {
+                return;
+            }
+
+            changeParent(intersect.object3D, camera);
+            //let targetParent = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.04, 12, 12));
+            let targetParent = new THREE.Object3D();
+            camera.add(targetParent);
+            targetParent.position.copy(intersect.object3D.position);
+            changeParent(intersect.object3D, targetParent);
+
+            this.pickedItems.push(intersect.object3D);
+            if (intersect.initialRotX) {
+                intersect.initialRotX = 0;
+                intersect.initialRotY = 0;
+            }
+        });
+    }
+
+    this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, null, keyCode, this);
+}
+
+function controllerKeyUp(keyCode) {
+    console.log("up",keyCode);
+    //if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
+    this.engaged = false;
+    if (this.pickedItems && this.pickedItems.length > 0) {
+        this.pickedItems.map(item => {
+            let targetParent = item.parent;
+            changeParent(item, item.initialParent);
+            camera.remove(targetParent);
+        });
+        this.pickedItems = [];
+    }
+    this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode, this);
+}
 requestAnimationFrame(animate);
 
 window.addEventListener('resize', onResize, true);

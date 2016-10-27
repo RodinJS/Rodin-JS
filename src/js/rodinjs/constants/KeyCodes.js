@@ -1,3 +1,4 @@
+export const KEY0 = 0;
 export const KEY1 = 1;
 export const KEY2 = 2;
 export const KEY3 = 3;
