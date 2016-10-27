@@ -131,8 +131,6 @@ for ( var i = 0; i < 50; i ++ ) {
     object.castShadow = true;
     object.receiveShadow = true;
 
-    // group.add( object );
-
     let obj = new RODIN.THREEObject(object);
 
     obj.on('ready', () => {
