@@ -9,15 +9,9 @@ import '../../node_modules/three/examples/js/effects/VREffect.js';
 import '../../node_modules/three/examples/js/loaders/OBJLoader.js';
 import '../../node_modules/three/examples/js/WebVR.js';
 
-
 WTF.is('Rodin.JS v0.0.1');
 
-
-if ( WEBVR.isLatestAvailable() === false ) {
-
-    document.body.appendChild( WEBVR.getMessage() );
-
-}
+/////////////////////////////WebVR Example/////////////////////////////////////
 
 // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
 // Only enable it if you actually need to.
@@ -53,26 +47,27 @@ scene.add(camera);
 var controls = new THREE.VRControls(camera);
 controls.standing = true;
 
+// Apply VR stereo rendering to renderer.
+var effect = new THREE.VREffect( renderer );
+effect.setSize(window.innerWidth, window.innerHeight);
+
+// Create a VR manager helper to enter and exit VR mode.
+var params = {
+    hideButton: false, // Default: false.
+    isUndistorted: false // Default: false.
+};
+
+var manager = new WebVRManager(renderer, effect, params);
+
 var raycaster;
 
 // controllers
-
 var controller = new RODIN.OculusController();
 controller.setRaycasterScene(scene);
 controller.setRaycasterCamera(camera);
 // scene.add( controller1 );
 
 raycaster = new RODIN.Raycaster( scene );
-
-// Apply VR stereo rendering to renderer.
-var effect = new THREE.VREffect( renderer );
-effect.setSize(window.innerWidth, window.innerHeight);
-
-if ( WEBVR.isAvailable() === true ) {
-
-    document.body.appendChild( WEBVR.getButton( effect ) );
-
-}
 
 var geometry = new THREE.PlaneGeometry( 4, 4 );
 var material = new THREE.MeshStandardMaterial( {
@@ -168,33 +163,30 @@ for ( var i = 0; i < 50; i ++ ) {
     });
 }
 
+// Kick off animation loop
 requestAnimationFrame(animate);
 
 window.addEventListener('resize', onResize, true);
 window.addEventListener('vrdisplaypresentchange', onResize, true);
 
 // Request animation frame loop function
-function animate() {
+function animate(timestamp) {
 
-    requestAnimationFrame(animate);
-    render();
-
-}
-
-function render() {
-
+    // Update controller.
     controller.update();
     controls.update();
-    effect.render( scene, camera );
+
+    // Render the scene through the manager.
+    manager.render(scene, camera, timestamp);
+
+    requestAnimationFrame(animate);
+
 }
 
 function onResize(e) {
-
     effect.setSize(window.innerWidth, window.innerHeight);
-
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
 }
 
 

@@ -11,7 +11,6 @@ import '../../node_modules/three/examples/js/effects/VREffect.js';
 import '../../node_modules/three/examples/js/loaders/OBJLoader.js';
 import '../../node_modules/three/examples/js/WebVR.js';
 
-
 WTF.is('Rodin.JS v0.0.1');
 
 /////////////////////////////WebVR Example/////////////////////////////////////
@@ -20,7 +19,6 @@ WTF.is('Rodin.JS v0.0.1');
 // Only enable it if you actually need to.
 var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setPixelRatio(window.devicePixelRatio);
-
 
 renderer.shadowMap.enabled = true;
 renderer.gammaInput = true;
@@ -35,6 +33,8 @@ scene.background = new THREE.Color(0x808080);
 
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+
+scene.add(camera);
 
 // Apply VR headset positional data to camera.
 var controls = new THREE.VRControls(camera);
@@ -54,6 +54,7 @@ var manager = new WebVRManager(renderer, effect, params);
 
 var raycaster;
 
+// controllers
 var controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
