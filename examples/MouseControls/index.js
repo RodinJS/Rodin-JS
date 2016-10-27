@@ -228,13 +228,14 @@ function animate(timestamp) {
 
     // Update controller.
     controller.update();
+
+    // Update VR headset position and apply to camera.
     controls.update();
 
     // Render the scene through the manager.
     manager.render(scene, camera, timestamp);
 
     requestAnimationFrame(animate);
-
 }
 
 function onResize(e) {
@@ -243,4 +244,4 @@ function onResize(e) {
     camera.updateProjectionMatrix();
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////
