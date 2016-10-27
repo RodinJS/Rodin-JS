@@ -19,15 +19,16 @@ export class ViveController extends GamePad {
 
         hand === CONTROLLER_HANDS.LEFT ? leftHandControllerCreated = true : rightHandControllerCreated = true;
 
-        var targetGeometry = new THREE.Geometry();
+        let targetGeometry = new THREE.Geometry();
         targetGeometry.vertices.push(
             new THREE.Vector3(0, 0, 0),
             new THREE.Vector3(0, 0, -1)
         );
 
-        var targetLine = new THREE.Line(targetGeometry, new THREE.LineBasicMaterial( {color: 0xff0000 } ));
+        let targetLine = new THREE.Line(targetGeometry, new THREE.LineBasicMaterial( {color: 0xff0000 } ));
+        this.targetLineDistance = -50;
         targetLine.name = 'targetLine';
-        targetLine.geometry.vertices[1].z = -50;
+        targetLine.geometry.vertices[1].z = this.targetLineDistance;
         this.add(targetLine);
         this.reycastingLine = targetLine;
     }
@@ -44,7 +45,7 @@ export class ViveController extends GamePad {
         this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
     gamepadHoverOut(){
-        this.reycastingLine.geometry.vertices[1].z = -50;
+        this.reycastingLine.geometry.vertices[1].z = this.targetLineDistance;
         this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
 

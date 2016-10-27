@@ -127,14 +127,16 @@ for (var i = 0; i < 12; i++) {
     });
 
     var object = new THREE.Mesh(geometry, material);
+
     object.position.x = (Math.random() - 0.5) * 2;
     object.position.y = (Math.random() - 0.5) * 2;
     object.position.z = (Math.random() - 0.5) * 2;
+
     object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
     object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
     object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
-    object.scale.set( 1, 1, 1);
 
+    object.scale.set(1, 1, 1);
 
     object.castShadow = true;
     object.receiveShadow = true;
@@ -158,8 +160,8 @@ for (var i = 0; i < 12; i++) {
         obj.hoveringObjects.push(controller);
     });
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (controller) => {
-        if (obj.hoveringObjects.indexOf(controller) > -1){
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt, controller) => {
+        if (obj.hoveringObjects.indexOf(controller) > -1) {
             obj.hoveringObjects.splice(obj.hoveringObjects.indexOf(controller));
         }
         if (obj.hoveringObjects.length !== 0 || obj.object3D.parent !== obj.object3D.initialParent) {
@@ -214,7 +216,7 @@ function controllerKeyDown(keyCode) {
     if (this.intersected && this.intersected.length > 0) {
         this.intersected.map(intersect => {
             if (intersect.object3D.parent != intersect.object3D.initialParent) {
-                 return;
+                return;
             }
 
             changeParent(intersect.object3D, this.reycastingLine);
