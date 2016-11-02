@@ -4,6 +4,7 @@ import {EVENT_NAMES, KEY_CODES} from '../../constants/constants.js';
 import {ErrorAbstractClassInstance} from '../../error/CustomErrors.js';
 import {Event} from '../../Event.js';
 
+import { MouseGamePad } from './MouseGamePad.js';
 export class GamePad extends THREE.Object3D {
 
     /**
@@ -19,9 +20,9 @@ export class GamePad extends THREE.Object3D {
 
         super();
 
+        navigator.mouseGamePad = new MouseGamePad();
         this.navigatorGamePadId = navigatorGamePadId;
         this.hand = hand;
-
         this.buttonsPressed = [false, false, false, false, false, false];
         this.buttonsTouched = [false, false, false, false, false, false];
         this.customController = null;
@@ -46,6 +47,9 @@ export class GamePad extends THREE.Object3D {
         ];
     }
 
+
+
+
     /**
      * get controller from navigator
      * @param {string} id
@@ -53,7 +57,15 @@ export class GamePad extends THREE.Object3D {
      * @returns {Object} controller or null
      */
     static getControllerFromNavigator(id, hand = null) {
-        let controllers = navigator.getGamepads();
+        let controllers = null;
+        try {
+            controllers = navigator.getGamepads();
+        } catch (ex){
+            controllers = [navigator.mouseGamePad] ;
+        }
+        if(!controllers || !controllers.length || controllers[0] === undefined){
+            controllers = [navigator.mouseGamePad] ;
+        }
         for (let i = 0; i < controllers.length; i++) {
             let controller = controllers[i];
             if (controller && controller.id && controller.id.match(new RegExp(id, 'gi'))) {
@@ -68,21 +80,6 @@ export class GamePad extends THREE.Object3D {
         }
 
         return null;
-    }
-
-    /**
-     * get mouse controller event
-     * @param {string} id
-     * @returns {Object} controller or null
-     */
-    static MouseControllerEvent(id){
-        let mouseEvent = new MouseEvent("move", {
-            bubbles: true,
-            cancelable: true,
-            view: window
-        });
-
-        return mouseEvent;
     }
 
     /**
@@ -107,14 +104,8 @@ export class GamePad extends THREE.Object3D {
      * All logic goes here
      */
     update() {
-        let controller;
-        //console.log(this.navigatorGamePadId);
-        if (this.navigatorGamePadId !== "mouse") {
-            controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
-        }
-        else{
-            controller = this.customController;
-        }
+        let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
+
         if (!controller) {
             return console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
         }
@@ -127,7 +118,6 @@ export class GamePad extends THREE.Object3D {
             if (this.buttonsPressed[i] !== controller.buttons[i].pressed) {
                 controller.buttons[i].pressed ? this.onKeyDown(this.buttons[i]) : this.onKeyUp(this.buttons[i]);
                 this.buttonsPressed[i] = controller.buttons[i].pressed;
-
                 if ("haptics" in controller && controller.haptics.length > 0) {
                     if (controller.buttons[i]) {
                         controller.haptics[0].vibrate(controller.buttons[i].value, 50);
@@ -148,11 +138,9 @@ export class GamePad extends THREE.Object3D {
                 this.onTouchDown(this.buttons[i], controller);
             }
         }
-
-        if (this.navigatorGamePadId !== "mouse") {
-            this.updateObject(controller);
-        }
-        this.intersectObjects();
+        this.onControllerUpdate();
+        this.updateObject(controller);
+        this.intersectObjects(controller);
     }
 
     /**
@@ -175,13 +163,13 @@ export class GamePad extends THREE.Object3D {
     /**
      * Checks all intersect and emits hover and hoverout events
      */
-    intersectObjects() {
+    intersectObjects(controller) {
         if (!this.getIntersections) {
             console.warn(`getIntersections method is not defined`);
         }
 
         if (this.engaged)return;
-        let intersections = this.getIntersections();
+        let intersections = this.getIntersections(controller);
 
         if (intersections.length > 0) {
             if (intersections.length > this.raycastLayers) {
@@ -241,7 +229,17 @@ export class GamePad extends THREE.Object3D {
     /**
      * @param {number} keyCode
      */
+    onKeyDown(keyCode) {
+    }
+    /**
+     * @param {number} keyCode
+     */
     onKeyUp(keyCode) {
+    }
+    /**
+     *
+     */
+    onControllerUpdate() {
     }
 
     /**
