@@ -8,7 +8,6 @@ import {ErrorAbstractClassInstance} from '../error/CustomErrors';
 
 /**
  * Abstract class Sculpt
- * @todo: new.target safari problem
  */
 export class Sculpt {
     constructor(id) {

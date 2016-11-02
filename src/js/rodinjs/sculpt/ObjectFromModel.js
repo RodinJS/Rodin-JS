@@ -19,6 +19,8 @@ import '../../../../src/js/rodinjs/vendor/JDLoader.min.js';
  */
 export class ObjectFromModel extends Sculpt {
     constructor(SubClass, objectGeometry ) {
+        super();
+
         if (this.constructor === ObjectFromModel) {
             throw new CustomErrors.ErrorAbstractClassInstance();
         }
@@ -30,8 +32,6 @@ export class ObjectFromModel extends Sculpt {
         if (!objectGeometry.type) {
             throw new CustomErrors.ErrorInvalidUrl('geometry.type');
         }
-
-        super();
 
         SubClass.objectLoaded = SubClass.objectLoaded || false;
         SubClass.geometry = SubClass.geometry || {};
