@@ -56,30 +56,19 @@ var params = {
 };
 var manager = new WebVRManager(renderer, effect, params);
 
-class CardboardObject extends RODIN.ObjectFromModel {
-    constructor() {
-        super(
-            CardboardObject,
-            {
-                url: "./model/cardboard/cardboard.js"
-            },
-            [
-                {
-                    url: "./model/cardboard/cardboard_m.jpg"
-                },
-                {
-                    color: 0xaaaaaa
-                }
-            ]
-        );
+class CardboardObject extends RODIN.JSONModelObject {
+    constructor(id) {
+        super(id, "./model/cardboard/cardboard.js" );
     }
 }
+
+
 
 var light1 = new THREE.DirectionalLight(0xffffff);
 light1.position.set(1, 1, 1);
 scene.add(light1);
 
-var light2 = new THREE.DirectionalLight(0x002288);
+var light2 = new THREE.DirectionalLight(0xffffff);
 light2.position.set(-1, -1, -1);
 scene.add(light2);
 
@@ -91,7 +80,13 @@ cardboard.on('ready', () => {
     cardboard.object3D.position.x = -3;
     cardboard.object3D.position.z = -5;
     cardboard.object3D.scale.set(0.01, 0.01, 0.01);
+    console.log(cardboard.object3D);
+    //cardboard.object3D.material.materials[0] = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load("./model/cardboard/cardboard_m.jpg"), color:0xffffff});
     scene.add(cardboard.object3D);
+});
+
+cardboard.on('update', (event) => {
+    event.target.object3D && (event.target.object3D.rotation.y += 0.01);
 });
 
 requestAnimationFrame(animate);
@@ -107,7 +102,7 @@ function animate(timestamp) {
 
     controls.update();
     manager.render(scene, camera, timestamp);
-    RODIN.Objects.map( obj => obj.emit('update', new RODIN.Event(obj)));
+    RODIN.Objects.map( obj => obj.emit('update', new RODIN.Event(obj), delta));
     TWEEN.update();
     requestAnimationFrame(animate);
 }
