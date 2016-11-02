@@ -34,13 +34,6 @@ scene.background = new THREE.Color( 0x808080 );
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
-/*var targetMap = new THREE.TextureLoader().load("./img/target.png");
-var targetMaterial = new THREE.SpriteMaterial({map: targetMap, color: 0xffffff, opacity: 1, depthTest: false});
-var target = new THREE.Sprite(targetMaterial);
-// var target = new THREE.Mesh(new THREE.SphereGeometry(0.2, 8, 8), new THREE.MeshBasicMaterial({color: 0xff0000, side: THREE.DoubleSide}));
-target.scale.set(0.01, 0.01, 0.01);
-target.position.set(0, 0, -1);
-camera.add(target);*/
 scene.add(camera);
 
 // scene.add(target)
@@ -67,7 +60,6 @@ var raycaster;
 var controller = new RODIN.MouseController();
 controller.setRaycasterScene(scene);
 controller.setRaycasterCamera(camera);
-// scene.add( controller1 );
 
 raycaster = new RODIN.Raycaster( scene );
 
@@ -152,66 +144,127 @@ for ( var i = 0; i < 50; i ++ ) {
     // CONTROLLER_KEY
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-        console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN + " Event, KeyCode " + evt.keyCode);
+        //console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN + " Event, KeyCode " + evt.keyCode);
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
-        console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP + " Event, KeyCode " + evt.keyCode);
+        //console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP + " Event, KeyCode " + evt.keyCode);
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {
-        console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK + " Event, KeyCode " + evt.keyCode);
+        //console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK + " Event, KeyCode " + evt.keyCode);
     });
 }
 
 controller.onKeyDown = controllerKeyDown;
 controller.onKeyUp = controllerKeyUp;
+controller.onControllerUpdate = controllerUpdate;
+
+
+/*function controllerUpdate() {
+    let mouse = this.getGamepad();
+    this.raycaster.setFromCamera( {x:mouse.axes[0], y:mouse.axes[1]}, camera );
+
+    if (this.pickedItems && this.pickedItems.length > 0) {
+        this.pickedItems.map(item => {
+            if ( this.raycaster.ray.intersectPlane( item.raycastCameraPlane, item.intersection ) ) {
+                if(this.keyCode === 1){
+                    item.position.copy( item.intersection.sub( item.offset ) );
+                } else if(this.keyCode === 3){
+                    let shift = item.intersection.sub( item.offset ).sub( item.position );
+                    let initParent = item.parent;
+                    changeParent(item, camera);
+                    item.rotation.x = item.initRotation.x - 4*shift.y;
+                    item.rotation.y = item.initRotation.y - 5*shift.x;
+                    item.rotation.z = item.initRotation.z;
+                    console.log(item.rotation );
+                    changeParent(item, initParent);
+
+                }
+            }
+        });
+    }
+}*/
+function controllerUpdate() {
+    let mouse = this.getGamepad();
+    this.raycaster.setFromCamera( {x:mouse.axes[0], y:mouse.axes[1]}, camera );
+
+    if (this.pickedItems && this.pickedItems.length > 0) {
+        this.pickedItems.map(item => {
+            if ( this.raycaster.ray.intersectPlane( item.raycastCameraPlane, item.intersection ) ) {
+                if(this.keyCode === 1){
+                    item.position.copy( item.intersection.sub( item.offset ) );
+                } else if(this.keyCode === 3){
+                    let shift = {x: mouse.axes[0] - item.initMousePos.x, y: mouse.axes[1] - item.initMousePos.y};
+                    item.initMousePos = {x: mouse.axes[0], y: mouse.axes[1]};
+                    let initParent = item.parent;
+                    changeParent(item, camera);
+                    let deltaRotationQuaternion = new THREE.Quaternion()
+                        .setFromEuler(
+                            new THREE.Euler(-shift.y * Math.PI, shift.x * Math.PI, 0, 'XYZ')
+                        );
+
+                    item.quaternion.multiplyQuaternions(deltaRotationQuaternion, item.quaternion);
+
+                    changeParent(item, initParent);
+                }
+            }
+        });
+    }
+}
 
 function controllerKeyDown(keyCode) {
-    console.log(controls);
-    //if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
+
+    console.log(keyCode);
+    if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
+    this.keyCode = keyCode;
     this.engaged = true;
     if (!this.pickedItems) {
         this.pickedItems = [];
     }
 
     if (this.intersected && this.intersected.length > 0) {
-        this.intersected.map(intersect => {
-            console.log(intersect.object3D.parent,intersect)
-            if (intersect.object3D.parent != intersect.object3D.initialParent) {
-                return;
-            }
+        let mouse = this.getGamepad();
+        mouse.stopPropagationOnMouseDown = true;
+        mouse.stopPropagationOnMouseMove = true;
 
-            changeParent(intersect.object3D, camera);
-            //let targetParent = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.04, 12, 12));
-            let targetParent = new THREE.Object3D();
-            camera.add(targetParent);
-            targetParent.position.copy(intersect.object3D.position);
-            changeParent(intersect.object3D, targetParent);
-
+        this.intersected.map( intersect => {
             this.pickedItems.push(intersect.object3D);
-            if (intersect.initialRotX) {
-                intersect.initialRotX = 0;
-                intersect.initialRotY = 0;
+
+            intersect.object3D.raycastCameraPlane = new THREE.Plane();
+            intersect.object3D.offset = new THREE.Vector3();
+            intersect.object3D.intersection = new THREE.Vector3();
+
+            intersect.object3D.raycastCameraPlane.setFromNormalAndCoplanarPoint(
+                camera.getWorldDirection(intersect.object3D.raycastCameraPlane.normal),
+                intersect.object3D.position
+            );
+
+            if ( this.raycaster.ray.intersectPlane( intersect.object3D.raycastCameraPlane, intersect.object3D.intersection   ) ) {
+                intersect.object3D.offset.copy( intersect.object3D.intersection ).sub( intersect.object3D.position );
+                if(keyCode === 3){
+                    let initParent = intersect.object3D.parent;
+                    changeParent(intersect.object3D, camera);
+                    intersect.object3D.initRotation = intersect.object3D.rotation.clone();
+                    intersect.object3D.initMousePos = {x: mouse.axes[0], y: mouse.axes[1]};
+                    changeParent(intersect.object3D, initParent);
+                }
             }
         });
+
+
     }
 
     this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, null, keyCode, this);
 }
 
 function controllerKeyUp(keyCode) {
-    console.log("up",keyCode);
-    //if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
+    if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
+    this.keyCode = null;
     this.engaged = false;
-    if (this.pickedItems && this.pickedItems.length > 0) {
-        this.pickedItems.map(item => {
-            let targetParent = item.parent;
-            changeParent(item, item.initialParent);
-            camera.remove(targetParent);
-        });
-        this.pickedItems = [];
-    }
+    this.getGamepad().stopPropagationOnMouseDown = false;
+    this.getGamepad().stopPropagationOnMouseMove = false;
+    this.pickedItems = [];
     this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode, this);
 }
 

@@ -2,7 +2,7 @@
 
 <html lang="en">
 <head>
-<title>RODIN.js - Cube Object</title>
+<title>RODIN.js</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
 <meta name="mobile-web-app-capable" content="yes">
@@ -23,7 +23,6 @@ body {
 
 <body>
 	<script type="text/javascript" src="../../_build/js/systemjs/system.js"></script>
-
 	<!--
 	  A polyfill for Promises. Needed for IE and Edge.
 	  -->
@@ -43,17 +42,20 @@ body {
 		System.import('../../_build/js/three/THREE.GLOBAL.js');
 
 		System.config({
-			map: {
-		        glsl: '../../_build/js/systemjs/glsl.js'  // path to glsl.js file
-			},
-			meta: {
+		    map: {
+		        glsl: '../../_build/js/systemjs/glsl.js'  // path to glsl.js file   
+		    },
+		    meta: {
 		        '../../_build/*.glsl': {   // for all glsl files on your project
-					loader: 'glsl'
-				}
-			},
-			packages: {
+		            loader: 'glsl'
+		        }
+		    },
+		    packages: {
 		        "../../_build": {  // path to your project root
-					"defaultJSExtensions": true
+		            "defaultJSExtensions": true
+		        },
+		        "../../node_modules": {
+		            "defaultJSExtensions": true
 		        }
 		    }
 		});
