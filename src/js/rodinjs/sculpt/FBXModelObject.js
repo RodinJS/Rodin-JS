@@ -3,6 +3,9 @@
 import {THREE} from '../../three/THREE.GLOBAL.js';
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
+import {Time} from '../time/Time.js';
+
+const time = Time.getInstance();
 
 /**
  * You can export FBX file from 3ds max
@@ -80,11 +83,11 @@ export class FBXModelObject extends Sculpt {
 
             }, onProgress, onError);
 
-        this.on("update", (evt, delta) => {
+        this.on("update", (evt) => {
             if (mixers) {
                 if (mixers.length > 0) {
                     for (let i = 0; i < mixers.length; i++) {
-                        mixers[i].update(delta);
+                        mixers[i].update(time.deltaTime() / 1000);
                     }
                 }
             }

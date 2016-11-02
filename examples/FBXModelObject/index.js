@@ -70,7 +70,7 @@ scene.add(amlight);
 let obj = new RODIN.FBXModelObject(0, './model/xsi_man_skinning.FBX', ['./model/Char_UV_Texture.gif']);
 
 obj.on('ready', () => {
-    let s = 0.1;
+    let s = 0.01;
     obj.object3D.scale.set(s, s, s);
     obj.object3D.position.y = controls.userHeight - 1.6;
     scene.add(obj.object3D);
@@ -86,13 +86,13 @@ window.addEventListener('resize', onResize, true);
 window.addEventListener('vrdisplaypresentchange', onResize, true);
 
 
-let clock = new THREE.Clock();
+const time = RODIN.Time.getInstance();
 function animate(timestamp) {
-    let delta = clock.getDelta();
+    time.tick();
 
     controls.update();
     manager.render(scene, camera, timestamp);
-    RODIN.Objects.map(obj => obj.emit('update', new RODIN.Event(obj), delta));
+    RODIN.Objects.map(obj => obj.emit('update', new RODIN.Event(obj)));
     requestAnimationFrame(animate);
 }
 
@@ -101,6 +101,7 @@ function onResize(e) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 }
+
 
 let display;
 
