@@ -19,10 +19,9 @@ import '../../../../src/js/rodinjs/vendor/JDLoader.min.js';
  */
 export class ObjectFromModel extends Sculpt {
     constructor(SubClass, objectGeometry ) {
-        //todo "new.target" issue
-/*        if (new.target === ObjectFromModel) {
+        if (this.constructor === ObjectFromModel) {
             throw new CustomErrors.ErrorAbstractClassInstance();
-        }*/
+        }
 
         if (!objectGeometry.url) {
             throw new CustomErrors.ErrorInvalidUrl('geometry.url');

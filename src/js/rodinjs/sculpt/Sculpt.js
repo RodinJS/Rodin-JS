@@ -4,6 +4,7 @@ import {Objects} from '../objects.js';
 import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
 import {EVENT_NAMES} from '../constants/constants.js';
+import {ErrorAbstractClassInstance} from '../error/CustomErrors';
 
 /**
  * Abstract class Sculpt
@@ -11,10 +12,9 @@ import {EVENT_NAMES} from '../constants/constants.js';
  */
 export class Sculpt {
     constructor(id) {
-
-/*        if (new.target == Sculpt) {
+        if (this.constructor == Sculpt) {
             throw new ErrorAbstractClassInstance();
-        }*/
+        }
 
         /**git
          * private properties
