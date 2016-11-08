@@ -21,7 +21,7 @@ document.body.appendChild(renderer.domElement);
 
 let scene = new THREE.Scene();
 
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 50);
+let camera = new THREE.PerspectiveCamera(95, window.innerWidth / window.innerHeight, 0.01, 150);
 
 let controls = new THREE.VRControls(camera);
 controls.standing = true;
@@ -29,14 +29,14 @@ controls.standing = true;
 let effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
-let player = new MaterialPlayer("video/drone.mp4");
+let player = new MaterialPlayer("video/test1.mp4");
 let material = new THREE.MeshBasicMaterial({
     map: player.getTextureL()
 });
 
 
 let sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(30, 720, 4), material);
-sphere.scale.set(-1,1,1);
+sphere.scale.set(1,1,-1);
 scene.add(sphere);
 
 
