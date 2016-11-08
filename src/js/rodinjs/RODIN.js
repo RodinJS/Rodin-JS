@@ -15,6 +15,7 @@ export { Event } from './Event.js';
 export { Sculpt } from './sculpt/Sculpt.js';
 export { THREEObject } from './sculpt/THREEObject.js';
 export { CubeObject } from './sculpt/CubeObject.js';
+export { CubeMapFromModel } from './sculpt/CubeMapFromModel.js';
 export { Snow } from './sculpt/Snow.js';
 export { ObjectFromModel } from './sculpt/ObjectFromModel.js';
 export { ColladaModelObject } from './sculpt/ColladaModelObject.js';

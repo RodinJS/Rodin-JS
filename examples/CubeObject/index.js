@@ -31,19 +31,7 @@ var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHei
  var controls = new THREE.VRControls(camera);
  controls.standing = true;
 
-/*
-var controls = new RODIN.MobileCameraControls(
-    scene,
-    camera,
-    new THREE.Vector3(0, 0, 0),
-    new THREE.Vector3(0, 0, -0.01),
-    renderer.domElement,
-    true
-);
-//controls.standing = true;
-controls.userHeight = 1.6;
-controls.object.position.y = controls.userHeight;
-*/
+
 
 // Apply VR stereo rendering to renderer.
 var effect = new THREE.VREffect(renderer);
