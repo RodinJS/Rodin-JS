@@ -86,6 +86,16 @@ export class OBJModelObject extends Sculpt {
 
                     console.log("OBJ file was loaded");
                 }, onProgress, onError);
+        }, function(){}, () => {
+            let objLoader = new THREE.OBJLoader();
+            objLoader.load(
+                URL,
+                (mesh) => {
+                    this.init(mesh);
+                    this.emit('ready', new Event(this));
+
+                    console.log("OBJ file was loaded");
+                }, onProgress, onError);
         });
 
 

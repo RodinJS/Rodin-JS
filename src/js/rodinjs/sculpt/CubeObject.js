@@ -106,28 +106,6 @@ export class CubeObject extends Sculpt {
         context.rotate(configs.rotate);
         context.translate(configs.translate[0] * tileSize, configs.translate[1] * tileSize);
         context.drawImage(imageObj, left, top, tileSize - 2, tileSize - 2, 0, 0, tileSize, tileSize);
-/*
-
-        let cont = document.querySelector("#material-canvases-temporary-container");
-
-        if (!cont) {
-            cont = document.createElement('div');
-            cont.setAttribute("id", "material-canvases-temporary-container");
-
-            cont.style.position = "absolute";
-            cont.style.left = "-150%";
-            cont.style.top = "-150%";
-
-            cont.style.width = "0";
-            cont.style.height = "0";
-
-            document.body.appendChild(cont);
-        }
-
-
-        cont.appendChild(canvas);
-*/
-
 
         let texture = new THREE.Texture();
         texture.image = canvas;
