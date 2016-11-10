@@ -23,6 +23,9 @@ export { OBJModelObject } from './sculpt/OBJModelObject.js';
 export { JSONModelObject } from './sculpt/JSONModelObject.js';
 export { JDModelObject } from './sculpt/JDModelObject.js';
 export { FBXModelObject } from './sculpt/FBXModelObject.js';
+export { Physics_old } from './physics/Physics_old.js';
+export { RodinPhysics } from './physics/RodinPhysics.js';
+export { RigidBody } from './physics/RigidBody.js';
 export { Raycaster } from './raycaster/Raycaster.js';
 
 export { CONSTANTS };

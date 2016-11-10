@@ -50,6 +50,7 @@ const SHADER =        [ 'src/shader/**/*' ];
 const MODEL =         [ 'src/model/**/*' ];
 const VIDEO =         [ 'src/video/**/*' ];
 const EX_JS =         [ 'examples/**/index.js', '!examples/**/model/**/*.js' ];
+const CANNON =        [ 'node_modules/cannon/build/cannon.js' ];
 
 const AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -105,7 +106,16 @@ gulp.task('js-three', () => {
     .pipe(plumber(ERROR_MESSAGE))
     .pipe(babel())
     .pipe(uglify(UGLIFY_AGRESIVE))
+    .pipe(plumber.stop())
     .pipe(gulp.dest('./_build/js/three'));
+});
+
+gulp.task('cannon', () => {
+  return gulp.src(CANNON)
+     .pipe(plumber(ERROR_MESSAGE))
+     .pipe(babel())
+     .pipe(plumber.stop())
+     .pipe(gulp.dest('./_build/js/cannon'));
 });
 
 gulp.task('glsl', () => {
@@ -253,7 +263,7 @@ gulp.task('prod', (done) => {
 });
 
 gulp.task('default', (done) => {
-  sequence('clean', ['js', 'js-three', 'glsl', 'three-global', 'systemjs', 'examples', 'sass', 'font', 'img', 'connect', 'watch'], done);
+  sequence('clean', ['js', 'cannon', 'js-three', 'glsl', 'three-global', 'systemjs', 'examples', 'sass', 'font', 'img', 'connect', 'watch'], done);
 });
 
 

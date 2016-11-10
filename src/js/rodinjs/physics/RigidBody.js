@@ -1,0 +1,159 @@
+import {THREE} from '../../three/THREE.GLOBAL.js';
+
+import '../../../../_build/js/cannon/cannon.js';
+
+export class RigidBody {
+    /**
+     *
+     * @param {object, null} object
+     * @param {number, 0} mass
+     * @param {string, undefined} typeOfCollisionShape
+     */
+    constructor(object = null, mass = 0, typeOfCollisionShape = undefined) {
+
+        this.object = object;
+
+        if (!typeOfCollisionShape) {
+            typeOfCollisionShape = object.geometry.type;
+        }
+
+        if (!RigidBody.threeToCannonAxis) {
+            let qX = new CANNON.Quaternion();
+            qX.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+            let qY = new CANNON.Quaternion();
+            qY.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI);
+            let qXY = new CANNON.Quaternion();
+            qY.mult(qX, qXY);
+
+            RigidBody.threeToCannonAxis = qXY;
+        }
+
+        if (this.object) {
+            // calculate new quaternion for Z-up axis
+            let qOBJ = new CANNON.Quaternion(this.object.quaternion.x,
+                this.object.quaternion.y,
+                this.object.quaternion.z,
+                this.object.quaternion.w);
+            let qObjXY = new CANNON.Quaternion();
+
+            qOBJ.mult(RigidBody.threeToCannonAxis, qObjXY);
+
+            // create object's rigidBody
+            this.rigidBody = new CANNON.Body({
+                mass: mass, // kg
+                position: new CANNON.Vec3(this.object.position.x,
+                    this.object.position.y,
+                    this.object.position.z), // m
+                quaternion: qObjXY // radian
+            });
+
+            this.rigidBody.updateMassProperties();
+            this.rigidBody.addShape(this.createObjectCollision(typeOfCollisionShape));
+            this.rigidBody.owner = this.object;
+        }
+    }
+
+    static threeToCannonAxis = null;
+
+    /**
+     *
+     * @param {string, undefined} typeOfCollisionShape
+     */
+    createObjectCollision(typeOfCollisionShape = undefined) {
+        let shape;
+        let param = this.object.geometry.parameters;
+
+        switch (typeOfCollisionShape) {
+            case "PlaneBufferGeometry":
+            case "PlaneGeometry":
+                //
+                //shape = new CANNON.Plane();
+                // todo 0.00001 find a better solution
+                // todo hight esim inch
+                shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, 0.00001, param.height / 2));
+                //this.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+                break;
+            case "BoxBufferGeometry":
+            case "BoxGeometry":
+                //half extents
+                shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, param.depth / 2, param.height / 2));
+
+                break;
+            case "SphereBufferGeometry":
+            case "SphereGeometry":
+                //radius
+                shape = new CANNON.Sphere(param.radius);
+                break;
+            case "ConeBufferGeometry":
+            case "ConeGeometry":
+                // todo 0.00001 find a better solution
+                shape = new CANNON.Cylinder(0.00001, param.radius, param.height, param.radialSegments);
+                break;
+            case "CylinderBufferGeometry":
+            case "CylinderGeometry":
+                // check it is a cone or a cylinder
+                shape = new CANNON.Cylinder(param.radiusTop, param.radiusBottom, param.height, param.radialSegments);
+
+                /*let qY = new THREE.Quaternion();
+                 qY.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI);
+                 let qYMulty = new THREE.Quaternion();
+                 qYMulty.multiplyQuaternions(qY, this.object.quaternion);
+
+                 let qX = new THREE.Quaternion();
+                 qX.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+                 let qXMulty = new THREE.Quaternion();
+                 qXMulty.multiplyQuaternions(qX, this.object.quaternion);
+
+                 this.rigidBody.quaternion.copy(qYMulty);
+                 this.rigidBody.quaternion.copy(qXMulty);*/
+
+                break;
+            default:
+                // todo convex polyhedron
+                /*var bunnyBody = new CANNON.Body({ mass: 1 });
+                 for(var i=0; i<bunny.length; i++){
+
+                 var rawVerts = bunny[i].verts;
+                 var rawFaces = bunny[i].faces;
+                 var rawOffset = bunny[i].offset;
+
+                 var verts=[], faces=[], offset;
+
+                 // Get vertices
+                 for(var j=0; j<rawVerts.length; j+=3){
+                 verts.push(new CANNON.Vec3( rawVerts[j]  ,
+                 rawVerts[j+1],
+                 rawVerts[j+2]));
+                 }
+
+                 // Get faces
+                 for(var j=0; j<rawFaces.length; j+=3){
+                 faces.push([rawFaces[j],rawFaces[j+1],rawFaces[j+2]]);
+                 }
+
+                 // Get offset
+                 offset = new CANNON.Vec3(rawOffset[0],rawOffset[1],rawOffset[2]);
+
+                 // Construct polyhedron
+                 var bunnyPart = new CANNON.ConvexPolyhedron(verts,faces);
+
+                 // Add to compound
+                 bunnyBody.addShape(bunnyPart,offset);
+                 }*/
+
+                let tmpFaces = [], tmpVerts = [];
+                for (let i = 0; i < this.object.geometry.faces.length; i++) {
+                    tmpFaces.push(this.object.geometry.faces[i].a);
+                    tmpFaces.push(this.object.geometry.faces[i].b);
+                    tmpFaces.push(this.object.geometry.faces[i].c);
+                }
+                for (let i = 0; i < this.object.geometry.vertices.length; i++) {
+                    tmpVerts.push(this.object.geometry.vertices[i].x);
+                    tmpVerts.push(this.object.geometry.vertices[i].y);
+                    tmpVerts.push(this.object.geometry.vertices[i].z);
+                }
+                shape = new CANNON.Trimesh(tmpVerts, tmpFaces);
+        }
+        return shape;
+    }
+}
