@@ -28,7 +28,7 @@ controls.standing = true;
 let effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
-let player = new MaterialPlayer("video/111.mp4", true);
+let player = new MaterialPlayer("video/1.mp4", true);
 let materialL = new THREE.MeshBasicMaterial({
     map: player.getTextureL()
 });

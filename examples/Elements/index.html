@@ -18,6 +18,7 @@ body {
   padding: 0;
   overflow: hidden;
 }
+
 </style>
 </head>
 
@@ -37,6 +38,7 @@ body {
 	  Helps enter and exit VR mode, provides best practices while in VR.
 	  -->
 	<script src="../../node_modules/webvr-boilerplate/build/webvr-manager.js"></script>
+
 	<script>
 		System.import('../../_build/js/three/THREE.GLOBAL.js');
 
@@ -52,9 +54,6 @@ body {
 		    packages: {
 		        "../../_build": {  // path to your project root
 		            "defaultJSExtensions": true
-		        },
-		        "../../node_modules": {
-		            "defaultJSExtensions": true
 		        }
 		    }
 		});
@@ -62,11 +61,6 @@ body {
 		System.import('index_c.js');
 
 	</script>
-	
-	<!--
-		TWEEN.js
-	 -->
-<!-- 	<script src="../../node_modules/tween.js/src/tween.js"></script>
- -->
+
 	</body>
 </html>

@@ -51,3 +51,4 @@ node_modules
 _build
 
 examples/**/*_c.js
+examples/**/video/*.mp4
