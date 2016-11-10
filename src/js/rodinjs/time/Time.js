@@ -56,7 +56,7 @@ export class Time {
     }
 
     tick () {
-        this.setDelta(this.now() - this.lastTeak);
+        this.setDelta(this.now() - this.lastTeak, enforce);
         this.lastTeak = this.now();
     }
 

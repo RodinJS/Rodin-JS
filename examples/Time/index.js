@@ -86,11 +86,6 @@ function generateGUI () {
         this.timeSpeed = 1;
         this.startTime = time.startTime;
         this.now = 0;
-        this.z = -5;
-        this.duration = 3000;
-        this.start = function () {
-
-        }
     };
 
     GUIparams = new Params();
@@ -109,9 +104,6 @@ function generateGUI () {
 
     gui.add(GUIparams, 'startTime', time.startTime);
     gui.add(GUIparams, 'now');
-    gui.add(GUIparams, 'z', -5, 5);
-    gui.add(GUIparams, 'duration', 1, 20000);
-    gui.add(GUIparams, 'start');
 }
 
 function updateGUI () {
