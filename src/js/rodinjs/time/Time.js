@@ -37,6 +37,9 @@ export class Time {
             delta = value;
         };
 
+        /**
+         * @returns {number} time between last two teaks
+         */
         this.deltaTime = () => {
             return delta;
         };
@@ -47,19 +50,31 @@ export class Time {
         this.startTime = Date.now();
     }
 
+    /**
+     * @param value {number} new speed
+     */
     set speed (value) {
         this.setSpeed(value);
     }
 
+    /**
+     * @returns {number} current speed
+     */
     get speed () {
         return this.getSpeed();
     }
 
+    /**
+     * call this function on each render
+     */
     tick () {
         this.setDelta(this.now() - this.lastTeak, enforce);
         this.lastTeak = this.now();
     }
 
+    /**
+     * @returns {number} milliseconds with speeds
+     */
     now () {
         return (Date.now() - this.lastSpeedChange) * this.speed + this.msBeforeLastSpeedChange;
     }
