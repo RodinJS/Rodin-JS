@@ -76,3 +76,15 @@ export class ErrorInvalidFileFormat extends CustomError {
         super(`Invalid URL for ${filed}`)
     }
 }
+
+export class ErrorBadValueParameter extends CustomError {
+    constructor () {
+        super('Bad argument');
+    }
+}
+
+export class ErrorProtectedFieldChange extends CustomError {
+    constructor (field = '') {
+        super(`Protected field ${field} can not be changed`);
+    }
+}
