@@ -1,4 +1,3 @@
-import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 
 console.log(RODIN);
@@ -83,47 +82,49 @@ light.shadow.mapSize.set( 4096, 4096 );
 scene.add( light );
 
 
-    let params = {};
-    params.name ="name_";
-    params.width = 0.7;
-    params.height = 0.4;
-    params.background = {
-        color: 0xffffff,
-        opacity: 0.5,
-        img: {url: "./img/test.jpg"}
-    };
-    params.border = {
-        width: 0.01,
-        color: 0x00ff00,
-        radius: 0.02
-    };
-    params.label = {
-        text: "Button 1",
-        fontFamily: "Arial",
-        fontSize: 0.1,
-        color:0xffffff,
-        opacity:1,
-        position: {h: 30, v: 30}
-    };
-    params.image = {
-        url: "./img/target.png",
-        width: 0.2,
-        height: 0.2,
-        opacity: 0.5,
-        transparent: true,
-        position: {h: 0, v: 20}
-    };
+let params = {};
+params.name ="name_";
+params.width = 0.7;
+params.height = 0.4;
+params.background = {
+    color: 0xffffff,
+    opacity: 0.8,
+    image: {
+        url: "./img/test.jpg"
+    }
+};
+params.border = {
+    width: 0.01,
+    color: 0x00ff00,
+    radius: 0.02
+};
+params.label = {
+    text: "Button 1",
+    fontFamily: "Arial",
+    fontSize: 0.1,
+    color:0xffffff,
+    opacity:1,
+    position: {h: 30, v: 30}
+};
+params.image = {
+    url: "./img/target.png",
+    width: 0.2,
+    height: 0.2,
+    opacity: 0.5,
+    position: {h: 0, v: 20}
+};
 
-    let button = new RODIN.Button(params);
-    button.on('ready', (evt) => {
-        let object = button.object3D;
-        object.position.y = controls.userHeight;
-        object.position.z =  - 1;
+let button = new RODIN.Button(params);
+button.on('ready', (evt) => {
+    let object = button.object3D;
+    object.position.y = controls.userHeight;
+    object.position.z = -1;
 
-        object.castShadow = true;
-        object.receiveShadow = true;
-        scene.add( object );
-    });
+    object.castShadow = true;
+    object.receiveShadow = true;
+    scene.add(object);
+});
+
 
 /*    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, () => {
         obj.object3D.material.emissive.r = 1;

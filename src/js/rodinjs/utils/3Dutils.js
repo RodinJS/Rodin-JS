@@ -1,3 +1,4 @@
+'use strict';
 import {THREE} from '../../three/THREE.GLOBAL.js';
 
 export const _canvas = document.createElement('canvas');
@@ -77,35 +78,39 @@ export function createTextTexture(text, font, fontSize, color, clear, textCanvas
     textContext.fillStyle = "rgb("+rgb.r+", "+rgb.g+", "+rgb.b+")";
     textContext.fillText(text, 0, fontSize, textCanvas.width);
     return new THREE.Texture(textCanvas);
-};
+}
 
 export function setupCanvas({width = 0, height = 0, canvas = _canvas} = {}) {
     let context = canvas.getContext('2d');
+    context.globalAlpha = 1;
     context.clearRect(0, 0, canvas.width, canvas.height);
     canvas.width = width;
     canvas.height = height;
     return canvas;
-};
+}
 
 export function measureTextOnCanvas(text, font, fontSize, canvas = _canvas) {
     let textContext = canvas.getContext('2d');
     textContext.font = fontSize + "px " + font;
     return {x: textContext.measureText(text).width, y: fontSize};
-};
-export function drawImageOnCanvas({image, width = _canvas.width, height = _canvas.height, x=0, y=0, canvas = _canvas}) {
+}
+
+export function drawImageOnCanvas({image, width = _canvas.width, height = _canvas.height, x=0, y=0, opacity = 1, canvas = _canvas}) {
     let context = canvas.getContext('2d');
+    context.globalAlpha = opacity;
     context.drawImage(image, x, y, width, height);
     return canvas;
-};
+}
 
 export function drawTextOnCanvas({text, font = "Arial", fontSize = 12, x = 0, y = 0, color = 0x000000, opacity = 1, textCanvas = _canvas}) {
     let textContext = textCanvas.getContext('2d');
     let rgb = hexToRgb(color);
     textContext.font = fontSize + "px " + font;
-    textContext.fillStyle = "rgba("+rgb.r+", "+rgb.g+", "+rgb.b+", "+opacity+")";
+    textContext.globalAlpha = opacity;
+    textContext.fillStyle = "rgb("+rgb.r+", "+rgb.g+", "+rgb.b+")";
     textContext.fillText(text, x, y+fontSize);
     return textCanvas;
-};
+}
 
 export function hexToRgb(hex) {
     return {
@@ -113,4 +118,4 @@ export function hexToRgb(hex) {
         g: (hex >> 8) & 0xFF,        // or `(i & 0x00FF00) >>  8`
         b: hex & 0xFF
     };
-};
+}
