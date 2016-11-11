@@ -23,6 +23,20 @@ body {
 
 <body>
 <script type="text/javascript" src="https://cdn.rodinapp.com/systemjs/system.js"></script>
+<!--
+  A polyfill for Promises. Needed for IE and Edge.
+  -->
+<script src="https://cdn.rodinapp.com/nm/es6-promise.js"></script>
+
+<!--
+  A polyfill for WebVR using the Device{Motion,Orientation}Event API.
+  -->
+<script src="https://cdn.rodinapp.com/nm/webvr-polyfill.js"></script>
+
+<!--
+  Helps enter and exit VR mode, provides best practices while in VR.
+  -->
+<script src="https://cdn.rodinapp.com/nm/webvr-manager.js"></script>
 	<script>
 		System.import('https://cdn.rodinapp.com/three/THREE.GLOBAL.js');
 
@@ -48,20 +62,6 @@ body {
 		System.import('index.js');
 
 	</script>
-		<!--
-		  A polyfill for Promises. Needed for IE and Edge.
-		  -->
-		<script src="https://cdn.rodinapp.com/nm/es6-promise.js"></script>
-
-		<!--
-		  A polyfill for WebVR using the Device{Motion,Orientation}Event API.
-		  -->
-		<script src="https://cdn.rodinapp.com/nm/webvr-polyfill.js"></script>
-
-		<!--
-		  Helps enter and exit VR mode, provides best practices while in VR.
-		  -->
-		<script src="https://cdn.rodinapp.com/nm/webvr-manager.js"></script>
 			<!--
 				TWEEN.js
 			 -->
