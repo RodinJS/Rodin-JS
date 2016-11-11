@@ -19,7 +19,6 @@ export { CubeObject } from './sculpt/CubeObject.js';
 export { CubeMapFromModel } from './sculpt/CubeMapFromModel.js';
 export { Button } from './sculpt/elements/Button.js';
 export { Snow } from './sculpt/Snow.js';
-export { ObjectFromModel } from './sculpt/ObjectFromModel.js';
 export { ColladaModelObject } from './sculpt/ColladaModelObject.js';
 export { OBJModelObject } from './sculpt/OBJModelObject.js';
 export { JSONModelObject } from './sculpt/JSONModelObject.js';
