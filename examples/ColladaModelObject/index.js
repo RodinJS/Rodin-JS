@@ -6,6 +6,9 @@ WTF.is(RODIN);
 
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
+import '../../node_modules/three/examples/js/loaders/collada/AnimationHandler.js';
+import '../../node_modules/three/examples/js/loaders/collada/KeyFrameAnimation.js';
+import '../../node_modules/three/examples/js/loaders/collada/Animation.js';
 
 WTF.is('Rodin.JS v0.0.1');
 
@@ -73,6 +76,7 @@ obj.on('ready', () => {
     let s = 1.1;
     obj.object3D.scale.set(s, s, s);
     obj.object3D.position.y = controls.userHeight - 1.6;
+    obj.object3D.position.z = - 1.6;
     obj.object3D.rotation.x = -Math.PI / 2;
 
     scene.add(obj.object3D);
