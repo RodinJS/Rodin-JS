@@ -6,6 +6,12 @@ WTF.is(RODIN);
 
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
+import '../../node_modules/three/examples/js/loaders/collada/AnimationHandler.js';
+import '../../node_modules/three/examples/js/loaders/collada/KeyFrameAnimation.js';
+import '../../node_modules/three/examples/js/loaders/collada/Animation.js';
+import '../../node_modules/three/examples/js/loaders/OBJLoader.js';
+import '../../node_modules/three/examples/js/loaders/DDSLoader.js';
+import '../../node_modules/three/examples/js/loaders/MTLLoader.js';
 
 WTF.is('Rodin.JS v0.0.1');
 
@@ -71,6 +77,7 @@ let obj = new RODIN.OBJModelObject(0, './model/cardboard.obj', ['./model/cardboa
 
 obj.on('ready', () => {
     obj.object3D.position.y = controls.userHeight - 0.5;
+    obj.object3D.position.z = -0.5;
     scene.add(obj.object3D);
 });
 
