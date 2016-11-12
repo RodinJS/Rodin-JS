@@ -1,5 +1,16 @@
+import {ErrorSingletonClass} from '../../error/CustomErrors';
+
+const enforce = function () {
+};
+
+let instance = null;
+
 export class MouseGamePad {
-    constructor() {
+    constructor(e) {
+        if(e !== enforce) {
+            throw new ErrorSingletonClass();
+        }
+
         this.axes = [0,0];
         this.buttons = [
             {
@@ -26,7 +37,7 @@ export class MouseGamePad {
         this.stopPropagationOnMouseMove = false;
         this.stopPropagationOnMouseUp = false;
 
-        this.mouseMove = (event) => {
+        let mouseMove = (event) => {
             this.axes[0] = ( event.clientX / window.innerWidth ) * 2 - 1;
             this.axes[1] = - ( event.clientY / window.innerHeight ) * 2 + 1;
 
@@ -35,7 +46,8 @@ export class MouseGamePad {
                 event.stopPropagation();
             }
         };
-        this.mouseDown = (event) => {
+
+        let mouseDown = (event) => {
             switch(event.button) {
                 case 0:
                     this.buttons[0].pressed = true;
@@ -53,7 +65,8 @@ export class MouseGamePad {
                 event.stopPropagation();
             }
         };
-        this.mouseUp = (event) => {
+
+        let mouseUp = (event) => {
             switch(event.button) {
                 case 0:
                     this.buttons[0].pressed = false;
@@ -71,10 +84,19 @@ export class MouseGamePad {
                 event.stopPropagation();
             }
         };
-        document.body.addEventListener( 'mousemove', this.mouseMove, false );
-        document.body.addEventListener( 'mousedown', this.mouseDown, false );
-        document.body.addEventListener( 'mouseup', this.mouseUp, false );
-        document.body.addEventListener( 'contextmenu', (e) => {e.preventDefault();return;}, false );
+
+        document.body.addEventListener( 'mousemove', mouseMove, false );
+        document.body.addEventListener( 'mousedown', mouseDown, false );
+        document.body.addEventListener( 'mouseup', mouseUp, false );
+        document.body.addEventListener( 'contextmenu', (e) => {e.preventDefault();}, false );
+    }
+
+    static getInstance() {
+        if(!instance) {
+            instance = new MouseGamePad(enforce);
+        }
+
+        return instance;
     }
 }
 

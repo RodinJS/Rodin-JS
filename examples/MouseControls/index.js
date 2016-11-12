@@ -161,33 +161,8 @@ controller.onKeyUp = controllerKeyUp;
 controller.onControllerUpdate = controllerUpdate;
 
 
-/*function controllerUpdate() {
-    let mouse = this.getGamepad();
-    this.raycaster.setFromCamera( {x:mouse.axes[0], y:mouse.axes[1]}, camera );
-
-    if (this.pickedItems && this.pickedItems.length > 0) {
-        this.pickedItems.map(item => {
-            if ( this.raycaster.ray.intersectPlane( item.raycastCameraPlane, item.intersection ) ) {
-                if(this.keyCode === 1){
-                    item.position.copy( item.intersection.sub( item.offset ) );
-                } else if(this.keyCode === 3){
-                    let shift = item.intersection.sub( item.offset ).sub( item.position );
-                    let initParent = item.parent;
-                    changeParent(item, camera);
-                    item.rotation.x = item.initRotation.x - 4*shift.y;
-                    item.rotation.y = item.initRotation.y - 5*shift.x;
-                    item.rotation.z = item.initRotation.z;
-                    console.log(item.rotation );
-                    changeParent(item, initParent);
-
-                }
-            }
-        });
-    }
-}*/
 function controllerUpdate() {
-    let mouse = this.getGamepad();
-    this.raycaster.setFromCamera( {x:mouse.axes[0], y:mouse.axes[1]}, camera );
+    this.raycaster.setFromCamera( {x:this.axes[0], y:this.axes[1]}, camera );
 
     if (this.pickedItems && this.pickedItems.length > 0) {
         this.pickedItems.map(item => {
@@ -195,8 +170,8 @@ function controllerUpdate() {
                 if(this.keyCode === 1){
                     item.position.copy( item.intersection.sub( item.offset ) );
                 } else if(this.keyCode === 3){
-                    let shift = {x: mouse.axes[0] - item.initMousePos.x, y: mouse.axes[1] - item.initMousePos.y};
-                    item.initMousePos = {x: mouse.axes[0], y: mouse.axes[1]};
+                    let shift = {x: this.axes[0] - item.initMousePos.x, y: this.axes[1] - item.initMousePos.y};
+                    item.initMousePos = {x: this.axes[0], y: this.axes[1]};
                     let initParent = item.parent;
                     changeParent(item, camera);
                     let deltaRotationQuaternion = new THREE.Quaternion()
@@ -224,9 +199,8 @@ function controllerKeyDown(keyCode) {
     }
 
     if (this.intersected && this.intersected.length > 0) {
-        let mouse = this.getGamepad();
-        mouse.stopPropagationOnMouseDown = true;
-        mouse.stopPropagationOnMouseMove = true;
+        this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
+        this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
 
         this.intersected.map( intersect => {
             this.pickedItems.push(intersect.object3D);
@@ -246,24 +220,20 @@ function controllerKeyDown(keyCode) {
                     let initParent = intersect.object3D.parent;
                     changeParent(intersect.object3D, camera);
                     intersect.object3D.initRotation = intersect.object3D.rotation.clone();
-                    intersect.object3D.initMousePos = {x: mouse.axes[0], y: mouse.axes[1]};
+                    intersect.object3D.initMousePos = {x: this.axes[0], y: this.axes[1]};
                     changeParent(intersect.object3D, initParent);
                 }
             }
         });
-
-
     }
-
-    this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, null, keyCode, this);
 }
 
 function controllerKeyUp(keyCode) {
     if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
     this.keyCode = null;
     this.engaged = false;
-    this.getGamepad().stopPropagationOnMouseDown = false;
-    this.getGamepad().stopPropagationOnMouseMove = false;
+    this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
+    this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
     this.pickedItems = [];
     this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode, this);
 }

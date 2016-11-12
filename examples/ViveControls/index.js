@@ -52,16 +52,21 @@ var params = {
 
 var manager = new WebVRManager(renderer, effect, params);
 
-var raycaster;
-
 // controllers
 var controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
+controllerL.onKeyDown = controllerKeyDown;
+controllerL.onKeyUp = controllerKeyUp;
+controllerL.onTouchUp = controllerTouchUp;
+controllerL.onTouchDown = controllerTouchDown;
+scene.add(controllerL);
 
 var controllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
 controllerR.standingMatrix = controls.getStandingMatrix();
-
-scene.add(controllerL);
+controllerR.onKeyDown = controllerKeyDown;
+controllerR.onKeyUp = controllerKeyUp;
+controllerR.onTouchUp = controllerTouchUp;
+controllerR.onTouchDown = controllerTouchDown;
 scene.add(controllerR);
 
 var loader = new THREE.OBJLoader();
@@ -78,14 +83,13 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
     controllerR.add(object.clone());
 });
 
-raycaster = new RODIN.Raycaster(scene);
-
 var geometry = new THREE.PlaneGeometry(4, 4);
 var material = new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
     roughness: 1.0,
     metalness: 0.0
 });
+
 var floor = new THREE.Mesh(geometry, material);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
@@ -119,8 +123,8 @@ var geometries = [
 ];
 
 for (var i = 0; i < 12; i++) {
-    var geometry = geometries[Math.floor(Math.random() * geometries.length)];
-    var material = new THREE.MeshStandardMaterial({
+    let geometry = geometries[Math.floor(Math.random() * geometries.length)];
+    let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
         roughness: 0.7,
         metalness: 0.0
@@ -151,18 +155,18 @@ for (var i = 0; i < 12; i++) {
 
     // hover
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt, controller) => {
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
         if (!obj.hoveringObjects) {
             obj.hoveringObjects = [];
         }
-        if (obj.hoveringObjects.indexOf(controller) > -1) return;
+        if (obj.hoveringObjects.indexOf(evt.controller) > -1) return;
         obj.object3D.material.emissive.r = 1;
-        obj.hoveringObjects.push(controller);
+        obj.hoveringObjects.push(evt.controller);
     });
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt, controller) => {
-        if (obj.hoveringObjects.indexOf(controller) > -1) {
-            obj.hoveringObjects.splice(obj.hoveringObjects.indexOf(controller));
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt) => {
+        if (obj.hoveringObjects.indexOf(evt.controller) > -1) {
+            obj.hoveringObjects.splice(obj.hoveringObjects.indexOf(evt.controller));
         }
         if (obj.hoveringObjects.length !== 0 || obj.object3D.parent !== obj.object3D.initialParent) {
             return;
@@ -172,16 +176,16 @@ for (var i = 0; i < 12; i++) {
 
     // CONTROLLER_KEY
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt, controller) => {
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
         obj.object3D.scale.set(1.1, 1.1, 1.1);
     });
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt, controller) => {
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
         obj.object3D.scale.set(1, 1, 1);
 
     });
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt, controller) => {
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {
         if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
         }
         if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
@@ -190,21 +194,15 @@ for (var i = 0; i < 12; i++) {
 
     // Controller touch
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, (evt, controller) => {
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
     });
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, (evt, controller) => {
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, (evt) => {
     });
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt, controller) => {
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt) => {
     });
 }
-
-controllerL.onKeyDown = controllerKeyDown;
-controllerL.onKeyUp = controllerKeyUp;
-
-controllerR.onKeyDown = controllerKeyDown;
-controllerR.onKeyUp = controllerKeyUp;
 
 function controllerKeyDown(keyCode) {
     if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
@@ -233,8 +231,6 @@ function controllerKeyDown(keyCode) {
             }
         });
     }
-
-    this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, null, keyCode, this);
 }
 
 function controllerKeyUp(keyCode) {
@@ -248,14 +244,7 @@ function controllerKeyUp(keyCode) {
         });
         this.pickedItems = [];
     }
-    this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode, this);
 }
-
-controllerL.onTouchUp = controllerTouchUp;
-controllerL.onTouchDown = controllerTouchDown;
-
-controllerR.onTouchUp = controllerTouchUp;
-controllerR.onTouchDown = controllerTouchDown;
 
 function controllerTouchDown(keyCode, gamepad) {
 
@@ -288,7 +277,6 @@ function controllerTouchDown(keyCode, gamepad) {
             intersect.object3D.parent.quaternion.copy(new THREE.Quaternion().multiplyQuaternions(quaternionX, quaternionY));
         });
     }
-    this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, null, keyCode, this);
 }
 
 function controllerTouchUp(keyCode, gamepad) {
@@ -306,7 +294,6 @@ function controllerTouchUp(keyCode, gamepad) {
             changeParent(intersect.object3D, holderObj);
         });
     }
-    this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, null, keyCode, this);
 }
 
 // Kick off animation loop
@@ -336,5 +323,3 @@ function onResize(e) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////
