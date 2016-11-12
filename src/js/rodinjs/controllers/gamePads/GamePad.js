@@ -168,6 +168,7 @@ export class GamePad extends THREE.Object3D {
     /**
      * Checks all intersect and emits hover and hoverout events
      */
+    //TODO: Fix continious hover emitting
     intersectObjects(controller) {
         if (!this.getIntersections) {
             console.warn(`getIntersections method is not defined`);
