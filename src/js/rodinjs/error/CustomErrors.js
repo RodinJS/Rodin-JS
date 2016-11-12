@@ -88,3 +88,9 @@ export class ErrorProtectedFieldChange extends CustomError {
         super(`Protected field ${field} can not be changed`);
     }
 }
+
+export class ErrorInvalidEventType extends CustomError {
+    constructor(eventName = '', action = '') {
+        super(`Invalid event name ${eventName} for action ${action}`);
+    }
+}

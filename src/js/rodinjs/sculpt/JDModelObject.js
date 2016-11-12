@@ -3,12 +3,13 @@
 import {THREE} from '../../three/THREE.GLOBAL.js';
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
+import {Time} from './../time/Time.js';
 
 /**
  * You can export JD file from 3ds max
  * For export use Json 3D Exporter for 3ds Max 2016 - http://www.cgdev.net/json/download.php
  */
-
+const time = Time.getInstance();
 export class JDModelObject extends Sculpt {
     /**
      * JDModelObject constructor.
@@ -64,11 +65,11 @@ export class JDModelObject extends Sculpt {
                 console.log("JD file was loaded");
             }, onProgress, onError);
 
-        this.on("update", (evt, delta) => {
+        this.on("update", (evt) => {
             if (mixers) {
                 if (mixers.length > 0) {
                     for (let i = 0; i < mixers.length; i++) {
-                        mixers[i].update(delta);
+                        mixers[i].update(time.deltaTime()/1000);
                     }
                 }
             }

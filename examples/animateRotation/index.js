@@ -56,30 +56,19 @@ var params = {
 };
 var manager = new WebVRManager(renderer, effect, params);
 
-class CardboardObject extends RODIN.ObjectFromModel {
-    constructor() {
-        super(
-            CardboardObject,
-            {
-                url: "./model/cardboard/cardboard.js"
-            },
-            [
-                {
-                    url: "./model/cardboard/cardboard_m.jpg"
-                },
-                {
-                    color: 0xaaaaaa
-                }
-            ]
-        );
+class CardboardObject extends RODIN.JSONModelObject {
+    constructor(id) {
+        super(id, "./model/cardboard/cardboard.js" );
     }
 }
+
+
 
 var light1 = new THREE.DirectionalLight(0xffffff);
 light1.position.set(1, 1, 1);
 scene.add(light1);
 
-var light2 = new THREE.DirectionalLight(0x002288);
+var light2 = new THREE.DirectionalLight(0xffffff);
 light2.position.set(-1, -1, -1);
 scene.add(light2);
 
@@ -91,6 +80,8 @@ cardboard.on('ready', () => {
     cardboard.object3D.position.x = -3;
     cardboard.object3D.position.z = -5;
     cardboard.object3D.scale.set(0.01, 0.01, 0.01);
+    console.log(cardboard.object3D);
+    //cardboard.object3D.material.materials[0] = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load("./model/cardboard/cardboard_m.jpg"), color:0xffffff});
     scene.add(cardboard.object3D);
 });
 
@@ -107,7 +98,7 @@ function animate(timestamp) {
 
     controls.update();
     manager.render(scene, camera, timestamp);
-    RODIN.Objects.map( obj => obj.emit('update', new RODIN.Event(obj)));
+    RODIN.Objects.map( obj => obj.emit('update', new RODIN.Event(obj), delta));
     TWEEN.update();
     requestAnimationFrame(animate);
 }
@@ -147,9 +138,9 @@ function setStageDimensions(stage) {
 function generateGUI() {
 
     var FizzyText = function() {
-        this.x = 0;
+        this.x = -3;
         this.y = 0;
-        this.z = 0;
+        this.z = -5;
         this.duration = 3000;
         this.start = function () {
             cardboard && cardboard.object3D && cardboard.animate(
@@ -172,9 +163,9 @@ function generateGUI() {
         })
     );
 
-    gui.add(text, 'x');
-    gui.add(text, 'y');
-    gui.add(text, 'z');
+    gui.add(text, 'x', -Math.PI, Math.PI);
+    gui.add(text, 'y', -Math.PI, Math.PI);
+    gui.add(text, 'z', -Math.PI, Math.PI);
     gui.add(text, 'duration', 1, 20000);
     gui.add(text, 'start');
 }

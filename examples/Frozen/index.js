@@ -18,7 +18,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 // Append the canvas element created by the renderer to document body element.
 document.body.appendChild(renderer.domElement);
 let ua = (navigator.userAgent || navigator.vendor || window.opera);
-alert( ua + "_______" + ua.match( /iPhone OS \d\d_/i ))
+//alert( ua + "_______" + ua.match( /iPhone OS \d\d_/i ))
 var focalLength = 3;
 
 // Create a three.js scene.

@@ -12,8 +12,8 @@ newmtl Material__122
 	Kd 1.0000 1.0000 1.0000
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka D:\work\Rodin-JS\examples\OBJModelObject\model\cardboard-01.jpg
-	map_Kd D:\work\Rodin-JS\examples\OBJModelObject\model\cardboard-01.jpg
+	map_Ka cardboard-01.jpg
+	map_Kd cardboard-01.jpg
 
 newmtl Material__134
 	Ns 10.0000
@@ -38,5 +38,5 @@ newmtl Material__135
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka D:\work\Rodin-JS\examples\OBJModelObject\model\cardboard-02.jpg
-	map_Kd D:\work\Rodin-JS\examples\OBJModelObject\model\cardboard-02.jpg
+	map_Ka cardboard-02.jpg
+	map_Kd cardboard-02.jpg

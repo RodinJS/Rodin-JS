@@ -17,7 +17,7 @@ WTF.is('Rodin.JS v0.0.1');
 
 // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
 // Only enable it if you actually need to.
-let renderer = new THREE.WebGLRenderer({antialias: true});
+var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setPixelRatio(window.devicePixelRatio);
 
 renderer.shadowMap.enabled = true;
@@ -28,47 +28,47 @@ renderer.gammaOutput = true;
 document.body.appendChild(renderer.domElement);
 
 // Create a three.js scene.
-let scene = new THREE.Scene();
+var scene = new THREE.Scene();
 scene.background = new THREE.Color(0x808080);
 
 // Create a three.js camera.
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 
 scene.add(camera);
 
 // Apply VR headset positional data to camera.
-let controls = new THREE.VRControls(camera);
+var controls = new THREE.VRControls(camera);
 controls.standing = true;
 
 // Apply VR stereo rendering to renderer.
-let effect = new THREE.VREffect(renderer);
+var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
 // Create a VR manager helper to enter and exit VR mode.
-let params = {
+var params = {
     hideButton: false, // Default: false.
     isUndistorted: false // Default: false.
 };
 
-let manager = new WebVRManager(renderer, effect, params);
+var manager = new WebVRManager(renderer, effect, params);
 
-let raycaster;
+var raycaster;
 
 // controllers
-let controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
+var controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
-let controllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
+var controllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
 controllerR.standingMatrix = controls.getStandingMatrix();
 
 scene.add(controllerL);
 scene.add(controllerR);
 
-let loader = new THREE.OBJLoader();
+var loader = new THREE.OBJLoader();
 loader.setPath('./object/');
 loader.load('vr_controller_vive_1_5.obj', function (object) {
 
-    let loader = new THREE.TextureLoader();
+    var loader = new THREE.TextureLoader();
     loader.setPath('./img/');
 
     object.children[0].material.map = loader.load('onepointfive_texture.png');
@@ -78,22 +78,21 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
     controllerR.add(object.clone());
 });
 
-raycaster = new RODIN.Raycaster(scene);
-
-let geometry = new THREE.PlaneGeometry(4, 4);
-let material = new THREE.MeshStandardMaterial({
+var geometry = new THREE.PlaneGeometry(4, 4);
+var material = new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
     roughness: 1.0,
     metalness: 0.0
 });
-let floor = new THREE.Mesh(geometry, material);
+
+var floor = new THREE.Mesh(geometry, material);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
 scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
 
-let light = new THREE.DirectionalLight(0xffffff);
+var light = new THREE.DirectionalLight(0xffffff);
 light.position.set(0, 6, 0);
 light.castShadow = true;
 light.shadow.camera.top = 2;
@@ -105,12 +104,12 @@ scene.add(light);
 
 // add raycastable objects to scene
 
-let group = new THREE.Group();
+var group = new THREE.Group();
 group.position.set(1, 1, 0);
 group.rotation.y = 0.4;
 scene.add(group);
 
-let geometries = [
+var geometries = [
     new THREE.BoxGeometry(0.2, 0.2, 0.2),
     new THREE.ConeGeometry(0.2, 0.2, 64),
     new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
@@ -118,7 +117,7 @@ let geometries = [
     new THREE.TorusGeometry(0.2, 0.08, 12, 12)
 ];
 
-for (let i = 0; i < 12; i++) {
+for (var i = 0; i < 12; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -126,7 +125,7 @@ for (let i = 0; i < 12; i++) {
         metalness: 0.0
     });
 
-    let object = new THREE.Mesh(geometry, material);
+    var object = new THREE.Mesh(geometry, material);
 
     object.position.x = (Math.random() - 0.5) * 2;
     object.position.y = (Math.random() - 0.5) * 2;

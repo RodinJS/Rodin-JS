@@ -1,6 +1,7 @@
 import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
+import '../../_build/js/rodinjs/vendor/JDLoader.min.js';
 
 WTF.is(RODIN);
 
@@ -12,6 +13,7 @@ WTF.is('Rodin.JS v0.0.1');
 let renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setPixelRatio(window.devicePixelRatio);
 
+let time = RODIN.Time.getInstance();
 document.body.appendChild(renderer.domElement);
 
 let scene = new THREE.Scene();
@@ -72,13 +74,14 @@ obj.on('ready', () => {
     let s = 0.009;
     obj.object3D.scale.set(s, s, s);
     obj.object3D.position.y = controls.userHeight - 1.6;
+    obj.object3D.position.z = - 1.6;
     obj.object3D.rotation.z = Math.PI / 2;
     obj.object3D.rotation.y = Math.PI / 2;
     scene.add(obj.object3D);
 });
 
 obj.on('update', () => {
-    obj.object3D && (obj.object3D.rotation.y += 0.0051);
+    obj.object3D && (obj.object3D.rotation.y += time.deltaTime()/2000);
 });
 
 requestAnimationFrame(animate);
@@ -86,13 +89,11 @@ requestAnimationFrame(animate);
 window.addEventListener('resize', onResize, true);
 window.addEventListener('vrdisplaypresentchange', onResize, true);
 
-let clock = new THREE.Clock();
 function animate(timestamp) {
-    let delta = clock.getDelta();
-
+    time.tick();
     controls.update();
     manager.render(scene, camera, timestamp);
-    RODIN.Objects.map(obj => obj.emit('update', new RODIN.Event(obj), delta));
+    RODIN.Objects.map(obj => obj.emit('update', new RODIN.Event(obj)));
     requestAnimationFrame(animate);
 }
 
