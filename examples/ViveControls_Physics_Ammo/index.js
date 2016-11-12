@@ -80,20 +80,25 @@ raycaster = new RODIN.Raycaster(scene);
 
 /////////// physics ////////////////////
 
+let physics = new RODIN.Physics( 0, scene );
+
 //Setting up the scene
-let collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
+
+physics.sceneSetup(-10);
+
+/*let collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
 let dispatcher = new Ammo.btCollisionDispatcher(collisionConfiguration);
 let overlappingPairCache = new Ammo.btDbvtBroadphase();
 let solver = new Ammo.btSequentialImpulseConstraintSolver();
 scene.world = new Ammo.btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-scene.world.setGravity(new Ammo.btVector3(0, -10, 0));
+scene.world.setGravity(new Ammo.btVector3(0, -10, 0));*/
 
 ///////////////// creating floor ///////////////////////
 let floorWidth = 20;
-let floorLength = 20;
+let floorDepth = 20;
 let floorHeight = 0.1;
 
-let geometry = new THREE.PlaneGeometry(floorWidth, floorLength);
+let geometry = new THREE.PlaneGeometry(floorWidth, floorDepth);
 let material = new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
     roughness: 1.0,
@@ -103,13 +108,19 @@ let floor = new THREE.Mesh(geometry, material);
 floor.rotation.x = -Math.PI / 2;
 floor.position.set(0, 0, 0);
 floor.receiveShadow = true;
+
+//floor.width = floorWidth;
+//floor.depth = floorDepth;
+//floor.height = floorHeight;
+
 scene.add(floor);
-floorColissionDetect(floor);
+//physics.objectCollisionDetect( floor, 0);
+physics.floorCollisionDetect( floor );
+//floorCollisionDetect(floor);
 
-function floorColissionDetect(floor) {
+function floorCollisionDetect(floor) {
 
-//Creating the floor
-    let floorShape = new Ammo.btBoxShape(new Ammo.btVector3(floorWidth, floorHeight, floorLength)); // Create block 50x2x50
+    let floorShape = new Ammo.btBoxShape(new Ammo.btVector3(floorWidth, floorHeight, floorDepth)); // Create block 50x2x50
     let floorTransform = new Ammo.btTransform();
     floorTransform.setIdentity();
     floorTransform.setOrigin(new Ammo.btVector3(floor.position.x, -floorHeight / 2, floor.position.z)); // Set initial position
@@ -120,6 +131,7 @@ function floorColissionDetect(floor) {
     let rbInfo = new Ammo.btRigidBodyConstructionInfo(floorMass, motionState, floorShape, localInertia);
     let floorAmmo = new Ammo.btRigidBody(rbInfo);
     scene.world.addRigidBody(floorAmmo);
+    console.log(scene.world);
 }
 
 scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
@@ -145,6 +157,7 @@ scene.add(group);
 
 let geometries = [
     new THREE.BoxGeometry(0.2, 0.2, 0.2),
+    //new THREE.BoxBufferGeometry(0.2, 0.2, 0.2),
     new THREE.ConeGeometry(0.2, 0.2, 64),
     new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
     new THREE.IcosahedronGeometry(0.2, 1),
@@ -153,7 +166,7 @@ let geometries = [
 
 for (let i = 0; i < 12; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
-    console.log( geometry instanceof  THREE.BoxGeometry);
+    //console.log( geometry instanceof  THREE.BoxGeometry);
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
         roughness: 0.7,
@@ -171,6 +184,8 @@ for (let i = 0; i < 12; i++) {
 
     object.castShadow = true;
     object.receiveShadow = true;
+
+    //console.log( object.min, object.max );
 
     let obj = new RODIN.THREEObject(object);
 
@@ -230,11 +245,15 @@ for (let i = 0; i < 12; i++) {
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt, controller) => {
     });
 
+
+    //physics.objectCollisionDetect( obj.object3D, 0.02);
+    //console.log( object.geometry.parameters );
+
     creatingObjectPhysics(obj);
 }
 
-// enablePhysics({ mass });
-//
+// todo enablePhysics({ mass });
+// create class
 
 function creatingObjectPhysics(obj) {
 
@@ -260,7 +279,6 @@ function creatingObjectPhysics(obj) {
     objAmmo.mesh = obj.object3D; // Assign the Three.js mesh in `obj`, this is used to update the model position later
     objectsArray.push(objAmmo); // Keep track of this obj
 }
-
 
 function updateObjectsPhysics() {
     scene.world.stepSimulation(1 / 60, 5); // Tells Ammo.js to apply physics for 1/60th of a second with a maximum of 5 steps
@@ -410,6 +428,7 @@ function animate(timestamp) {
     controls.update();
 
     // Update scene's objects physics.
+    //physics.updateObjectsPhysics();
     updateObjectsPhysics();
 
     // Render the scene through the manager.

@@ -1,6 +1,7 @@
 import {THREE} from '../../three/THREE.GLOBAL.js';
 
 import '../../../../_build/js/cannon/cannon.js';
+import {RodinPhysics} from './RodinPhysics.js';
 
 export class RigidBody {
     /**
@@ -10,6 +11,7 @@ export class RigidBody {
      * @param {string, undefined} typeOfCollisionShape
      */
     constructor(object = null, mass = 0, typeOfCollisionShape = undefined) {
+
 
         this.object = object;
 
@@ -31,25 +33,26 @@ export class RigidBody {
         if (this.object) {
             // calculate new quaternion for Z-up axis
             let qOBJ = new CANNON.Quaternion(this.object.quaternion.x,
-                this.object.quaternion.y,
-                this.object.quaternion.z,
-                this.object.quaternion.w);
+                                             this.object.quaternion.y,
+                                             this.object.quaternion.z,
+                                             this.object.quaternion.w);
             let qObjXY = new CANNON.Quaternion();
-
             qOBJ.mult(RigidBody.threeToCannonAxis, qObjXY);
 
             // create object's rigidBody
             this.rigidBody = new CANNON.Body({
                 mass: mass, // kg
-                position: new CANNON.Vec3(this.object.position.x,
-                    this.object.position.y,
-                    this.object.position.z), // m
+                position: new CANNON.Vec3(this.object.parent.position.x + this.object.position.x,
+                                          this.object.parent.position.y + this.object.position.y,
+                                          this.object.parent.position.z + this.object.position.z), // m
                 quaternion: qObjXY // radian
             });
 
             this.rigidBody.updateMassProperties();
             this.rigidBody.addShape(this.createObjectCollision(typeOfCollisionShape));
-            this.rigidBody.owner = this.object;
+            this.owner = this.object;
+
+            RodinPhysics.getInstance().addRigidBodyToWorld(this);
         }
     }
 
@@ -67,47 +70,40 @@ export class RigidBody {
             case "PlaneBufferGeometry":
             case "PlaneGeometry":
                 //
-                //shape = new CANNON.Plane();
                 // todo 0.00001 find a better solution
                 // todo hight esim inch
                 shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, 0.00001, param.height / 2));
+                //shape = new CANNON.Plane();
                 //this.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
                 break;
+
             case "BoxBufferGeometry":
             case "BoxGeometry":
                 //half extents
                 shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, param.depth / 2, param.height / 2));
-
                 break;
+
             case "SphereBufferGeometry":
             case "SphereGeometry":
-                //radius
                 shape = new CANNON.Sphere(param.radius);
                 break;
+
             case "ConeBufferGeometry":
             case "ConeGeometry":
                 // todo 0.00001 find a better solution
                 shape = new CANNON.Cylinder(0.00001, param.radius, param.height, param.radialSegments);
                 break;
+
             case "CylinderBufferGeometry":
             case "CylinderGeometry":
-                // check it is a cone or a cylinder
                 shape = new CANNON.Cylinder(param.radiusTop, param.radiusBottom, param.height, param.radialSegments);
-
-                /*let qY = new THREE.Quaternion();
-                 qY.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI);
-                 let qYMulty = new THREE.Quaternion();
-                 qYMulty.multiplyQuaternions(qY, this.object.quaternion);
-
-                 let qX = new THREE.Quaternion();
-                 qX.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
-                 let qXMulty = new THREE.Quaternion();
-                 qXMulty.multiplyQuaternions(qX, this.object.quaternion);
-
-                 this.rigidBody.quaternion.copy(qYMulty);
-                 this.rigidBody.quaternion.copy(qXMulty);*/
-
                 break;
+
+            case "TorusBufferGeometry":
+            case "TorusGeometry":
+                shape = new CANNON.Trimesh.createTorus(param.radius, param.tube, param.radialSegments, param.tubularSegments);
+                break;
+
             default:
                 // todo convex polyhedron
                 /*var bunnyBody = new CANNON.Body({ mass: 1 });
@@ -156,4 +152,6 @@ export class RigidBody {
         }
         return shape;
     }
+
+    // todo delete rigidBody
 }
