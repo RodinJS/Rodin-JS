@@ -29,10 +29,10 @@ document.body.appendChild(renderer.domElement);
 
 // Create a three.js scene.
 var scene = new THREE.Scene();
-scene.background = new THREE.Color( 0x808080 );
+scene.background = new THREE.Color(0x808080);
 
 // Create a three.js camera.
-var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000 );
+var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 scene.add(camera);
 
@@ -54,61 +54,64 @@ var params = {
 
 var manager = new WebVRManager(renderer, effect, params);
 
-var raycaster;
 
 // controllers
 var controller = new RODIN.MouseController();
 controller.setRaycasterScene(scene);
 controller.setRaycasterCamera(camera);
+controller.onKeyDown = controllerKeyDown;
+controller.onKeyUp = controllerKeyUp;
+controller.onControllerUpdate = controllerUpdate;
 
-raycaster = new RODIN.Raycaster( scene );
 
-var geometry = new THREE.PlaneGeometry( 4, 4 );
-var material = new THREE.MeshStandardMaterial( {
+var geometry = new THREE.PlaneGeometry(4, 4);
+var material = new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
     roughness: 1.0,
     metalness: 0.0
-} );
-var floor = new THREE.Mesh( geometry, material );
-floor.rotation.x = - Math.PI / 2;
+});
+var floor = new THREE.Mesh(geometry, material);
+floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
-scene.add( floor );
+scene.add(floor);
 
-scene.add( new THREE.HemisphereLight( 0x808080, 0x606060 ) );
+scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
 
-var light = new THREE.DirectionalLight( 0xffffff );
-light.position.set( 0, 6, 0 );
+var light = new THREE.DirectionalLight(0xffffff);
+light.position.set(0, 6, 0);
 light.castShadow = true;
 light.shadow.camera.top = 2;
 light.shadow.camera.bottom = -2;
 light.shadow.camera.right = 2;
 light.shadow.camera.left = -2;
-light.shadow.mapSize.set( 4096, 4096 );
-scene.add( light );
+light.shadow.mapSize.set(4096, 4096);
+scene.add(light);
 
 // add raycastable objects to scene
 
 var group = new THREE.Group();
-scene.add( group );
+group.position.set(1, 1, 0);
+group.rotation.y = 0.4;
+scene.add(group);
 
 var geometries = [
-    new THREE.BoxGeometry( 0.2, 0.2, 0.2 ),
-    new THREE.ConeGeometry( 0.2, 0.2, 64 ),
-    new THREE.CylinderGeometry( 0.2, 0.2, 0.2, 64 ),
-    new THREE.IcosahedronGeometry( 0.2, 3 ),
-    new THREE.TorusGeometry( 0.2, 0.04, 64, 32 )
+    new THREE.BoxGeometry(0.2, 0.2, 0.2),
+    new THREE.ConeGeometry(0.2, 0.2, 64),
+    new THREE.CylinderGeometry(0.2, 0.2, 0.2, 64),
+    new THREE.IcosahedronGeometry(0.2, 3),
+    new THREE.TorusGeometry(0.2, 0.04, 64, 32)
 ];
 
-for ( var i = 0; i < 50; i ++ ) {
+for (var i = 0; i < 50; i++) {
 
-    var geometry = geometries[ Math.floor( Math.random() * geometries.length ) ];
-    var material = new THREE.MeshStandardMaterial( {
+    var geometry = geometries[Math.floor(Math.random() * geometries.length)];
+    var material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
         roughness: 0.7,
         metalness: 0.0
-    } );
+    });
 
-    var object = new THREE.Mesh( geometry, material );
+    var object = new THREE.Mesh(geometry, material);
 
     object.position.x = Math.random() * 4 - 2;
     object.position.y = Math.random() * 2;
@@ -118,7 +121,7 @@ for ( var i = 0; i < 50; i ++ ) {
     object.rotation.y = Math.random() * 2 * Math.PI;
     object.rotation.z = Math.random() * 2 * Math.PI;
 
-    object.scale.setScalar( Math.random() + 0.5 );
+    object.scale.setScalar(Math.random() + 0.5);
 
     object.castShadow = true;
     object.receiveShadow = true;
@@ -156,20 +159,19 @@ for ( var i = 0; i < 50; i ++ ) {
     });
 }
 
-controller.onKeyDown = controllerKeyDown;
-controller.onKeyUp = controllerKeyUp;
-controller.onControllerUpdate = controllerUpdate;
-
 
 function controllerUpdate() {
-    this.raycaster.setFromCamera( {x:this.axes[0], y:this.axes[1]}, camera );
+    this.raycaster.setFromCamera({x: this.axes[0], y: this.axes[1]}, camera);
 
     if (this.pickedItems && this.pickedItems.length > 0) {
         this.pickedItems.map(item => {
-            if ( this.raycaster.ray.intersectPlane( item.raycastCameraPlane, item.intersection ) ) {
-                if(this.keyCode === 1){
-                    item.position.copy( item.intersection.sub( item.offset ) );
-                } else if(this.keyCode === 3){
+            if (this.raycaster.ray.intersectPlane(item.raycastCameraPlane, item.intersection)) {
+                if (this.keyCode === 1) {
+                    let initParent = item.parent;
+                    changeParent(item, scene);
+                    item.position.copy(item.intersection.sub(item.offset));
+                    changeParent(item, initParent);
+                } else if (this.keyCode === 3) {
                     let shift = {x: this.axes[0] - item.initMousePos.x, y: this.axes[1] - item.initMousePos.y};
                     item.initMousePos = {x: this.axes[0], y: this.axes[1]};
                     let initParent = item.parent;
@@ -202,8 +204,11 @@ function controllerKeyDown(keyCode) {
         this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
         this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
 
-        this.intersected.map( intersect => {
+        this.intersected.map(intersect => {
             this.pickedItems.push(intersect.object3D);
+
+            let initParent = intersect.object3D.parent;
+            changeParent(intersect.object3D, scene);
 
             intersect.object3D.raycastCameraPlane = new THREE.Plane();
             intersect.object3D.offset = new THREE.Vector3();
@@ -214,9 +219,9 @@ function controllerKeyDown(keyCode) {
                 intersect.object3D.position
             );
 
-            if ( this.raycaster.ray.intersectPlane( intersect.object3D.raycastCameraPlane, intersect.object3D.intersection   ) ) {
-                intersect.object3D.offset.copy( intersect.object3D.intersection ).sub( intersect.object3D.position );
-                if(keyCode === 3){
+            if (this.raycaster.ray.intersectPlane(intersect.object3D.raycastCameraPlane, intersect.object3D.intersection)) {
+                intersect.object3D.offset.copy(intersect.object3D.intersection).sub(intersect.object3D.position);
+                if (keyCode === 3) {
                     let initParent = intersect.object3D.parent;
                     changeParent(intersect.object3D, camera);
                     intersect.object3D.initRotation = intersect.object3D.rotation.clone();
@@ -224,6 +229,7 @@ function controllerKeyDown(keyCode) {
                     changeParent(intersect.object3D, initParent);
                 }
             }
+            changeParent(intersect.object3D, initParent);
         });
     }
 }

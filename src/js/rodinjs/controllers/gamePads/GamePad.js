@@ -23,7 +23,6 @@ export class GamePad extends THREE.Object3D {
         navigator.mouseGamePad = MouseGamePad.getInstance();
         this.navigatorGamePadId = navigatorGamePadId;
         this.hand = hand;
-        this.customController = null;
 
         this.raycaster = new Raycaster();
         this.raycaster.setScene(scene);
@@ -99,13 +98,16 @@ export class GamePad extends THREE.Object3D {
         this.camera = camera;
     }
 
-
+    /**
+     * Getter for GamePad axes.
+     * @returns {Array} An array of double values
+     */
     get axes() {
         return GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand).axes;
     }
 
     /**
-     * All logic goes here
+     * Checks the gamepad state, calls the appropriate methods
      */
     update() {
         let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
@@ -191,7 +193,6 @@ export class GamePad extends THREE.Object3D {
                 }
             }
             if (!found) {
-                console.log(intersect, this);
                 this.gamepadHoverOut();
                 let evt = new Event(intersect.object3D.Sculpt, null, null, "", this);
                 intersect.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT, evt);

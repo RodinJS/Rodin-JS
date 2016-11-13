@@ -4,8 +4,6 @@ import {WTF} from '../../_build/js/rodinjs/RODIN.js';
 
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
-console.log(RODIN);
-
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
 import '../../node_modules/three/examples/js/loaders/OBJLoader.js';
@@ -53,29 +51,21 @@ var params = {
 var manager = new WebVRManager(renderer, effect, params);
 
 // controllers
-var controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
-controllerL.standingMatrix = controls.getStandingMatrix();
-controllerL.onKeyDown = controllerKeyDown;
-controllerL.onKeyUp = controllerKeyUp;
-controllerL.onTouchUp = controllerTouchUp;
-controllerL.onTouchDown = controllerTouchDown;
-scene.add(controllerL);
+var viveControllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
+viveControllerL.standingMatrix = controls.getStandingMatrix();
+viveControllerL.onKeyDown = controllerKeyDown;
+viveControllerL.onKeyUp = controllerKeyUp;
+viveControllerL.onTouchUp = controllerTouchUp;
+viveControllerL.onTouchDown = controllerTouchDown;
+scene.add(viveControllerL);
 
-var controllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
-controllerR.standingMatrix = controls.getStandingMatrix();
-controllerR.onKeyDown = controllerKeyDown;
-controllerR.onKeyUp = controllerKeyUp;
-controllerR.onTouchUp = controllerTouchUp;
-controllerR.onTouchDown = controllerTouchDown;
-scene.add(controllerR);
-
-
-var mouseController = new RODIN.MouseController();
-mouseController.setRaycasterScene(scene);
-mouseController.setRaycasterCamera(camera);
-mouseController.onKeyDown = mouseControllerKeyDown;
-mouseController.onKeyUp = mouseControllerKeyUp;
-mouseController.onControllerUpdate = mouseControllerUpdate;
+var viveControllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
+viveControllerR.standingMatrix = controls.getStandingMatrix();
+viveControllerR.onKeyDown = controllerKeyDown;
+viveControllerR.onKeyUp = controllerKeyUp;
+viveControllerR.onTouchUp = controllerTouchUp;
+viveControllerR.onTouchDown = controllerTouchDown;
+scene.add(viveControllerR);
 
 var loader = new THREE.OBJLoader();
 loader.setPath('./object/');
@@ -87,9 +77,18 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
     object.children[0].material.map = loader.load('onepointfive_texture.png');
     object.children[0].material.specularMap = loader.load('onepointfive_spec.png');
 
-    controllerL.add(object.clone());
-    controllerR.add(object.clone());
+    viveControllerL.add(object.clone());
+    viveControllerR.add(object.clone());
 });
+
+
+var mouseController = new RODIN.MouseController();
+mouseController.setRaycasterScene(scene);
+mouseController.setRaycasterCamera(camera);
+mouseController.onKeyDown = mouseControllerKeyDown;
+mouseController.onKeyUp = mouseControllerKeyUp;
+mouseController.onControllerUpdate = mouseControllerUpdate;
+
 
 var geometry = new THREE.PlaneGeometry(4, 4);
 var material = new THREE.MeshStandardMaterial({
@@ -130,7 +129,7 @@ var geometries = [
     new THREE.TorusGeometry(0.2, 0.08, 12, 12)
 ];
 
-for (var i = 0; i < 12; i++) {
+for (var i = 0; i < 50; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -140,15 +139,14 @@ for (var i = 0; i < 12; i++) {
 
     var object = new THREE.Mesh(geometry, material);
 
-    object.position.x = (Math.random() - 0.5) * 2;
-    object.position.y = (Math.random() - 0.5) * 2;
-    object.position.z = (Math.random() - 0.5) * 2;
+    object.position.x = Math.random() * 4 - 2;
+    object.position.y = Math.random() * 2;
+    object.position.z = Math.random() * 4 - 2;
 
-    object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
-    object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
-    object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
+    object.rotation.x = Math.random() * 2 * Math.PI;
+    object.rotation.y = Math.random() * 2 * Math.PI;
+    object.rotation.z = Math.random() * 2 * Math.PI;
 
-    object.scale.set(1, 1, 1);
 
     object.castShadow = true;
     object.receiveShadow = true;
@@ -165,7 +163,7 @@ for (var i = 0; i < 12; i++) {
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
         console.log(evt);
-        if(evt.controller instanceof RODIN.ViveController) {
+        if (evt.controller instanceof RODIN.ViveController) {
             if (!obj.hoveringObjects) {
                 obj.hoveringObjects = [];
             }
@@ -174,13 +172,13 @@ for (var i = 0; i < 12; i++) {
             obj.hoveringObjects.push(evt.controller);
         }
 
-        if(evt.controller instanceof RODIN.MouseController) {
+        if (evt.controller instanceof RODIN.MouseController) {
             obj.object3D.scale.set(1.2, 1.2, 1.2);
         }
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt) => {
-        if(evt.controller instanceof RODIN.ViveController) {
+        if (evt.controller instanceof RODIN.ViveController) {
             if (obj.hoveringObjects.indexOf(evt.controller) > -1) {
                 obj.hoveringObjects.splice(obj.hoveringObjects.indexOf(evt.controller));
             }
@@ -190,7 +188,7 @@ for (var i = 0; i < 12; i++) {
             obj.object3D.material.emissive.r = 0;
         }
 
-        if(evt.controller instanceof RODIN.MouseController) {
+        if (evt.controller instanceof RODIN.MouseController) {
             obj.object3D.scale.set(1, 1, 1);
         }
     });
@@ -279,7 +277,6 @@ function controllerTouchDown(keyCode, gamepad) {
             }
 
             if (!intersect.initialRotX && intersect.initialRotX != 0) {
-
                 intersect.initialRotX = +intersect.object3D.parent.rotation.x;
                 intersect.initialRotY = +intersect.object3D.parent.rotation.y;
             }
@@ -319,14 +316,17 @@ function controllerTouchUp(keyCode, gamepad) {
 
 
 function mouseControllerUpdate() {
-    this.raycaster.setFromCamera( {x:this.axes[0], y:this.axes[1]}, camera );
+    this.raycaster.setFromCamera({x: this.axes[0], y: this.axes[1]}, camera);
 
     if (this.pickedItems && this.pickedItems.length > 0) {
         this.pickedItems.map(item => {
-            if ( this.raycaster.ray.intersectPlane( item.raycastCameraPlane, item.intersection ) ) {
-                if(this.keyCode === 1){
-                    item.position.copy( item.intersection.sub( item.offset ) );
-                } else if(this.keyCode === 3){
+            if (this.raycaster.ray.intersectPlane(item.raycastCameraPlane, item.intersection)) {
+                if (this.keyCode === 1) {
+                    let initParent = item.parent;
+                    changeParent(item, scene);
+                    item.position.copy(item.intersection.sub(item.offset));
+                    changeParent(item, initParent);
+                } else if (this.keyCode === 3) {
                     let shift = {x: this.axes[0] - item.initMousePos.x, y: this.axes[1] - item.initMousePos.y};
                     item.initMousePos = {x: this.axes[0], y: this.axes[1]};
                     let initParent = item.parent;
@@ -358,8 +358,11 @@ function mouseControllerKeyDown(keyCode) {
         this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
         this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
 
-        this.intersected.map( intersect => {
+        this.intersected.map(intersect => {
             this.pickedItems.push(intersect.object3D);
+
+            let initParent = intersect.object3D.parent;
+            changeParent(intersect.object3D, scene);
 
             intersect.object3D.raycastCameraPlane = new THREE.Plane();
             intersect.object3D.offset = new THREE.Vector3();
@@ -370,9 +373,9 @@ function mouseControllerKeyDown(keyCode) {
                 intersect.object3D.position
             );
 
-            if ( this.raycaster.ray.intersectPlane( intersect.object3D.raycastCameraPlane, intersect.object3D.intersection   ) ) {
-                intersect.object3D.offset.copy( intersect.object3D.intersection ).sub( intersect.object3D.position );
-                if(keyCode === 3){
+            if (this.raycaster.ray.intersectPlane(intersect.object3D.raycastCameraPlane, intersect.object3D.intersection)) {
+                intersect.object3D.offset.copy(intersect.object3D.intersection).sub(intersect.object3D.position);
+                if (keyCode === 3) {
                     let initParent = intersect.object3D.parent;
                     changeParent(intersect.object3D, camera);
                     intersect.object3D.initRotation = intersect.object3D.rotation.clone();
@@ -380,6 +383,7 @@ function mouseControllerKeyDown(keyCode) {
                     changeParent(intersect.object3D, initParent);
                 }
             }
+            changeParent(intersect.object3D, initParent);
         });
     }
 }
@@ -404,8 +408,8 @@ window.addEventListener('vrdisplaypresentchange', onResize, true);
 function animate(timestamp) {
 
     // Update controller.
-    controllerL.update();
-    controllerR.update();
+    viveControllerL.update();
+    viveControllerR.update();
     mouseController.update();
 
     // Update VR headset position and apply to camera.
