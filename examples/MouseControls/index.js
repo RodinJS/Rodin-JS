@@ -104,14 +104,14 @@ var geometries = [
 
 for (var i = 0; i < 50; i++) {
 
-    var geometry = geometries[Math.floor(Math.random() * geometries.length)];
-    var material = new THREE.MeshStandardMaterial({
+    let geometry = geometries[Math.floor(Math.random() * geometries.length)];
+    let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
         roughness: 0.7,
         metalness: 0.0
     });
 
-    var object = new THREE.Mesh(geometry, material);
+    let object = new THREE.Mesh(geometry, material);
 
     object.position.x = Math.random() * 4 - 2;
     object.position.y = Math.random() * 2;
@@ -145,17 +145,50 @@ for (var i = 0; i < 50; i++) {
     });
 
     // CONTROLLER_KEY
+    if(Math.random() > 0.5){
+        object.material = new THREE.MeshStandardMaterial({
+            color: 0x00ff00,
+            roughness: 0.7,
+            metalness: 0.0
+        });
+        obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+            console.log(evt);
+            let controller = evt.controller;
+            let target = evt.target;
 
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-        //console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN + " Event, KeyCode " + evt.keyCode);
-    });
+            controller.pickedItems.push(target.object3D);
+
+            let initParent = target.object3D.parent;
+            changeParent(target.object3D, scene);
+
+            target.object3D.raycastCameraPlane = new THREE.Plane();
+            target.object3D.offset = new THREE.Vector3();
+            target.object3D.intersection = new THREE.Vector3();
+
+            target.object3D.raycastCameraPlane.setFromNormalAndCoplanarPoint(
+                camera.getWorldDirection(target.object3D.raycastCameraPlane.normal),
+                target.object3D.position
+            );
+
+            if (controller.raycaster.ray.intersectPlane(target.object3D.raycastCameraPlane, target.object3D.intersection)) {
+                target.object3D.offset.copy(target.object3D.intersection).sub(target.object3D.position);
+                if (evt.keyCode === 3) {
+                    let initParent = target.object3D.parent;
+                    changeParent(target.object3D, camera);
+                    target.object3D.initRotation = target.object3D.rotation.clone();
+                    target.object3D.initMousePos = {x: controller.axes[0], y: controller.axes[1]};
+                    changeParent(target.object3D, initParent);
+                }
+            }
+            changeParent(target.object3D, initParent);
+        });
+    }
+
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
-        //console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP + " Event, KeyCode " + evt.keyCode);
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {
-        //console.log(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK + " Event, KeyCode " + evt.keyCode);
     });
 }
 
@@ -191,46 +224,15 @@ function controllerUpdate() {
 }
 
 function controllerKeyDown(keyCode) {
-
-    console.log(keyCode);
     if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
     this.keyCode = keyCode;
     this.engaged = true;
     if (!this.pickedItems) {
         this.pickedItems = [];
     }
-
     if (this.intersected && this.intersected.length > 0) {
         this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
         this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
-
-        this.intersected.map(intersect => {
-            this.pickedItems.push(intersect.object3D);
-
-            let initParent = intersect.object3D.parent;
-            changeParent(intersect.object3D, scene);
-
-            intersect.object3D.raycastCameraPlane = new THREE.Plane();
-            intersect.object3D.offset = new THREE.Vector3();
-            intersect.object3D.intersection = new THREE.Vector3();
-
-            intersect.object3D.raycastCameraPlane.setFromNormalAndCoplanarPoint(
-                camera.getWorldDirection(intersect.object3D.raycastCameraPlane.normal),
-                intersect.object3D.position
-            );
-
-            if (this.raycaster.ray.intersectPlane(intersect.object3D.raycastCameraPlane, intersect.object3D.intersection)) {
-                intersect.object3D.offset.copy(intersect.object3D.intersection).sub(intersect.object3D.position);
-                if (keyCode === 3) {
-                    let initParent = intersect.object3D.parent;
-                    changeParent(intersect.object3D, camera);
-                    intersect.object3D.initRotation = intersect.object3D.rotation.clone();
-                    intersect.object3D.initMousePos = {x: this.axes[0], y: this.axes[1]};
-                    changeParent(intersect.object3D, initParent);
-                }
-            }
-            changeParent(intersect.object3D, initParent);
-        });
     }
 }
 
@@ -241,7 +243,6 @@ function controllerKeyUp(keyCode) {
     this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
     this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
     this.pickedItems = [];
-    this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode, this);
 }
 
 // Kick off animation loop
