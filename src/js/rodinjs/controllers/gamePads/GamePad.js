@@ -45,6 +45,7 @@ export class GamePad extends THREE.Object3D {
 
         this.buttonsPressed = new Array(this.buttons.length).fill(false);
         this.buttonsTouched = new Array(this.buttons.length).fill(false);
+        this.buttonsValues = new Array(this.buttons.length).fill(0);
     }
 
     /**
@@ -130,6 +131,12 @@ export class GamePad extends THREE.Object3D {
                         break;
                     }
                 }
+            }
+
+            // Handle controller button value change
+            if (this.buttonsValues[i] !== controller.buttons[i].value) {
+                this.valueChange(this.buttons[i]);
+                this.buttonsValues[i] = controller.buttons[i].value;
             }
 
             // Handle controller button touch event
@@ -226,6 +233,17 @@ export class GamePad extends THREE.Object3D {
                 intersect.object3D.Sculpt.emit(eventName, evt);
             });
         }
+    }
+
+    get valueChange() {
+        return (keyCode) => {
+            this.onValueChange && this.onValueChange(keyCode);
+            this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_KEY_DOWN, null, keyCode, this);
+        }
+    }
+
+    set valueChange(value) {
+        throw new ErrorProtectedFieldChange('valueChange');
     }
 
     get keyDown() {

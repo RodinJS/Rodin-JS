@@ -6,6 +6,7 @@ export const HOVER_OUT = 'hoverout';
 export const MOUSE_DOWN = 'mousedown';
 export const MOUSE_UP = 'mouseup';
 export const MOUSE_MOVE = 'mousemove';
+export const MOUSE_WHEEL = 'mousewheel';
 export const MOUSE_ENTER = 'mouseeter';
 export const MOUSE_LEAVE = 'mouseleave';
 export const CLICK = 'click';
