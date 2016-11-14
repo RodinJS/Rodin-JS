@@ -42,7 +42,7 @@ effect.setSize(window.innerWidth, window.innerHeight);
 // Add a skybox.
 var boxSize = 21;
 var snowBoxSize = 18;
-var skybox = new RODIN.CubeObject(boxSize, 'img/portals/frozen/room/bg/SD/horizontalSkyBox1.jpg')
+var skybox = new RODIN.CubeObject(boxSize, 'img/portals/frozen/room/bg/SD/horizontalSkyBox1.jpg');
 
 skybox.on('ready', () => {
     scene.add(skybox.object3D);
@@ -67,7 +67,6 @@ skybox.on('ready', () => {
 //    windspeed in m/s,
 //    graviti value
 //);
-
 
 let snow = new RODIN.Snow(0,
     'img/particle_snow2.png',
@@ -106,7 +105,7 @@ object1.position.y = 0;
 object1.position.z = -9.5;
 //object1.rotation.y = Math.PI;
 object1.scale.set(.5,.5,.5);
-console.log(object1)
+console.log(object1);
 let obj = new RODIN.THREEObject(object1);
 
 obj.on('ready', () => {
@@ -178,5 +177,5 @@ function setStageDimensions(stage) {
     scene.add(skybox.object3D);
 
     // Place the cube in the middle of the scene, at user height.
-//  cube.position.set(0, controls.userHeight, 0);
+    // cube.position.set(0, controls.userHeight, 0);
 }

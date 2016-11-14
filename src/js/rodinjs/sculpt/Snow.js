@@ -53,7 +53,7 @@ export class Snow extends Sculpt {
             size: particleSize,
             map: flakeTexture,
             transparent: true,
-            depthWrite: false,
+            // depthWrite: false,
             opacity: 0.7
         });
 
