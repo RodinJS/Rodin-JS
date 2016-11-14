@@ -51,7 +51,8 @@ effect.setSize(window.innerWidth, window.innerHeight);
 // Create a VR manager helper to enter and exit VR mode.
 var params = {
     hideButton: false, // Default: false.
-    isUndistorted: false // Default: false.
+    isUndistorted: false, // Default: false.
+    predistorted: true
 };
 
 var manager = new WebVRManager(renderer, effect, params);
@@ -104,7 +105,7 @@ var geometries = [
     new THREE.TorusGeometry(0.2, 0.04, 64, 32)
 ];
 
-for (var i = 0; i < 10; i++) {
+for (var i = 0; i < 20; i++) {
 
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
