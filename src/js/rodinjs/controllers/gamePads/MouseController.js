@@ -51,6 +51,10 @@ export class MouseController extends GamePad {
             case EVENT_NAMES.MOUSE_MOVE:
                 gamePad.stopPropagationOnMouseMove = value;
                 return;
+
+            case EVENT_NAMES.MOUSE_WHEEL:
+                gamePad.stopPropagationOnScroll = value;
+                return;
         }
 
         throw new ErrorInvalidEventType(eventName, 'setPropagation');

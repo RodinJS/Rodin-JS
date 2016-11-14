@@ -184,6 +184,7 @@ for (var i = 0; i < 50; i++) {
 
 
         obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_VALUE_CHANGE, (evt) => {
+            console.log("fuck", evt)
             let controller = evt.controller;
             let gamePad = RODIN.MouseController.getGamepad();
             let target = evt.target;
