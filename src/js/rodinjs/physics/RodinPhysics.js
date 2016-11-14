@@ -1,6 +1,6 @@
 import {THREE} from '../../three/THREE.GLOBAL.js';
 
-import '../../../../_build/js/cannon/cannon.js';
+import '/cannon/cannon.js';
 import {RigidBody} from './RigidBody.js';
 
 
