@@ -5,6 +5,8 @@ import {ErrorAbstractClassInstance, ErrorProtectedFieldChange} from '../../error
 import {Event} from '../../Event.js';
 
 import { MouseGamePad } from './MouseGamePad.js';
+import { CardboardGamePad } from './CardboardGamePad.js';
+
 export class GamePad extends THREE.Object3D {
 
     /**
@@ -14,13 +16,13 @@ export class GamePad extends THREE.Object3D {
      * @param {THREE.Scene} scene
      * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
      * @param {number} raycastLayers
-     * @todo: new.target safari problem
      */
     constructor(navigatorGamePadId = "", hand = null, scene = null, camera = null, raycastLayers = 1) {
 
         super();
 
         navigator.mouseGamePad = MouseGamePad.getInstance();
+        navigator.cardboardGamePad = CardboardGamePad.getInstance();
         this.navigatorGamePadId = navigatorGamePadId;
         this.hand = hand;
 
@@ -46,6 +48,16 @@ export class GamePad extends THREE.Object3D {
         this.buttonsPressed = new Array(this.buttons.length).fill(false);
         this.buttonsTouched = new Array(this.buttons.length).fill(false);
         this.buttonsValues = new Array(this.buttons.length).fill(0);
+
+        this.enabled = true;
+    }
+
+    enable() {
+        this.enabled = true;
+    }
+
+    disable() {
+        this.enabled = false;
     }
 
     /**
@@ -58,12 +70,16 @@ export class GamePad extends THREE.Object3D {
         let controllers = [];
         try {
             controllers = [...navigator.getGamepads()];
+
+            /// TODO by Lyov: add static array like: customGamePads for remote add custom game pads without change GamePad class
+
             controllers.push(navigator.mouseGamePad);
+            controllers.push(navigator.cardboardGamePad);
         } catch (ex){
-            controllers = [navigator.mouseGamePad] ;
+            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad] ;
         }
         if(!controllers || !controllers.length || controllers[0] === undefined){
-            controllers = [navigator.mouseGamePad] ;
+            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad] ;
         }
         for (let i = 0; i < controllers.length; i++) {
             let controller = controllers[i];
@@ -111,6 +127,9 @@ export class GamePad extends THREE.Object3D {
      * Checks the gamepad state, calls the appropriate methods
      */
     update() {
+        if(!this.enabled)
+            return;
+
         let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
 
         if (!controller) {
