@@ -30,21 +30,23 @@ export class CardboardGamePad {
 
         let cardboardDown = () => {
             this.buttons[0].pressed = true;
-            if ( this.stopPropagationOnMouseDown ) {
+            if (this.stopPropagationOnMouseDown) {
                 event.stopPropagation();
             }
         };
 
         let cardboardUp = () => {
             this.buttons[0].pressed = false;
-            if ( this.stopPropagationOnMouseUp ) {
+            if (this.stopPropagationOnMouseUp) {
                 event.stopPropagation();
             }
         };
 
         document.body.addEventListener('touchstart', cardboardDown, false);
         document.body.addEventListener('touchend', cardboardUp, false);
-        document.body.addEventListener( 'contextmenu', (e) => {e.preventDefault();}, false );
+        document.body.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        }, false);
     }
 
     static getInstance() {

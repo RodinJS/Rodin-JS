@@ -31,6 +31,10 @@ export class ViveController extends GamePad {
         targetLine.geometry.vertices[1].z = this.targetLineDistance;
         this.add(targetLine);
         this.reycastingLine = targetLine;
+
+        if(false){
+            this.disable();
+        }
     }
 
     getIntersections() {

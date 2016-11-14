@@ -4,8 +4,8 @@ import {EVENT_NAMES, KEY_CODES} from '../../constants/constants.js';
 import {ErrorAbstractClassInstance, ErrorProtectedFieldChange} from '../../error/CustomErrors.js';
 import {Event} from '../../Event.js';
 
-import { MouseGamePad } from './MouseGamePad.js';
-import { CardboardGamePad } from './CardboardGamePad.js';
+import {MouseGamePad} from './MouseGamePad.js';
+import {CardboardGamePad} from './CardboardGamePad.js';
 
 export class GamePad extends THREE.Object3D {
 
@@ -75,11 +75,11 @@ export class GamePad extends THREE.Object3D {
 
             controllers.push(navigator.mouseGamePad);
             controllers.push(navigator.cardboardGamePad);
-        } catch (ex){
-            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad] ;
+        } catch (ex) {
+            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad];
         }
-        if(!controllers || !controllers.length || controllers[0] === undefined){
-            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad] ;
+        if (!controllers || !controllers.length || controllers[0] === undefined) {
+            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad];
         }
         for (let i = 0; i < controllers.length; i++) {
             let controller = controllers[i];
@@ -127,7 +127,7 @@ export class GamePad extends THREE.Object3D {
      * Checks the gamepad state, calls the appropriate methods
      */
     update() {
-        if(!this.enabled)
+        if (!this.enabled)
             return;
 
         let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
@@ -265,6 +265,12 @@ export class GamePad extends THREE.Object3D {
         throw new ErrorProtectedFieldChange('valueChange');
     }
 
+    /**
+     * @param {number} value
+     */
+    onValueChange(value) {
+    }
+
     get keyDown() {
         return (keyCode) => {
             this.onKeyDown && this.onKeyDown(keyCode);
@@ -276,11 +282,6 @@ export class GamePad extends THREE.Object3D {
         throw new ErrorProtectedFieldChange('keyDown');
     }
 
-    /**
-     * @param {number} value
-     */
-    onValueChange(value) {
-    }
 
     /**
      * @param {number} keyCode
@@ -299,11 +300,11 @@ export class GamePad extends THREE.Object3D {
     set keyUp(value) {
         throw new ErrorProtectedFieldChange('keyUp');
     }
+
     /**
      * @param {number} keyCode
      */
     onKeyUp(keyCode) {
-        this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode, this);
     }
 
     /**
@@ -351,9 +352,9 @@ export class GamePad extends THREE.Object3D {
     onControllerUpdate() {
     }
 
-    gamepadHover(intersect){
+    gamepadHover(intersect) {
     }
 
-    gamepadHoverOut(){
+    gamepadHoverOut() {
     }
 }
