@@ -16,7 +16,6 @@ export class GamePad extends THREE.Object3D {
      * @param {THREE.Scene} scene
      * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
      * @param {number} raycastLayers
-     * @todo: new.target safari problem
      */
     constructor(navigatorGamePadId = "", hand = null, scene = null, camera = null, raycastLayers = 1) {
 
