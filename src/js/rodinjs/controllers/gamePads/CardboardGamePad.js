@@ -24,39 +24,27 @@ export class CardboardGamePad {
         this.displayId = 0;
         this.hand = "";
         this.id = "Cardboard Gamepad";
-        this.stopPropagationOnCardboardDown = false;
-        this.stopPropagationOnCardboardMove = false;
-        this.stopPropagationOnCardboardUp = false;
+        this.stopPropagationOnMouseDown = false;
+        this.stopPropagationOnMouseUp = false;
 
 
-        let cardboardDown = (event) => {
-            switch (event.button) {
-                case 0:
-                    this.buttons[0].pressed = true;
-                    break;
-                default:
-                    break;
-            }
-            if (this.stopPropagationOnCardboardDown) {
+        let cardboardDown = () => {
+            this.buttons[0].pressed = true;
+            if ( this.stopPropagationOnMouseDown ) {
                 event.stopPropagation();
             }
         };
 
-        let cardboardUp = (event) => {
-            switch (event.button) {
-                case 0:
-                    this.buttons[0].pressed = false;
-                    break;
-                default:
-                    break;
-            }
-            if (this.stopPropagationOnCardboardUp) {
+        let cardboardUp = () => {
+            this.buttons[0].pressed = false;
+            if ( this.stopPropagationOnMouseUp ) {
                 event.stopPropagation();
             }
         };
 
         document.body.addEventListener('touchstart', cardboardDown, false);
         document.body.addEventListener('touchend', cardboardUp, false);
+        document.body.addEventListener( 'contextmenu', (e) => {e.preventDefault();}, false );
     }
 
     static getInstance() {

@@ -17,7 +17,7 @@ WTF.is('Rodin.JS v0.0.1');
 
 // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
 // Only enable it if you actually need to.
-let renderer = new THREE.WebGLRenderer({antialias: true});
+var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setPixelRatio(window.devicePixelRatio);
 
 renderer.shadowMap.enabled = true;
@@ -28,58 +28,58 @@ renderer.gammaOutput = true;
 document.body.appendChild(renderer.domElement);
 
 // Create a three.js scene.
-let scene = new THREE.Scene();
+var scene = new THREE.Scene();
 scene.background = new THREE.Color(0x808080);
 
 // Create a three.js camera.
-let camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-
+var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+let target = new THREE.Mesh(new THREE.SphereGeometry(0.01, 5, 5), new THREE.MeshBasicMaterial({color: 0xff0000}));
+target.position.z = -1;
+camera.add(target);
 scene.add(camera);
 
 // scene.add(target)
 
 // Apply VR headset positional data to camera.
-let controls = new THREE.VRControls(camera);
+var controls = new THREE.VRControls(camera);
 controls.standing = true;
 
 // Apply VR stereo rendering to renderer.
-let effect = new THREE.VREffect(renderer);
+var effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
 // Create a VR manager helper to enter and exit VR mode.
-let params = {
+var params = {
     hideButton: false, // Default: false.
     isUndistorted: false // Default: false.
 };
 
-let manager = new WebVRManager(renderer, effect, params);
-window.webvr = manager;
+var manager = new WebVRManager(renderer, effect, params);
 
-// alert(1111111111);
-console.log("fuck", webvr);
 
 // controllers
-let controller = new RODIN.CardboardController();
+var controller = new RODIN.CardboardController();
 controller.setRaycasterScene(scene);
 controller.setRaycasterCamera(camera);
 controller.onKeyDown = controllerKeyDown;
 controller.onKeyUp = controllerKeyUp;
+controller.onControllerUpdate = controllerUpdate;
 
-let geometry = new THREE.PlaneGeometry(4, 4);
-let material = new THREE.MeshStandardMaterial({
+
+var geometry = new THREE.PlaneGeometry(4, 4);
+var material = new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
     roughness: 1.0,
     metalness: 0.0
 });
-
-let floor = new THREE.Mesh(geometry, material);
+var floor = new THREE.Mesh(geometry, material);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
 scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
 
-let light = new THREE.DirectionalLight(0xffffff);
+var light = new THREE.DirectionalLight(0xffffff);
 light.position.set(0, 6, 0);
 light.castShadow = true;
 light.shadow.camera.top = 2;
@@ -91,12 +91,12 @@ scene.add(light);
 
 // add raycastable objects to scene
 
-let group = new THREE.Group();
+var group = new THREE.Group();
 group.position.set(1, 1, 0);
 group.rotation.y = 0.4;
 scene.add(group);
 
-let geometries = [
+var geometries = [
     new THREE.BoxGeometry(0.2, 0.2, 0.2),
     new THREE.ConeGeometry(0.2, 0.2, 64),
     new THREE.CylinderGeometry(0.2, 0.2, 0.2, 64),
@@ -104,7 +104,7 @@ let geometries = [
     new THREE.TorusGeometry(0.2, 0.04, 64, 32)
 ];
 
-for (let i = 0; i < 50; i++) {
+for (var i = 0; i < 10; i++) {
 
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
@@ -147,48 +147,24 @@ for (let i = 0; i < 50; i++) {
     });
 
     // CONTROLLER_KEY
-    if (Math.random() > 0.5) {
+    if(Math.random() > 0.5){
         object.material = new THREE.MeshStandardMaterial({
             color: 0x00ff00,
             roughness: 0.7,
             metalness: 0.0
         });
-
         obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-            console.log(evt);
-            let controller = evt.controller;
-            let target = evt.target;
-
-            controller.pickedItems.push(target.object3D);
-
-            let initParent = target.object3D.parent;
-            changeParent(target.object3D, scene);
-
-            target.object3D.raycastCameraPlane = new THREE.Plane();
-            target.object3D.offset = new THREE.Vector3();
-            target.object3D.intersection = new THREE.Vector3();
-
-            target.object3D.raycastCameraPlane.setFromNormalAndCoplanarPoint(
-                camera.getWorldDirection(target.object3D.raycastCameraPlane.normal),
-                target.object3D.position
-            );
-
-            if (controller.raycaster.ray.intersectPlane(target.object3D.raycastCameraPlane, target.object3D.intersection)) {
-                target.object3D.offset.copy(target.object3D.intersection).sub(target.object3D.position);
-                if (evt.keyCode === 3) {
-                    let initParent = target.object3D.parent;
-                    changeParent(target.object3D, camera);
-                    target.object3D.initRotation = target.object3D.rotation.clone();
-                    target.object3D.initMousePos = {x: controller.axes[0], y: controller.axes[1]};
-                    changeParent(target.object3D, initParent);
-                }
+            if(evt.controller instanceof RODIN.CardboardController) {
+                evt.target.object3D.initialParent = evt.target.object3D.parent;
+                changeParent(evt.target.object3D, camera);
             }
-            changeParent(target.object3D, initParent);
         });
     }
 
-
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
+        if(evt.controller instanceof RODIN.CardboardController) {
+            changeParent(evt.target.object3D, evt.target.object3D.initialParent);
+        }
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {
@@ -233,12 +209,18 @@ function controllerKeyDown(keyCode) {
     if (!this.pickedItems) {
         this.pickedItems = [];
     }
+    if (this.intersected && this.intersected.length > 0) {
+        this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
+        this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
+    }
 }
 
 function controllerKeyUp(keyCode) {
     if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
     this.keyCode = null;
     this.engaged = false;
+    this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
+    this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
     this.pickedItems = [];
 }
 
