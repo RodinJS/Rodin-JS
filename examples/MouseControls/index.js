@@ -152,7 +152,6 @@ for (var i = 0; i < 50; i++) {
             metalness: 0.0
         });
         obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-            console.log(evt);
             let controller = evt.controller;
             let target = evt.target;
 
@@ -182,6 +181,22 @@ for (var i = 0; i < 50; i++) {
             }
             changeParent(target.object3D, initParent);
         });
+
+
+        obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_VALUE_CHANGE, (evt) => {
+            let controller = evt.controller;
+            let gamePad = RODIN.MouseController.getGamepad();
+            let target = evt.target;
+            if (evt.keyCode === 2) {
+                let initParent = target.object3D.parent;
+                changeParent(target.object3D, camera);
+                target.object3D.position.z -= gamePad.buttons[evt.keyCode - 1].value/1000;
+                gamePad.buttons[evt.keyCode - 1].value = 0;
+                changeParent(target.object3D, initParent);
+            }
+
+        });
+
     }
 
 

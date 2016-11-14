@@ -238,7 +238,7 @@ export class GamePad extends THREE.Object3D {
     get valueChange() {
         return (keyCode) => {
             this.onValueChange && this.onValueChange(keyCode);
-            this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_KEY_DOWN, null, keyCode, this);
+            this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_VALUE_CHANGE, null, keyCode, this);
         }
     }
 
@@ -255,6 +255,12 @@ export class GamePad extends THREE.Object3D {
 
     set keyDown(value) {
         throw new ErrorProtectedFieldChange('keyDown');
+    }
+
+    /**
+     * @param {number} value
+     */
+    onValueChange(value) {
     }
 
     /**

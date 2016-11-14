@@ -49,7 +49,7 @@ export class MouseGamePad {
         };
 
         let mouseDown = (event) => {
-            console.log(event);
+            //console.log(event);
             switch(event.button) {
                 case 0:
                     this.buttons[0].pressed = true;
@@ -89,7 +89,7 @@ export class MouseGamePad {
 
         let scroll = (event) => {
             this.buttons[1].value += event.deltaY;
-            console.log(this.buttons[1].value);
+            //console.log(this.buttons[1].value);
             if ( this.stopPropagationOnScroll ) {
                 event.stopPropagation();
             }
