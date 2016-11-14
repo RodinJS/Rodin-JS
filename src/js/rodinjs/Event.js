@@ -7,6 +7,7 @@ export class Event {
 	 * @param {event} domEvent
 	 * @param keyCode
 	 * @param {string} hand
+	 * @param {GamePad} controller
 	 * @constructor
 	 */
 	constructor (target, domEvent = null, keyCode = null, hand = "", controller = null) {

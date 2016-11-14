@@ -36,6 +36,7 @@ export class MouseGamePad {
         this.stopPropagationOnMouseDown = false;
         this.stopPropagationOnMouseMove = false;
         this.stopPropagationOnMouseUp = false;
+        this.stopPropagationOnScroll = false;
 
         let mouseMove = (event) => {
             this.axes[0] = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -48,6 +49,7 @@ export class MouseGamePad {
         };
 
         let mouseDown = (event) => {
+            //console.log(event);
             switch(event.button) {
                 case 0:
                     this.buttons[0].pressed = true;
@@ -85,10 +87,19 @@ export class MouseGamePad {
             }
         };
 
+        let scroll = (event) => {
+            this.buttons[1].value += event.deltaY;
+            //console.log(this.buttons[1].value);
+            if ( this.stopPropagationOnScroll ) {
+                event.stopPropagation();
+            }
+        };
+
         document.body.addEventListener( 'mousemove', mouseMove, false );
         document.body.addEventListener( 'mousedown', mouseDown, false );
         document.body.addEventListener( 'mouseup', mouseUp, false );
         document.body.addEventListener( 'contextmenu', (e) => {e.preventDefault();}, false );
+        document.body.addEventListener( 'wheel', scroll, false );
     }
 
     static getInstance() {

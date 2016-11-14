@@ -33,7 +33,9 @@ scene.background = new THREE.Color(0x808080);
 
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-
+let target = new THREE.Mesh(new THREE.SphereGeometry(0.01, 5, 5), new THREE.MeshBasicMaterial({color: 0xff0000}));
+target.position.z = -1;
+camera.add(target);
 scene.add(camera);
 
 // scene.add(target)
@@ -49,14 +51,15 @@ effect.setSize(window.innerWidth, window.innerHeight);
 // Create a VR manager helper to enter and exit VR mode.
 var params = {
     hideButton: false, // Default: false.
-    isUndistorted: false // Default: false.
+    isUndistorted: false, // Default: false.
+    predistorted: true
 };
 
 var manager = new WebVRManager(renderer, effect, params);
 
 
 // controllers
-var controller = new RODIN.MouseController();
+var controller = new RODIN.CardboardController();
 controller.setRaycasterScene(scene);
 controller.setRaycasterCamera(camera);
 controller.onKeyDown = controllerKeyDown;
@@ -102,7 +105,7 @@ var geometries = [
     new THREE.TorusGeometry(0.2, 0.04, 64, 32)
 ];
 
-for (var i = 0; i < 50; i++) {
+for (var i = 0; i < 20; i++) {
 
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
@@ -152,55 +155,17 @@ for (var i = 0; i < 50; i++) {
             metalness: 0.0
         });
         obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-            let controller = evt.controller;
-            let target = evt.target;
-
-            controller.pickedItems.push(target.object3D);
-
-            let initParent = target.object3D.parent;
-            changeParent(target.object3D, scene);
-
-            target.object3D.raycastCameraPlane = new THREE.Plane();
-            target.object3D.offset = new THREE.Vector3();
-            target.object3D.intersection = new THREE.Vector3();
-
-            target.object3D.raycastCameraPlane.setFromNormalAndCoplanarPoint(
-                camera.getWorldDirection(target.object3D.raycastCameraPlane.normal),
-                target.object3D.position
-            );
-
-            if (controller.raycaster.ray.intersectPlane(target.object3D.raycastCameraPlane, target.object3D.intersection)) {
-                target.object3D.offset.copy(target.object3D.intersection).sub(target.object3D.position);
-                if (evt.keyCode === 3) {
-                    let initParent = target.object3D.parent;
-                    changeParent(target.object3D, camera);
-                    target.object3D.initRotation = target.object3D.rotation.clone();
-                    target.object3D.initMousePos = {x: controller.axes[0], y: controller.axes[1]};
-                    changeParent(target.object3D, initParent);
-                }
+            if(evt.controller instanceof RODIN.CardboardController) {
+                evt.target.object3D.initialParent = evt.target.object3D.parent;
+                changeParent(evt.target.object3D, camera);
             }
-            changeParent(target.object3D, initParent);
         });
-
-
-        obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_VALUE_CHANGE, (evt) => {
-            let controller = evt.controller;
-            let gamePad = RODIN.MouseController.getGamepad();
-            let target = evt.target;
-            if (evt.keyCode === 2) {
-                let initParent = target.object3D.parent;
-                changeParent(target.object3D, camera);
-                target.object3D.position.z -= gamePad.buttons[evt.keyCode - 1].value/1000;
-                gamePad.buttons[evt.keyCode - 1].value = 0;
-                changeParent(target.object3D, initParent);
-            }
-
-        });
-
     }
 
-
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
+        if(evt.controller instanceof RODIN.CardboardController) {
+            changeParent(evt.target.object3D, evt.target.object3D.initialParent);
+        }
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {

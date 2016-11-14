@@ -1,42 +1,37 @@
 import {GamePad} from "./GamePad.js";
-import {ErrorMouseControllerAlreadyExists} from '../../error/CustomErrors.js';
+import {ErrorCardboardControllerAlreadyExists} from '../../error/CustomErrors.js';
 import {EVENT_NAMES} from '../../constants/constants.js';
 import {ErrorInvalidEventType} from '../../error/CustomErrors';
 
 let controllerCreated = false;
 
-export class MouseController extends GamePad {
+export class CardboardController extends GamePad {
     constructor(scene = null, camera = null) {
-        if(controllerCreated) {
-            throw new ErrorMouseControllerAlreadyExists();
+        if (controllerCreated) {
+            throw new ErrorCardboardControllerAlreadyExists();
         }
         controllerCreated = true;
-        super("mouse", null, scene, camera, 2);
+        super("cardboard", null, scene, camera, 2);
 
         this.setRaycasterScene(scene);
         this.setRaycasterCamera(camera);
+        this.disable();
 
+        window.addEventListener('vrdisplaypresentchange', (e)=> {
+            let re = new RegExp('cardboard', 'gi');
+            if (e.detail && e.detail.display && re.test(e.detail.display.displayName)) {
+                e.detail.display.isPresenting ? this.enable() : this.disable();
+            }
+        }, true);
     }
 
-
-    getIntersections(controller) {
-        this.raycaster.setFromCamera( new THREE.Vector2(controller.axes[0],controller.axes[1]), this.camera );
+    getIntersections() {
+        this.raycaster.set(this.camera.getWorldPosition(), this.camera.getWorldDirection());
         return this.raycaster.raycast();
-    }
-    gamepadHover(intersect){
-        //this.reycastingLine.geometry.vertices[1].z = -intersect.distance;
-        //this.reycastingLine.geometry.verticesNeedUpdate = true;
-    }
-    gamepadHoverOut(){
-        //this.reycastingLine.geometry.vertices[1].z = -50;
-        //this.reycastingLine.geometry.verticesNeedUpdate = true;
-    }
-    static getGamepad(){
-        return navigator.mouseGamePad;
     }
 
     setPropagation(eventName, value) {
-        let gamePad = MouseController.getGamepad();
+        let gamePad = CardboardController.getGamepad();
         value = !value;
 
         switch (eventName) {
@@ -51,10 +46,6 @@ export class MouseController extends GamePad {
             case EVENT_NAMES.MOUSE_MOVE:
                 gamePad.stopPropagationOnMouseMove = value;
                 return;
-
-            case EVENT_NAMES.MOUSE_WHEEL:
-                gamePad.stopPropagationOnScroll = value;
-                return;
         }
 
         throw new ErrorInvalidEventType(eventName, 'setPropagation');
@@ -68,7 +59,7 @@ export class MouseController extends GamePad {
         this.setPropagation(eventName, false);
     }
 
-    get axes() {
-        return MouseController.getGamepad().axes;
+    static getGamepad() {
+        return navigator.cardboardGamePad;
     }
 }

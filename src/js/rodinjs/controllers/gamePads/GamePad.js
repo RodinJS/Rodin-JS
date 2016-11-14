@@ -5,6 +5,8 @@ import {ErrorAbstractClassInstance, ErrorProtectedFieldChange} from '../../error
 import {Event} from '../../Event.js';
 
 import { MouseGamePad } from './MouseGamePad.js';
+import { CardboardGamePad } from './CardboardGamePad.js';
+
 export class GamePad extends THREE.Object3D {
 
     /**
@@ -14,16 +16,15 @@ export class GamePad extends THREE.Object3D {
      * @param {THREE.Scene} scene
      * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
      * @param {number} raycastLayers
-     * @todo: new.target safari problem
      */
     constructor(navigatorGamePadId = "", hand = null, scene = null, camera = null, raycastLayers = 1) {
 
         super();
 
         navigator.mouseGamePad = MouseGamePad.getInstance();
+        navigator.cardboardGamePad = CardboardGamePad.getInstance();
         this.navigatorGamePadId = navigatorGamePadId;
         this.hand = hand;
-        this.customController = null;
 
         this.raycaster = new Raycaster();
         this.raycaster.setScene(scene);
@@ -46,6 +47,17 @@ export class GamePad extends THREE.Object3D {
 
         this.buttonsPressed = new Array(this.buttons.length).fill(false);
         this.buttonsTouched = new Array(this.buttons.length).fill(false);
+        this.buttonsValues = new Array(this.buttons.length).fill(0);
+
+        this.enabled = true;
+    }
+
+    enable() {
+        this.enabled = true;
+    }
+
+    disable() {
+        this.enabled = false;
     }
 
     /**
@@ -58,12 +70,16 @@ export class GamePad extends THREE.Object3D {
         let controllers = [];
         try {
             controllers = [...navigator.getGamepads()];
+
+            /// TODO by Lyov: add static array like: customGamePads for remote add custom game pads without change GamePad class
+
             controllers.push(navigator.mouseGamePad);
+            controllers.push(navigator.cardboardGamePad);
         } catch (ex){
-            controllers = [navigator.mouseGamePad] ;
+            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad] ;
         }
         if(!controllers || !controllers.length || controllers[0] === undefined){
-            controllers = [navigator.mouseGamePad] ;
+            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad] ;
         }
         for (let i = 0; i < controllers.length; i++) {
             let controller = controllers[i];
@@ -99,15 +115,21 @@ export class GamePad extends THREE.Object3D {
         this.camera = camera;
     }
 
-
+    /**
+     * Getter for GamePad axes.
+     * @returns {Array} An array of double values
+     */
     get axes() {
         return GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand).axes;
     }
 
     /**
-     * All logic goes here
+     * Checks the gamepad state, calls the appropriate methods
      */
     update() {
+        if(!this.enabled)
+            return;
+
         let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
 
         if (!controller) {
@@ -128,6 +150,12 @@ export class GamePad extends THREE.Object3D {
                         break;
                     }
                 }
+            }
+
+            // Handle controller button value change
+            if (this.buttonsValues[i] !== controller.buttons[i].value) {
+                this.valueChange(this.buttons[i]);
+                this.buttonsValues[i] = controller.buttons[i].value;
             }
 
             // Handle controller button touch event
@@ -168,6 +196,7 @@ export class GamePad extends THREE.Object3D {
     /**
      * Checks all intersect and emits hover and hoverout events
      */
+    //TODO: Fix continious hover emitting
     intersectObjects(controller) {
         if (!this.getIntersections) {
             console.warn(`getIntersections method is not defined`);
@@ -190,7 +219,6 @@ export class GamePad extends THREE.Object3D {
                 }
             }
             if (!found) {
-                console.log(intersect, this);
                 this.gamepadHoverOut();
                 let evt = new Event(intersect.object3D.Sculpt, null, null, "", this);
                 intersect.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT, evt);
@@ -226,6 +254,17 @@ export class GamePad extends THREE.Object3D {
         }
     }
 
+    get valueChange() {
+        return (keyCode) => {
+            this.onValueChange && this.onValueChange(keyCode);
+            this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_VALUE_CHANGE, null, keyCode, this);
+        }
+    }
+
+    set valueChange(value) {
+        throw new ErrorProtectedFieldChange('valueChange');
+    }
+
     get keyDown() {
         return (keyCode) => {
             this.onKeyDown && this.onKeyDown(keyCode);
@@ -235,6 +274,12 @@ export class GamePad extends THREE.Object3D {
 
     set keyDown(value) {
         throw new ErrorProtectedFieldChange('keyDown');
+    }
+
+    /**
+     * @param {number} value
+     */
+    onValueChange(value) {
     }
 
     /**
