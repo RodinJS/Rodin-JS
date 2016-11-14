@@ -33,8 +33,9 @@ scene.background = new THREE.Color(0x808080);
 
 // Create a three.js camera.
 var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-let target = new THREE.Mesh(new THREE.SphereGeometry(0.01, 5, 5), new THREE.MeshBasicMaterial({color: 0xff0000}));
+let target = new THREE.Mesh(new THREE.SphereGeometry(0.01, 4, 4), new THREE.MeshBasicMaterial({color: 0xff0000, depthTest: false}));
 target.position.z = -1;
+target.visible = false;
 camera.add(target);
 scene.add(camera);
 
@@ -148,25 +149,22 @@ for (var i = 0; i < 20; i++) {
     });
 
     // CONTROLLER_KEY
-    if(Math.random() > 0.5){
+    if (Math.random() > 0.5) {
         object.material = new THREE.MeshStandardMaterial({
             color: 0x00ff00,
             roughness: 0.7,
             metalness: 0.0
         });
+
         obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-            if(evt.controller instanceof RODIN.CardboardController) {
-                evt.target.object3D.initialParent = evt.target.object3D.parent;
-                changeParent(evt.target.object3D, camera);
-            }
+            evt.target.object3D.initialParent = evt.target.object3D.parent;
+            changeParent(evt.target.object3D, camera);
+        });
+
+        obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
+            changeParent(evt.target.object3D, evt.target.object3D.initialParent);
         });
     }
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
-        if(evt.controller instanceof RODIN.CardboardController) {
-            changeParent(evt.target.object3D, evt.target.object3D.initialParent);
-        }
-    });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {
     });
@@ -201,10 +199,11 @@ function controllerUpdate() {
             }
         });
     }
+
+    target.visible = controller.enabled;
 }
 
 function controllerKeyDown(keyCode) {
-    if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
     this.keyCode = keyCode;
     this.engaged = true;
     if (!this.pickedItems) {
