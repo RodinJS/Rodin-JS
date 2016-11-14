@@ -48,6 +48,16 @@ export class GamePad extends THREE.Object3D {
 
         this.buttonsPressed = new Array(this.buttons.length).fill(false);
         this.buttonsTouched = new Array(this.buttons.length).fill(false);
+
+        this.enabled = true;
+    }
+
+    enable() {
+        this.enabled = true;
+    }
+
+    disable() {
+        this.enabled = false;
     }
 
     /**
@@ -117,6 +127,9 @@ export class GamePad extends THREE.Object3D {
      * Checks the gamepad state, calls the appropriate methods
      */
     update() {
+        if(!this.enabled)
+            return;
+
         let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
 
         if (!controller) {
