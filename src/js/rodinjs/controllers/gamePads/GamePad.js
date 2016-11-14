@@ -5,6 +5,8 @@ import {ErrorAbstractClassInstance, ErrorProtectedFieldChange} from '../../error
 import {Event} from '../../Event.js';
 
 import { MouseGamePad } from './MouseGamePad.js';
+import { CardboardGamePad } from './CardboardGamePad.js';
+
 export class GamePad extends THREE.Object3D {
 
     /**
@@ -21,6 +23,7 @@ export class GamePad extends THREE.Object3D {
         super();
 
         navigator.mouseGamePad = MouseGamePad.getInstance();
+        navigator.cardboardGamePad = CardboardGamePad.getInstance();
         this.navigatorGamePadId = navigatorGamePadId;
         this.hand = hand;
 
@@ -57,12 +60,16 @@ export class GamePad extends THREE.Object3D {
         let controllers = [];
         try {
             controllers = [...navigator.getGamepads()];
+
+            /// TODO by Lyov: add static array like: customGamePads for remote add custom game pads without change GamePad class
+
             controllers.push(navigator.mouseGamePad);
+            controllers.push(navigator.cardboardGamePad);
         } catch (ex){
-            controllers = [navigator.mouseGamePad] ;
+            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad] ;
         }
         if(!controllers || !controllers.length || controllers[0] === undefined){
-            controllers = [navigator.mouseGamePad] ;
+            controllers = [navigator.mouseGamePad, navigator.cardboardGamePad] ;
         }
         for (let i = 0; i < controllers.length; i++) {
             let controller = controllers[i];
