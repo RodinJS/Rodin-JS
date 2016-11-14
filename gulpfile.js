@@ -236,7 +236,6 @@ gulp.task('clean', () =>  {
 gulp.task('examples', () => {
   const s = size({title: 'Examples -> ', pretty: true});
   return gulp.src(EX_JS)
-    .pipe(watch(EX_JS))
     .pipe(plumber(ERROR_MESSAGE))
     .pipe(babel())
     .pipe(s)

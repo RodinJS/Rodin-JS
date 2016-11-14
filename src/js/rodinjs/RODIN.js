@@ -7,6 +7,7 @@ export { WTF } from './logger/Logger.js';
 export { MobileDeviceOrientationControls } from './mobile/MobileDeviceOrientationControls.js';
 export { MobileCameraControls } from './mobile/MobileCameraControls.js';
 export { MouseController } from './controllers/gamePads/MouseController.js';
+export { CardboardController } from './controllers/gamePads/CardboardController.js';
 export { ViveController } from './controllers/gamePads/ViveController.js';
 export { OculusController } from './controllers/gamePads/OculusController.js';
 
