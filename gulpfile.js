@@ -258,7 +258,7 @@ gulp.task('connect', () => {
 
 
 gulp.task('prod', (done) => {
-  sequence('clean', ['js-prod', 'js-three', 'glsl', 'three-global','systemjs', 'examples', 'sass-prod', 'font', 'img'], done);
+  sequence('clean', ['js-prod', 'js-three', 'glsl', 'three-global','systemjs', 'examples', 'sass-prod', 'font', 'img', 'connect'], done);
 });
 
 gulp.task('default', (done) => {
