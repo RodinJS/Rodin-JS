@@ -52,6 +52,10 @@ skybox.on('ready', () => {
     snowContainer.rotation.y = -Math.PI / 2;
     snowContainer.position.y = -boxSize / 2 + snowBoxSize / 2;
     scene.add(object1);
+
+    // For high end VR devices like Vive and Oculus, take into account the stage
+    // parameters provided.
+    setupStage()
 });
 
 //snow = new RODIN.Snow(
@@ -78,10 +82,6 @@ snow.on("ready", (evt) => {
     evt.target.object3D.renderOrder = 1;
     snowContainer.add(evt.target.object3D);
 });
-// For high end VR devices like Vive and Oculus, take into account the stage
-// parameters provided.
-setupStage();
-
 
 // Create a VR manager helper to enter and exit VR mode.
 var params = {
