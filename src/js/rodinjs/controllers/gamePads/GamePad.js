@@ -1,4 +1,4 @@
-import {THREE} from '../../../three/THREE.GLOBAL.js';
+import {THREE} from '../../../vendor/three/THREE.GLOBAL.js';
 import {Raycaster} from '../../raycaster/Raycaster.js';
 import {EVENT_NAMES, KEY_CODES} from '../../constants/constants.js';
 import {ErrorAbstractClassInstance, ErrorProtectedFieldChange} from '../../error/CustomErrors.js';

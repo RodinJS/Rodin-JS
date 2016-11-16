@@ -1,4 +1,4 @@
-import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
+import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 
 console.log(RODIN);

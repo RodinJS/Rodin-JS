@@ -1,0 +1,36 @@
+[
+  {
+    "src": "node_modules/cannon/build/cannon.js",
+    "dest": "/cannon/",
+    "babelyfi": true
+  },
+  {
+    "src": "node_modules/three/src/**/*.glsl",
+    "dest": "/three/",
+    "babelyfi": false
+  },
+  {
+    "src": [
+      "node_modules/three/src/**/*.js",
+      "node_modules/three/src/**/*.glsl"
+    ],
+    "dest": "/three/",
+    "babelyfi": true
+  },
+  {
+    "src": [
+      "src/js/Three.custom.js",
+      "src/js/THREE.GLOBAL.js"
+    ],
+    "dest": "/three/",
+    "babelyfi": true
+  },
+
+
+
+  {
+    "src": "node_modules/three/examples/js/loaders/*.js",
+    "dest": "/three/examples/js/loaders/",
+    "babelyfi": true
+  }
+]

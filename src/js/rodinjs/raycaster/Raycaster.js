@@ -1,4 +1,4 @@
-import { THREE } from '../../three/THREE.GLOBAL.js';
+import { THREE } from '../../vendor/three/THREE.GLOBAL.js';
 import { Raycastables } from '../objects.js';
 import { ErrorNoSceneProvided } from '../error/CustomErrors.js';
 

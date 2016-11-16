@@ -1,5 +1,5 @@
 'use strict';
-import * as THREE from '../../three/Three.custom.js';
+import * as THREE from '../../vendor/three/Three.custom.js';
 import {OrbitControls} from '../OrbitControls.js';
 import {MobileDeviceOrientationControls} from './MobileDeviceOrientationControls.js';
 

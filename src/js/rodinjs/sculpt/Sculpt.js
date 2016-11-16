@@ -1,4 +1,4 @@
-import {THREE} from '../../three/THREE.GLOBAL.js';
+import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import {WTF} from '../logger/Logger.js';
 import {Objects} from '../objects.js';
 import {ANIMATION_TYPES} from '../constants/constants.js';

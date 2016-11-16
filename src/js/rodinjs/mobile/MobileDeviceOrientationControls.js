@@ -1,6 +1,6 @@
 'use strict';
 
-import * as THREE from '../../three/Three.custom.js';
+import * as THREE from '../../vendor/three/Three.custom.js';
 
 let instance = null;
 var self;

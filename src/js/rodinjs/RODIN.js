@@ -36,4 +36,6 @@ export { Objects } from './objects.js';
 export { Raycastables } from './objects.js';
 export { Time } from './time/Time.js';
 
+export {Scene} from './scene/Scene.js';
+
 export let v = 'RODIN.js v0.0.1';

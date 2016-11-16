@@ -1,12 +1,12 @@
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
-import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
+import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
 console.log(RODIN);
 
-import '../../_build/js/cannon/cannon.js';
+import '../../_build/js/vendor/cannon/cannon.js';
 
 import '../../node_modules/three/examples/js/controls/VRControls.js';
 import '../../node_modules/three/examples/js/effects/VREffect.js';
