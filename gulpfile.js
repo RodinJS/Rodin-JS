@@ -140,10 +140,8 @@ gulp.task('js-prod', () => {
   const s = size({title: 'JS production -> ', pretty: true});
   return gulp.src(JS)
     .pipe(plumber(ERROR_MESSAGE))
-    .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(uglify(UGLIFY_AGRESIVE))
-    .pipe(sourcemaps.write('.'))
     .pipe(s)
     .pipe(gulp.dest('./_build/js'))
     .pipe(notify({
@@ -258,7 +256,7 @@ gulp.task('connect', () => {
 
 
 gulp.task('prod', (done) => {
-  sequence('clean', ['js-prod', 'js-three', 'glsl', 'three-global','systemjs', 'examples', 'sass-prod', 'font', 'img', 'connect'], done);
+  sequence('clean', ['js-prod', 'cannon', 'js-three', 'glsl', 'three-global','systemjs', 'examples', 'sass-prod', 'font', 'img', 'connect'], done);
 });
 
 gulp.task('default', (done) => {
