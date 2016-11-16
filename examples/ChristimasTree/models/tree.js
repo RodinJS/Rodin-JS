@@ -1,19 +1,6 @@
 {
 
-"metadata":
-{
-"sourceFile": "tree.max",
-"generatedBy": "3ds max ThreeJSExporter",
-"formatVersion": 3.1,
-"vertices": 123,
-"normals": 222,
-"colors": 0,
-"uvs": 167,
-"triangles": 222,
-"materials": 2
-},
-
-"materials": [
+"metadata":{"sourceFile": "tree.max","generatedBy": "3ds max ThreeJSExporter","formatVersion": 3.1,"vertices": 123,"normals": 222,"colors": 0,"uvs": 167,"triangles": 222,"materials": 2},"materials": [
 {
 "DbgIndex" : 0,
 "DbgName"  : "Material #38",
@@ -27,7 +14,7 @@
 {
 "DbgIndex" : 1,
 "DbgName"  : "Material #39",
-"colorDiffuse"  : [0.0275, 0.4353, 0.1176],
+"colorDiffuse"  : [0.2745, 0.3922, 0.3922],
 "colorSpecular"  : [1.0000, 1.0000, 1.0000],
 "opacity"  : 1.0,
 "specularCoef"  : 0.0,

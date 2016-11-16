@@ -19,7 +19,7 @@ RODIN.WTF.is('Rodin.JS v0.0.1');
 // Only enable it if you actually need to.
 let renderer = new THREE.WebGLRenderer({antialias: window.devicePixelRatio < 2});
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled = false;
 
 // Append the canvas element created by the renderer to document body element.
 document.body.appendChild(renderer.domElement);
@@ -29,14 +29,15 @@ let focalLength = 3;
 
 // Create a three.js scene.
 let scene = new THREE.Scene();
+//scene.background = new THREE.Color(0x728fb4);
 
 // Add a skybox.
-var boxSize = 30;
-//var skybox = new RODIN.CubeObject(boxSize*4, './img/skybox.jpg');
-let texture = new THREE.TextureLoader().load('./img/space.jpg');
-var skybox = new THREE.Mesh(new THREE.SphereGeometry(boxSize * 2, 12, 12), new THREE.MeshBasicMaterial({map: texture}));
+let boxSize = 30;
+//let texture = new THREE.TextureLoader().load('./img/space.jpg');
+//let skybox = new THREE.Mesh(new THREE.SphereGeometry(boxSize * 2, 12, 12), new THREE.MeshBasicMaterial({map: texture}));
+let skybox = new THREE.Mesh(new THREE.BoxGeometry(boxSize * 2, boxSize * 2, boxSize * 2), new THREE.MeshBasicMaterial({color: 0x000000}));
 //scene.fog = new THREE.FogExp2( 0x7a8695, 0.5 );
-scene.fog = new THREE.Fog(0x7a8695, 0, boxSize * 2.8);
+scene.fog = new THREE.Fog(0x7a8695, 0, 23);
 
 // Create a three.js camera.
 let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 200);
@@ -47,7 +48,7 @@ controls.standing = true;
 
 scene.add(skybox);
 skybox.position.y = controls.userHeight;
-skybox.rotation.y = Math.PI;
+//skybox.rotation.y = Math.PI;
 skybox.scale.set(1, 1, -1);
 
 
@@ -60,7 +61,7 @@ effect.setSize(window.innerWidth, window.innerHeight);
 // Create a VR manager helper to enter and exit VR mode.
 let params = {
     hideButton: false, // Default: false.
-    isUndistorted: true // Default: false.\
+    isUndistorted: true // Default: false.
 };
 let manager = new WebVRManager(renderer, effect, params);
 
@@ -102,7 +103,6 @@ mouseController.onKeyDown = mouseControllerKeyDown;
 mouseController.onKeyUp = mouseControllerKeyUp;
 mouseController.onControllerUpdate = mouseControllerUpdate;
 
-
 // Add a skybox.
 boxSize = 21;
 let snowBoxSize = 18;
@@ -134,17 +134,17 @@ snow.on("ready", (evt) => {
     scene.add(snowContainer);
 });
 
-let light1 = new THREE.DirectionalLight(0xffffff);
+let light1 = new THREE.DirectionalLight(0xbbbbbb);
 light1.position.set(0, 6, 1);
 light1.castShadow = true;
 light1.shadow.camera.top = 15;
 light1.shadow.camera.bottom = -15;
 light1.shadow.camera.right = 15;
 light1.shadow.camera.left = -15;
-light1.shadow.mapSize.set(4096, 4096);
+light1.shadow.mapSize.set(2048, 2048);
 scene.add(light1);
 
-scene.add(new THREE.AmbientLight(0x888888));
+scene.add(new THREE.AmbientLight(0xaaaaaa));
 
 //terrain
 
@@ -156,7 +156,7 @@ terrain.on('ready', () => {
     textureSnow.wrapT = THREE.RepeatWrapping;
     textureSnow.repeat.x = 15;
     textureSnow.repeat.y = 15;
-
+//ccsdcnjnsdk
     let mesh = new THREE.Mesh(terrain.object3D.geometry,
         new THREE.MeshLambertMaterial({
             color: 0xbbbbbb,
@@ -164,7 +164,7 @@ terrain.on('ready', () => {
             clipShadows: true
         }));
 
-    mesh.scale.set(0.5, 0.5, 0.5);
+    mesh.scale.set(0.3, 0.4, 0.3);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     scene.add(mesh);
@@ -196,7 +196,6 @@ let s = 0.06;
 // christmasTree
 let christmasTree = new RODIN.JSONModelObject(0, './models/christmasTree.js');
 christmasTree.on('ready', () => {
-    console.log(christmasTree.object3D.material.materials)
     christmasTree.object3D.material.materials[0].alphaTest = 0.35;
     christmasTree.object3D.material.materials[0].transparent = false;
     christmasTree.object3D.material.materials[0].side = THREE.DoubleSide;
@@ -210,6 +209,26 @@ christmasTree.on('ready', () => {
     christmasTree.object3D.castShadow = true;
     christmasTree.object3D.receiveShadow = true;
     scene.add(christmasTree.object3D);
+});
+
+// random tree
+let tree = new RODIN.JSONModelObject(0, './models/tree.js');
+tree.on('ready', () => {
+    for (let i = 0; i < 25; i++) {
+        let s = Math.randomFloatIn(0.05, 0.15);
+        let t = tree.object3D.clone();
+        let alpha = Math.randomFloatIn(-Math.PI, Math.PI);
+
+        t.position.x = (Math.sin(alpha) + s) * Math.randomFloatIn(9, 20);
+        t.position.y = 0;
+        t.position.z = (Math.cos(alpha) + s) * Math.randomFloatIn(9, 20);
+        t.rotation.y = (Math.random() - 0.5) * 2 * Math.PI / 2;
+        t.scale.set(s, s, s);
+
+        t.castShadow = true;
+        t.receiveShadow = true;
+        scene.add(t);
+    }
 });
 
 // christmasTree toys
@@ -239,10 +258,9 @@ let toyReady = function () {
     scene.add(obj.object3D);
     RODIN.Raycastables.push(obj.object3D);
     obj.object3D.initialParent = obj.object3D.parent;
-    // hover
 
+    // hover
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
-        console.log(evt);
         if (evt.controller instanceof RODIN.ViveController) {
             if (!obj.hoveringObjects) {
                 obj.hoveringObjects = [];
@@ -270,9 +288,7 @@ let toyReady = function () {
     });
 
     // CONTROLLER_KEY
-
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-        console.log(evt);
         let controller = evt.controller;
         let target = evt.target;
         if (controller instanceof RODIN.MouseController) {
@@ -328,7 +344,6 @@ let toyReady = function () {
         }
         else if (controller instanceof RODIN.ViveController) {
             let targetParent = target.object3D.parent;
-            console.log(target.object3D);
             changeParent(target.object3D, target.object3D.initialParent);
             controller.reycastingLine.remove(targetParent);
         }
@@ -361,7 +376,6 @@ let toyReady = function () {
     });
 
     // Controller touch
-
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
     });
 
@@ -370,9 +384,8 @@ let toyReady = function () {
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt) => {
     });
-
-
 };
+
 for (let i = 0; i < 10; i++) {
     let toy = new RODIN.JSONModelObject(i, toyURLS[Math.randomIntIn(0, 5)]);
     toy.on('ready', toyReady);
@@ -380,7 +393,23 @@ for (let i = 0; i < 10; i++) {
 
 let toy = new RODIN.JSONModelObject(10, toyURLS[6]);
 toy.on('ready', toyReady);
-
+toy.on('ready', () => {
+    toy.object3D.geometry.center();
+    let toyGeo = toy.object3D.geometry.clone();
+    // duplicate add gradient texture
+    let glowMat = new THREE.MeshPhongMaterial({
+        map: './models/star.png',
+        lights: true,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true
+    });
+    let toyGlow = new THREE.Mesh(toyGeo, glowMat);
+    toyGlow.scale.multiplyScalar(1.2);
+    toyGlow.geometry.center();
+    toy.object3D.add(toyGlow);
+    console.log(toyGlow);
+});
 
 function controllerKeyDown(keyCode) {
     if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
@@ -447,7 +476,6 @@ function controllerTouchUp(keyCode, gamepad) {
     }
 }
 
-
 function mouseControllerUpdate() {
     this.raycaster.setFromCamera({x: this.axes[0], y: this.axes[1]}, camera);
 
@@ -501,28 +529,6 @@ function mouseControllerKeyUp(keyCode) {
     this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
     this.pickedItems = [];
 }
-
-
-// random tree
-let tree = new RODIN.JSONModelObject(0, './models/tree.js');
-tree.on('ready', () => {
-    for (let i = 0; i < 25; i++) {
-        let s = Math.randomFloatIn(0.05, 0.15);
-        let t = tree.object3D.clone();
-        let alpha = Math.randomFloatIn(-Math.PI, Math.PI);
-
-        t.position.x = (Math.sin(alpha) + s) * Math.randomFloatIn(9, 20);
-        t.position.y = 0;
-        t.position.z = (Math.cos(alpha) + s) * Math.randomFloatIn(9, 20);
-        ;
-        t.rotation.y = (Math.random() - 0.5) * 2 * Math.PI / 2;
-        t.scale.set(s, s, s);
-
-        t.castShadow = true;
-        t.receiveShadow = true;
-        scene.add(t);
-    }
-});
 
 // Kick off animation loop
 requestAnimationFrame(animate);
