@@ -51,7 +51,6 @@ skybox.position.y = controls.userHeight;
 //skybox.rotation.y = Math.PI;
 skybox.scale.set(1, 1, -1);
 
-
 let snowContainer = new THREE.Object3D();
 
 // Apply VR stereo rendering to renderer.
@@ -82,7 +81,7 @@ viveControllerR.onTouchDown = controllerTouchDown;
 scene.add(viveControllerR);
 
 let loader = new THREE.OBJLoader();
-loader.setPath('./object/');
+loader.setPath('./models/');
 loader.load('vr_controller_vive_1_5.obj', function (object) {
 
     let loader = new THREE.TextureLoader();
@@ -147,16 +146,13 @@ scene.add(light1);
 scene.add(new THREE.AmbientLight(0xaaaaaa));
 
 //terrain
-
 let terrain = new RODIN.JSONModelObject(0, "./models/terrain.js");
-
 terrain.on('ready', () => {
     let textureSnow = new THREE.TextureLoader().load("./models/snow_texture.jpg");
     textureSnow.wrapS = THREE.RepeatWrapping;
     textureSnow.wrapT = THREE.RepeatWrapping;
     textureSnow.repeat.x = 15;
     textureSnow.repeat.y = 15;
-//ccsdcnjnsdk
     let mesh = new THREE.Mesh(terrain.object3D.geometry,
         new THREE.MeshLambertMaterial({
             color: 0xbbbbbb,
@@ -170,28 +166,7 @@ terrain.on('ready', () => {
     scene.add(mesh);
 });
 
-// characters
-let geometry1 = new THREE.PlaneGeometry(10, 12, 2, 2);
-let texture1 = new THREE.TextureLoader().load("img/portals/frozen/characters.png");
-
-let material1 = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-    map: texture1,
-    transparent: true
-});
-
-let object1 = new THREE.Mesh(geometry1, material1);
-let obj = new RODIN.THREEObject(object1);
-
-obj.on('ready', () => {
-    object1.position.x = 0;
-    object1.position.y = 1.39;
-    object1.position.z = -6.5;
-    object1.scale.set(0.25, 0.25, 0.25);
-    scene.add(object1);
-});
-
-let s = 0.06;
+let s = 0.05;
 
 // christmasTree
 let christmasTree = new RODIN.JSONModelObject(0, './models/christmasTree.js');
@@ -202,9 +177,9 @@ christmasTree.on('ready', () => {
     christmasTree.object3D.material.materials[0].clipShadows = true;
 
     christmasTree.object3D.scale.set(s, s, s);
-    christmasTree.object3D.position.x = 1.5;
+    christmasTree.object3D.position.x = 0.5;
     christmasTree.object3D.position.y = 0;
-    christmasTree.object3D.position.z = 1.5;
+    christmasTree.object3D.position.z = 0.5;
 
     christmasTree.object3D.castShadow = true;
     christmasTree.object3D.receiveShadow = true;
@@ -237,13 +212,13 @@ let toyURLS = [
     './models/candy.js',
     './models/toyDuploCone.js',
     './models/toySphereBig.js',
-    './models/toySphereMiddel.js',
+    './models/toySphereMiddle.js',
     './models/toySphereSmall.js',
     './models/star.js',
 ];
 let toyReady = function () {
     let obj = new RODIN.THREEObject(this.object3D);
-    let k = Math.randomFloatIn(0.1, 1.0);
+    let k = Math.randomFloatIn(-0.1, -1.0);
     let alpha = Math.randomFloatIn(-Math.PI, Math.PI);
 
     obj.object3D.position.x = (Math.sin(alpha) + s) * k;
@@ -385,27 +360,37 @@ let toyReady = function () {
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt) => {
     });
 };
-
+let colors = [ 0x0d2a70 , 0x690000, 0xd2d2d2];
 for (let i = 0; i < 10; i++) {
-    let toy = new RODIN.JSONModelObject(i, toyURLS[Math.randomIntIn(0, 5)]);
+    let url = toyURLS[Math.randomIntIn(0, 5)];
+    let toy = new RODIN.JSONModelObject(i, url);
+
     toy.on('ready', toyReady);
-}
+    toy.on('ready', () => {
+        toy.object3D.geometry.computeVertexNormals();
+
+        toy.object3D.material.materials[0].reflectivity = 1;
+        toy.object3D.material.materials[0].hue = 1;
+        if (url !== toyURLS[1]){
+            toy.object3D.material.materials[0].color = new THREE.Color(colors[Math.randomIntIn(0, colors.length - 1)]);
+        }
+    }
+)}
 
 let toy = new RODIN.JSONModelObject(10, toyURLS[6]);
 toy.on('ready', toyReady);
 toy.on('ready', () => {
     toy.object3D.geometry.center();
     let toyGeo = toy.object3D.geometry.clone();
-    // duplicate add gradient texture
-    let glowMat = new THREE.MeshPhongMaterial({
-        map: './models/star.png',
+    let glowMat = new THREE.MeshStandardMaterial({
+        map: new THREE.TextureLoader().load("./models/star.png"),
         lights: true,
-        side: THREE.BackSide,
         blending: THREE.AdditiveBlending,
+        opacity: 0.75,
         transparent: true
     });
     let toyGlow = new THREE.Mesh(toyGeo, glowMat);
-    toyGlow.scale.multiplyScalar(1.2);
+    toyGlow.scale.multiplyScalar(1.5);
     toyGlow.geometry.center();
     toy.object3D.add(toyGlow);
     console.log(toyGlow);
@@ -550,6 +535,7 @@ function animate(timestamp) {
     // Update VR headset position and apply to camera.
     controls.update();
     snow.emit('update');
+
     // Render the scene through the manager.
     manager.render(scene, camera, timestamp);
     requestAnimationFrame(animate);
