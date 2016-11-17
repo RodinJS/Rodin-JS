@@ -140,7 +140,7 @@ scene.add(light1);
 scene.add(new THREE.AmbientLight(0xaaaaaa));
 
 //terrain
-let terrain = new RODIN.JSONModelObject(0, "./models/terrain.js");
+let terrain = new RODIN.JSONModelObject(0, "./models/terrain.json");
 terrain.on('ready', () => {
     let textureSnow = new THREE.TextureLoader().load("./models/snow_texture.jpg");
     textureSnow.wrapS = THREE.RepeatWrapping;
@@ -163,7 +163,7 @@ terrain.on('ready', () => {
 let s = 0.05;
 
 // christmasTree
-let christmasTree = new RODIN.JSONModelObject(0, './models/christmasTree.js');
+let christmasTree = new RODIN.JSONModelObject(0, './models/christmasTree.json');
 christmasTree.on('ready', () => {
     christmasTree.object3D.material.materials[0].alphaTest = 0.35;
     christmasTree.object3D.material.materials[0].transparent = false;
@@ -181,7 +181,7 @@ christmasTree.on('ready', () => {
 });
 
 // random tree
-let tree = new RODIN.JSONModelObject(0, './models/tree.js');
+let tree = new RODIN.JSONModelObject(0, './models/tree.json');
 tree.on('ready', () => {
     for (let i = 0; i < 25; i++) {
         let s = Math.randomFloatIn(0.05, 0.15);
@@ -202,13 +202,13 @@ tree.on('ready', () => {
 
 // christmasTree toys
 let toyURLS = [
-    './models/bell.js',
-    './models/candy.js',
-    './models/toyDuploCone.js',
-    './models/toySphereBig.js',
-    './models/toySphereMiddle.js',
-    './models/toySphereSmall.js',
-    './models/star.js',
+    './models/bell.json',
+    './models/candy.json',
+    './models/toyDuploCone.json',
+    './models/toySphereBig.json',
+    './models/toySphereMiddle.json',
+    './models/toySphereSmall.json',
+    './models/star.json',
 ];
 let toyReady = function () {
     let obj = new RODIN.THREEObject(this.object3D);
