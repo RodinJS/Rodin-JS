@@ -4,11 +4,11 @@ import {WTF} from '../../_build/js/rodinjs/RODIN.js';
 
 WTF.is(RODIN);
 
-import '../../node_modules/three/examples/js/controls/VRControls.js';
-import '../../node_modules/three/examples/js/effects/VREffect.js';
-import '../../node_modules/three/examples/js/loaders/collada/AnimationHandler.js';
-import '../../node_modules/three/examples/js/loaders/collada/KeyFrameAnimation.js';
-import '../../node_modules/three/examples/js/loaders/collada/Animation.js';
+import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
+import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
+import '../../_build/js/vendor/three/examples/js/loaders/collada/AnimationHandler.js';
+import '../../_build/js/vendor/three/examples/js/loaders/collada/KeyFrameAnimation.js';
+import '../../_build/js/vendor/three/examples/js/loaders/collada/Animation.js';
 
 WTF.is('Rodin.JS v0.0.1');
 

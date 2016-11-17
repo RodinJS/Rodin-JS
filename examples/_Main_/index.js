@@ -1,26 +1,19 @@
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
 
-import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
+import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 
 console.log(RODIN);
 
-import '../../node_modules/three/examples/js/controls/VRControls.js';
-import '../../node_modules/three/examples/js/effects/VREffect.js';
+import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
+import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
 
 WTF.is('Rodin.JS v0.0.1');
 
 
 
 ///////////////////////TWEEN EXAMPLE////////////////////////////////
-
-let tween = new TWEEN.Tween({ x: 0, y: 0 })
-    .to({ x: 100, y: 100 }, 1000)
-    .onUpdate(function() {
-        console.log(this.x, this.y);
-    })
-    .start();
 let skybox = null;
 
 // WTF.is(tween);
@@ -47,16 +40,6 @@ let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHei
 // Apply VR headset positional data to camera.
 let controls = new THREE.VRControls(camera);
 controls.standing = true;
-
-/*let controls = new RODIN.MobileCameraControls(
- scene,
- camera,
- new THREE.Vector3(0, 0, 0),
- new THREE.Vector3(0, 0, -0.01),
- renderer.domElement,
- true
- );
- controls.userHeight = 1.6*/
 
 
 // Apply VR stereo rendering to renderer.

@@ -1,5 +1,5 @@
 import {Sculpt} from "../sculpt/Sculpt.js";
-import {THREE} from "../../THREE.GLOBAL.js";
+import {THREE} from "../../vendor/three/THREE.GLOBAL.js";
 import {Time} from "../time/Time.js";
 import {Set} from '../utils/Set.js';
 import {Objects} from '../objects.js';

@@ -104,7 +104,7 @@ gulp.task('vendor', () => {
         let module = VENDOR[i];
         let task = gulp.src(module.src);
 
-        if (module.babel) {
+        if (module.babelyfi) {
             task = task.pipe(plumber(ERROR_MESSAGE))
                 .pipe(babel())
                 .pipe(plumber.stop())
