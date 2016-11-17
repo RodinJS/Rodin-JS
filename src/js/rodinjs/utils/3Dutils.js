@@ -1,5 +1,5 @@
 'use strict';
-import {THREE} from '../../three/THREE.GLOBAL.js';
+import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 
 export const _canvas = document.createElement('canvas');
 

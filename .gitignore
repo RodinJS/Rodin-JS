@@ -52,3 +52,5 @@ _build
 
 examples/**/*_c.js
 examples/**/*.mp4
+
+src/js/vendor

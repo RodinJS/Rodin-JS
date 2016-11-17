@@ -1,4 +1,4 @@
-import {THREE} from '../../three/THREE.GLOBAL.js';
+import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 
 export class MaterialPlayer {
     constructor(url, stereoscopic = false, format = "mp4", fps = 25) {

@@ -1,0 +1,50 @@
+[
+  {
+    "src": "node_modules/es6-promise/dist/*.js",
+    "dest": "/es6-promise/",
+    "babelyfi": false
+  },
+  {
+    "src": "node_modules/webvr-polyfill/build/*.js",
+    "dest": "/webvr-polyfill/",
+    "babelyfi": false
+  },
+  {
+    "src": "node_modules/webvr-boilerplate/build/*.js",
+    "dest": "/webvr-boilerplate/",
+    "babelyfi": false
+  },
+  {
+    "src": "node_modules/dat-gui/**/*.js",
+    "dest": "/dat-gui/",
+    "babelyfi": false
+  },
+  {
+    "src": "node_modules/cannon/build/cannon.js",
+    "dest": "/cannon/",
+    "babelyfi": true
+  },
+  {
+    "src": "node_modules/three/src/**/*.glsl",
+    "dest": "/three/",
+    "babelyfi": false
+  },
+  {
+    "src": "node_modules/three/src/**/*.js",
+    "dest": "/three/",
+    "babelyfi": true
+  },
+  {
+    "src": [
+      "src/js/Three.custom.js",
+      "src/js/THREE.GLOBAL.js"
+    ],
+    "dest": "/three/",
+    "babelyfi": true
+  },
+  {
+    "src": "node_modules/three/examples/js/**/*.js",
+    "dest": "/three/examples/js/",
+    "babelyfi": false
+  }
+]

@@ -1,27 +1,18 @@
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
 
-import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
+import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 
 console.log(RODIN);
 
-import '../../node_modules/three/examples/js/controls/VRControls.js';
-import '../../node_modules/three/examples/js/effects/VREffect.js';
+import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
+import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
 
 WTF.is('Rodin.JS v0.0.1');
 
 
-
-///////////////////////TWEEN EXAMPLE////////////////////////////////
-
-var tween = new TWEEN.Tween({ x: 0, y: 0 })
-    .to({ x: 100, y: 100 }, 1000)
-    .onUpdate(function() {
-        console.log(this.x, this.y);
-    })
-    .start();
-var skybox = null;
+let skybox = null;
 
 // WTF.is(tween);
 ///////////////////////////////////////////////////////////////////
@@ -32,23 +23,23 @@ var skybox = null;
 
 // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
 // Only enable it if you actually need to.
-var renderer = new THREE.WebGLRenderer({antialias: true});
+let renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setPixelRatio(window.devicePixelRatio);
 
 // Append the canvas element created by the renderer to document body element.
 document.body.appendChild(renderer.domElement);
 
 // Create a three.js scene.
-var scene = new THREE.Scene();
+let scene = new THREE.Scene();
 
 // Create a three.js camera.
-var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
 
 // Apply VR headset positional data to camera.
-var controls = new THREE.VRControls(camera);
+let controls = new THREE.VRControls(camera);
 controls.standing = true;
 
-/*var controls = new RODIN.MobileCameraControls(
+/*let controls = new RODIN.MobileCameraControls(
  scene,
  camera,
  new THREE.Vector3(0, 0, 0),
@@ -60,15 +51,15 @@ controls.standing = true;
 
 
 // Apply VR stereo rendering to renderer.
-var effect = new THREE.VREffect(renderer);
+let effect = new THREE.VREffect(renderer);
 effect.setSize(window.innerWidth, window.innerHeight);
 
-var distanceRatio = 1;
+let distanceRatio = 1;
 
 
 // Add a repeating grid as a skybox.
-var boxSize = 15 * distanceRatio;
-var loader = new THREE.TextureLoader();
+let boxSize = 15 * distanceRatio;
+let loader = new THREE.TextureLoader();
 loader.load('img/boxW.png', onTextureLoaded);
 
 function onTextureLoaded(texture) {
@@ -76,8 +67,8 @@ function onTextureLoaded(texture) {
     texture.wrapT = THREE.RepeatWrapping;
     texture.repeat.set(boxSize, boxSize);
 
-    var geometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
-    var material = new THREE.MeshBasicMaterial({
+    let geometry = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+    let material = new THREE.MeshBasicMaterial({
         map: texture,
 //    color: 0x01BE00,
         side: THREE.BackSide
@@ -95,20 +86,20 @@ function onTextureLoaded(texture) {
 
 
 // Create a VR manager helper to enter and exit VR mode.
-var params = {
+let params = {
     hideButton: false, // Default: false.
     isUndistorted: false // Default: false.
 };
-var manager = new WebVRManager(renderer, effect, params);
+let manager = new WebVRManager(renderer, effect, params);
 
 // Create 3D objects.
-var boxCount = 1000;
-var particleBoxSize = 0.015 * distanceRatio;
-var geometry = new THREE.BoxGeometry(particleBoxSize, particleBoxSize, particleBoxSize);
-var material = new THREE.MeshNormalMaterial();
-//var cube = new THREE.Mesh(geometry, material);
-var cubes = [];
-for (var i = 0; i < boxCount; i++) {
+let boxCount = 1000;
+let particleBoxSize = 0.015 * distanceRatio;
+let geometry = new THREE.BoxGeometry(particleBoxSize, particleBoxSize, particleBoxSize);
+let material = new THREE.MeshNormalMaterial();
+//let cube = new THREE.Mesh(geometry, material);
+let cubes = [];
+for (let i = 0; i < boxCount; i++) {
     cubes.push(new THREE.Mesh(geometry, material));
     cubes[i].position.set(1.5 * distanceRatio * (Math.random() - 0.5), controls.userHeight - 3 * distanceRatio * (Math.random() - 0.5), 1.5 * distanceRatio * (Math.random() - 0.5));
     scene.add(cubes[i]);
@@ -127,14 +118,14 @@ window.addEventListener('resize', onResize, true);
 window.addEventListener('vrdisplaypresentchange', onResize, true);
 
 // Request animation frame loop function
-var lastRender = 0;
+let lastRender = 0;
 function animate(timestamp) {
-    var delta = Math.min(timestamp - lastRender, 500);
+    let delta = Math.min(timestamp - lastRender, 500);
     lastRender = timestamp;
 
     // Apply rotation to cube mesh
 //  cube.rotation.y += delta * 0.0006;
-    for (var i = 0; i < boxCount; i++) {
+    for (let i = 0; i < boxCount; i++) {
         cubes[i].rotation.y += delta * 0.001;
     }
 
@@ -153,7 +144,7 @@ function onResize(e) {
     camera.updateProjectionMatrix();
 }
 
-var display;
+let display;
 
 // Get the HMD, and if we're dealing with something that specifies
 // stageParameters, rearrange the scene.
@@ -174,11 +165,11 @@ function setStageDimensions(stage) {
     // Make the skybox fit the stage.
     if (stage.sizeX === 0 || stage.sizeZ === 0) return;
 
-    var material = skybox.material;
+    let material = skybox.material;
     scene.remove(skybox);
 
     // Size the skybox according to the size of the actual stage.
-    var geometry = new THREE.BoxGeometry(stage.sizeX, boxSize, stage.sizeZ);
+    let geometry = new THREE.BoxGeometry(stage.sizeX, boxSize, stage.sizeZ);
     skybox = new THREE.Mesh(geometry, material);
 
     // Place it on the floor.

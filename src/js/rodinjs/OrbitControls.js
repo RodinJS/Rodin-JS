@@ -1,6 +1,6 @@
 'use strict';
 
-import * as THREE from '../three/Three.custom.js';
+import * as THREE from '../vendor/three/Three.custom.js';
 /**
  * @author qiao / https://github.com/qiao
  * @author mrdoob / http://mrdoob.com

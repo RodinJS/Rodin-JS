@@ -1,7 +1,7 @@
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 
-import '../../node_modules/three/examples/js/controls/VRControls.js';
-import '../../node_modules/three/examples/js/effects/VREffect.js';
+import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
+import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
 
 
 /////////////////////////////WebVR Framework/////////////////////////////////////

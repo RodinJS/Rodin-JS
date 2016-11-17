@@ -1,6 +1,6 @@
 'use strict';
 
-import {THREE} from '../../three/THREE.GLOBAL.js';
+import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 import {OBJModelObject} from './OBJModelObject.js';

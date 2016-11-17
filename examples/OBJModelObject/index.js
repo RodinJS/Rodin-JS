@@ -1,17 +1,17 @@
-import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
+import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
 
 WTF.is(RODIN);
 
-import '../../node_modules/three/examples/js/controls/VRControls.js';
-import '../../node_modules/three/examples/js/effects/VREffect.js';
-import '../../node_modules/three/examples/js/loaders/collada/AnimationHandler.js';
-import '../../node_modules/three/examples/js/loaders/collada/KeyFrameAnimation.js';
-import '../../node_modules/three/examples/js/loaders/collada/Animation.js';
-import '../../node_modules/three/examples/js/loaders/OBJLoader.js';
-import '../../node_modules/three/examples/js/loaders/DDSLoader.js';
-import '../../node_modules/three/examples/js/loaders/MTLLoader.js';
+import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
+import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
+import '../../_build/js/vendor/three/examples/js/loaders/collada/AnimationHandler.js';
+import '../../_build/js/vendor/three/examples/js/loaders/collada/KeyFrameAnimation.js';
+import '../../_build/js/vendor/three/examples/js/loaders/collada/Animation.js';
+import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
+import '../../_build/js/vendor/three/examples/js/loaders/DDSLoader.js';
+import '../../_build/js/vendor/three/examples/js/loaders/MTLLoader.js';
 
 WTF.is('Rodin.JS v0.0.1');
 

@@ -1,13 +1,13 @@
-import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
+import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {WTF} from '../../_build/js/rodinjs/RODIN.js';
 
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
-import '../../node_modules/three/examples/js/controls/VRControls.js';
-import '../../node_modules/three/examples/js/effects/VREffect.js';
-import '../../node_modules/three/examples/js/loaders/OBJLoader.js';
-import '../../node_modules/three/examples/js/WebVR.js';
+import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
+import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
+import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
+import '../../_build/js/vendor/three/examples/js/WebVR.js';
 
 WTF.is('Rodin.JS v0.0.1');
 

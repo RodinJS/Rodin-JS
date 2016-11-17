@@ -1,6 +1,6 @@
-import {THREE} from '../../three/THREE.GLOBAL.js';
+import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 
-import '../../cannon/cannon.js';
+import '../../vendor/cannon/cannon.js';
 import {RigidBody} from './RigidBody.js';
 
 
