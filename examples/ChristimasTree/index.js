@@ -25,18 +25,13 @@ renderer.shadowMap.enabled = false;
 document.body.appendChild(renderer.domElement);
 let ua = (navigator.userAgent || navigator.vendor || window.opera);
 //alert( ua + "_______" + ua.match( /iPhone OS \d\d_/i ))
-let focalLength = 3;
 
 // Create a three.js scene.
 let scene = new THREE.Scene();
-//scene.background = new THREE.Color(0x728fb4);
 
 // Add a skybox.
 let boxSize = 30;
-//let texture = new THREE.TextureLoader().load('./img/space.jpg');
-//let skybox = new THREE.Mesh(new THREE.SphereGeometry(boxSize * 2, 12, 12), new THREE.MeshBasicMaterial({map: texture}));
 let skybox = new THREE.Mesh(new THREE.BoxGeometry(boxSize * 2, boxSize * 2, boxSize * 2), new THREE.MeshBasicMaterial({color: 0x000000}));
-//scene.fog = new THREE.FogExp2( 0x7a8695, 0.5 );
 scene.fog = new THREE.Fog(0x7a8695, 0, 23);
 
 // Create a three.js camera.
@@ -48,7 +43,6 @@ controls.standing = true;
 
 scene.add(skybox);
 skybox.position.y = controls.userHeight;
-//skybox.rotation.y = Math.PI;
 skybox.scale.set(1, 1, -1);
 
 let snowContainer = new THREE.Object3D();
