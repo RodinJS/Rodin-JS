@@ -23,7 +23,7 @@ class SceneManager extends Manager {
             scene.addController(this.controllers[i]);
         }
 
-        scene.controller = this.controllers;
+        scene.controllers = this.controllers;
     }
 
     addController (controller) {

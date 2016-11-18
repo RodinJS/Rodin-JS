@@ -79,7 +79,7 @@ export class Scene extends Sculpt {
 
     addController (controller) {
         controller.setRaycasterScene(this.scene);
-        controller.setRaycasterCamera(this.scene.camera);
+        controller.setRaycasterCamera(this.camera);
     }
 
     enable () {

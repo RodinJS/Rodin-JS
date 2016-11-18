@@ -19,12 +19,20 @@ let material = new THREE.MeshNormalMaterial();
 
 for (let i = 0; i < 1000; i++) {
     let cube = new RODIN.THREEObject(new THREE.Mesh(geometry, material));
-    cube.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
-        evt.target.object3D.position.set(1.5 * (Math.random() - 0.5), scene.controls.userHeight - 3 * (Math.random() - 0.5), 1.5 * (Math.random() - 0.5));
+    // RODIN.CONSTANTS.EVENT_NAMES.READY
+    cube.on('ready', (evt) => {
+        evt.target.object3D.position.set(Math.randomFloatIn(-0.75,0.75),
+                                        scene.controls.userHeight - Math.randomFloatIn(-1.5,1.5),
+                                        Math.randomFloatIn(-0.75,0.75));
         scene.add(evt.target.object3D);
+        RODIN.Raycastables.push(evt.target.object3D);
     });
-
-    cube.on(RODIN.CONSTANTS.EVENT_NAMES.UPDATE, (evt) => {
+    // RODIN.CONSTANTS.EVENT_NAMES.UPDATE
+    cube.on('update', (evt) => {
         evt.target.object3D.rotation.y += RODIN.Time.deltaTime() / 500;
-    })
+    });
+    // RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT
+    cube.on('controllerhoverout', (evt) => {
+        evt.target.object3D.scale.set(2, 2, 2);
+    });
 }
