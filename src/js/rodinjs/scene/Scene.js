@@ -21,6 +21,7 @@ export class Scene extends Sculpt {
         });
 
         this.controls = new THREE.VRControls(this.camera);
+        this.controllers = new Set();
         this.effect = new THREE.VREffect(this.renderer);
         this.webVRmanager = new WebVRManager(this.renderer, this.effect, { hideButton: false, isUndistorted: false });
 
@@ -30,6 +31,8 @@ export class Scene extends Sculpt {
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.controls.standing = true;
         this.effect.setSize(window.innerWidth, window.innerHeight);
+
+        this.time = Time.getInstance();
 
         window.addEventListener('resize', this.onResize.bind(this), true);
         window.addEventListener('vrdisplaypresentchange', this.onResize.bind(this), true);
@@ -55,6 +58,9 @@ export class Scene extends Sculpt {
             this.webVRmanager.render(this.scene, this.camera, timestamp);
             this.postRenderFunctions.map(i => i());
 
+            // Update controllers
+            this.controllers.map(controller => controller.update());
+
             requestAnimationFrame(this.render.bind(this));
         }
     }
@@ -71,7 +77,12 @@ export class Scene extends Sculpt {
         this.scene.add(obj);
     }
 
-    enable() {
+    addController (controller) {
+        controller.setRaycasterScene(this.scene);
+        controller.setRaycasterCamera(this.scene.camera);
+    }
+
+    enable () {
         document.body.appendChild(this.renderer.domElement);
     }
 }
