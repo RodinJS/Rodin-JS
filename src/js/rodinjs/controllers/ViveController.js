@@ -1,6 +1,6 @@
-import {GamePad} from "./GamePad.js";
-import {ErrorNoValueProvided, ErrorViveControllerAlreadyExists} from "../../error/CustomErrors.js";
-import {CONTROLLER_HANDS} from '../../constants/constants.js';
+import {GamePad} from "./gamePads/GamePad.js";
+import {ErrorNoValueProvided, ErrorViveControllerAlreadyExists} from "../error/CustomErrors.js";
+import {CONTROLLER_HANDS} from '../constants/constants.js';
 
 let leftHandControllerCreated = false;
 let rightHandControllerCreated = false;

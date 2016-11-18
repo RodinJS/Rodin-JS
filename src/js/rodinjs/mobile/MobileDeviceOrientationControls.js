@@ -3,7 +3,7 @@
 import * as THREE from '../../vendor/three/Three.custom.js';
 
 let instance = null;
-var self;
+let self;
 export class MobileDeviceOrientationControls  {
 	constructor(object) {
 		if(!instance){
@@ -42,13 +42,13 @@ export class MobileDeviceOrientationControls  {
 	// The angles alpha, beta and gamma form a set of intrinsic Tait-Bryan angles of type Z-X'-Y''
 
 	setObjectQuaternion(quaternion, alpha, beta, gamma, orient) {
-		var zee = new THREE.Vector3( 0, 0, 1 );
+		let zee = new THREE.Vector3( 0, 0, 1 );
 
-		var euler = new THREE.Euler();
+		let euler = new THREE.Euler();
 
-		var q0 = new THREE.Quaternion();
+		let q0 = new THREE.Quaternion();
 
-		var q1 = new THREE.Quaternion( - Math.sqrt( 0.5 ), 0, 0, Math.sqrt( 0.5 ) ); // - PI/2 around the x-axis
+		let q1 = new THREE.Quaternion( - Math.sqrt( 0.5 ), 0, 0, Math.sqrt( 0.5 ) ); // - PI/2 around the x-axis
 
 		euler.set( beta, alpha, - gamma, 'YXZ' ); // 'ZXY' for the device, but 'YXZ' for us
 
@@ -84,10 +84,10 @@ export class MobileDeviceOrientationControls  {
 
 		if ( this.enabled === false ) return;
 
-		var alpha = this.deviceOrientation.alpha ? THREE.Math.degToRad( this.deviceOrientation.alpha ) + this.alphaOffsetAngle : 0; // Z
-		var beta = this.deviceOrientation.beta ? THREE.Math.degToRad( this.deviceOrientation.beta ) : 0; // X'
-		var gamma = this.deviceOrientation.gamma ? THREE.Math.degToRad( this.deviceOrientation.gamma ) : 0; // Y''
-		var orient = this.screenOrientation ? THREE.Math.degToRad( this.screenOrientation ) : 0; // O
+		let alpha = this.deviceOrientation.alpha ? THREE.Math.degToRad( this.deviceOrientation.alpha ) + this.alphaOffsetAngle : 0; // Z
+		let beta = this.deviceOrientation.beta ? THREE.Math.degToRad( this.deviceOrientation.beta ) : 0; // X'
+		let gamma = this.deviceOrientation.gamma ? THREE.Math.degToRad( this.deviceOrientation.gamma ) : 0; // Y''
+		let orient = this.screenOrientation ? THREE.Math.degToRad( this.screenOrientation ) : 0; // O
 
 		this.setObjectQuaternion(this.object.quaternion, alpha, beta, gamma, orient);
 

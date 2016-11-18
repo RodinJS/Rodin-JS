@@ -1,7 +1,7 @@
-import {GamePad} from "./GamePad.js";
-import {ErrorMouseControllerAlreadyExists} from '../../error/CustomErrors.js';
-import {EVENT_NAMES} from '../../constants/constants.js';
-import {ErrorInvalidEventType} from '../../error/CustomErrors';
+import {GamePad} from "./gamePads/GamePad.js";
+import {ErrorMouseControllerAlreadyExists} from '../error/CustomErrors.js';
+import {EVENT_NAMES} from '../constants/constants.js';
+import {ErrorInvalidEventType} from '../error/CustomErrors';
 
 let controllerCreated = false;
 

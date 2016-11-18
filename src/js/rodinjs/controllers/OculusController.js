@@ -1,5 +1,5 @@
-import {GamePad} from './GamePad.js';
-import {ErrorOculusControllerAlreadyExists} from '../../error/CustomErrors.js';
+import {GamePad} from './gamePads/GamePad.js';
+import {ErrorOculusControllerAlreadyExists} from '../error/CustomErrors.js';
 
 let controllerCreated = false;
 
