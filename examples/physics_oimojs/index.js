@@ -1,19 +1,15 @@
-import {WTF} from '../../_build/js/rodinjs/RODIN.js';
-import {THREE} from '../../_build/js/three/THREE.GLOBAL.js';
+//import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
-
-import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
 console.log(RODIN);
 
-import '../../_build/js/cannon/cannon.js';
+import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
+import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
+import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
+import '../../_build/js/vendor/three/examples/js/WebVR.js';
+import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
-import '../../node_modules/three/examples/js/controls/VRControls.js';
-import '../../node_modules/three/examples/js/effects/VREffect.js';
-import '../../node_modules/three/examples/js/loaders/OBJLoader.js';
-import '../../node_modules/three/examples/js/WebVR.js';
-
-WTF.is('Rodin.JS v0.0.1');
+RODIN.WTF.is('Rodin.JS v0.0.1');
 
 // Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
 // Only enable it if you actually need to.
@@ -49,6 +45,33 @@ let params = {
 };
 
 let manager = new WebVRManager(renderer, effect, params);
+
+/*
+ var n = navigator.userAgent;
+ if (n.match(/Android/i) || n.match(/webOS/i) || n.match(/iPhone/i) || n.match(/iPad/i) || n.match(/iPod/i) || n.match(/BlackBerry/i) || n.match(/Windows Phone/i)){ isMobile = true;  antialias = false; document.getElementById("MaxNumber").value = 200; }
+
+ var materialType = 'MeshBasicMaterial';
+
+ if(!isMobile){
+    scene.add( new THREE.AmbientLight( 0x3D4143 ) );
+    light = new THREE.DirectionalLight( 0xffffff , 1.4);
+    light.position.set( 300, 1000, 500 );
+    light.target.position.set( 0, 0, 0 );
+    light.castShadow = true;
+    light.shadowCameraNear = 500;
+    light.shadowCameraFar = 1600;
+    light.shadowCameraFov = 70;
+    light.shadowBias = 0.0001;
+    light.shadowDarkness = 0.7;
+    //light.shadowCameraVisible = true;
+    light.shadowMapWidth = light.shadowMapHeight = 1024;
+    scene.add( light );
+
+    materialType = 'MeshPhongMaterial';
+
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;//THREE.BasicShadowMap;
+ }*/
 
 scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
 
@@ -91,15 +114,15 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
 raycaster = new RODIN.Raycaster(scene);
 
 /////////// physics ////////////////////
-scene.physics = RODIN.RodinPhysics.getInstance();
+scene.physics = RODIN.RodinPhysics.getInstance("oimo");
 
 //Setting up world
-scene.physics.setupWorldGeneralParameters(0, -9.82, 0, 10, true, 32); // todo check 32-8 difference
+scene.physics.setupWorldGeneralParameters(0, -9.82, 0, 8, true, 32); // todo check 32-8 difference
 
 ///////////////// creating floor ///////////////////////
-let floorWidth = 10;
+let floorWidth = 4;
 let floorHeight = 0.1;
-let floorDepth = 10;
+let floorDepth = 4;
 
 // todo distinguish ground from plane
 let geometry = new THREE.PlaneGeometry(floorWidth, floorDepth);
@@ -114,12 +137,13 @@ let material = new THREE.MeshStandardMaterial({
 });
 let ground = new THREE.Mesh(geometry, material);
 ground.rotation.x = -Math.PI / 2;
-ground.position.set(0, -0.05, 8);
+ground.position.set(0, 0, 5);
 ground.receiveShadow = true;
 
 scene.add(ground);
 // add physic
-let groundRigitBody = new RODIN.RigidBody(ground, 0);
+let groundRigitBody = new RODIN.RigidBody(ground, 0, "ground");
+groundRigitBody.name = "ground";
 
 /// axis object XYZ ///
 /*let geometryX = new THREE.BoxGeometry(2, 0.01, 0.01);
@@ -160,22 +184,22 @@ let mass = 0.2;
 
 let group = new THREE.Group();
 //todo shifted position
-group.position.set(0, 0, 2);
+group.position.set(0, 0, 0);
 //group.rotation.y = 0.4;
 scene.add(group);
 
 let geometries = [
-    new THREE.BoxGeometry(0.2, 0.2, 0.2),
+    //new THREE.BoxGeometry(0.2, 0.2, 0.2),
     new THREE.SphereGeometry(0.2, 64),
-    new THREE.ConeGeometry(0.2, 0.2, 64),
-    new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
+    //new THREE.ConeGeometry(0.2, 0.2, 64),
+    //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
     //new THREE.IcosahedronGeometry(0.2, 1),
     //new THREE.TorusGeometry(0.2, 0.08, 12, 12),
     //new THREE.TorusKnotGeometry(0.2, 0.05, 30, 16)
 ];
 
 // add raycastable objects to scene
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 1; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -184,12 +208,13 @@ for (let i = 0; i < 20; i++) {
     });
 
     let object = new THREE.Mesh(geometry, material);
-    object.position.x = (Math.random() - 0.5) * 3;
-    object.position.y = (Math.random() - 0.5) * 3 + 2;
-    object.position.z = (Math.random() - 0.5) * 3;
-    object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
-    object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
-    object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
+    //object.position.x = (Math.random() - 0.5) * 3;
+    //object.position.y = (Math.random() - 0.5) * 3 + 2;
+    //object.position.z = (Math.random() - 0.5) * 3 + 5;
+    object.position.set(0, 4, 5);
+    //object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
+    //object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
+    //object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
     object.scale.set(1, 1, 1);
 
     object.castShadow = true;
@@ -203,6 +228,7 @@ for (let i = 0; i < 20; i++) {
 
         // add physic
         let objectRigitBody = new RODIN.RigidBody(obj.object3D, mass);
+        objectRigitBody.name = obj.object3D.geometry.type;
     });
 
     // hover
@@ -252,7 +278,7 @@ for (let i = 0; i < 20; i++) {
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt, controller) => {
     });
 }
-
+/*
 controllerL.onKeyDown = controllerKeyDown;
 controllerL.onKeyUp = controllerKeyUp;
 
@@ -361,6 +387,7 @@ function controllerTouchUp(keyCode, gamepad) {
     }
     this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, null, keyCode, this);
 }
+*/
 
 // Kick off animation loop
 requestAnimationFrame(animate);
@@ -372,8 +399,8 @@ window.addEventListener('vrdisplaypresentchange', onResize, true);
 function animate(timestamp) {
 
     // Update controller.
-    controllerL.update();
-    controllerR.update();
+    //controllerL.update();
+    //controllerR.update();
 
     // Update VR headset position and apply to camera.
     controls.update();

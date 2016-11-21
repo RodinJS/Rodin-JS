@@ -25,6 +25,11 @@
     "babelyfi": true
   },
   {
+    "src": "node_modules/Oimo.js/build/**/*.js",
+    "dest": "/oimo/",
+    "babelyfi": false
+  },
+  {
     "src": "node_modules/three/src/**/*.glsl",
     "dest": "/three/",
     "babelyfi": false

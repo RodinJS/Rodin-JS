@@ -1,6 +1,8 @@
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 
 import '../../vendor/cannon/cannon.js';
+import '../../vendor/oimo/oimo.js';
+
 import {RodinPhysics} from './RodinPhysics.js';
 
 export class RigidBody {
@@ -9,51 +11,80 @@ export class RigidBody {
      * @param {object, null} object
      * @param {number, 0} mass
      * @param {string, undefined} typeOfCollisionShape
+     * @param {string, undefined} name
      */
-    constructor(object = null, mass = 0, typeOfCollisionShape = undefined) {
+    constructor(object = null, mass = 0, typeOfCollisionShape = undefined, name) {
 
-
+        this.physicsEngine = RodinPhysics.physicsEngine;
+        this.name = name || "";
         this.object = object;
 
         if (!typeOfCollisionShape) {
             typeOfCollisionShape = object.geometry.type;
         }
 
-        if (!RigidBody.threeToCannonAxis) {
-            let qX = new CANNON.Quaternion();
-            qX.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
-            let qY = new CANNON.Quaternion();
-            qY.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI);
-            let qXY = new CANNON.Quaternion();
-            qY.mult(qX, qXY);
-
-            RigidBody.threeToCannonAxis = qXY;
+        if (!this.physicsEngine) {
+            return;
         }
+        if (this.physicsEngine === "cannon") {
+            if (!RigidBody.threeToCannonAxis) {
+                let qX = new CANNON.Quaternion();
+                qX.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+                let qY = new CANNON.Quaternion();
+                qY.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI);
+                let qXY = new CANNON.Quaternion();
+                qY.mult(qX, qXY);
 
-        if (this.object) {
-            // calculate new quaternion for Z-up axis
-            let qOBJ = new CANNON.Quaternion(this.object.quaternion.x,
-                                             this.object.quaternion.y,
-                                             this.object.quaternion.z,
-                                             this.object.quaternion.w);
-            let qObjXY = new CANNON.Quaternion();
-            qOBJ.mult(RigidBody.threeToCannonAxis, qObjXY);
+                RigidBody.threeToCannonAxis = qXY;
+            }
 
-            // create object's rigidBody
-            this.rigidBody = new CANNON.Body({
-                mass: mass, // kg
-                position: new CANNON.Vec3(this.object.parent.position.x + this.object.position.x,
-                                          this.object.parent.position.y + this.object.position.y,
-                                          this.object.parent.position.z + this.object.position.z), // m
-                quaternion: qObjXY // radian
-            });
+            if (this.object) {
+                // calculate new quaternion for Z-up axis
+                let qOBJ = new CANNON.Quaternion(this.object.quaternion.x,
+                    this.object.quaternion.y,
+                    this.object.quaternion.z,
+                    this.object.quaternion.w);
+                let qObjXY = new CANNON.Quaternion();
+                qOBJ.mult(RigidBody.threeToCannonAxis, qObjXY);
 
-            this.rigidBody.updateMassProperties();
-            this.rigidBody.addShape(this.createObjectCollision(typeOfCollisionShape));
+                // create object's rigidBody
+                this.body = new CANNON.Body({
+                    mass: mass, // kg
+                    position: new CANNON.Vec3(this.object.parent.position.x + this.object.position.x,
+                        this.object.parent.position.y + this.object.position.y,
+                        this.object.parent.position.z + this.object.position.z), // m
+                    quaternion: qObjXY // radian
+                });
+
+                this.body.updateMassProperties();
+                this.body.addShape(this.createObjectCollision(typeOfCollisionShape));
+                this.owner = this.object;
+            }
+        }
+        if (this.physicsEngine === "oimo") {
+            if (typeOfCollisionShape == "ground") {
+                this.body = {
+                    size: [4, 0.1, 4],
+                    pos: [0, 0, 5],
+                    move: false,
+                    world: RodinPhysics.world,
+                    name: typeOfCollisionShape,
+                    //mass: 0
+                }
+            } else {
+                this.body = {
+                    type: 'sphere',
+                    pos: [0, 4, 5],
+                    size: [0.2],
+                    move: true,
+                    world: RodinPhysics.world,
+                    name: typeOfCollisionShape,
+                    //mass: 1
+                };
+            }
             this.owner = this.object;
-
-            RodinPhysics.getInstance().addRigidBodyToWorld(this);
         }
+        RodinPhysics.getInstance(this.physicsEngine).addRigidBodyToWorld(this);
     }
 
     static threeToCannonAxis = null;
@@ -85,11 +116,13 @@ export class RigidBody {
 
             case "SphereBufferGeometry":
             case "SphereGeometry":
+            case "sphere":
                 shape = new CANNON.Sphere(param.radius);
                 break;
 
             case "ConeBufferGeometry":
             case "ConeGeometry":
+            case "cone":
                 // todo 0.00001 find a better solution
                 shape = new CANNON.Cylinder(0.00001, param.radius, param.height, param.radialSegments);
                 break;
