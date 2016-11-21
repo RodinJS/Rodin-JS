@@ -1,6 +1,6 @@
 import {GamePad} from "./gamePads/GamePad.js";
 import {ErrorCardboardControllerAlreadyExists} from '../error/CustomErrors.js';
-import {EVENT_NAMES} from '../constants/constants.js';
+import {EVENT_NAMES, KEY_CODES} from '../constants/constants.js';
 import {ErrorInvalidEventType} from '../error/CustomErrors';
 
 let controllerCreated = false;
@@ -17,7 +17,7 @@ export class CardboardController extends GamePad {
         this.setRaycasterCamera(camera);
         this.disable();
 
-        window.addEventListener('vrdisplaypresentchange', (e)=> {
+        window.addEventListener('vrdisplaypresentchange', (e) => {
             let re = new RegExp('cardboard', 'gi');
             if (e.detail && e.detail.display && re.test(e.detail.display.displayName)) {
                 e.detail.display.isPresenting ? this.enable() : this.disable();
@@ -57,6 +57,20 @@ export class CardboardController extends GamePad {
 
     stopPropagation(eventName) {
         this.setPropagation(eventName, false);
+    }
+
+    onKeyDown(keyCode) {
+        this.engaged = true;
+        if (this.intersected && this.intersected.length > 0) {
+            this.stopPropagation(EVENT_NAMES.MOUSE_DOWN);
+            this.stopPropagation(EVENT_NAMES.MOUSE_MOVE);
+        }
+    }
+
+    onKeyUp(keyCode) {
+        this.engaged = false;
+        this.startPropagation(EVENT_NAMES.MOUSE_DOWN);
+        this.startPropagation(EVENT_NAMES.MOUSE_MOVE);
     }
 
     static getGamepad() {

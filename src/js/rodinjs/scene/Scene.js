@@ -18,6 +18,7 @@ export class Scene extends Sculpt {
         this.renderer = new THREE.WebGLRenderer({
             antialias: window.devicePixelRatio < 2
         });
+        this.scene.add(this.camera);
 
         this.controls = new THREE.VRControls(this.camera);
         this.controllers = new Set();
