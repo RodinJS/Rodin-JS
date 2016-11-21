@@ -46,7 +46,7 @@ const IMG = ['src/img/**/*.{jpg,jpeg,ico,png}'];
 const SHADER = ['src/shader/**/*'];
 const MODEL = ['src/model/**/*'];
 const VIDEO = ['src/video/**/*'];
-const EX_JS = ['examples/**/index.js', '!examples/**/model/**/*.js'];
+const EX_JS = ['examples/**/index.js', '!examples/**/model/**/*.js',]// 'old_examples/**/index.js', '!old_examples/**/model/**/*.js'];
 
 const VENDOR = require('./vendor.json');
 
@@ -229,6 +229,7 @@ gulp.task('examples', () => {
         .pipe(rename({suffix: '_c'}))
         .pipe(plumber.stop())
         .pipe(gulp.dest('./examples'))
+        // .pipe(gulp.dest('./old_examples'))
         .pipe(notify({
             onLast: true,
             message: () => `Examples - Total size ${s.prettySize}`

@@ -1,6 +1,6 @@
 'use strict';
-
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
+import '../../vendor/three/examples/js/loaders/ColladaLoader.js';
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 
