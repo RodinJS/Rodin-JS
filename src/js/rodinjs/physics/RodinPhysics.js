@@ -94,7 +94,7 @@ export class RodinPhysics {
             // calculate statistique or not
             this.world.isNoStat = false;
 
-            //this.world.worldscale(100);
+            this.world.worldscale(100);
         }
     }
 
@@ -108,10 +108,10 @@ export class RodinPhysics {
         }
 
         if (this.physicsEngine === "oimo") {
+
             rigidBody.body = this.world.add(rigidBody.body);
-            //console.log(rigidBody);
-            console.log(rigidBody.body);
         }
+        //console.log(rigidBody.body);
         this.rigidBodies.push(rigidBody);
     }
 
@@ -150,19 +150,26 @@ export class RodinPhysics {
             this.lastTime = timestamp;
         }
 
-        if (this.physicsEngine === "oimo") {
+        //if (this.physicsEngine === "oimo") {
             this.world.step();
 
-            //console.log(this.rigidBodies[i].body.getPosition());
-            let i = this.rigidBodies.length - 1;
+            let i = this.rigidBodies.length;
             while (i--) {
                 if (!this.rigidBodies[i].sleeping) {
-                    console.log(this.rigidBodies[i].body.getPosition());
-                    console.log(this.rigidBodies[i].object.position);
-                    this.rigidBodies[i].owner.position.copy(this.rigidBodies[i].body.getPosition());
+
+                    //if(i==1) {console.log(this.rigidBodies[1].body.position.y);}
+
+                    this.rigidBodies[i].owner.position.set(
+                        this.rigidBodies[i].body.position.x,
+                        this.rigidBodies[i].body.position.y,
+                        this.rigidBodies[i].body.position.z
+                    );
+                    //console.log("body",this.rigidBodies[i].body.position);
+                    //console.log("object",this.rigidBodies[i].owner.position);
+                    //this.rigidBodies[i].owner.position.copy(this.rigidBodies[i].body.getPosition());
                     //this.rigidBodies[i].object.quaternion.copy(this.rigidBodies[i].body.getQuaternion());
                 }
             }
-        }
+        //}
     }
 }

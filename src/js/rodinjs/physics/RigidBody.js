@@ -20,7 +20,7 @@ export class RigidBody {
         this.object = object;
 
         if (!typeOfCollisionShape) {
-            typeOfCollisionShape = object.geometry.type;
+            typeOfCollisionShape = this.object.geometry.type;
         }
 
         if (!this.physicsEngine) {
@@ -64,21 +64,27 @@ export class RigidBody {
         if (this.physicsEngine === "oimo") {
             if (typeOfCollisionShape == "ground") {
                 this.body = {
-                    size: [4, 0.1, 4],
-                    pos: [0, 0, 5],
-                    move: false,
+                    //type: 'box',
+                    size: [400, 1, 400],
+                    pos: [this.object.position.x * 100,
+                          this.object.position.y * 100,
+                          this.object.position.z * 100],
+                    //move: false,
                     world: RodinPhysics.world,
-                    name: typeOfCollisionShape,
+                    flat:true
+                    //name: typeOfCollisionShape,
                     //mass: 0
                 }
             } else {
                 this.body = {
-                    type: 'sphere',
-                    pos: [0, 4, 5],
-                    size: [0.2],
+                    type: 'box',
+                    size: [0.2 * 100, 0.2 * 100, 0.2 * 100],
+                    pos: [this.object.position.x * 100,
+                          this.object.position.y * 100,
+                          this.object.position.z * 100],
                     move: true,
                     world: RodinPhysics.world,
-                    name: typeOfCollisionShape,
+                    //name: typeOfCollisionShape,
                     //mass: 1
                 };
             }

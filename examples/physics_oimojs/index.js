@@ -117,7 +117,7 @@ raycaster = new RODIN.Raycaster(scene);
 scene.physics = RODIN.RodinPhysics.getInstance("oimo");
 
 //Setting up world
-scene.physics.setupWorldGeneralParameters(0, -9.82, 0, 8, true, 32); // todo check 32-8 difference
+scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
 
 ///////////////// creating floor ///////////////////////
 let floorWidth = 4;
@@ -189,8 +189,8 @@ group.position.set(0, 0, 0);
 scene.add(group);
 
 let geometries = [
-    //new THREE.BoxGeometry(0.2, 0.2, 0.2),
-    new THREE.SphereGeometry(0.2, 64),
+    new THREE.BoxGeometry(0.2, 0.2, 0.2),
+    //new THREE.SphereGeometry(0.2, 64),
     //new THREE.ConeGeometry(0.2, 0.2, 64),
     //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
     //new THREE.IcosahedronGeometry(0.2, 1),
