@@ -1,7 +1,7 @@
 // import {TWEEN} from '../Tween.js';
 
 export class Animation {
-    constructor() {
+    constructor(params) {
     }
 
     start() {
