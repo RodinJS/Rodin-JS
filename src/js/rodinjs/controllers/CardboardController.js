@@ -60,7 +60,13 @@ export class CardboardController extends GamePad {
     }
 
     onKeyDown(keyCode) {
+
+        this.keyCode = keyCode;
         this.engaged = true;
+        if (!this.pickedItems) {
+            this.pickedItems = [];
+        }
+
         if (this.intersected && this.intersected.length > 0) {
             this.stopPropagation(EVENT_NAMES.MOUSE_DOWN);
             this.stopPropagation(EVENT_NAMES.MOUSE_MOVE);
@@ -69,6 +75,9 @@ export class CardboardController extends GamePad {
 
     onKeyUp(keyCode) {
         this.engaged = false;
+        this.pickedItems = [];
+        this.keyCode = null;
+
         this.startPropagation(EVENT_NAMES.MOUSE_DOWN);
         this.startPropagation(EVENT_NAMES.MOUSE_MOVE);
     }
