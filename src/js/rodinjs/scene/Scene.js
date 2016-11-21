@@ -4,7 +4,6 @@ import {Time} from "../time/Time.js";
 import {Set} from '../utils/Set.js';
 import {Objects} from '../objects.js';
 import {Event} from '../Event.js';
-
 import '../../vendor/three/examples/js/controls/VRControls.js';
 import '../../vendor/three/examples/js/effects/VREffect.js';
 
