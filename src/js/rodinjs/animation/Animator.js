@@ -29,17 +29,17 @@ export class Animator {
 
     /**
      * Add new animation clip to animator
-     * @param animation
      * @returns {Animation}
      */
-    add (animation) {
-        if (animation instanceof Animation) {
-            this.clips.push(animation);
-            animation.sculpt = this.sculpt;
-            return animation;
-        }
+    add () {
+        for (let i = 0; i < arguments.length; i++) {
+            let animation = arguments[i];
+            if (!( animation instanceof Animation)) {
+                throw new ErrorParameterTypeDontMatch('animation', 'Animation');
+            }
 
-        throw new ErrorParameterTypeDontMatch('animation', 'Animation');
+            this.clips.push(animation.copy().setSculpt(this.sculpt));
+        }
     }
 
     /**
@@ -67,5 +67,36 @@ export class Animator {
         }
 
         return this.getClip(getter).isPlaying();
+    }
+
+    /**
+     * Start animation by name or id
+     * @param getter {string, number}
+     * @param forceStart {boolean}
+     * @returns {boolean}
+     */
+    start (getter, forceStart = false) {
+        let clip = this.getClip(getter);
+
+        if (!clip) {
+            return false;
+        }
+
+        return clip.start(forceStart);
+    }
+
+    /**
+     * Stop animation by name or id
+     * @param getter {string, number}
+     * @returns {boolean}
+     */
+    stop (getter) {
+        let clip = this.getClip(getter);
+
+        if (!clip) {
+            return false;
+        }
+
+        return clip.stop();
     }
 }

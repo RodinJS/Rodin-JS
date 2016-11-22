@@ -48,3 +48,32 @@ Object.clone = function (obj) {
 
     return temp;
 };
+
+
+/**
+ * Joins nested objects into single level objects
+ * @param {Object} obj
+ * @param {Array} skip
+ * @return {Object} single level obj
+ */
+Object.joinParams = function(obj, skip = []) {
+    let res = {};
+    for (let i in obj) {
+        if (obj[i].constructor === Object){
+            let cur = Object.joinParams(obj[i], skip);
+            for (let j in cur) {
+                if (!skip.includes(j)) {
+                    res[i + '.' + j] = cur[j];
+                }
+                else {
+                    if (!res[i])
+                        res[i] = {};
+                    res[i][j] = cur[j];
+                }
+            }
+        }
+        else
+            res[i] = obj[i];
+    }
+    return res;
+};

@@ -1,16 +1,27 @@
 import {TWEEN} from '../Tween.js';
+import {Event} from '../Event.js';
+import {EVENT_NAMES} from '../constants/constants.js';
 
 export class Animation {
     constructor (name, params) {
-        this.isLooping = false;
+        this._loop  = false;
         this.sculpt = {};
-        this.params = params;
+        this.params = Object.clone(params);
         this.name = name;
-        this.duration = 3000;
-        this.delay = 0;
-        this.easing = TWEEN.Easing.Linear.None;
+        this._duration = 2000;
+        this._delay = 0;
+        this._easing = TWEEN.Easing.Linear.None;
 
         this.playing = false;
+    }
+
+    /**
+     * copy animation
+     * @returns {Animation}
+     */
+    copy () {
+        let newAnimation = new Animation(this.name, this.params);
+        return newAnimation.duration(this.duration()).easing(this.easing()).delay(this.delay()).loop(this.loop());
     }
 
     /**
@@ -32,9 +43,8 @@ export class Animation {
                 return false;
             }
         }
+
         let normalizedParams = Animation.normalizeParams(this.params, this.sculpt.object3D);
-
-
         let startValues = normalizedParams.from;
         let endValues = normalizedParams.to;
 
@@ -42,17 +52,22 @@ export class Animation {
         this.initialProps = Object.clone(startValues);
         let _this = this;
         this.tween = new TWEEN.Tween(startValues)
-            .to(endValues, this.duration)
-            .delay(this.delay)
+            .to(endValues, this._duration)
+            .delay(this._delay)
+            .onStart(function () {
+                let evt = new Event(_this.sculpt);
+                evt.animation = _this.name;
+                _this.sculpt.emit(EVENT_NAMES.ANIMATION_START, evt);
+            })
             .onUpdate(function () {
                 for (let i in this) {
                     Object.setProperty(_this.sculpt.object3D, i, this[i]);
                 }
             })
-            .easing(this.easing)
+            .easing(this._easing)
             .start()
             .onComplete(function () {
-                if (_this.isLooping) {
+                if (_this._loop ) {
                     _this.playing = false;
                     _this.reset();
                     _this.start();
@@ -60,6 +75,10 @@ export class Animation {
                     _this.playing = false;
                     delete this.tween;
                 }
+
+                let evt = new Event(_this.sculpt);
+                evt.animation = _this.name;
+                _this.sculpt.emit(EVENT_NAMES.ANIMATION_COMPLETE, evt);
             });
     }
 
@@ -85,6 +104,9 @@ export class Animation {
                 this.reset();
             }
 
+            let evt = new Event(this.sculpt);
+            evt.animation = this.name;
+            this.sculpt.emit(EVENT_NAMES.ANIMATION_STOP, evt);
             return true;
         }
 
@@ -110,29 +132,90 @@ export class Animation {
 
     /**
      * Set loop
-     * @param loop {boolean}
+     * @param loop
+     * @returns {Animation}
      */
-    loop (loop) {
-        this.isLooping = loop;
+    loop (loop = null) {
+        if (loop === null) {
+            return this._loop ;
+        }
+
+        this._loop  = loop;
         return this;
     }
 
+    /**
+     * Set duration
+     * @param duration
+     * @returns {Animation}
+     */
+    duration (duration = null) {
+        if (duration === null) {
+            return this._duration;
+        }
+
+        this._duration = duration;
+        return this;
+    }
+
+    /**
+     * Set delay
+     * @param delay
+     * @returns {Animation}
+     */
+    delay (delay = null) {
+        if (delay === null) {
+            return this._delay;
+        }
+
+        this._delay = delay;
+        return this;
+    }
+
+    /**
+     * Set easing
+     * @param easing
+     * @returns {Animation}
+     */
+    easing (easing = null) {
+        if (easing === null) {
+            return this._easing;
+        }
+
+        this._easing = easing;
+        return this;
+    }
+
+
+    /**
+     * Set sculpt
+     * @param sculpt {Sculpt}
+     * @returns {Animation}
+     */
     setSculpt (sculpt) {
         this.initialProps = {};
         this.sculpt = sculpt;
+        return this;
     }
 
-    static normalizeParams(params, obj) {
-        let res = {from:{},to:{}};
-        for(let i in params) {
-            //todo recursion for position.x or position:{x}
-            if (params[i].hasOwnProperty('from')) {
-                res.from[i] = params[i].from;
-                res.to[i] = params[i].to;
+    /**
+     * Converts animation parameters to normalized
+     * parameters containing {from: , to: }
+     * @param {Object} params
+     * @param {Sculpt} obj
+     * @return {Object} normalized params
+     */
+    static normalizeParams (params, obj) {
+        let _params = Object.joinParams(params, ['from', 'to']);
+        let res = { from: {}, to: {} };
+        for (let i in _params) {
+            if (_params[i].hasOwnProperty('from')) {
+                res.from[i] = _params[i].from;
+                res.to[i] = _params[i].to;
             }
             else {
                 res.from[i] = Object.getProperty(obj, i);
-                res.to[i] = params[i];
+                res.to[i] = _params[i];
             }
         }
         return res;
