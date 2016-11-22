@@ -21,10 +21,22 @@ cube.on('ready', (evt) => {
 
     evt.target.animator.add(new Animation('down',
         {
-            'position.y': 1,
-            'position.x': {
-                from: - 0.2,
-                to: 0.2
+            position:{
+                y: 1,
+                x: {
+                    from: -0.2,
+                    to: 0.2
+                }
+            },
+            material: {
+                color: {
+                    r: 1,
+                    g: 0,
+                    b: {
+                        from: 0,
+                        to: 1
+                    }
+                }
             }
         }
     ));
@@ -42,6 +54,8 @@ cube.on('update', (evt) => {
         evt.target.object3D.rotation.x += RODIN.Time.deltaTime() / 1000;
     }
 });
+
+window.cube = cube;
 
 generateGUI();
 

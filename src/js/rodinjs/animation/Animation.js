@@ -122,17 +122,25 @@ export class Animation {
         this.sculpt = sculpt;
     }
 
+    /**
+     * Converts animation parameters to normalized
+     * parameters containing {from: , to: }
+     * @param {Object} params
+     * @param {Sculpt} object
+     * @return {Object} normalized params
+     */
     static normalizeParams(params, obj) {
+        let _params = Object.joinParams(params, ['from', 'to']);
         let res = {from:{},to:{}};
-        for(let i in params) {
+        for(let i in _params) {
             //todo recursion for position.x or position:{x}
-            if (params[i].hasOwnProperty('from')) {
-                res.from[i] = params[i].from;
-                res.to[i] = params[i].to;
+            if (_params[i].hasOwnProperty('from')) {
+                res.from[i] = _params[i].from;
+                res.to[i] = _params[i].to;
             }
             else {
                 res.from[i] = Object.getProperty(obj, i);
-                res.to[i] = params[i];
+                res.to[i] = _params[i];
             }
         }
         return res;
