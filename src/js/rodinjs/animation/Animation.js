@@ -32,21 +32,11 @@ export class Animation {
                 return false;
             }
         }
+        let normalizedParams = Animation.normalizeParams(this.params, this.sculpt.object3D);
 
-        let startValues = {};
-        let endValues = {};
-        // todo: find mardavari dzev for this
-        for (let i in this.params) {
-            if (Object.getProperty(this.sculpt.object3D, i) !== undefined) {
-                if (this.params[i].from) {
-                    startValues[i] = this.params[i].from;
-                    endValues[i] = this.params[i].to;
-                } else {
-                    startValues[i] = Object.getProperty(this.sculpt.object3D, i);
-                    endValues[i] = this.params[i];
-                }
-            }
-        }
+
+        let startValues = normalizedParams.from;
+        let endValues = normalizedParams.to;
 
         this.playing = true;
         this.initialProps = Object.clone(startValues);
@@ -130,5 +120,21 @@ export class Animation {
     setSculpt (sculpt) {
         this.initialProps = {};
         this.sculpt = sculpt;
+    }
+
+    static normalizeParams(params, obj) {
+        let res = {from:{},to:{}};
+        for(let i in params) {
+            //todo recursion for position.x or position:{x}
+            if (params[i].hasOwnProperty('from')) {
+                res.from[i] = params[i].from;
+                res.to[i] = params[i].to;
+            }
+            else {
+                res.from[i] = Object.getProperty(obj, i);
+                res.to[i] = params[i];
+            }
+        }
+        return res;
     }
 }
