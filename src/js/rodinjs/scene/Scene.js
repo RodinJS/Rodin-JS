@@ -50,6 +50,10 @@ export class Scene extends Sculpt {
     // todo: tanel esi scenemanager
     get render () {
         return (timestamp) => {
+            if(this.camera.projectionMatrixNeedsUpdate){
+                this.camera.updateProjectionMatrix();
+                this.camera.projectionMatrixNeedsUpdate = false;
+            }
             time.tick();
             TWEEN.update();
 
@@ -67,6 +71,11 @@ export class Scene extends Sculpt {
 
             requestAnimationFrame(this.render.bind(this));
         }
+    }
+
+    setCameraProperty(property, value){
+        Object.setProperty(this.camera, property, value);
+        this.camera.projectionMatrixNeedsUpdate = true;
     }
 
     preRender (fn) {

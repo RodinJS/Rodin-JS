@@ -18,9 +18,8 @@
         "DbgIndex" : 0,
         "DbgName"  : "Material #25",
         "colorDiffuse"  : [1, 1, 1],
-        "colorAmbient"  : [1, 1, 1],
         "colorSpecular" : [1, 1, 1],
-        "transparency"  : 1.0,
+        "opacity"  : 1.0,
         "specularCoef"  : 10.0,
         "vertexColors" : false
     }
