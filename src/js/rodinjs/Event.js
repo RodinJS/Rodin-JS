@@ -16,6 +16,7 @@ export class Event {
 		this.keyCode = keyCode;
 		this.hand =  hand;
 		this.controller = controller;
+		this.name = 'event';
 
 		this.timeStamp = Date.now();
 	}
