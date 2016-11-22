@@ -4,7 +4,7 @@ import {EVENT_NAMES} from '../constants/constants.js';
 
 export class Animation {
     constructor (name, params) {
-        this.isLooping = false;
+        this._loop  = false;
         this.sculpt = {};
         this.params = Object.clone(params);
         this.name = name;
@@ -21,7 +21,7 @@ export class Animation {
      */
     copy () {
         let newAnimation = new Animation(this.name, this.params);
-        return newAnimation.duration(this.duration()).easing(this.easing()).delay(this.delay());
+        return newAnimation.duration(this.duration()).easing(this.easing()).delay(this.delay()).loop(this.loop());
     }
 
     /**
@@ -67,7 +67,7 @@ export class Animation {
             .easing(this._easing)
             .start()
             .onComplete(function () {
-                if (_this.isLooping) {
+                if (_this._loop ) {
                     _this.playing = false;
                     _this.reset();
                     _this.start();
@@ -106,7 +106,7 @@ export class Animation {
 
             let evt = new Event(this.sculpt);
             evt.animation = this.name;
-            this.sculpt.emit(EVENT_NAMES.ANIMATION_END, evt);
+            this.sculpt.emit(EVENT_NAMES.ANIMATION_STOP, evt);
             return true;
         }
 
@@ -132,15 +132,15 @@ export class Animation {
 
     /**
      * Set loop
-     * @param loop {boolean}
+     * @param loop
      * @returns {Animation}
      */
     loop (loop = null) {
         if (loop === null) {
-            return this.isLooping;
+            return this._loop ;
         }
 
-        this.isLooping = loop;
+        this._loop  = loop;
         return this;
     }
 

@@ -10,9 +10,15 @@ import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 let scene = SceneManager.get();
 
 scene.add(new THREE.AmbientLight());
-let dl = new THREE.DirectionalLight();
-dl.position.set(1, 1, 1);
-scene.add(dl);
+let dl = new RODIN.THREEObject(new THREE.DirectionalLight());
+
+let dlAnim = new Animation('light', {
+    intensity: {
+        from: 1,
+        to: 0
+    }
+});
+dlAnim.duration(2000).easing(TWEEN.Easing.Cubic.InOut).loop(true);
 
 let downAnim = new Animation('down', {
     position: {
@@ -50,12 +56,20 @@ let upAnimRelative = new Animation('upRelative', {
 });
 upAnimRelative.easing(TWEEN.Easing.Elastic.InOut);
 
+dl.on('ready', (evt) => {
+    evt.target.object3D.position.set(1, 1, 1);
+    scene.add(evt.target.object3D);
+    evt.target.animator.add(dlAnim);
+});
+
+dl.on('animationcomplete', (evt) => {
+    evt.animation === 'light' && (evt.target.object3D.intensity = 1);
+});
+
 let cube = new RODIN.THREEObject(new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), new THREE.MeshLambertMaterial({ color: 0x336699 })));
 cube.on('ready', (evt) => {
     evt.target.object3D.position.set(0, scene.controls.userHeight, -0.5);
     scene.add(evt.target.object3D);
-    RODIN.Raycastables.push(evt.target.object3D);
-
     evt.target.animator.add(downAnim, upAnim, upAnimRelative);
 });
 
@@ -66,7 +80,7 @@ cube.on('update', (evt) => {
     }
 });
 
-cube.on(['animationstart', 'animationcomplete', 'animationend'], console.log);
+cube.on(['animationstart', 'animationcomplete', 'animationstop'], console.log);
 
 generateGUI();
 
@@ -88,7 +102,16 @@ function generateGUI () {
             cube.animator.stop('up');
         };
         this.startUpRelative = function () {
-            cube.animator.start('upRelative')
+            cube.animator.start('upRelative');
+        };
+        this.startLight = function () {
+            dl.animator.getClip('light').loop(false).start();
+        };
+        this.startLightLoop = function () {
+            dl.animator.getClip('light').loop(true).start();
+        };
+        this.stopLight = function () {
+            dl.animator.stop('light');
         };
     };
 
@@ -102,10 +125,16 @@ function generateGUI () {
         })
     );
 
-    gui.add(text, 'startDown');
-    gui.add(text, 'startDownWithLoop');
-    gui.add(text, 'stopDown');
-    gui.add(text, 'startUp');
-    gui.add(text, 'stopUp');
-    gui.add(text, 'startUpRelative');
+    let downFolder = gui.addFolder('Down');
+    downFolder.add(text, 'startDown').name('Start');
+    downFolder.add(text, 'startDownWithLoop').name('Start with loop');
+    downFolder.add(text, 'stopDown').name('Stop');
+    let upFolder = gui.addFolder('Up');
+    upFolder.add(text, 'startUp').name('Start');
+    upFolder.add(text, 'stopUp').name('Stop');
+    upFolder.add(text, 'startUpRelative').name('Start relative');
+    let lightfolder = gui.addFolder('Light');
+    lightfolder.add(text, 'startLight').name('Start');
+    lightfolder.add(text, 'startLightLoop').name('Start with loop');
+    lightfolder.add(text, 'stopLight').name('Stop');
 }
