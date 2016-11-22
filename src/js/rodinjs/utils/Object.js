@@ -27,3 +27,24 @@ Object.setProperty = function (obj, prop, val) {
 
     tmp[props[props.length - 1]] = val;
 };
+
+Object.clone = function (obj) {
+    if (obj === null || typeof(obj) !== 'object' || 'isActiveClone' in obj)
+        return obj;
+
+    let temp = null;
+    if (obj instanceof Date)
+        temp = new obj.constructor();
+    else
+        temp = obj.constructor();
+
+    for (let key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            obj['isActiveClone'] = null;
+            temp[key] = Object.clone(obj[key]);
+            delete obj['isActiveClone'];
+        }
+    }
+
+    return temp;
+};
