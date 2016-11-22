@@ -1,6 +1,7 @@
-'use strict';
-
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
+
+import '../../vendor/three/examples/js/loaders/FBXLoader.js';
+
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 import {Time} from '../time/Time.js';

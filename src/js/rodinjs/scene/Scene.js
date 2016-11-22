@@ -14,10 +14,11 @@ export class Scene extends Sculpt {
         super();
 
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(95, window.innerWidth / window.innerHeight, 0.1, 100);
+        this.camera = new THREE.PerspectiveCamera(95, window.innerWidth / window.innerHeight, 0.01, 100);
         this.renderer = new THREE.WebGLRenderer({
             antialias: window.devicePixelRatio < 2
         });
+        this.scene.add(this.camera);
 
         this.controls = new THREE.VRControls(this.camera);
         this.controllers = new Set();

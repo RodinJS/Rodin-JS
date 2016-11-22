@@ -1,13 +1,13 @@
 import {GamePad} from "./gamePads/GamePad.js";
 import {ErrorMouseControllerAlreadyExists} from '../error/CustomErrors.js';
-import {EVENT_NAMES} from '../constants/constants.js';
+import {EVENT_NAMES, KEY_CODES} from '../constants/constants.js';
 import {ErrorInvalidEventType} from '../error/CustomErrors';
 
 let controllerCreated = false;
 
 export class MouseController extends GamePad {
     constructor(scene = null, camera = null) {
-        if(controllerCreated) {
+        if (controllerCreated) {
             throw new ErrorMouseControllerAlreadyExists();
         }
         controllerCreated = true;
@@ -20,18 +20,21 @@ export class MouseController extends GamePad {
 
 
     getIntersections(controller) {
-        this.raycaster.setFromCamera( new THREE.Vector2(controller.axes[0],controller.axes[1]), this.camera );
+        this.raycaster.setFromCamera(new THREE.Vector2(controller.axes[0], controller.axes[1]), this.camera);
         return this.raycaster.raycast();
     }
-    gamepadHover(intersect){
+
+    gamepadHover(intersect) {
         //this.reycastingLine.geometry.vertices[1].z = -intersect.distance;
         //this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
-    gamepadHoverOut(){
+
+    gamepadHoverOut() {
         //this.reycastingLine.geometry.vertices[1].z = -50;
         //this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
-    static getGamepad(){
+
+    static getGamepad() {
         return navigator.mouseGamePad;
     }
 
@@ -70,5 +73,28 @@ export class MouseController extends GamePad {
 
     get axes() {
         return MouseController.getGamepad().axes;
+    }
+
+
+    onKeyDown(keyCode) {
+        if (keyCode === KEY_CODES.KEY2) return;
+        this.keyCode = keyCode;
+        this.engaged = true;
+        if (!this.pickedItems) {
+            this.pickedItems = [];
+        }
+        if (this.intersected && this.intersected.length > 0) {
+            this.stopPropagation(EVENT_NAMES.MOUSE_DOWN);
+            this.stopPropagation(EVENT_NAMES.MOUSE_MOVE);
+        }
+    }
+
+    onKeyUp(keyCode) {
+        if (keyCode === KEY_CODES.KEY2) return;
+        this.keyCode = null;
+        this.engaged = false;
+        this.startPropagation(EVENT_NAMES.MOUSE_DOWN);
+        this.startPropagation(EVENT_NAMES.MOUSE_MOVE);
+        this.pickedItems = [];
     }
 }

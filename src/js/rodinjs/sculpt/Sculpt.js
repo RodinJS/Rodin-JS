@@ -279,8 +279,8 @@ export class Sculpt {
             throw new Error("Invalid end valus");
         }
 
-        var easing = params.easing || TWEEN.Easing.Elastic.Out;
-        var duration = params.duration || 1000;
+        var easing = params.easing || TWEEN.Easing.Linear.None;
+        var duration = params.duration || 200;
         var delay = params.delay || 0;
         var animateProperty = params.property;
 
