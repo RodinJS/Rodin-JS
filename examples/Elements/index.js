@@ -71,11 +71,9 @@ while (i--) {
                     to: new THREE.Vector3(1.1, 1.1, 1.1)
                 }
             );
-            //evt.target.object3D.scale.set(1.1, 1.1, 1.1);
 
         });
         evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt) => {
-            //console.log(evt.target.object3D);
             evt.target.animate(
                 {
                     property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
