@@ -6,27 +6,34 @@ import '../../vendor/oimo/oimo.js';
 import {RodinPhysics} from './RodinPhysics.js';
 
 export class RigidBody {
+    
     /**
      *
      * @param {object, null} object
-     * @param {number, 0} mass
-     * @param {string, undefined} typeOfCollisionShape
-     * @param {string, undefined} name
      */
-    constructor(object = null, mass = 0, typeOfCollisionShape = undefined, name) {
+    //constructor(object = null, mass = 0, type = undefined, name) {
+    //object: ground,
+    //mass: 0,
+    //type: "plane",
+    //static: true
+    constructor(object) {
 
         this.physicsEngine = RodinPhysics.physicsEngine;
-        this.name = name || "";
-        this.object = object;
 
-        if (!typeOfCollisionShape) {
-            typeOfCollisionShape = this.object.geometry.type;
+        this.object = object || null;
+        this.owner = this.object.mesh || null;
+        this.name = this.object.name || '';
+        this.type = this.object.type || '';
+        this.dynamic = this.object.dynamic;
+
+        if (!this.type) {
+            this.type = this.owner.geometry.type;
         }
 
         if (!this.physicsEngine) {
             return;
         }
-        if (this.physicsEngine === "cannon") {
+        if (this.physicsEngine === 'cannon') {
             if (!RigidBody.threeToCannonAxis) {
                 let qX = new CANNON.Quaternion();
                 qX.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
@@ -38,114 +45,145 @@ export class RigidBody {
                 RigidBody.threeToCannonAxis = qXY;
             }
 
-            if (this.object) {
+            if (this.owner) {
                 // calculate new quaternion for Z-up axis
-                let qOBJ = new CANNON.Quaternion(this.object.quaternion.x,
-                    this.object.quaternion.y,
-                    this.object.quaternion.z,
-                    this.object.quaternion.w);
+                let qOBJ = new CANNON.Quaternion(this.owner.quaternion.x,
+                                                 this.owner.quaternion.y,
+                                                 this.owner.quaternion.z,
+                                                 this.owner.quaternion.w);
                 let qObjXY = new CANNON.Quaternion();
                 qOBJ.mult(RigidBody.threeToCannonAxis, qObjXY);
 
-                // create object's rigidBody
+                // create mesh's rigidBody
                 this.body = new CANNON.Body({
-                    mass: mass, // kg
-                    position: new CANNON.Vec3(this.object.parent.position.x + this.object.position.x,
-                        this.object.parent.position.y + this.object.position.y,
-                        this.object.parent.position.z + this.object.position.z), // m
+                    mass: this.mass, // kg
+                    position: new CANNON.Vec3(this.owner.parent.position.x + this.owner.position.x,
+                                              this.owner.parent.position.y + this.owner.position.y,
+                                              this.owner.parent.position.z + this.owner.position.z), // m
                     quaternion: qObjXY // radian
                 });
 
                 this.body.updateMassProperties();
-                this.body.addShape(this.createObjectCollision(typeOfCollisionShape));
-                this.owner = this.object;
+                this.body.addShape(this.createObjectCollision(this.type));
             }
         }
-        if (this.physicsEngine === "oimo") {
-            if (typeOfCollisionShape == "ground") {
-                this.body = {
-                    //type: 'box',
-                    size: [400, 1, 400],
-                    pos: [this.object.position.x * 100,
-                          this.object.position.y * 100,
-                          this.object.position.z * 100],
-                    //move: false,
-                    world: RodinPhysics.world,
-                    flat:true
-                    //name: typeOfCollisionShape,
-                    //mass: 0
-                }
-            } else {
-                this.body = {
-                    type: 'box',
-                    size: [0.2 * 100, 0.2 * 100, 0.2 * 100],
-                    pos: [this.object.position.x * 100,
-                          this.object.position.y * 100,
-                          this.object.position.z * 100],
-                    move: true,
-                    world: RodinPhysics.world,
-                    //name: typeOfCollisionShape,
-                    //mass: 1
-                };
-            }
-            this.owner = this.object;
+        if (this.physicsEngine === 'oimo') {
+            this.body = {
+                type: this.createObjectCollision(this.type),
+                size: this.createObjectCollision.size,
+                pos: [this.owner.parent.position.x * 100 + this.owner.position.x * 100,
+                      this.owner.parent.position.y * 100 + this.owner.position.y * 100,
+                      this.owner.parent.position.z * 100 + this.owner.position.z * 100],
+                rot: [/*this.owner.parent.rotation.x +*/ this.owner.rotation.x,
+                      /*this.owner.parent.rotation.y +*/ this.owner.rotation.y,
+                      /*this.owner.parent.rotation.z +*/ this.owner.rotation.z],
+                move: this.dynamic,
+                world: RodinPhysics.world,
+                //flat: true,
+                mass: this.mass
+            };
+            /*this.body = {
+             type: 'sphere',
+             size: this.createObjectCollision(mesh.type),
+             pos: [this.mesh.position.x * 100,
+             this.mesh.position.y * 100,
+             this.mesh.position.z * 100],
+             move: true,
+             world: RodinPhysics.world,
+             //name: mesh.type,
+             //mass: 1
+             };*/
         }
+        //console.log("rot",this.body.rot);
+        //console.log(this);
         RodinPhysics.getInstance(this.physicsEngine).addRigidBodyToWorld(this);
+    }
+
+    get mass(){
+        return this.object.mass || 0;
+    }
+    set mass(m){
+        this.object.mass = m;
     }
 
     static threeToCannonAxis = null;
 
     /**
      *
-     * @param {string, undefined} typeOfCollisionShape
+     * @param {string, undefined} type
      */
-    createObjectCollision(typeOfCollisionShape = undefined) {
+    createObjectCollision(type) {
+        if (type == undefined) {
+            type = "";
+        }
+
         let shape;
-        let param = this.object.geometry.parameters;
+        let param = this.owner.geometry.parameters;
+        this.createObjectCollision.size = [];
 
-        switch (typeOfCollisionShape) {
-            case "PlaneBufferGeometry":
-            case "PlaneGeometry":
-                //
-                // todo 0.00001 find a better solution
-                // todo hight esim inch
-                shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, 0.00001, param.height / 2));
-                //shape = new CANNON.Plane();
-                //this.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+        switch (type) {
+            case 'PlaneBufferGeometry':
+            case 'PlaneGeometry':
+            case 'plane':
+                if (this.physicsEngine === 'cannon') {
+                    //
+                    // todo 0.00001 find a better solution
+                    // todo hight esim inch
+                    shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, 0.00001, param.height / 2));
+                    //shape = new CANNON.Plane();
+                    //this.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+
+                } else {
+                    shape = '';
+                    this.createObjectCollision.size.push(...[param.width * 100, 0.00001, param.height * 100]);
+                }
                 break;
 
-            case "BoxBufferGeometry":
-            case "BoxGeometry":
-                //half extents
-                shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, param.depth / 2, param.height / 2));
+            case 'BoxBufferGeometry':
+            case 'BoxGeometry':
+            case 'box':
+            case '':
+                if (this.physicsEngine === 'cannon') {
+                    //half extents
+                    shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, param.depth / 2, param.height / 2));
+                } else {
+                    shape = 'box';
+                    this.createObjectCollision.size.push(...[param.width * 100, param.depth * 100, param.height * 100]);
+                }
                 break;
 
-            case "SphereBufferGeometry":
-            case "SphereGeometry":
-            case "sphere":
-                shape = new CANNON.Sphere(param.radius);
+            case 'SphereBufferGeometry':
+            case 'SphereGeometry':
+            case 'sphere':
+                if (this.physicsEngine === 'cannon') {
+                    shape = new CANNON.Sphere(param.radius);
+                } else {
+                    shape = 'sphere';
+                    this.createObjectCollision.size.push(param.radius * 100);
+                }
                 break;
 
-            case "ConeBufferGeometry":
-            case "ConeGeometry":
-            case "cone":
+           /* case 'ConeBufferGeometry"':
+            case 'ConeGeometry':
+            case 'cone':
                 // todo 0.00001 find a better solution
                 shape = new CANNON.Cylinder(0.00001, param.radius, param.height, param.radialSegments);
                 break;
 
-            case "CylinderBufferGeometry":
-            case "CylinderGeometry":
+            case 'CylinderBufferGeometry':
+            case 'CylinderGeometry':
+            case 'cylinder':
                 shape = new CANNON.Cylinder(param.radiusTop, param.radiusBottom, param.height, param.radialSegments);
                 break;
 
-            case "TorusBufferGeometry":
-            case "TorusGeometry":
+            case 'TorusBufferGeometry':
+            case 'TorusGeometry':
                 shape = new CANNON.Trimesh.createTorus(param.radius, param.tube, param.radialSegments, param.tubularSegments);
                 break;
 
             default:
                 // todo convex polyhedron
-                /*var bunnyBody = new CANNON.Body({ mass: 1 });
+                /!*var bunnyBody = new CANNON.Body({ mass: 1 });
                  for(var i=0; i<bunny.length; i++){
 
                  var rawVerts = bunny[i].verts;
@@ -174,21 +212,24 @@ export class RigidBody {
 
                  // Add to compound
                  bunnyBody.addShape(bunnyPart,offset);
-                 }*/
+                 }*!/
 
                 let tmpFaces = [], tmpVerts = [];
-                for (let i = 0; i < this.object.geometry.faces.length; i++) {
-                    tmpFaces.push(this.object.geometry.faces[i].a);
-                    tmpFaces.push(this.object.geometry.faces[i].b);
-                    tmpFaces.push(this.object.geometry.faces[i].c);
+                for (let i = 0; i < this.owner.geometry.faces.length; i++) {
+                    tmpFaces.push(this.owner.geometry.faces[i].a);
+                    tmpFaces.push(this.owner.geometry.faces[i].b);
+                    tmpFaces.push(this.owner.geometry.faces[i].c);
                 }
-                for (let i = 0; i < this.object.geometry.vertices.length; i++) {
-                    tmpVerts.push(this.object.geometry.vertices[i].x);
-                    tmpVerts.push(this.object.geometry.vertices[i].y);
-                    tmpVerts.push(this.object.geometry.vertices[i].z);
+                for (let i = 0; i < this.owner.geometry.vertices.length; i++) {
+                    tmpVerts.push(this.owner.geometry.vertices[i].x);
+                    tmpVerts.push(this.owner.geometry.vertices[i].y);
+                    tmpVerts.push(this.owner.geometry.vertices[i].z);
                 }
-                shape = new CANNON.Trimesh(tmpVerts, tmpFaces);
+                shape = new CANNON.Trimesh(tmpVerts, tmpFaces);*/
+            default: return
         }
+
+        console.log(shape);
         return shape;
     }
 

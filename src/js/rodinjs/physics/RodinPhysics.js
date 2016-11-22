@@ -111,8 +111,10 @@ export class RodinPhysics {
 
             rigidBody.body = this.world.add(rigidBody.body);
         }
-        //console.log(rigidBody.body);
         this.rigidBodies.push(rigidBody);
+        console.log(this.rigidBodies);
+        console.log("rot_body",rigidBody.body.getQuaternion());
+
     }
 
     /**
@@ -156,18 +158,20 @@ export class RodinPhysics {
             let i = this.rigidBodies.length;
             while (i--) {
                 if (!this.rigidBodies[i].sleeping) {
-
-                    //if(i==1) {console.log(this.rigidBodies[1].body.position.y);}
-
                     this.rigidBodies[i].owner.position.set(
                         this.rigidBodies[i].body.position.x,
                         this.rigidBodies[i].body.position.y,
                         this.rigidBodies[i].body.position.z
                     );
+                    //this.rigidBodies[i].owner.rotation.set(
+                    //    this.rigidBodies[i].body.rotation.x,
+                    //    this.rigidBodies[i].body.rotation.y,
+                    //    this.rigidBodies[i].body.rotation.z
+                    //);
                     //console.log("body",this.rigidBodies[i].body.position);
                     //console.log("object",this.rigidBodies[i].owner.position);
                     //this.rigidBodies[i].owner.position.copy(this.rigidBodies[i].body.getPosition());
-                    //this.rigidBodies[i].object.quaternion.copy(this.rigidBodies[i].body.getQuaternion());
+                    this.rigidBodies[i].owner.quaternion.copy(this.rigidBodies[i].body.getQuaternion());
                 }
             }
         //}
