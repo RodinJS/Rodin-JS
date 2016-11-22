@@ -3,6 +3,7 @@ import {WTF} from '../logger/Logger.js';
 import {Objects} from '../objects.js';
 import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
+import {Animator} from '../animation/Animator.js';
 import {EVENT_NAMES} from '../constants/constants.js';
 import {ErrorAbstractClassInstance} from '../error/CustomErrors';
 
@@ -54,6 +55,8 @@ export class Sculpt {
         this.style = {
             cursor: "default"
         };
+
+        this.animator = new Animator(this);
 
 
         /**
@@ -279,15 +282,15 @@ export class Sculpt {
             throw new Error("Invalid end valus");
         }
 
-        var easing = params.easing || TWEEN.Easing.Linear.None;
-        var duration = params.duration || 200;
-        var delay = params.delay || 0;
-        var animateProperty = params.property;
+        let easing = params.easing || TWEEN.Easing.Linear.None;
+        let duration = params.duration || 200;
+        let delay = params.delay || 0;
+        let animateProperty = params.property;
 
-        var startValue = params.from;
-        var endValue = params.to;
+        let startValue = params.from;
+        let endValue = params.to;
 
-        var onCompleteCallback = function () {
+        let onCompleteCallback = function () {
             next && next();
         };
 
@@ -301,7 +304,7 @@ export class Sculpt {
                 this.scaleTween.stop();
             }
 
-            var updateCallback = function () {
+            let updateCallback = function () {
                 object.scale.copy(this);
             };
 
@@ -323,7 +326,7 @@ export class Sculpt {
                 this.positionTween.stop();
             }
 
-            var updateCallback = function () {
+            let updateCallback = function () {
                 object.position.copy(this);
             };
 
@@ -345,7 +348,7 @@ export class Sculpt {
                 this.rotationTween.stop();
             }
 
-            var updateCallback = function () {
+            let updateCallback = function () {
                 object.rotation.x = this.x;
                 object.rotation.y = this.y;
                 object.rotation.z = this.z;
@@ -369,25 +372,25 @@ export class Sculpt {
      * @param next
      */
     rotateAroundNull(params, next) {
-        var duration = params.duration || 500;
-        var delay = params.delay || 0;
-        var easing = params.easing || TWEEN.Easing.Quadratic.InOut;
-        var cycles = params.cycles || 1;
+        let duration = params.duration || 500;
+        let delay = params.delay || 0;
+        let easing = params.easing || TWEEN.Easing.Quadratic.InOut;
+        let cycles = params.cycles || 1;
 
         if (this.rotateTween) {
             this.rotateTween.stop()
         }
 
-        var elem = {
+        let elem = {
             t: 0
         };
 
-        var r = Math.sqrt(Math.pow(this.object3D.position.x, 2) + Math.pow(this.object3D.position.y, 2));
+        let r = Math.sqrt(Math.pow(this.object3D.position.x, 2) + Math.pow(this.object3D.position.y, 2));
 
         let object = this.object3D;
 
         function updateCallback() {
-            var t = this.t;
+            let t = this.t;
 
             object.position.y = r * Math.cos(t);
             object.position.x = r * Math.sin(t);

@@ -4,6 +4,8 @@ import {Time} from "../time/Time.js";
 import {Set} from '../utils/Set.js';
 import {Objects} from '../objects.js';
 import {Event} from '../Event.js';
+import {TWEEN} from '../Tween.js';
+
 import '../../vendor/three/examples/js/controls/VRControls.js';
 import '../../vendor/three/examples/js/effects/VREffect.js';
 
@@ -45,9 +47,11 @@ export class Scene extends Sculpt {
         this.camera.updateProjectionMatrix();
     }
 
+    // todo: tanel esi scenemanager
     get render () {
         return (timestamp) => {
             time.tick();
+            TWEEN.update();
 
             // Update VR headset position and apply to camera.
             this.controls.update();
