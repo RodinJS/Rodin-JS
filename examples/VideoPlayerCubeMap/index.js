@@ -17,7 +17,9 @@ let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
 //// TODO by Lyov: ask Aram for fix far problem
-camera.far = 10000;
+camera.far = 1000;
+//// TODO by Aram: OK Lyov, I'll check.
+camera.updateProjectionMatrix();
 
 let player = new MaterialPlayer("video/test2.mp4");
 let material = new THREE.MeshBasicMaterial({
