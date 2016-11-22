@@ -25,6 +25,8 @@ export class Scene extends Sculpt {
         this.controls = new THREE.VRControls(this.camera);
         this.controllers = new Set();
         this.effect = new THREE.VREffect(this.renderer);
+
+        WebVRConfig.TOUCH_PANNER_DISABLED = false;
         this.webVRmanager = new WebVRManager(this.renderer, this.effect, { hideButton: false, isUndistorted: false });
 
         this.preRenderFunctions = new Set();
