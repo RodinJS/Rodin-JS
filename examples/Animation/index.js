@@ -19,22 +19,20 @@ cube.on('ready', (evt) => {
     scene.add(evt.target.object3D);
     RODIN.Raycastables.push(evt.target.object3D);
 
-    evt.target.animator.add(new Animation(
+    evt.target.animator.add(new Animation('down',
         {
             'position.y': 1,
             'position.x': {
                 from: - 0.2,
                 to: 0.2
             }
-        },
-        'down'
+        }
     ));
 
-    evt.target.animator.add(new Animation(
+    evt.target.animator.add(new Animation('up',
         {
             'position.y': scene.controls.userHeight
-        },
-        'up'
+        }
     ))
 });
 

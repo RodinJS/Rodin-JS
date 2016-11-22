@@ -1,7 +1,7 @@
 import {TWEEN} from '../Tween.js';
 
 export class Animation {
-    constructor (params, name) {
+    constructor (name, params) {
         this.isLooping = false;
         this.sculpt = {};
         this.params = params;
@@ -9,6 +9,8 @@ export class Animation {
         this.duration = 3000;
         this.delay = 0;
         this.easing = TWEEN.Easing.Linear.None;
+
+        this.playing = false;
     }
 
     /**
@@ -46,9 +48,7 @@ export class Animation {
             }
         }
 
-        console.log(startValues);
-        console.log(endValues);
-
+        this.playing = true;
         this.initialProps = Object.clone(startValues);
         let _this = this;
         this.tween = new TWEEN.Tween(startValues)
@@ -63,8 +63,12 @@ export class Animation {
             .start()
             .onComplete(function () {
                 if (_this.isLooping) {
-                    _this.stop();
+                    _this.playing = false;
+                    _this.reset();
                     _this.start();
+                } else {
+                    _this.playing = false;
+                    delete this.tween;
                 }
             });
     }
@@ -85,12 +89,12 @@ export class Animation {
         if (this.isPlaying()) {
             this.tween.stop();
             delete this.tween;
+            this.playing = false;
 
             if (reset) {
-                for (let i in this.initialProps) {
-                    Object.setProperty(this.sculpt.object3D, i, this.initialProps[i]);
-                }
+                this.reset();
             }
+
             return true;
         }
 
@@ -98,11 +102,20 @@ export class Animation {
     }
 
     /**
+     * reset all initial props
+     */
+    reset () {
+        for (let i in this.initialProps) {
+            Object.setProperty(this.sculpt.object3D, i, this.initialProps[i]);
+        }
+    }
+
+    /**
      * Check animation playing status
      * @returns {boolean}
      */
     isPlaying () {
-        return !!this.tween;
+        return this.playing;
     }
 
     /**
@@ -115,6 +128,7 @@ export class Animation {
     }
 
     setSculpt (sculpt) {
+        this.initialProps = {};
         this.sculpt = sculpt;
     }
 }
