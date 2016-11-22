@@ -33,3 +33,7 @@ export const CONTROLLER_CLICK = 'controllerclick';
 export const CONTROLLER_TOUCH_START = 'controllertouchstart';
 export const CONTROLLER_TOUCH_END = 'controllertouchend';
 export const CONTROLLER_TAP = 'controllertap';
+
+export const ANIMATION_START = 'animationstart';
+export const ANIMATION_END = 'animationend';
+export const ANIMATION_COMPLETE = 'animationcomplete';

@@ -199,7 +199,7 @@ export class Sculpt {
      */
     on(evts, callback) {
         let events = this.getEvents();
-        if(!Array.isArray(events)) {
+        if(!Array.isArray(evts)) {
             evts = [evts];
         }
         for (let i = 0; i < evts.length; i++) {
@@ -242,6 +242,7 @@ export class Sculpt {
      * @param {Array} args
      */
     emit(evt, customEvt, ...args) {
+        customEvt.name = evt;
         let events = this.getEvents();
         if (events[evt] && events[evt].length > 0) {
             for (let f = 0; f < events[evt].length; f++) {
