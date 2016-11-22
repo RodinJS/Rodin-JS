@@ -66,7 +66,7 @@ cube.on('update', (evt) => {
     }
 });
 
-cube.on(['animationstart', 'animationcomplete'], (evt) => console.log(evt));
+cube.on(['animationstart', 'animationcomplete', 'animationend'], console.log);
 
 generateGUI();
 
