@@ -27,7 +27,6 @@ let material = new THREE.MeshBasicMaterial({
     map: player.getTextureL()
 });
 
-
 // Add a skybox.
 let boxSize = 150;
 let skybox = new CubeMapFromModel(0, boxSize, null, material);
@@ -36,7 +35,6 @@ skybox.on('ready', () => {
     scene.add(skybox.object3D);
     skybox.object3D.position.y = controls.userHeight;
 });
-
 
 scene.preRender(function () {
     player.update(RODIN.Time.deltaTime());
