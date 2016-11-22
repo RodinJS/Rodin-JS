@@ -6,7 +6,7 @@ import {Sculpt} from './../Sculpt.js';
 import {timeout} from './../../utils/timeout.js';
 import {utils3D} from './../../utils/utils.js';
 
-export class Button extends Sculpt {
+export class Element extends Sculpt {
     constructor({
         name = "button",
         width = 0.2,
@@ -15,7 +15,7 @@ export class Button extends Sculpt {
         border = {},
         label = {},
         image,
-        ppm = 2000
+        ppm = 500
         }) {
         super(0);
         this.name = name;
@@ -26,13 +26,17 @@ export class Button extends Sculpt {
         this.label = label;
         this.image = image;
         this.ppm = ppm;
+        this.canvas = document.createElement("canvas");
         if(this.background.opacity === undefined && (this.background.color || this.background.image)){
             this.background.opacity = 1;
         }
-        if(this.border === undefined || this.border.radius === undefined ){
+        if(!this.border.radius || this.border.radius < 0){
             this.border.radius = 0.00000001;
         }
-        if(this.label !== undefined && this.label.fontSize === undefined ){
+        if(this.border.radius >= Math.min(this.width/2, this.height/2)){
+            this.border.radius = Math.min(this.width/2, this.height/2)-0.00000001;
+        }
+        if(this.label.fontSize === undefined ){
             this.label.fontSize = Math.min(this.height, this.width)/4;
         }
         if(this.image !== undefined && this.image.url === undefined ){
@@ -49,7 +53,7 @@ export class Button extends Sculpt {
             utils3D.roundRect(buttonShape, this.width, this.height, this.border.radius);
             let buttonGeo = utils3D.createGeometryFromShape(buttonShape);
 
-            let canvas = utils3D.setupCanvas({width: this.ppm * this.width, height: this.ppm * this.height});
+            let canvas = utils3D.setupCanvas({width: this.ppm * this.width, height: this.ppm * this.height, canvas: this.canvas});
             // Background
             /*            let buttonBGMat = new THREE.MeshBasicMaterial({
              color: this.background.color ? this.background.color : 0xffffff,
@@ -67,8 +71,10 @@ export class Button extends Sculpt {
                 utils3D.drawImageOnCanvas({
                     image: this.background.image.element,
                     opacity: this.background.opacity,
-                    canvas
+                    canvas: this.canvas
                 });
+
+                delete this.background.image.element;
                 /*
                  document.body.appendChild(canvas);
                  canvas.style.zIndex = 9999999999;
@@ -77,7 +83,7 @@ export class Button extends Sculpt {
                  canvas.style.left = "0";
                  */
             } else if (this.background.color) {
-                let ctx = canvas.getContext("2d");
+                let ctx = this.canvas.getContext("2d");
                 let rgb = utils3D.hexToRgb(this.background.color);
                 ctx.fillStyle = "rgba("
                     + rgb.r + ", "
@@ -85,18 +91,24 @@ export class Button extends Sculpt {
                     + rgb.b + ", "
                     + this.background.opacity
                     + ")";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
             }
 
             // label
             if (this.label) {
-                let x = 0;
-                let y = 0;
+                let x = 50;
+                let y = 50;
+                let textSize = utils3D.measureTextOnCanvas(
+                    this.label.text,
+                    this.label.fontFamily,
+                    this.label.fontSize * this.ppm,
+                    this.canvas
+                )
                 if (this.label.position && this.label.position.h) {
-                    x = this.label.position.h * (this.ppm * this.width) / 100;
+                    x = this.label.position.h * (this.ppm * this.width) / 100 - textSize.x / 2;
                 }
                 if (this.label.position && this.label.position.v) {
-                    y = this.label.position.v * (this.ppm * this.height) / 100;
+                    y = this.label.position.v * (this.ppm * this.height) / 100 - textSize.y / 2;
                 }
                 utils3D.drawTextOnCanvas({
                     text: this.label.text,
@@ -106,30 +118,54 @@ export class Button extends Sculpt {
                     y,
                     color: this.label.color,
                     opacity: this.label.opacity,
-                    canvas
+                    canvas: this.canvas
                 });
             }
 
             // image
             if (this.image) {
-                let x = 0;
-                let y = 0;
+                let x = 50;
+                let y = 50;
+                let w = this.ppm * this.image.width;
+                let h = this.ppm * this.image.height;
                 if (this.image.position && this.image.position.h) {
-                    x = this.image.position.h * (this.ppm * this.width) / 100;
+                    x = this.image.position.h * (this.ppm * this.width) / 100 - w/2;
                 }
                 if (this.image.position && this.image.position.v) {
-                    y = this.image.position.v * (this.ppm * this.height) / 100;
+                    y = this.image.position.v * (this.ppm * this.height) / 100 - h/2;
                 }
-                let canvas = utils3D.drawImageOnCanvas({
+                utils3D.drawImageOnCanvas({
                     image: this.image.element,
-                    width: this.ppm * this.image.width,
-                    height: this.ppm * this.image.height,
+                    width: w,
+                    height: h,
                     x,
                     y,
                     opacity: this.image.opacity,
-                    canvas
+                    canvas: this.canvas
                 });
+                delete this.image.element;
                 /*                document.body.appendChild(canvas);
+                 canvas.style.zIndex = 9999999999;
+                 canvas.style.position = "absolute";
+                 canvas.style.top = "0";
+                 canvas.style.left = "0";*/
+            }
+            if (this.border && this.border.width) {
+                let ctx = this.canvas.getContext("2d");
+                ctx.globalAlpha = 1;
+                ctx.beginPath();
+                utils3D.roundRectCanvas(ctx, this.width* this.ppm, this.height* this.ppm, this.border.radius * this.ppm);
+                ctx.closePath();
+                ctx.lineWidth = this.border.width * 2 * this.ppm;
+                let rgb = utils3D.hexToRgb(this.border.color);
+                ctx.strokeStyle = "rgba("
+                    + rgb.r + ", "
+                    + rgb.g + ", "
+                    + rgb.b + ", "
+                    + (this.border.opacity ? this.border.opacity : 1)
+                    + ")";
+                ctx.stroke();
+      /*                          document.body.appendChild(canvas);
                  canvas.style.zIndex = 9999999999;
                  canvas.style.position = "absolute";
                  canvas.style.top = "0";
@@ -137,8 +173,18 @@ export class Button extends Sculpt {
             }
 
             let buttonMat = null;
-            if (this.image || this.label) {
-                let tex = new THREE.Texture(canvas);
+
+            if (this.image || this.label || this.background.image || this.background.color) {
+                let w = utils3D.nearestPow2(this.canvas.width) / this.canvas.width;
+                let h = utils3D.nearestPow2(this.canvas.height) / this.canvas.height;
+
+                let inMemCanvas = document.createElement('canvas');
+                let inMemCtx = inMemCanvas.getContext('2d');
+                inMemCanvas.width = this.canvas.width*w;
+                inMemCanvas.height = this.canvas.height*h;
+                inMemCtx.drawImage(this.canvas, 0, 0, this.canvas.width*w, this.canvas.height*h);
+
+                let tex = new THREE.Texture(inMemCanvas);
                 tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
                 tex.repeat.set(1 / this.width, 1 / this.height);
                 buttonMat = new THREE.MeshBasicMaterial({
@@ -147,6 +193,8 @@ export class Button extends Sculpt {
                     transparent: true
                 });
                 tex.needsUpdate = true;
+                delete this.canvas
+                inMemCanvas = null;
             }
 
 

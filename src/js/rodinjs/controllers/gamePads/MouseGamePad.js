@@ -11,7 +11,7 @@ export class MouseGamePad {
             throw new ErrorSingletonClass();
         }
 
-        this.axes = [0, 0];
+        this.axes = [-1, -1];
         this.buttons = [
             {
                 pressed: false,
