@@ -1,6 +1,14 @@
 'use strict';
 
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
+
+import '../../vendor/three/examples/js/loaders/collada/AnimationHandler.js';
+import '../../vendor/three/examples/js/loaders/collada/KeyFrameAnimation.js';
+import '../../vendor/three/examples/js/loaders/collada/Animation.js';
+import '../../vendor/three/examples/js/loaders/OBJLoader.js';
+import '../../vendor/three/examples/js/loaders/DDSLoader.js';
+import '../../vendor/three/examples/js/loaders/MTLLoader.js';
+
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 
@@ -86,7 +94,8 @@ export class OBJModelObject extends Sculpt {
 
                     console.log("OBJ file was loaded");
                 }, onProgress, onError);
-        }, function(){}, () => {
+        }, function () {
+        }, () => {
             let objLoader = new THREE.OBJLoader();
             objLoader.load(
                 URL,

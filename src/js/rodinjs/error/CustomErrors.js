@@ -96,7 +96,13 @@ export class ErrorProtectedFieldChange extends CustomError {
 }
 
 export class ErrorInvalidEventType extends CustomError {
-    constructor(eventName = '', action = '') {
+    constructor (eventName = '', action = '') {
         super(`Invalid event name ${eventName} for action ${action}`);
+    }
+}
+
+export class ErrorParameterTypeDontMatch extends CustomError {
+    constructor (paramName = '', type = '') {
+        super(`Parameter ${paramName} must be in type ${type}`);
     }
 }

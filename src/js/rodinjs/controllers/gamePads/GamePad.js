@@ -54,10 +54,12 @@ export class GamePad extends THREE.Object3D {
 
     enable() {
         this.enabled = true;
+        this.onEnable();
     }
 
     disable() {
         this.enabled = false;
+        this.onDisable();
     }
 
     /**
@@ -348,6 +350,15 @@ export class GamePad extends THREE.Object3D {
      * @param {object} gamepad
      */
     onTouchUp(keyCode, gamepad) {
+    }
+
+
+    onDisable(){
+
+    }
+
+    onEnable(){
+
     }
 
 

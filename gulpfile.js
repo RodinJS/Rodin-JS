@@ -229,6 +229,7 @@ gulp.task('examples', () => {
         .pipe(rename({suffix: '_c'}))
         .pipe(plumber.stop())
         .pipe(gulp.dest('./examples'))
+        // .pipe(gulp.dest('./old_examples'))
         .pipe(notify({
             onLast: true,
             message: () => `Examples - Total size ${s.prettySize}`

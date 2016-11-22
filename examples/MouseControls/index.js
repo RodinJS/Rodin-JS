@@ -1,68 +1,21 @@
 import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
-import {WTF} from '../../_build/js/rodinjs/RODIN.js';
-
+import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
+import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
+import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
-console.log(RODIN);
+let scene = SceneManager.get();
+let camera = scene.camera;
+let controls = scene.controls;
+let renderer = scene.renderer;
+let originalScene = scene.scene;
 
-import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
-import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
-import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
-import '../../_build/js/vendor/three/examples/js/WebVR.js';
+let mouseController = new MouseController();
+mouseController.onControllerUpdate = controllerUpdate;
+SceneManager.addController(mouseController);
 
-WTF.is('Rodin.JS v0.0.1');
-
-/////////////////////////////WebVR Example/////////////////////////////////////
-
-// Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
-// Only enable it if you actually need to.
-let renderer = new THREE.WebGLRenderer({antialias: true});
-renderer.setPixelRatio(window.devicePixelRatio);
-
-renderer.shadowMap.enabled = true;
-renderer.gammaInput = true;
-renderer.gammaOutput = true;
-
-// Append the canvas element created by the renderer to document body element.
-document.body.appendChild(renderer.domElement);
-
-// Create a three.js scene.
-let scene = new THREE.Scene();
-scene.background = new THREE.Color(0x808080);
-
-// Create a three.js camera.
-let camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-scene.add(camera);
-
-// scene.add(target)
-
-// Apply VR headset positional data to camera.
-let controls = new THREE.VRControls(camera);
-controls.standing = true;
-
-// Apply VR stereo rendering to renderer.
-let effect = new THREE.VREffect(renderer);
-effect.setSize(window.innerWidth, window.innerHeight);
-
-// Create a VR manager helper to enter and exit VR mode.
-let params = {
-    hideButton: false, // Default: false.
-    isUndistorted: false // Default: false.
-};
-
-let manager = new WebVRManager(renderer, effect, params);
-
-
-// controllers
-let controller = new RODIN.MouseController();
-controller.setRaycasterScene(scene);
-controller.setRaycasterCamera(camera);
-controller.onKeyDown = controllerKeyDown;
-controller.onKeyUp = controllerKeyUp;
-controller.onControllerUpdate = controllerUpdate;
-
+scene.scene.background = new THREE.Color(0x808080);
 
 let geometry = new THREE.PlaneGeometry(4, 4);
 let material = new THREE.MeshStandardMaterial({
@@ -102,7 +55,7 @@ let geometries = [
     new THREE.TorusGeometry(0.2, 0.04, 64, 32)
 ];
 
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 20; i++) {
 
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
@@ -144,13 +97,17 @@ for (let i = 0; i < 50; i++) {
         obj.object3D.material.emissive.r = 0;
     });
 
+    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
+    });
+
     // CONTROLLER_KEY
-    if(Math.random() > 0.5){
+    if (Math.random() > 0.5) {
         object.material = new THREE.MeshStandardMaterial({
             color: 0x00ff00,
             roughness: 0.7,
             metalness: 0.0
         });
+
         obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
             let controller = evt.controller;
             let target = evt.target;
@@ -158,7 +115,7 @@ for (let i = 0; i < 50; i++) {
             controller.pickedItems.push(target.object3D);
 
             let initParent = target.object3D.parent;
-            changeParent(target.object3D, scene);
+            changeParent(target.object3D, originalScene);
 
             target.object3D.raycastCameraPlane = new THREE.Plane();
             target.object3D.offset = new THREE.Vector3();
@@ -182,11 +139,9 @@ for (let i = 0; i < 50; i++) {
             changeParent(target.object3D, initParent);
         });
 
-
         obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_VALUE_CHANGE, (evt) => {
-            console.log("fuck", evt)
             let controller = evt.controller;
-            let gamePad = RODIN.MouseController.getGamepad();
+            let gamePad = MouseController.getGamepad();
             let target = evt.target;
             if (evt.keyCode === 2) {
                 let initParent = target.object3D.parent;
@@ -197,15 +152,7 @@ for (let i = 0; i < 50; i++) {
             }
 
         });
-
     }
-
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
-    });
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt) => {
-    });
 }
 
 
@@ -217,7 +164,7 @@ function controllerUpdate() {
             if (this.raycaster.ray.intersectPlane(item.raycastCameraPlane, item.intersection)) {
                 if (this.keyCode === 1) {
                     let initParent = item.parent;
-                    changeParent(item, scene);
+                    changeParent(item, originalScene);
                     item.position.copy(item.intersection.sub(item.offset));
                     changeParent(item, initParent);
                 } else if (this.keyCode === 3) {
@@ -238,54 +185,3 @@ function controllerUpdate() {
         });
     }
 }
-
-function controllerKeyDown(keyCode) {
-    if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
-    this.keyCode = keyCode;
-    this.engaged = true;
-    if (!this.pickedItems) {
-        this.pickedItems = [];
-    }
-    if (this.intersected && this.intersected.length > 0) {
-        this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
-        this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
-    }
-}
-
-function controllerKeyUp(keyCode) {
-    if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
-    this.keyCode = null;
-    this.engaged = false;
-    this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
-    this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
-    this.pickedItems = [];
-}
-
-// Kick off animation loop
-requestAnimationFrame(animate);
-
-window.addEventListener('resize', onResize, true);
-window.addEventListener('vrdisplaypresentchange', onResize, true);
-
-// Request animation frame loop function
-function animate(timestamp) {
-
-    // Update controller.
-    controller.update();
-
-    // Update VR headset position and apply to camera.
-    controls.update();
-
-    // Render the scene through the manager.
-    manager.render(scene, camera, timestamp);
-
-    requestAnimationFrame(animate);
-}
-
-function onResize(e) {
-    effect.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////
