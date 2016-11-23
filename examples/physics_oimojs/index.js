@@ -132,8 +132,7 @@ let material = new THREE.MeshStandardMaterial({
     roughness: 1.0,
     metalness: 0.0,
     opacity: 0.8,
-    transparent: true,
-    side: THREE.DoubleSide
+    transparent: true
 });
 let ground = new THREE.Mesh(geometry, material);
 ground.rotation.x = -Math.PI / 2;
@@ -189,12 +188,12 @@ let mass = 0.2;
 
 let group = new THREE.Group();
 //todo shifted position
-group.position.set(0, 0, 0);
-//group.rotation.y = 0.4;
+group.position.set(0, 3, 5);
+group.rotation.x = Math.PI/4;
 scene.add(group);
 
 let geometries = [
-    new THREE.BoxGeometry(0.2, 0.2, 0.2),
+    new THREE.BoxGeometry(0.2, 0.5, 0.2),
     new THREE.SphereGeometry(0.2, 64),
     //new THREE.ConeGeometry(0.2, 0.2, 64),
     //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
@@ -202,9 +201,11 @@ let geometries = [
     //new THREE.TorusGeometry(0.2, 0.08, 12, 12),
     //new THREE.TorusKnotGeometry(0.2, 0.05, 30, 16)
 ];
+let startPhysics = false;
+setTimeout(()=>{startPhysics = true}, 5000);
 
 // add raycastable objects to scene
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 10; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -214,12 +215,12 @@ for (let i = 0; i < 5; i++) {
 
     let object = new THREE.Mesh(geometry, material);
     object.position.x = (Math.random() - 0.5) * 3;
-    object.position.y = (Math.random() - 0.5) * 3 + 4;
-    object.position.z = (Math.random() - 0.5) * 3 + 5;
+    object.position.y = (Math.random() - 0.5) * 3;
+    object.position.z = (Math.random() - 0.5) * 3;
     //object.position.set(0, 4, 5);
-    object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
-    object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
-    object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
+    //object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
+    //object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
+    //object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
     object.scale.set(1, 1, 1);
 
     object.castShadow = true;
@@ -231,7 +232,6 @@ for (let i = 0; i < 5; i++) {
         RODIN.Raycastables.push(obj.object3D);
         obj.object3D.initialParent = obj.object3D.parent;
 
-        //console.log(obj.object3D.quaternion);
         // add physic
         let objectRigitBody = new RODIN.RigidBody({
             mesh: obj.object3D,
@@ -419,6 +419,7 @@ function animate(timestamp) {
     manager.render(scene, camera, timestamp);
 
     // Update scene's objects physics.
+    //if(startPhysics)
     scene.physics.updateWorldPhysics(timestamp);
 
     requestAnimationFrame(animate);

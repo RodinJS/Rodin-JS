@@ -3,6 +3,7 @@ import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import '../../vendor/cannon/cannon.js';
 import '../../vendor/oimo/oimo.js';
 
+
 import {RodinPhysics} from './RodinPhysics.js';
 
 export class RigidBody {
@@ -68,34 +69,43 @@ export class RigidBody {
             }
         }
         if (this.physicsEngine === 'oimo') {
+            //changeParent(this.owner, this.owner.parent);
+            //console.log("position",this.owner.position);
+            //console.log("getWorldPosition()",this.owner.getWorldPosition());
             this.body = {
                 type: this.createObjectCollision(this.type),
                 size: this.createObjectCollision.size,
-                pos: [this.owner.parent.position.x * 100 + this.owner.position.x * 100,
-                      this.owner.parent.position.y * 100 + this.owner.position.y * 100,
-                      this.owner.parent.position.z * 100 + this.owner.position.z * 100],
-                rot: [/*this.owner.parent.rotation.x +*/ this.owner.rotation.x,
-                      /*this.owner.parent.rotation.y +*/ this.owner.rotation.y,
-                      /*this.owner.parent.rotation.z +*/ this.owner.rotation.z],
+                pos: [this.owner.getWorldPosition().x * 100,
+                      this.owner.getWorldPosition().y * 100,
+                      this.owner.getWorldPosition().z * 100],
+                rot: [(this.owner.getWorldRotation().x * 180) / Math.PI,
+                      (this.owner.getWorldRotation().y * 180) / Math.PI,
+                      (this.owner.getWorldRotation().z * 180) / Math.PI],
                 move: this.dynamic,
                 world: RodinPhysics.world,
                 //flat: true,
                 mass: this.mass
             };
-            /*this.body = {
-             type: 'sphere',
-             size: this.createObjectCollision(mesh.type),
-             pos: [this.mesh.position.x * 100,
-             this.mesh.position.y * 100,
-             this.mesh.position.z * 100],
-             move: true,
-             world: RodinPhysics.world,
-             //name: mesh.type,
-             //mass: 1
-             };*/
+            //this.deltaPos = {x: this.owner.getWorldPosition().x - this.owner.position.x,
+            //                 y: this.owner.getWorldPosition().y - this.owner.position.y,
+            //                 z: this.owner.getWorldPosition().z - this.owner.position.z};
+
+            this.deltaPos = new THREE.Vector3(
+                                    this.owner.getWorldPosition().x/* - this.owner.position.x*/,
+                                    this.owner.getWorldPosition().y/* - this.owner.position.y*/,
+                                    this.owner.getWorldPosition().z/* - this.owner.position.z*/);
+
+            this.deltaRot = {x: this.owner.getWorldRotation().x - this.owner.rotation.x,
+                             y: this.owner.getWorldRotation().y - this.owner.rotation.y,
+                             z: this.owner.getWorldRotation().z - this.owner.rotation.z};
+            this.deltaQuat = this.owner.getWorldQuaternion().multiply(this.owner.quaternion.inverse());
+            /*this.deltaQuat = new THREE.Quaternion();
+            this.deltaQuat.set(deltaQuat.x,
+                               deltaQuat.y,
+                               deltaQuat.z,
+                               deltaQuat.w);*/
+            console.log(this.deltaQuat);
         }
-        //console.log("rot",this.body.rot);
-        //console.log(this);
         RodinPhysics.getInstance(this.physicsEngine).addRigidBodyToWorld(this);
     }
 
@@ -135,7 +145,7 @@ export class RigidBody {
 
                 } else {
                     shape = '';
-                    this.createObjectCollision.size.push(...[param.width * 100, 0.00001, param.height * 100]);
+                    this.createObjectCollision.size.push(...[param.width * 100, param.height * 100, 0.002 ]);
                 }
                 break;
 
@@ -148,7 +158,7 @@ export class RigidBody {
                     shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, param.depth / 2, param.height / 2));
                 } else {
                     shape = 'box';
-                    this.createObjectCollision.size.push(...[param.width * 100, param.depth * 100, param.height * 100]);
+                    this.createObjectCollision.size.push(...[param.width * 100, param.height * 100, param.depth * 100]);
                 }
                 break;
 
@@ -229,7 +239,7 @@ export class RigidBody {
             default: return
         }
 
-        console.log(shape);
+        //console.log(shape);
         return shape;
     }
 

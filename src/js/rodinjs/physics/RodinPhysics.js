@@ -108,19 +108,9 @@ export class RodinPhysics {
         }
 
         if (this.physicsEngine === "oimo") {
-
             rigidBody.body = this.world.add(rigidBody.body);
-
-            console.log("rigidBody.owner.quaternion", rigidBody.owner.rotation);
-            console.log("rigidBody.owner.quaternion", rigidBody.owner.quaternion);
-            rigidBody.body.setQuaternion(rigidBody.owner.quaternion);
-            //console.log("rigidBody.body.quaternion", rigidBody.body.getQuaternion());
-
         }
         this.rigidBodies.push(rigidBody);
-        //console.log(this.rigidBodies);
-        //console.log("rot_body",rigidBody.body.getQuaternion());
-
     }
 
     /**
@@ -158,29 +148,47 @@ export class RodinPhysics {
             this.lastTime = timestamp;
         }
 
-        //if (this.physicsEngine === "oimo") {
-        this.world.step();
+        if (this.physicsEngine === "oimo") {
+            this.world.step();
 
-        let i = this.rigidBodies.length;
-        while (i--) {
-            if (!this.rigidBodies[i].sleeping) {
-                this.rigidBodies[i].owner.position.set(
-                    this.rigidBodies[i].body.position.x,
-                    this.rigidBodies[i].body.position.y,
-                    this.rigidBodies[i].body.position.z
-                );
-                //this.rigidBodies[i].owner.rotation.set(
-                //    this.rigidBodies[i].body.rotation.x,
-                //    this.rigidBodies[i].body.rotation.y,
-                //    this.rigidBodies[i].body.rotation.z
-                //);
-                //console.log("body",this.rigidBodies[i].body.position);
-                //console.log("object",this.rigidBodies[i].owner.position);
-                //this.rigidBodies[i].owner.position.copy(this.rigidBodies[i].body.getPosition());
-                //console.log(this.rigidBodies[i].body);
-                this.rigidBodies[i].owner.quaternion.copy(this.rigidBodies[i].body.getQuaternion());
+            let i = this.rigidBodies.length;
+            while (i--) {
+                if (!this.rigidBodies[i].sleeping) {
+                    let tmpPosDelta = this.rigidBodies[i].deltaPos.clone();
+                    //tmpPosDelta.applyQuaternion(this.rigidBodies[i].owner.parent.getWorldQuaternion().inverse());
+
+                    /*this.rigidBodies[i].owner.position.set(
+                        this.rigidBodies[i].body.position.x - this.rigidBodies[i].deltaPos.x,
+                        this.rigidBodies[i].body.position.y - this.rigidBodies[i].deltaPos.y,
+                        this.rigidBodies[i].body.position.z - this.rigidBodies[i].deltaPos.z
+                    );*/
+
+                    /*this.rigidBodies[i].owner.position.set(
+                        this.rigidBodies[i].body.position.x - tmpPosDelta.x,
+                        this.rigidBodies[i].body.position.y - tmpPosDelta.y,
+                        this.rigidBodies[i].body.position.z - tmpPosDelta.z
+                    );*/
+
+                    tmpPosDelta = new THREE.Vector3(
+                        this.rigidBodies[i].body.position.x,
+                        this.rigidBodies[i].body.position.y,
+                        this.rigidBodies[i].body.position.z
+                    );
+                    this.rigidBodies[i].owner.position.set(
+                        this.rigidBodies[i].owner.worldToLocal(tmpPosDelta).x/100,
+                        this.rigidBodies[i].owner.worldToLocal(tmpPosDelta).y/100,
+                        this.rigidBodies[i].owner.worldToLocal(tmpPosDelta).z/100,
+                    );
+                    this.rigidBodies[i].owner.updateMatrixWorld();
+                    /*let bodyQuat = new THREE.Quaternion();
+                    bodyQuat.set(this.rigidBodies[i].body.getQuaternion().x,
+                                 this.rigidBodies[i].body.getQuaternion().y,
+                                 this.rigidBodies[i].body.getQuaternion().z,
+                                 this.rigidBodies[i].body.getQuaternion().w);
+                    let a = bodyQuat.multiply(this.rigidBodies[i].deltaQuat);
+                    this.rigidBodies[i].owner.quaternion.copy(a);*/
+                }
             }
         }
-        //}
     }
 }
