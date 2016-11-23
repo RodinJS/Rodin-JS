@@ -110,10 +110,16 @@ export class RodinPhysics {
         if (this.physicsEngine === "oimo") {
 
             rigidBody.body = this.world.add(rigidBody.body);
+
+            console.log("rigidBody.owner.quaternion", rigidBody.owner.rotation);
+            console.log("rigidBody.owner.quaternion", rigidBody.owner.quaternion);
+            rigidBody.body.setQuaternion(rigidBody.owner.quaternion);
+            //console.log("rigidBody.body.quaternion", rigidBody.body.getQuaternion());
+
         }
         this.rigidBodies.push(rigidBody);
-        console.log(this.rigidBodies);
-        console.log("rot_body",rigidBody.body.getQuaternion());
+        //console.log(this.rigidBodies);
+        //console.log("rot_body",rigidBody.body.getQuaternion());
 
     }
 
@@ -131,7 +137,7 @@ export class RodinPhysics {
             }
 
             if (this.world.numObjects() > 0) {
-                let i = this.rigidBodies.length - 1;
+                let i = this.rigidBodies.length;
                 while (i--) {
                     this.rigidBodies[i].owner.position.set(
                         this.rigidBodies[i].body.position.x,
@@ -153,27 +159,28 @@ export class RodinPhysics {
         }
 
         //if (this.physicsEngine === "oimo") {
-            this.world.step();
+        this.world.step();
 
-            let i = this.rigidBodies.length;
-            while (i--) {
-                if (!this.rigidBodies[i].sleeping) {
-                    this.rigidBodies[i].owner.position.set(
-                        this.rigidBodies[i].body.position.x,
-                        this.rigidBodies[i].body.position.y,
-                        this.rigidBodies[i].body.position.z
-                    );
-                    //this.rigidBodies[i].owner.rotation.set(
-                    //    this.rigidBodies[i].body.rotation.x,
-                    //    this.rigidBodies[i].body.rotation.y,
-                    //    this.rigidBodies[i].body.rotation.z
-                    //);
-                    //console.log("body",this.rigidBodies[i].body.position);
-                    //console.log("object",this.rigidBodies[i].owner.position);
-                    //this.rigidBodies[i].owner.position.copy(this.rigidBodies[i].body.getPosition());
-                    this.rigidBodies[i].owner.quaternion.copy(this.rigidBodies[i].body.getQuaternion());
-                }
+        let i = this.rigidBodies.length;
+        while (i--) {
+            if (!this.rigidBodies[i].sleeping) {
+                this.rigidBodies[i].owner.position.set(
+                    this.rigidBodies[i].body.position.x,
+                    this.rigidBodies[i].body.position.y,
+                    this.rigidBodies[i].body.position.z
+                );
+                //this.rigidBodies[i].owner.rotation.set(
+                //    this.rigidBodies[i].body.rotation.x,
+                //    this.rigidBodies[i].body.rotation.y,
+                //    this.rigidBodies[i].body.rotation.z
+                //);
+                //console.log("body",this.rigidBodies[i].body.position);
+                //console.log("object",this.rigidBodies[i].owner.position);
+                //this.rigidBodies[i].owner.position.copy(this.rigidBodies[i].body.getPosition());
+                //console.log(this.rigidBodies[i].body);
+                this.rigidBodies[i].owner.quaternion.copy(this.rigidBodies[i].body.getQuaternion());
             }
+        }
         //}
     }
 }

@@ -133,7 +133,7 @@ let material = new THREE.MeshStandardMaterial({
     metalness: 0.0,
     opacity: 0.8,
     transparent: true,
-    //side: THREE.DoubleSide
+    side: THREE.DoubleSide
 });
 let ground = new THREE.Mesh(geometry, material);
 ground.rotation.x = -Math.PI / 2;
@@ -231,7 +231,7 @@ for (let i = 0; i < 5; i++) {
         RODIN.Raycastables.push(obj.object3D);
         obj.object3D.initialParent = obj.object3D.parent;
 
-        console.log(obj.object3D.quaternion);
+        //console.log(obj.object3D.quaternion);
         // add physic
         let objectRigitBody = new RODIN.RigidBody({
             mesh: obj.object3D,
