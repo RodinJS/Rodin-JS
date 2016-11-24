@@ -54,10 +54,12 @@ export class GamePad extends THREE.Object3D {
 
     enable() {
         this.enabled = true;
+        this.onEnable();
     }
 
     disable() {
         this.enabled = false;
+        this.onDisable();
     }
 
     /**
@@ -225,17 +227,19 @@ export class GamePad extends THREE.Object3D {
             }
         });
 
-        this.intersected = [];
-
+        let currentIntersected = [];
         if (intersections.length > 0) {
             intersections.map(intersect => {
-                let evt = new Event(intersect.object.Sculpt, null, null, "", this);
-                evt.distance = intersect.distance;
-                this.intersected.push(intersect.object.Sculpt);
-                this.gamepadHover(intersect);
-                intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, evt);
+                currentIntersected.push(intersect.object.Sculpt);
+                if(this.intersected.indexOf(intersect.object.Sculpt) === -1){
+                    let evt = new Event(intersect.object.Sculpt, null, null, "", this);
+                    evt.distance = intersect.distance;
+                    this.gamepadHover(intersect);
+                    intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, evt);
+                }
             });
         }
+        this.intersected = [...currentIntersected];
     }
 
     /**
@@ -346,6 +350,15 @@ export class GamePad extends THREE.Object3D {
      * @param {object} gamepad
      */
     onTouchUp(keyCode, gamepad) {
+    }
+
+
+    onDisable(){
+
+    }
+
+    onEnable(){
+
     }
 
 

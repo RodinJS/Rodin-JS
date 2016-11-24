@@ -1,8 +1,12 @@
 'use strict';
-
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
+import '../../vendor/three/examples/js/loaders/collada/AnimationHandler.js';
+import '../../vendor/three/examples/js/loaders/collada/KeyFrameAnimation.js';
+import '../../vendor/three/examples/js/loaders/collada/Animation.js';
+import '../../vendor/three/examples/js/loaders/ColladaLoader.js';
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
+import * as RODIN from '../RODIN.js';
 
 /**
  * For better experience you can export collada file from blender.
@@ -46,13 +50,15 @@ export class ColladaModelObject extends Sculpt {
                 });
 
                 this.init(mesh.scene);
-                this.emit('ready', new Event(this));
 
+                /// TODO: log messages with our custome loger
                 console.log("COLLADA file was loaded");
+
+                this.emit('ready', new Event(this));
             }, onProgress, onError);
 
-        this.on("update", (evt, delta) => {
-            THREE.AnimationHandler.update(delta);
+        this.on("update", (evt) => {
+            THREE.AnimationHandler.update(RODIN.Time.deltaTime()/1000);
         });
 
         // todo create resetAxis function

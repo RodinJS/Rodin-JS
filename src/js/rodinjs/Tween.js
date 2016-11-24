@@ -35,6 +35,9 @@ THE SOFTWARE.
  * Thank you all, you're awesome!
  */
 
+import {Time} from './time/Time.js';
+const time = Time.getInstance();
+
 export var TWEEN = TWEEN || (function () {
 
 	var _tweens = [];
@@ -97,7 +100,7 @@ export var TWEEN = TWEEN || (function () {
 })();
 
 TWEEN.now = function () {
-	return new Date().getTime();
+	return time.now();
 };
 
 TWEEN.Tween = function (object) {
