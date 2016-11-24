@@ -1,50 +1,21 @@
-//import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
-import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
-
-console.log(RODIN);
-
-import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
-import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
+import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
-import '../../_build/js/vendor/three/examples/js/WebVR.js';
+import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
+import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
+import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
+import {THREEObject} from '../../_build/js/rodinjs/sculpt/THREEObject.js';
+import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
+import {RigidBody} from '../../_build/js/rodinjs/physics/RigidBody.js';
+import {RodinPhysics} from '../../_build/js/rodinjs/physics/RodinPhysics.js';
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
-RODIN.WTF.is('Rodin.JS v0.0.1');
+let scene = SceneManager.get();
+let camera = scene.camera;
+let controls = scene.controls;
+let renderer = scene.renderer;
+let originalScene = scene.scene;
 
-// Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
-// Only enable it if you actually need to.
-let renderer = new THREE.WebGLRenderer({antialias: true});
-renderer.setPixelRatio(window.devicePixelRatio);
-
-renderer.shadowMap.enabled = true;
-renderer.gammaInput = true;
-renderer.gammaOutput = true;
-
-// Append the canvas element created by the renderer to document body element.
-document.body.appendChild(renderer.domElement);
-
-// Create a three.js scene.
-let scene = new THREE.Scene();
-scene.background = new THREE.Color(0xbfd1e5);
-
-// Create a three.js camera.
-let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
-
-// Apply VR headset positional data to camera.
-let controls = new THREE.VRControls(camera);
-controls.standing = true;
-
-// Apply VR stereo rendering to renderer.
-let effect = new THREE.VREffect(renderer);
-effect.setSize(window.innerWidth, window.innerHeight);
-
-// Create a VR manager helper to enter and exit VR mode.
-let params = {
-    hideButton: false, // Default: false.
-    isUndistorted: false // Default: false.
-};
-
-let manager = new WebVRManager(renderer, effect, params);
+scene.scene.background = new THREE.Color(0x808080);
 
 /*
  var n = navigator.userAgent;
@@ -88,14 +59,14 @@ scene.add(light);
 // objects raycasting
 let raycaster;
 
-let controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
+let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
-let controllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
+let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
 controllerR.standingMatrix = controls.getStandingMatrix();
 
-scene.add(controllerL);
-scene.add(controllerR);
+SceneManager.addController(controllerL);
+SceneManager.addController(controllerR);
 
 let loader = new THREE.OBJLoader();
 loader.setPath('./object/');
@@ -114,7 +85,7 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
 raycaster = new RODIN.Raycaster(scene);
 
 /////////// physics ////////////////////
-scene.physics = RODIN.RodinPhysics.getInstance("oimo");
+scene.physics = RodinPhysics.getInstance("oimo");
 
 //Setting up world
 scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
@@ -142,7 +113,7 @@ ground.receiveShadow = true;
 
 scene.add(ground);
 // add physic
-let groundRigitBody = new RODIN.RigidBody({
+let groundRigitBody = new RigidBody({
     mesh: ground,
     mass: 0,
     type: "plane",
@@ -227,14 +198,14 @@ for (let i = 0; i < 1; i++) {
     object.castShadow = true;
     object.receiveShadow = true;
 
-    let obj = new RODIN.THREEObject(object);
+    let obj = new THREEObject(object);
     obj.on('ready', () => {
         group.add(obj.object3D);
         RODIN.Raycastables.push(obj.object3D);
         obj.object3D.initialParent = obj.object3D.parent;
 
         // add physic
-        let objectRigitBody = new RODIN.RigidBody({
+        let objectRigitBody = new RigidBody({
             mesh: obj.object3D,
             mass: mass,
             dynamic: true
@@ -399,37 +370,8 @@ for (let i = 0; i < 1; i++) {
  this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, null, keyCode, this);
  }
  */
-
-// Kick off animation loop
-requestAnimationFrame(animate);
-
-window.addEventListener('resize', onResize, true);
-window.addEventListener('vrdisplaypresentchange', onResize, true);
-
-// Request animation frame loop function
-function animate(timestamp) {
-
-    // Update controller.
-    //controllerL.update();
-    //controllerR.update();
-
-    // Update VR headset position and apply to camera.
-    controls.update();
-
-    // Render the scene through the manager.
-    manager.render(scene, camera, timestamp);
-
+scene.preRender( () => {
     // Update scene's objects physics.
     //if(startPhysics)
-    scene.physics.updateWorldPhysics(timestamp);
-
-    requestAnimationFrame(animate);
-}
-
-function onResize(e) {
-    effect.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////
+    scene.physics.updateWorldPhysics(RODIN.Time.deltaTime());
+});
