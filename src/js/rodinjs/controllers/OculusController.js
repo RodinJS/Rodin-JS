@@ -8,6 +8,8 @@ export class OculusController extends GamePad {
         if(controllerCreated) {
             throw new ErrorOculusControllerAlreadyExists();
         }
+
+        controllerCreated = true;
         super('oculus', null, scene, camera);
     }
 
