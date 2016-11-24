@@ -25,6 +25,8 @@ export class Scene extends Sculpt {
         this.controls = new THREE.VRControls(this.camera);
         this.controllers = new Set();
         this.effect = new THREE.VREffect(this.renderer);
+
+        WebVRConfig.TOUCH_PANNER_DISABLED = false;
         this.webVRmanager = new WebVRManager(this.renderer, this.effect, { hideButton: false, isUndistorted: false });
 
         this.preRenderFunctions = new Set();
@@ -50,6 +52,10 @@ export class Scene extends Sculpt {
     // todo: tanel esi scenemanager
     get render () {
         return (timestamp) => {
+            if(this.camera.projectionMatrixNeedsUpdate){
+                this.camera.updateProjectionMatrix();
+                this.camera.projectionMatrixNeedsUpdate = false;
+            }
             time.tick();
             TWEEN.update();
 
@@ -67,6 +73,11 @@ export class Scene extends Sculpt {
 
             requestAnimationFrame(this.render.bind(this));
         }
+    }
+
+    setCameraProperty(property, value){
+        Object.setProperty(this.camera, property, value);
+        this.camera.projectionMatrixNeedsUpdate = true;
     }
 
     preRender (fn) {
