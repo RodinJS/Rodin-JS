@@ -9,63 +9,51 @@ import {OBJModelObject} from '../../_build/js/rodinjs/sculpt/OBJModelObject.js';
 
 let scene = SceneManager.get();
 scene.add(new THREE.AmbientLight());
+scene.setCameraProperty('far', 100);
 let dl = new THREE.DirectionalLight();
 dl.position.set(1, 1, 1);
 scene.add(dl);
 
 SceneManager.addController(new KeyboardController());
 
-let geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-let material = new THREE.MeshLambertMaterial({ color: 0x6699bb });
-
-for (let i = 0; i < 5000; i++) {
-    let cube = new RODIN.THREEObject(new THREE.Mesh(geometry, material));
-    cube.on('ready', (evt) => {
-        evt.target.object3D.position.set(Math.randomFloatIn(-500, 500), Math.randomFloatIn(-500, 500), Math.randomFloatIn(-500, 500));
-        scene.add(evt.target.object3D);
-    });
-
-    cube.on('update', (evt) => {
-        evt.target.object3D.rotation.y += RODIN.Time.deltaTime() / 500;
-    });
-}
-
 let player = new RODIN.THREEObject(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10), new THREE.MeshLambertMaterial({ color: 0x336699, wireframe: true })));
 
 player.on('ready', (evt) => {
     evt.target.object3D.position.y = scene.controls.userHeight;
+    evt.target.object3D.position.z = - 0.25;
     scene.add(evt.target.object3D);
+
+    evt.target.object3D.add(new THREE.AxisHelper(0.15));
 });
 
 player.speed = 0;
 
 player.on('update', (evt) => {
-    evt.target.object3D.translateZ(-RODIN.Time.deltaTime() / 2000 * player.speed);
-
     if(KeyboardController.getKey(KEY_CODES.W)) {
-        player.speed ++;
-    } else {
-        if(player.speed > 0) {
-            player.speed -= 2;
+        evt.target.object3D.rotateX(RODIN.Time.deltaTime() / 1000);
+    }
 
-        }
+    if(KeyboardController.getKey(KEY_CODES.S)) {
+        evt.target.object3D.rotateX(- RODIN.Time.deltaTime() / 1000);
     }
 
     if (KeyboardController.getKey(KEY_CODES.A)) {
-        evt.target.object3D.rotateY(RODIN.Time.deltaTime() / 2000);
+        evt.target.object3D.rotateY(RODIN.Time.deltaTime() / 1000);
     }
 
     if(KeyboardController.getKey(KEY_CODES.D)) {
-        evt.target.object3D.rotateY(-RODIN.Time.deltaTime() / 2000);
+        evt.target.object3D.rotateY(- RODIN.Time.deltaTime() / 1000);
     }
-
-    scene.camera.position.copy(evt.target.object3D.position);
-    scene.camera.position.add(evt.target.forward);
-    scene.camera.lookAt(evt.target.object3D.position);
 });
 
 player.on(EVENT_NAMES.GLOBALS.CONTROLLER_KEY_DOWN, (evt) => {
-    if (evt.getKey(KEY_CODES.W)) {
-        // player.object3D.position.x += RODIN.Time.deltaTime() / 1000;
+    if (evt.keyCode === KEY_CODES.SPACE) {
+        player.object3D.scale.set(1.1, 1.1, 1.1);
+    }
+});
+
+player.on(EVENT_NAMES.GLOBALS.CONTROLLER_KEY_UP, (evt) => {
+    if (evt.keyCode === KEY_CODES.SPACE) {
+        player.object3D.scale.set(1, 1, 1);
     }
 });
