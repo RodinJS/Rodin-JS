@@ -120,9 +120,9 @@ scene.physics = RODIN.RodinPhysics.getInstance("oimo");
 scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
 
 ///////////////// creating floor ///////////////////////
-let floorWidth = 4;
+let floorWidth = 10;
 let floorHeight = 0.1;
-let floorDepth = 4;
+let floorDepth = 10;
 
 // todo distinguish ground from plane
 let geometry = new THREE.PlaneGeometry(floorWidth, floorDepth);
@@ -132,11 +132,12 @@ let material = new THREE.MeshStandardMaterial({
     roughness: 1.0,
     metalness: 0.0,
     opacity: 0.8,
-    transparent: true
+    transparent: true,
+    side: THREE.DoubleSide
 });
 let ground = new THREE.Mesh(geometry, material);
 ground.rotation.x = -Math.PI / 2;
-ground.position.set(0, 0, 5);
+ground.position.set(0, 0, 8);
 ground.receiveShadow = true;
 
 scene.add(ground);
@@ -194,7 +195,7 @@ scene.add(group);
 
 let geometries = [
     new THREE.BoxGeometry(0.2, 0.5, 0.2),
-    new THREE.SphereGeometry(0.2, 64),
+    //new THREE.SphereGeometry(0.2, 64),
     //new THREE.ConeGeometry(0.2, 0.2, 64),
     //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
     //new THREE.IcosahedronGeometry(0.2, 1),
@@ -205,7 +206,7 @@ let startPhysics = false;
 setTimeout(()=>{startPhysics = true}, 5000);
 
 // add raycastable objects to scene
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 1; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -214,10 +215,10 @@ for (let i = 0; i < 10; i++) {
     });
 
     let object = new THREE.Mesh(geometry, material);
-    object.position.x = (Math.random() - 0.5) * 3;
-    object.position.y = (Math.random() - 0.5) * 3;
-    object.position.z = (Math.random() - 0.5) * 3;
-    //object.position.set(0, 4, 5);
+    //object.position.x = (Math.random() - 0.5) * 3;
+    //object.position.y = (Math.random() - 0.5) * 3;
+    //object.position.z = (Math.random() - 0.5) * 3;
+    object.position.set(0, 5, 0);
     //object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
     //object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
     //object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;

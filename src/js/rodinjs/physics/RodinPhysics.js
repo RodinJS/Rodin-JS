@@ -3,6 +3,8 @@ import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import '../../vendor/cannon/cannon.js';
 import '../../vendor/oimo/oimo.js';
 import {RigidBody} from './RigidBody.js';
+import changeParent  from '../../rodinjs/utils/ChangeParent.js';
+
 
 
 // todo make singleton
@@ -111,6 +113,8 @@ export class RodinPhysics {
             rigidBody.body = this.world.add(rigidBody.body);
         }
         this.rigidBodies.push(rigidBody);
+        //console.log("owner", rigidBody.owner.position);
+        //console.log("ownerWorld", rigidBody.owner.getWorldPosition());
     }
 
     /**
@@ -154,7 +158,7 @@ export class RodinPhysics {
             let i = this.rigidBodies.length;
             while (i--) {
                 if (!this.rigidBodies[i].sleeping) {
-                    let tmpPosDelta = this.rigidBodies[i].deltaPos.clone();
+                    //let tmpPosDelta = this.rigidBodies[i].deltaPos.clone();
                     //tmpPosDelta.applyQuaternion(this.rigidBodies[i].owner.parent.getWorldQuaternion().inverse());
 
                     /*this.rigidBodies[i].owner.position.set(
@@ -169,17 +173,27 @@ export class RodinPhysics {
                         this.rigidBodies[i].body.position.z - tmpPosDelta.z
                     );*/
 
-                    tmpPosDelta = new THREE.Vector3(
+                    let obj = new THREE.Object3D();
+                    obj.position.set(
                         this.rigidBodies[i].body.position.x,
                         this.rigidBodies[i].body.position.y,
                         this.rigidBodies[i].body.position.z
                     );
-                    this.rigidBodies[i].owner.position.set(
-                        this.rigidBodies[i].owner.worldToLocal(tmpPosDelta).x/100,
-                        this.rigidBodies[i].owner.worldToLocal(tmpPosDelta).y/100,
-                        this.rigidBodies[i].owner.worldToLocal(tmpPosDelta).z/100,
-                    );
-                    this.rigidBodies[i].owner.updateMatrixWorld();
+
+                    changeParent(obj, this.rigidBodies[i].owner.parent);
+                    this.rigidBodies[i].owner.position.copy(obj.position);
+
+                    //let pos = obj.worldToLocal(this.rigidBodies[i].owner.getWorldPosition());
+                    console.log("owner", this.rigidBodies[i].owner.position);
+                    //console.log("pos", pos);
+                    console.log("body", this.rigidBodies[i].body.position);
+                    console.log("________");
+                    obj.parent.remove(obj);
+                    obj = null;
+                    //console.log("pos-world", this.rigidBodies[i].owner.getWorldPosition());
+                    //this.rigidBodies[i].owner.position.set(pos);
+
+                    //this.rigidBodies[i].owner.updateMatrixWorld();
                     /*let bodyQuat = new THREE.Quaternion();
                     bodyQuat.set(this.rigidBodies[i].body.getQuaternion().x,
                                  this.rigidBodies[i].body.getQuaternion().y,

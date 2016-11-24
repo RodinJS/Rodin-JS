@@ -78,9 +78,9 @@ export class RigidBody {
                 pos: [this.owner.getWorldPosition().x * 100,
                       this.owner.getWorldPosition().y * 100,
                       this.owner.getWorldPosition().z * 100],
-                rot: [(this.owner.getWorldRotation().x * 180) / Math.PI,
-                      (this.owner.getWorldRotation().y * 180) / Math.PI,
-                      (this.owner.getWorldRotation().z * 180) / Math.PI],
+                //rot: [this.owner.getWorldRotation().x * (180 / Math.PI),
+                //      this.owner.getWorldRotation().y * (180 / Math.PI),
+                //      this.owner.getWorldRotation().z * (180 / Math.PI)],
                 move: this.dynamic,
                 world: RodinPhysics.world,
                 //flat: true,
@@ -104,8 +104,10 @@ export class RigidBody {
                                deltaQuat.y,
                                deltaQuat.z,
                                deltaQuat.w);*/
-            console.log(this.deltaQuat);
+            //console.log(this.deltaQuat);
         }
+        //console.log(this.owner.parent);
+
         RodinPhysics.getInstance(this.physicsEngine).addRigidBodyToWorld(this);
     }
 
