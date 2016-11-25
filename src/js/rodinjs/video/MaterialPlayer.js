@@ -9,7 +9,7 @@ export class MaterialPlayer {
         let video = document.createElement('video');
         let sourceMP4 = document.createElement("source");
         let currDelta = 0;
-        let frameDuration = 1000/fps;
+        let frameDuration = 1000 / fps;
         sourceMP4.type = "video/" + format;
         sourceMP4.src = url;
         video.appendChild(sourceMP4);
@@ -47,14 +47,14 @@ export class MaterialPlayer {
         };
 
         this.onBufferEnd = function () {
-        /*
-            let i = this.buffer.length;
-            while (i--) {
-                let x1 = this.buffer.start(i);
-                let x2 = this.buffer.end(i);
-                console.log(x1, x2);
-            }
-        */
+            /*
+             let i = this.buffer.length;
+             while (i--) {
+             let x1 = this.buffer.start(i);
+             let x2 = this.buffer.end(i);
+             console.log(x1, x2);
+             }
+             */
             console.log("playing");
         };
         this.isPlaying = function () {
@@ -93,9 +93,16 @@ export class MaterialPlayer {
             video.currentTime = video.duration * percent;
         };
 
+        this.getTime = () => {
+            return video.currentTime;
+        };
+        this.getLength = () => {
+            return video.duration;
+        };
+
         this.update = (delta) => {
             currDelta += delta;
-            if(currDelta < frameDuration){
+            if (currDelta < frameDuration) {
                 return;
             }
             //console.log(currDelta);
@@ -110,10 +117,10 @@ export class MaterialPlayer {
                 }
             }
 
-            if(bufferCounter == 0 && !this.isBuffering && this.isPlaying()){
+            if (bufferCounter == 0 && !this.isBuffering && this.isPlaying()) {
                 this.isBuffering = true;
                 this.onBufferStart();
-            }else if(bufferCounter >= 3 && this.isBuffering){
+            } else if (bufferCounter >= 3 && this.isBuffering) {
                 this.isBuffering = false;
                 this.onBufferEnd();
             }

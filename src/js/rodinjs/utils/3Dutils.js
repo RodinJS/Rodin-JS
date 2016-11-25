@@ -106,7 +106,7 @@ export function createTextTexture(text, font, fontSize, color, clear, textCanvas
     return new THREE.Texture(textCanvas);
 }
 
-export function setupCanvas({width = 0, height = 0, canvas} = {}) {
+export function setupCanvas({width = 0, height = 0, canvas}) {
     let context = canvas.getContext('2d');
     context.globalAlpha = 1;
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -134,7 +134,8 @@ export function drawTextOnCanvas({text, font = "Arial", fontSize = 12, x = 0, y 
     textContext.font = fontSize + "px " + font;
     textContext.globalAlpha = opacity;
     textContext.fillStyle = "rgb("+rgb.r+", "+rgb.g+", "+rgb.b+")";
-    textContext.fillText(text, x, y+fontSize);
+    textContext.textBaseline = "bottom";
+    textContext.fillText(text, x, y + fontSize );
     return canvas;
 }
 
