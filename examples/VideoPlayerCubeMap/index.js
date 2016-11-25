@@ -16,8 +16,6 @@ let renderer = scene.renderer;
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
-//// TODO by Lyov: ask Aram for fix far problem
-//// TODO by Aram: OK Lyov, I'll check.
 scene.setCameraProperty("far", 1000);
 
 

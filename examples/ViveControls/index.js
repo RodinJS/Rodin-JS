@@ -2,7 +2,8 @@ import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
-import {CardboardController} from '../../_build/js/rodinjs/controllers/CardboardController.js';
+import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
+import {OBJModelObject} from '../../_build/js/rodinjs/sculpt/OBJModelObject.js';
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
 
@@ -19,34 +20,30 @@ renderer.gammaInput = true;
 renderer.gammaOutput = true;
 
 
-scene.
-10000
+scene.setCameraProperty("far", 10000);
+
 
 scene.scene.background = new THREE.Color(0x808080);
 
 
-let controllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
+let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 SceneManager.addController(controllerL);
 
-let controllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
+scene.add(controllerL);
+
+let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
 controllerR.standingMatrix = controls.getStandingMatrix();
 SceneManager.addController(controllerR);
 
-let loader = new THREE.OBJLoader();
-loader.setPath('./object/');
-loader.load('vr_controller_vive_1_5.obj', function (object) {
+scene.add(controllerR);
 
-    let loader = new THREE.TextureLoader();
-    loader.setPath('./img/');
+let obj = new OBJModelObject(0, './object/vr_controller_vive_1_5.obj', ['./img/onepointfive_texture.png', './img/onepointfive_spec.png']);
 
-    object.children[0].material.map = loader.load('onepointfive_texture.png');
-    object.children[0].material.specularMap = loader.load('onepointfive_spec.png');
-
-    controllerL.add(object.clone());
-    controllerR.add(object.clone());
+obj.on('ready', () => {
+    controllerL.add(obj.object3D.clone());
+    controllerR.add(obj.object3D.clone());
 });
-
 
 
 let geometry = new THREE.PlaneGeometry(4, 4);
