@@ -406,4 +406,8 @@ export class Sculpt {
             .start()
             .onComplete(next);
     }
+
+    get forward() {
+        return (new THREE.Vector3(0,0,1)).applyQuaternion(this.object3D.quaternion);
+    }
 }

@@ -22,14 +22,27 @@ body {
 </head>
 
 <body>
-<!--<script src="https://jsconsole.com/js/remote.js?8da03fdb-426f-4e32-b171-80b74c5dfefa"></script>-->
 	<script type="text/javascript" src="../../_build/js/systemjs/system.js"></script>
+	<!--
+	  A polyfill for Promises. Needed for IE and Edge.
+	  -->
+	<script src="../../_build/js/vendor/es6-promise/es6-promise.js"></script>
+
+	<!--
+	  A polyfill for WebVR using the Device{Motion,Orientation}Event API.
+	  -->
+	<script src="../../_build/js/vendor/webvr-polyfill/webvr-polyfill.js"></script>
+
+	<!--
+	  Helps enter and exit VR mode, provides best practices while in VR.
+	  -->
+	<script src="../../_build/js/vendor/webvr-boilerplate/webvr-manager.js"></script>
 	<script>
 		System.import('../../_build/js/vendor/three/THREE.GLOBAL.js');
 
 		System.config({
 		    map: {
-		        glsl: '../../_build/js/systemjs/glsl.js'  // path to glsl.js file
+		        glsl: '../../_build/js/systemjs/glsl.js'  // path to glsl.js file   
 		    },
 		    meta: {
 		        '../../_build/*.glsl': {   // for all glsl files on your project
@@ -49,19 +62,5 @@ body {
 		System.import('index_c.js');
 
 	</script>
-	<!--
-	  A polyfill for Promises. Needed for IE and Edge.
-	  -->
-	<script src="../../_build/js/vendor/es6-promise/es6-promise.js"></script>
-
-	<!--
-	  A polyfill for WebVR using the Device{Motion,Orientation}Event API.
-	  -->
-	<script src="../../_build/js/vendor/webvr-polyfill/webvr-polyfill.js"></script>
-
-	<!--
-	  Helps enter and exit VR mode, provides best practices while in VR.
-	  -->
-	<script src="../../_build/js/vendor/webvr-boilerplate/webvr-manager.js"></script>
 	</body>
 </html>

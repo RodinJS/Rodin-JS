@@ -16,17 +16,14 @@ let renderer = scene.renderer;
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
-//// TODO by Lyov: ask Aram for fix far problem
-camera.far = 1000;
-//// TODO by Aram: OK Lyov, I'll check.
-camera.updateProjectionMatrix();
+scene.setCameraProperty("far", 1000);
+
 
 let player = new MaterialPlayer("video/test2.mp4");
 let material = new THREE.MeshBasicMaterial({
     color: 0xffffff,
     map: player.getTextureL()
 });
-
 
 // Add a skybox.
 let boxSize = 150;
@@ -36,7 +33,6 @@ skybox.on('ready', () => {
     scene.add(skybox.object3D);
     skybox.object3D.position.y = controls.userHeight;
 });
-
 
 scene.preRender(function () {
     player.update(RODIN.Time.deltaTime());

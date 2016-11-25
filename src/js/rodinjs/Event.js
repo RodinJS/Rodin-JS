@@ -18,6 +18,12 @@ export class Event {
 		this.controller = controller;
 		this.name = 'event';
 
+		this.keys = [];
+
 		this.timeStamp = Date.now();
 	}
+
+	getKey(keyCode) {
+		return this.keys.indexOf(keyCode) !== -1
+    }
 }
