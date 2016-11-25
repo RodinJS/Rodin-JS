@@ -113,8 +113,6 @@ export class RodinPhysics {
             rigidBody.body = this.world.add(rigidBody.body);
         }
         this.rigidBodies.push(rigidBody);
-        //console.log("owner", rigidBody.owner.position);
-        //console.log("ownerWorld", rigidBody.owner.getWorldPosition());
     }
 
     /**
@@ -158,49 +156,24 @@ export class RodinPhysics {
             let i = this.rigidBodies.length;
             while (i--) {
                 if (!this.rigidBodies[i].sleeping) {
-                    //let tmpPosDelta = this.rigidBodies[i].deltaPos.clone();
-                    //tmpPosDelta.applyQuaternion(this.rigidBodies[i].owner.parent.getWorldQuaternion().inverse());
-
-                    /*this.rigidBodies[i].owner.position.set(
-                        this.rigidBodies[i].body.position.x - this.rigidBodies[i].deltaPos.x,
-                        this.rigidBodies[i].body.position.y - this.rigidBodies[i].deltaPos.y,
-                        this.rigidBodies[i].body.position.z - this.rigidBodies[i].deltaPos.z
-                    );*/
-
-                    /*this.rigidBodies[i].owner.position.set(
-                        this.rigidBodies[i].body.position.x - tmpPosDelta.x,
-                        this.rigidBodies[i].body.position.y - tmpPosDelta.y,
-                        this.rigidBodies[i].body.position.z - tmpPosDelta.z
-                    );*/
 
                     let obj = new THREE.Object3D();
-                    obj.position.set(
+                    obj.position.copy(this.rigidBodies[i].body.position);
+                    obj.quaternion.copy(this.rigidBodies[i].body.getQuaternion());
+
+                    changeParent(obj, this.rigidBodies[i].owner.parent);
+                    this.rigidBodies[i].owner.position.copy(obj.position);
+                    this.rigidBodies[i].owner.quaternion.copy(obj.quaternion);
+
+                    obj.parent.remove(obj);
+                    obj = null;
+
+                    /*this.rigidBodies[i].owner.position.set(
                         this.rigidBodies[i].body.position.x,
                         this.rigidBodies[i].body.position.y,
                         this.rigidBodies[i].body.position.z
                     );
-
-                    changeParent(obj, this.rigidBodies[i].owner.parent);
-                    this.rigidBodies[i].owner.position.copy(obj.position);
-
-                    //let pos = obj.worldToLocal(this.rigidBodies[i].owner.getWorldPosition());
-                    console.log("owner", this.rigidBodies[i].owner.position);
-                    //console.log("pos", pos);
-                    console.log("body", this.rigidBodies[i].body.position);
-                    console.log("________");
-                    obj.parent.remove(obj);
-                    obj = null;
-                    //console.log("pos-world", this.rigidBodies[i].owner.getWorldPosition());
-                    //this.rigidBodies[i].owner.position.set(pos);
-
-                    //this.rigidBodies[i].owner.updateMatrixWorld();
-                    /*let bodyQuat = new THREE.Quaternion();
-                    bodyQuat.set(this.rigidBodies[i].body.getQuaternion().x,
-                                 this.rigidBodies[i].body.getQuaternion().y,
-                                 this.rigidBodies[i].body.getQuaternion().z,
-                                 this.rigidBodies[i].body.getQuaternion().w);
-                    let a = bodyQuat.multiply(this.rigidBodies[i].deltaQuat);
-                    this.rigidBodies[i].owner.quaternion.copy(a);*/
+                    this.rigidBodies[i].owner.quaternion.copy(this.rigidBodies[i].body.getQuaternion());*/
                 }
             }
         }

@@ -65,8 +65,8 @@ controllerL.standingMatrix = controls.getStandingMatrix();
 let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
 controllerR.standingMatrix = controls.getStandingMatrix();
 
-SceneManager.addController(controllerL);
-SceneManager.addController(controllerR);
+//SceneManager.addController(controllerL);
+//SceneManager.addController(controllerR);
 
 let loader = new THREE.OBJLoader();
 loader.setPath('./object/');
@@ -91,9 +91,9 @@ scene.physics = RodinPhysics.getInstance("oimo");
 scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
 
 ///////////////// creating floor ///////////////////////
-let floorWidth = 10;
+let floorWidth = 4;
 let floorHeight = 0.1;
-let floorDepth = 10;
+let floorDepth = 4;
 
 // todo distinguish ground from plane
 let geometry = new THREE.PlaneGeometry(floorWidth, floorDepth);
@@ -108,7 +108,7 @@ let material = new THREE.MeshStandardMaterial({
 });
 let ground = new THREE.Mesh(geometry, material);
 ground.rotation.x = -Math.PI / 2;
-ground.position.set(0, 0, 8);
+ground.position.set(0, 0, 5);
 ground.receiveShadow = true;
 
 scene.add(ground);
@@ -160,13 +160,13 @@ let mass = 0.2;
 
 let group = new THREE.Group();
 //todo shifted position
-group.position.set(0, 3, 5);
-group.rotation.x = Math.PI/4;
+//group.position.set(0, 3, 5);
+//group.rotation.x = Math.PI;
 scene.add(group);
 
 let geometries = [
     new THREE.BoxGeometry(0.2, 0.5, 0.2),
-    //new THREE.SphereGeometry(0.2, 64),
+    new THREE.SphereGeometry(0.2, 64),
     //new THREE.ConeGeometry(0.2, 0.2, 64),
     //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
     //new THREE.IcosahedronGeometry(0.2, 1),
@@ -177,7 +177,7 @@ let startPhysics = false;
 setTimeout(()=>{startPhysics = true}, 5000);
 
 // add raycastable objects to scene
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 300; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -186,13 +186,13 @@ for (let i = 0; i < 1; i++) {
     });
 
     let object = new THREE.Mesh(geometry, material);
-    //object.position.x = (Math.random() - 0.5) * 3;
-    //object.position.y = (Math.random() - 0.5) * 3;
-    //object.position.z = (Math.random() - 0.5) * 3;
-    object.position.set(0, 5, 0);
-    //object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
-    //object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
-    //object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
+    object.position.x = (Math.random() - 0.5) * 3;
+    object.position.y = (Math.random() - 0.5) * 3 + 3;
+    object.position.z = (Math.random() - 0.5) * 3 + 5;
+    //object.position.set(0, 5, 0);
+    object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
+    object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
+    object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
     object.scale.set(1, 1, 1);
 
     object.castShadow = true;
@@ -372,6 +372,5 @@ for (let i = 0; i < 1; i++) {
  */
 scene.preRender( () => {
     // Update scene's objects physics.
-    //if(startPhysics)
-    scene.physics.updateWorldPhysics(RODIN.Time.deltaTime());
+    if(startPhysics) scene.physics.updateWorldPhysics(RODIN.Time.deltaTime());
 });
