@@ -71,7 +71,14 @@ export class Scene extends Sculpt {
             // Update controllers
             this.controllers.map(controller => controller.update());
 
-            requestAnimationFrame(this.render.bind(this));
+            // check! if HMD is connected and active,
+            // rendering is passed to HMD's animation frame loop, instead of the browser window's.
+            if(this.webVRmanager.hmd && this.webVRmanager.hmd.isPresenting){
+                this.webVRmanager.hmd.requestAnimationFrame(this.render.bind(this));
+            }else {
+                requestAnimationFrame(this.render.bind(this));
+            }
+
         }
     }
 
