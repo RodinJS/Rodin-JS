@@ -1,4 +1,7 @@
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
+import {Time} from '../time/Time.js';
+
+const time = Time.getInstance();
 
 export class MaterialPlayer {
     constructor(url, stereoscopic = false, format = "mp4", fps = 25) {
@@ -7,7 +10,8 @@ export class MaterialPlayer {
                 0:  url,
                 default: "0"
             }
-        };
+        }
+
         let bufferCounter = 0;
         let lastTime = 0;
         this.framesToLoader = 30;
@@ -127,6 +131,10 @@ export class MaterialPlayer {
         };
 
         this.update = (delta) => {
+            if(video.playbackRate !== time.speed) {
+                video.playbackRate = time.speed;
+            }
+
             currDelta += delta;
             if (currDelta < frameDuration) {
                 return;
