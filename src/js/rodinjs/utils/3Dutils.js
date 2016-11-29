@@ -7,7 +7,7 @@ import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
  * @param { THREE.Object3D } object
  * @param { THREE.Object3D } targetParent
  */
-export function createGeometryFromShape(  shape ) {
+export function createGeometryFromShape(shape) {
 
     let geometry = new THREE.ShapeGeometry(shape);
     geometry.center();
@@ -15,7 +15,25 @@ export function createGeometryFromShape(  shape ) {
 
 }
 
-export function createShape(  shape = null, material = null ) {
+export function scaleGeometry(geometry, scale) {
+
+    for (var i = 0; i < geometry.vertices.length; i++) {
+        var vertex = geometry.vertices[i];
+        vertex.x *= scale.x;
+        vertex.y *= scale.y;
+        vertex.z *= scale.z;
+    }
+
+    geometry.parameters.width *= scale.x;
+    geometry.parameters.height *= scale.y;
+    geometry.parameters.depth *= scale.z;
+    geometry.__dirtyVertices = true;
+
+
+    return geometry;
+}
+
+export function createShape(shape = null, material = null) {
 
     let geometry = new THREE.ShapeGeometry(shape);
     geometry.center();
@@ -40,8 +58,8 @@ export function pill(ctx, width, radius) {
 
 export function roundRectCanvas(ctx, width, height, radius) {
 
-    radius = radius > width/2 ? width/2 : radius;
-    radius = radius > height/2 ? height/2 : radius;
+    radius = radius > width / 2 ? width / 2 : radius;
+    radius = radius > height / 2 ? height / 2 : radius;
 
     width = width - 2 * radius;
     height = height - 2 * radius;
@@ -50,25 +68,25 @@ export function roundRectCanvas(ctx, width, height, radius) {
 
     ctx.lineTo(radius + width, 0);
 
-    ctx.arc(radius + width, radius, radius , -Math.PI/2,0);
+    ctx.arc(radius + width, radius, radius, -Math.PI / 2, 0);
 
-    ctx.lineTo(2*radius + width, radius + height);
+    ctx.lineTo(2 * radius + width, radius + height);
 
-    ctx.arc(radius + width, radius + height, radius, 0, Math.PI/2);
+    ctx.arc(radius + width, radius + height, radius, 0, Math.PI / 2);
 
-    ctx.lineTo(radius, 2*radius + height);
+    ctx.lineTo(radius, 2 * radius + height);
 
-    ctx.arc(radius, radius + height, radius, Math.PI/2, Math.PI);
+    ctx.arc(radius, radius + height, radius, Math.PI / 2, Math.PI);
 
     ctx.lineTo(0, radius);
 
-    ctx.arc(radius, radius, radius, Math.PI, 1.5*Math.PI);
+    ctx.arc(radius, radius, radius, Math.PI, 1.5 * Math.PI);
 }
 
 export function roundRect(ctx, width, height, radius) {
 
-    radius = radius > width/2 ? width/2 : radius;
-    radius = radius > height/2 ? height/2 : radius;
+    radius = radius > width / 2 ? width / 2 : radius;
+    radius = radius > height / 2 ? height / 2 : radius;
 
     width = width - 2 * radius;
     height = height - 2 * radius;
@@ -77,31 +95,31 @@ export function roundRect(ctx, width, height, radius) {
 
     ctx.lineTo(radius + width, 0.0000001);
 
-    ctx.absarc(radius + width, radius, radius ,  -Math.PI/2, 0);
+    ctx.absarc(radius + width, radius, radius, -Math.PI / 2, 0);
 
-    ctx.lineTo(2*radius + width, radius + height);
+    ctx.lineTo(2 * radius + width, radius + height);
 
-    ctx.absarc(radius + width, radius + height, radius, 0, Math.PI/2);
+    ctx.absarc(radius + width, radius + height, radius, 0, Math.PI / 2);
 
-    ctx.lineTo(radius, 2*radius + height);
+    ctx.lineTo(radius, 2 * radius + height);
 
-    ctx.absarc(radius, radius + height, radius, Math.PI/2, Math.PI);
+    ctx.absarc(radius, radius + height, radius, Math.PI / 2, Math.PI);
 
     ctx.lineTo(0.0000001, radius);
 
-    ctx.absarc(radius, radius, radius, Math.PI, 1.5*Math.PI);
+    ctx.absarc(radius, radius, radius, Math.PI, 1.5 * Math.PI);
 }
 
 export function createTextTexture(text, font, fontSize, color, clear, textCanvas) {
     let textContext = textCanvas.getContext('2d');
     clear && textContext.clearRect(0, 0, textCanvas.width, textCanvas.height);
     let rgb = hexToRgb(color);
-    fontSize*=100;
+    fontSize *= 100;
     textContext.font = fontSize + "px " + font;
     textCanvas.width = textContext.measureText(text).width;
     textCanvas.height = fontSize;
     textContext.font = fontSize + "px " + font;
-    textContext.fillStyle = "rgb("+rgb.r+", "+rgb.g+", "+rgb.b+")";
+    textContext.fillStyle = "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")";
     textContext.fillText(text, 0, fontSize, textCanvas.width);
     return new THREE.Texture(textCanvas);
 }
@@ -115,7 +133,7 @@ export function setupCanvas({width = 0, height = 0, canvas}) {
     return canvas;
 }
 
-export function measureTextOnCanvas(text,  font = "Arial", fontSize = 12, canvas) {
+export function measureTextOnCanvas(text, font = "Arial", fontSize = 12, canvas) {
     let textContext = canvas.getContext('2d');
     textContext.font = fontSize + "px " + font;
     return {x: textContext.measureText(text).width, y: fontSize};
@@ -133,9 +151,9 @@ export function drawTextOnCanvas({text, font = "Arial", fontSize = 12, x = 0, y 
     let rgb = hexToRgb(color);
     textContext.font = fontSize + "px " + font;
     textContext.globalAlpha = opacity;
-    textContext.fillStyle = "rgb("+rgb.r+", "+rgb.g+", "+rgb.b+")";
+    textContext.fillStyle = "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")";
     textContext.textBaseline = "bottom";
-    textContext.fillText(text, x, y + fontSize );
+    textContext.fillText(text, x, y + fontSize);
     return canvas;
 }
 
@@ -147,6 +165,6 @@ export function hexToRgb(hex) {
     };
 }
 
-export function nearestPow2( value ){
-    return Math.pow( 2, Math.round( Math.log( value ) / Math.log( 2 ) ) );
+export function nearestPow2(value) {
+    return Math.pow(2, Math.round(Math.log(value) / Math.log(2)));
 }

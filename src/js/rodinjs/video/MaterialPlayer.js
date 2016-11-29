@@ -2,6 +2,12 @@ import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 
 export class MaterialPlayer {
     constructor(url, stereoscopic = false, format = "mp4", fps = 25) {
+        if((typeof url) === "string"){
+            url = {
+                0:  url,
+                default: "0"
+            }
+        };
         let bufferCounter = 0;
         let lastTime = 0;
         this.framesToLoader = 30;
@@ -11,7 +17,7 @@ export class MaterialPlayer {
         let currDelta = 0;
         let frameDuration = 1000 / fps;
         sourceMP4.type = "video/" + format;
-        sourceMP4.src = url;
+        sourceMP4.src = url[url.default];
         video.appendChild(sourceMP4);
         video.width = 512;
         video.height = 256;
@@ -46,6 +52,22 @@ export class MaterialPlayer {
             console.log("buffering");
         };
 
+        this.switchTo = function (key) {
+
+            this.pause();
+            let timePoint = video.currentTime;
+
+            video.innerHTML = "";
+
+            let sourceMP4 = document.createElement("source");
+            sourceMP4.type = "video/" + format;
+            sourceMP4.src = url[key];
+
+            video.appendChild(sourceMP4);
+            video.load();
+            video.currentTime = timePoint;
+        };
+
         this.onBufferEnd = function () {
             /*
              let i = this.buffer.length;
@@ -71,6 +93,10 @@ export class MaterialPlayer {
 
         this.isMute = () => {
             return video.muted;
+        };
+
+        this.mute = ( value = true) => {
+            video.muted = value;
         };
 
         this.play = () => {
@@ -140,6 +166,7 @@ export class MaterialPlayer {
 
         this.destroy = () => {
             video.pause();
+            video = null;
         };
     }
 }
