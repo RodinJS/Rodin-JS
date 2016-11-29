@@ -4,16 +4,17 @@ import {Time} from '../time/Time.js';
 const time = Time.getInstance();
 
 export class MaterialPlayer {
-    constructor(url, stereoscopic = false, format = "mp4", fps = 25) {
-        if((typeof url) === "string"){
+    constructor (url, stereoscopic = false, format = "mp4", fps = 25) {
+        if ((typeof url) === "string") {
             url = {
-                0:  url,
+                0: url,
                 default: "0"
             }
         }
 
         let bufferCounter = 0;
         let lastTime = 0;
+        let speed = 1;
         this.framesToLoader = 30;
         this.isBuffering = false;
         let video = document.createElement('video');
@@ -99,7 +100,7 @@ export class MaterialPlayer {
             return video.muted;
         };
 
-        this.mute = ( value = true) => {
+        this.mute = (value = true) => {
             video.muted = value;
         };
 
@@ -131,8 +132,8 @@ export class MaterialPlayer {
         };
 
         this.update = (delta) => {
-            if(video.playbackRate !== time.speed) {
-                video.playbackRate = time.speed;
+            if(time.speed * speed !== video.playbackRate) {
+                video.playbackRate = time.speed * speed;
             }
 
             currDelta += delta;
@@ -176,6 +177,15 @@ export class MaterialPlayer {
             video.pause();
             video = null;
         };
+
+        Object.defineProperty(this, "speed", {
+            get: function () {
+                return speed;
+            },
+            set: function (value) {
+                speed = value;
+                video.playbackRate = time.speed * speed;
+            }
+        });
     }
 }
-;
