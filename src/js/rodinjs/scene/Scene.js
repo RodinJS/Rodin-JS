@@ -75,28 +75,52 @@ export class Scene extends Sculpt {
         }
     }
 
+    /**
+     * Set camera property
+     * @param property {string}
+     * @param value {*}
+     */
     setCameraProperty(property, value){
         Object.setProperty(this.camera, property, value);
         this.camera.projectionMatrixNeedsUpdate = true;
     }
 
+    /**
+     * add function to pre render queue
+     * @param fn {function}
+     */
     preRender (fn) {
         this.preRenderFunctions.push(fn);
     }
 
+    /**
+     * add function to post render queue
+     * @param fn {function}
+     */
     postRender (fn) {
         this.postRenderFunctions.push(fn);
     }
 
+    /**
+     * add object to sene
+     * @param obj {Object3D}
+     */
     add (obj) {
         this.scene.add(obj);
     }
 
+    /**
+     * add controller to scene
+     * @param controller {GamePad}
+     */
     addController (controller) {
         controller.setRaycasterScene(this.scene);
         controller.setRaycasterCamera(this.camera);
     }
 
+    /**
+     * enable scene
+     */
     enable () {
         document.body.appendChild(this.renderer.domElement);
     }
