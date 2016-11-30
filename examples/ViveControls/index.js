@@ -17,15 +17,10 @@ let renderer = scene.renderer;
 
 renderer.setPixelRatio(window.devicePixelRatio);
 
-renderer.shadowMap.enabled = true;
-renderer.gammaInput = true;
-renderer.gammaOutput = true;
-
-
 scene.setCameraProperty("far", 10000);
 
 
-scene.scene.background = new THREE.Color(0x808080);
+// scene.scene.background = new THREE.Color(0x808080);
 
 
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
