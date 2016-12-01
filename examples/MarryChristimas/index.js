@@ -78,17 +78,17 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
 
 
 /// Add light
-let light1 = new THREE.DirectionalLight(0xbbbbbb);
-light1.position.set(0, 6, 1);
-light1.castShadow = true;
-light1.shadow.camera.top = 15;
-light1.shadow.camera.bottom = -15;
-light1.shadow.camera.right = 15;
-light1.shadow.camera.left = -15;
-light1.shadow.mapSize.set(2048, 2048);
-scene.add(light1);
+//let light1 = new THREE.DirectionalLight(0xbbbbbb);
+//light1.position.set(0, 3, 1);
+//light1.castShadow = true;
+//light1.shadow.camera.top = 15;
+//light1.shadow.camera.bottom = -15;
+//light1.shadow.camera.right = 15;
+//light1.shadow.camera.left = -15;
+//light1.shadow.mapSize.set(2048, 2048);
+//scene.add(light1);
 
-scene.add(new THREE.AmbientLight(0xaaaaaa));
+scene.add(new THREE.AmbientLight(0xaaaaaa, 0.5));
 
 
 let boxSize = 30;
@@ -127,9 +127,7 @@ snow.on("ready", (evt) => {
 // christmasRoom
 let s = 0.026;
 let christmasRoom = new JDModelObject(0, './models/ChristmasRoom.JD');
-//let christmasRoom = new JSONModelObject(0, './models/ChristmasRoom.js');
 christmasRoom.on('ready', () => {
-    console.log(christmasRoom.object3D.children[0].material.materials[0]);
     christmasRoom.object3D.children[0].material.materials[0].alphaTest = 0.35;
     christmasRoom.object3D.children[0].material.materials[0].transparent = false;
     christmasRoom.object3D.children[0].material.materials[0].side = THREE.DoubleSide;
@@ -142,6 +140,39 @@ christmasRoom.on('ready', () => {
     christmasRoom.object3D.receiveShadow = true;
     scene.add(christmasRoom.object3D);
 });
+
+let christmasFire = new JDModelObject(1, './models/fire.JD');
+//let christmasRoom = new JSONModelObject(0, './models/ChristmasRoom.js');
+christmasFire.on('ready', () => {
+    console.log(christmasFire.object3D);
+
+    let txt = new THREE.TextureLoader();
+    txt.load(
+        'models/fire.jpg',
+        function ( texture ) {
+            christmasFire.object3D.children[0].material.materials[0] = new THREE.MeshBasicMaterial({
+                map: texture
+            });
+        },
+    );
+
+    christmasFire.object3D.scale.set(s, s, s);
+    christmasFire.object3D.position.z = 5;
+
+    //christmasFire.object3D.castShadow = true;
+    //christmasFire.object3D.receiveShadow = true;
+    scene.add(christmasFire.object3D);
+});
+let fireLight1 = new THREE.PointLight(0xff983c, 5, 1);
+fireLight1.position.set(0.2, 0.5, -5);
+//fireLight1.add(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10)));
+scene.add(fireLight1);
+
+/*let fireLight2 = new THREE.PointLight(0xff983c, 5, 1);
+fireLight2.position.set(0.2, 0.9, -0.2);
+
+fireLight2.add(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10)));
+scene.add(fireLight2);*/
 
 /*/// Add terrain
 let terrain = new JSONModelObject(0, "./models/terrain.json");
