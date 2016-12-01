@@ -35,6 +35,7 @@ export class GamePad extends THREE.Object3D {
         this.matrixAutoUpdate = false;
         this.standingMatrix = new THREE.Matrix4();
         this.engaged = false;
+        this.warningsFired = {};
 
         this.buttons = [
             KEY_CODES.KEY1,
@@ -135,7 +136,11 @@ export class GamePad extends THREE.Object3D {
         let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
 
         if (!controller) {
-            return console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
+            if(!this.warningsFired[this.navigatorGamePadId]){
+                this.warningsFired[this.navigatorGamePadId] = true;
+                console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
+            }
+            return;
         }
 
         for (let i = 0; i < controller.buttons.length; i++) {

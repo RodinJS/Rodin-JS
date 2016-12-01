@@ -2,6 +2,7 @@
 
 import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
+import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {Event} from '../../_build/js/rodinjs/Event.js';
 import {Sculpt} from '../../_build/js/rodinjs/sculpt/Sculpt.js';
 import {timeout} from '../../_build/js/rodinjs/utils/timeout.js';
@@ -49,7 +50,7 @@ scaleInAnimation.duration(150);
 
 export class VPcontrolPanel extends Sculpt {
 
-    constructor({ player, title = "Untitled Video", distance = 1, width = 1.5 }) {
+    constructor({ player, title = "Untitled Video", distance = 1, width = 1.5, controllers }) {
 
         super(0);
         this.object = new THREE.Object3D();
@@ -59,18 +60,68 @@ export class VPcontrolPanel extends Sculpt {
         this.elementsPending = 0;
         this.timeBarButton = null;
         this.title = title;
+        this.controllers = controllers;
         this.createTitle();
         this.createPlayPauseButtons();
         this.createTimeLine();
         this.createTimeBar();
         this.createAudioToggle();
         this.createHDToggle();
-        this.createBackGround();
-        this.panel.position.z = - distance;
-
+        this.createBackGround(distance, width);
+        this.panel.position.z = -distance;
+        this.scene = SceneManager.get();
+        let target = new THREE.Object3D();
+        target.position.z = -1;
+        let camera = this.scene.camera;
+        camera.add(target);
 
         this.object.add(this.panel);
 
+        for(let ci = 0; ci < this.controllers.length; ci++){
+
+            let controller = this.controllers[ci];
+
+            controller.onKeyDown = (keyCode) => {
+                this.showTimeOut =  timeout(() => {
+                    this.showTimeOut = null;
+                }, 200);
+            };
+
+            controller.onKeyUp = (keyCode) => {
+                if(this.showTimeOut){
+                    if (this.fadeTimeOut) {
+                        clearTimeout(this.fadeTimeOut);
+                    }
+
+                    this.scene.scene.updateMatrixWorld();
+                    let vector = new THREE.Vector3();
+                    vector.setFromMatrixPosition(target.matrixWorld);
+                    if (vector.x != 0 || vector.z != 0) {
+                        let newRot = Math.atan(vector.x / vector.z) + (vector.z < 0 ? Math.PI : 0) + Math.PI;
+                        if(!this.object.visible || Math.abs(this.object.rotation.y - newRot) >= Math.PI/3){
+                            this.object.rotation.y = newRot;
+                        }
+
+                    }
+
+                    this.object.visible = true;
+                    this.fadeTimeOut = timeout(() => {
+                        this.object.visible = false;
+                    }, 5000);
+                }
+            };
+
+
+            controller.gamepadHover = (intersect) => {
+                clearTimeout(this.fadeTimeOut);
+            };
+
+            controller.gamepadHoverOut = (intersect) => {
+                this.fadeTimeOut = timeout(() => {
+                    this.object.visible = false;
+                }, 5000);
+            };
+        }
     }
 
     readyCheck() {
@@ -82,9 +133,8 @@ export class VPcontrolPanel extends Sculpt {
         }
     }
 
-    createBackGround(){
-
-        let r = Math.sqrt( distance * distance + width * width / 4 ) * 2;
+    createBackGround(distance, width) {
+        let r = Math.sqrt(distance * distance + width * width / 4) * 2;
 
         let sphere = new THREE.Mesh(
             new THREE.SphereBufferGeometry(r, 12, 12),
@@ -92,18 +142,13 @@ export class VPcontrolPanel extends Sculpt {
                 color: 0x000000,
                 transparent: true,
                 opacity: 0.3,
+                //wireframe:true,
                 side: THREE.BackSide
             })
         );
-
-        this.sphere = RODIN.THREEObject(sphere);
-
-        this.sphere.on("ready", (evt) => {
-            this.sphere.object3D.position.z = 0.0001;
-            this.object.add(this.sphere.object3D);
-            RODIN.Raycastables.push(this.sphere.object3D);
-        });
-
+        sphere.geometry.applyMatrix(new THREE.Matrix4().makeTranslation( 0, 0, -distance));
+        sphere.position.z = distance;
+        this.object.add(sphere);
     }
 
 
@@ -112,7 +157,7 @@ export class VPcontrolPanel extends Sculpt {
             text: this.title,
             color: 0xffffff,
             fontFamily: "Arial",
-            fontSize: this.width *0.04,
+            fontSize: this.width * 0.04,
             ppm: 1000
         };
         let titleButton = new Text(titleParams);
@@ -120,20 +165,17 @@ export class VPcontrolPanel extends Sculpt {
 
         titleButton.on('ready', (evt) => {
             let object = evt.target.object3D;
-            object.position.y = this.width/4;
+            object.position.y = this.width / 4;
             this.panel.add(object);
             this.elementsPending--;
             this.readyCheck();
         });
 
 
-        playButton.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-            evt.target.animator.start("scaleOutAnimation");
-        });
     }
 
     createPlayPauseButtons() {
-        let playParams = {name: "play", width: this.width/5, height: this.width/5};
+        let playParams = {name: "play", width: this.width / 5, height: this.width / 5};
 
         playParams.background = {
             color: 0x666666,
@@ -141,13 +183,13 @@ export class VPcontrolPanel extends Sculpt {
         };
 
         playParams.border = {
-            radius: this.width/10
+            radius: this.width / 10
         };
 
         playParams.image = {
             url: "./img/play.png",
-            width: this.width/15,
-            height: this.width/15,
+            width: this.width / 15,
+            height: this.width / 15,
             position: {h: 54, v: 50}
         };
 
@@ -172,7 +214,9 @@ export class VPcontrolPanel extends Sculpt {
         });
 
         playButton.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-            evt.target.animator.start("scaleOutAnimation");
+            if(this.object.visible){
+                evt.target.animator.start("scaleOutAnimation");
+            }
         });
 
         playButton.on(RODIN.CONSTANTS.EVENT_NAMES.ANIMATION_COMPLETE, (evt) => {
@@ -181,11 +225,12 @@ export class VPcontrolPanel extends Sculpt {
                 this.panel.add(pauseButton.object3D);
                 pauseButton.animator.start("scaleInAnimation");
                 this.player.play();
+                this.object.visible = false;
             }
         });
 
 
-        let pauseParams = {name: "pause", width: this.width/5, height: this.width/5};
+        let pauseParams = {name: "pause", width: this.width / 5, height: this.width / 5};
 
         pauseParams.background = {
             color: 0x666666,
@@ -193,7 +238,7 @@ export class VPcontrolPanel extends Sculpt {
         };
 
         pauseParams.border = {
-            radius: this.width/10
+            radius: this.width / 10
         };
 
         pauseParams.image = {
@@ -223,7 +268,9 @@ export class VPcontrolPanel extends Sculpt {
         });
 
         pauseButton.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-            evt.target.animator.start("scaleOutAnimation");
+            if(this.object.visible){
+                evt.target.animator.start("scaleOutAnimation");
+            }
         });
 
         pauseButton.on(RODIN.CONSTANTS.EVENT_NAMES.ANIMATION_COMPLETE, (evt) => {
@@ -484,7 +531,7 @@ export class VPcontrolPanel extends Sculpt {
         muteButton.on('update', (evt) => {
             if (this.timeBarButton) {
                 let object = evt.target.object3D;
-                object.position.x = this.timeBarButton.object3D.position.x +  this.timeBarButton.object3D.scale.x * this.timeBarButton.object3D.geometry.parameters.width + this.width / 30;
+                object.position.x = this.timeBarButton.object3D.position.x + this.timeBarButton.object3D.scale.x * this.timeBarButton.object3D.geometry.parameters.width + this.width / 30;
             }
         });
 
@@ -503,8 +550,7 @@ export class VPcontrolPanel extends Sculpt {
             this.panel.add(unmuteButton.object3D);
         });
 
-
-        let unmuteParams = {name: "unmute", width: this.width * 0.04, height:this.width * 0.04, ppm: 1000};
+        let unmuteParams = {name: "unmute", width: this.width * 0.04, height: this.width * 0.04, ppm: 1000};
 
         unmuteParams.image = {
             url: "./img/audioOFF.png",
@@ -529,7 +575,7 @@ export class VPcontrolPanel extends Sculpt {
         unmuteButton.on('update', (evt) => {
             if (this.timeBarButton) {
                 let object = evt.target.object3D;
-                object.position.x = this.timeBarButton.object3D.position.x +  this.timeBarButton.object3D.scale.x * this.timeBarButton.object3D.geometry.parameters.width + this.width / 30;
+                object.position.x = this.timeBarButton.object3D.position.x + this.timeBarButton.object3D.scale.x * this.timeBarButton.object3D.geometry.parameters.width + this.width / 30;
             }
         });
 
@@ -551,7 +597,7 @@ export class VPcontrolPanel extends Sculpt {
     }
 
     createHDToggle() {
-        let HDParams =  {
+        let HDParams = {
             text: "HD",
             color: 0xffffff,
             fontFamily: "Arial",
@@ -565,7 +611,7 @@ export class VPcontrolPanel extends Sculpt {
         HDButton.on('ready', (evt) => {
             let object = evt.target.object3D;
             object.position.y = -this.width / 3.02;
-            object.position.x = this.width* 0.48;
+            object.position.x = this.width * 0.48;
             this.panel.add(object);
             RODIN.Raycastables.push(object);
             evt.target.animator.add(hoverAnimation, hoverOutAnimation);
@@ -590,13 +636,13 @@ export class VPcontrolPanel extends Sculpt {
             this.panel.remove(object);
             this.panel.add(SDButton.object3D);
 
-            if(playAfter){
+            if (playAfter) {
                 this.player.play();
             }
         });
 
 
-        let SDParams =  {
+        let SDParams = {
             text: "SD",
             color: 0xffffff,
             fontFamily: "Arial",
@@ -610,7 +656,7 @@ export class VPcontrolPanel extends Sculpt {
         SDButton.on('ready', (evt) => {
             let object = evt.target.object3D;
             object.position.y = -this.width / 3.02;
-            object.position.x = this.width* 0.48;
+            object.position.x = this.width * 0.48;
             RODIN.Raycastables.push(object);
             evt.target.animator.add(hoverAnimation, hoverOutAnimation);
             this.elementsPending--;
@@ -634,7 +680,7 @@ export class VPcontrolPanel extends Sculpt {
             this.panel.remove(object);
             this.panel.add(HDButton.object3D);
 
-            if(playAfter){
+            if (playAfter) {
                 this.player.play();
             }
         });
