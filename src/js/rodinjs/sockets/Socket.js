@@ -1,39 +1,26 @@
 import SocketInterface from './SocketInterface';
-import io from 'socket.io-client';
-import Cookie from '../utils/Cookie.js';
+import io from '../../vendor/socket.io/socket.io.js';
 
-let params = {query: "fake-access-token=" + Cookie.getCookie("token")};
-//localStorage.debug = '*';
+let _socket;
 
-const socket = io.connect('', params);
+export class Socket extends SocketInterface {
+    constructor (url = "http://localhost:1234/", params = {
+        transports: ['websocket', 'polling']
+    }) {
+        super();
 
-class Socket extends SocketInterface{
-    constructor(channel = "", room = "") {
-        super(channel, room);
-
-        this.emit("subscribe", {
-            channel: this.channel,
-            room: this.room
-        });
+        if (!_socket) {
+            _socket = io.connect(url, params);
+        }
     }
 
-    on(eventName, callback) {
-        socket.on(eventName, function () {
-            if (callback) {
-                callback.apply(socket, arguments);
-            }
-        });
+    on () {
+        _socket.on(...arguments);
     };
 
-    emit(eventName, data, callback) {
-        socket.emit(eventName, data, ()=> {
-            if (callback) {
-                callback.apply(socket, arguments);
-            }
-        })
+    emit () {
+        _socket.emit(...arguments);
     };
 
 
 }
-
-export default Socket;

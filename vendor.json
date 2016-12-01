@@ -10,6 +10,11 @@
     "babelyfi": false
   },
   {
+    "src": "node_modules/socket.io-client/**/*.js",
+    "dest": "/socket.io/",
+    "babelyfi": false
+  },
+  {
     "src": "node_modules/webvr-boilerplate/build/*.js",
     "dest": "/webvr-boilerplate/",
     "babelyfi": false
