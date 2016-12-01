@@ -17,7 +17,8 @@ export class JDModelObject extends Sculpt {
      * @param {number} [id = 0]
      * @param {string} [URL = '']
      */
-    constructor(id = 0, URL = '') {
+    constructor(id = 0,
+                URL = '') {
 
         super(id);
 
@@ -66,7 +67,7 @@ export class JDModelObject extends Sculpt {
                 console.log("JD file was loaded");
             }, onProgress, onError);
 
-        this.on("update", (evt) => {
+        this.on("update", () => {
             if (mixers) {
                 if (mixers.length > 0) {
                     for (let i = 0; i < mixers.length; i++) {
