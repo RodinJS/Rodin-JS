@@ -14,6 +14,10 @@ class SceneManager extends Manager {
         this.go(scene);
     }
 
+    /**
+     * switch scene
+     * @param index
+     */
     go (index) {
         let scene = this.get(index);
         scene.enable();
@@ -26,6 +30,10 @@ class SceneManager extends Manager {
         scene.controllers = this.controllers;
     }
 
+    /**
+     * add controller to SceneManager
+     * @param controller {GamePad}
+     */
     addController (controller) {
         this.controllers.push(controller);
         this.get().addController(controller);

@@ -2,6 +2,10 @@ import {Animation} from './Animation.js';
 import {ErrorParameterTypeDontMatch} from '../error/CustomErrors.js';
 import {Set} from '../utils/Set.js';
 
+/**
+ * Class Animator
+ * Each Sculpt object have its own animator.
+ */
 export class Animator {
     constructor (sculpt) {
         this.sculpt = sculpt;
