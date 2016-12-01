@@ -209,7 +209,7 @@ export class GamePad extends THREE.Object3D {
         }
 
         if (this.engaged)
-            return
+            return;
 
         let intersections = this.getIntersections(controller);
 
