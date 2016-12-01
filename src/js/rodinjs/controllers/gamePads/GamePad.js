@@ -7,6 +7,16 @@ import {Event} from '../../Event.js';
 import {MouseGamePad} from './MouseGamePad.js';
 import {CardboardGamePad} from './CardboardGamePad.js';
 
+let containsIntersect = function(interArray, inter){
+    for(let i = 0; i < interArray.length; i++){
+        let intersect = interArray[i];
+        if(intersect.object.Sculpt === inter.object.Sculpt){
+            return true;
+        }
+    }
+    return false;
+};
+
 export class GamePad extends THREE.Object3D {
 
     /**
@@ -233,11 +243,9 @@ export class GamePad extends THREE.Object3D {
             }
         });
 
-        let currentIntersected = [];
         if (intersections.length > 0) {
             intersections.map(intersect => {
-                currentIntersected.push(intersect);
-                if(this.intersected.indexOf(intersect.object.Sculpt) === -1 || intersect.object.Sculpt.forceHover){
+                if(!containsIntersect(this.intersected, intersect) || intersect.object.Sculpt.forceHover){
                     let evt = new Event(intersect.object.Sculpt, null, null, "", this);
                     evt.distance = intersect.distance;
                     evt.uv = intersect.uv;
@@ -246,7 +254,7 @@ export class GamePad extends THREE.Object3D {
                 }
             });
         }
-        this.intersected = [...currentIntersected];
+        this.intersected = [...intersections];
     }
 
     /**

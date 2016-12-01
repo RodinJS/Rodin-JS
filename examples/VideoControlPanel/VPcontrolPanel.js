@@ -685,5 +685,49 @@ export class VPcontrolPanel extends Sculpt {
             }
         });
 
+
+        let LDParams = {
+            text: "LD",
+            color: 0xffffff,
+            fontFamily: "Arial",
+            fontSize: this.width / 30,
+            ppm: 1000
+        };
+        let LDButton = new Text(LDParams);
+
+        this.elementsPending++;
+
+        LDButton.on('ready', (evt) => {
+            let object = evt.target.object3D;
+            object.position.y = -this.width / 3.02;
+            object.position.x = this.width * 0.48;
+            RODIN.Raycastables.push(object);
+            evt.target.animator.add(hoverAnimation, hoverOutAnimation);
+            this.elementsPending--;
+            this.readyCheck();
+        });
+
+        LDButton.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
+            evt.target.animator.start("hoverAnimation");
+        });
+
+        LDButton.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt) => {
+            evt.target.animator.start("hoverOutAnimation");
+        });
+
+        LDButton.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+
+            let playAfter = this.player.isPlaying();
+            this.player.switchTo("HD");
+
+            let object = evt.target.object3D;
+            this.panel.remove(object);
+            this.panel.add(HDButton.object3D);
+
+            if (playAfter) {
+                this.player.play();
+            }
+        });
+
     }
 }
