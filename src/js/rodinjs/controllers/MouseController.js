@@ -5,13 +5,16 @@ import {ErrorInvalidEventType} from '../error/CustomErrors';
 
 let controllerCreated = false;
 
+/**
+ * Class MouseController
+ */
 export class MouseController extends GamePad {
     constructor(scene = null, camera = null) {
         if (controllerCreated) {
             throw new ErrorMouseControllerAlreadyExists();
         }
         controllerCreated = true;
-        super("mouse", null, scene, camera, 2);
+        super("mouse", null, scene, camera, 1);
 
         this.setRaycasterScene(scene);
         this.setRaycasterCamera(camera);
@@ -19,25 +22,35 @@ export class MouseController extends GamePad {
     }
 
 
+    /**
+     * getIntersections override
+     * @param controller {MouseController}
+     * @returns [Sculpt]
+     */
     getIntersections(controller) {
         this.raycaster.setFromCamera(new THREE.Vector2(controller.axes[0], controller.axes[1]), this.camera);
         return this.raycaster.raycast();
     }
 
     gamepadHover(intersect) {
-        //this.reycastingLine.geometry.vertices[1].z = -intersect.distance;
-        //this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
 
     gamepadHoverOut() {
-        //this.reycastingLine.geometry.vertices[1].z = -50;
-        //this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
 
+    /**
+     * Get Gamepad from navigator
+     * @returns {MouseGamePad}
+     */
     static getGamepad() {
         return navigator.mouseGamePad;
     }
 
+    /**
+     * Set propagation for event
+     * @param eventName {string}
+     * @param value {boolean}
+     */
     setPropagation(eventName, value) {
         let gamePad = MouseController.getGamepad();
         value = !value;
@@ -63,19 +76,34 @@ export class MouseController extends GamePad {
         throw new ErrorInvalidEventType(eventName, 'setPropagation');
     }
 
+    /**
+     * start propagation for event
+     * @param eventName
+     */
     startPropagation(eventName) {
         this.setPropagation(eventName, true);
     }
 
+    /**
+     * stop propagation for event
+     * @param eventName
+     */
     stopPropagation(eventName) {
         this.setPropagation(eventName, false);
     }
 
+    /**
+     * Get Axes
+     * @returns {Array}
+     */
     get axes() {
         return MouseController.getGamepad().axes;
     }
 
-
+    /**
+     * onKeyDown function
+     * @param keyCode {number}
+     */
     onKeyDown(keyCode) {
         if (keyCode === KEY_CODES.KEY2) return;
         this.keyCode = keyCode;
@@ -89,6 +117,10 @@ export class MouseController extends GamePad {
         }
     }
 
+    /**
+     * onKeyUp function
+     * @param keyCode {number}
+     */
     onKeyUp(keyCode) {
         if (keyCode === KEY_CODES.KEY2) return;
         this.keyCode = null;

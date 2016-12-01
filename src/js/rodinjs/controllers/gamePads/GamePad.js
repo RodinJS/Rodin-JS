@@ -17,7 +17,7 @@ export class GamePad extends THREE.Object3D {
      * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
      * @param {number} raycastLayers
      */
-    constructor(navigatorGamePadId = "", hand = null, scene = null, camera = null, raycastLayers = 1) {
+    constructor (navigatorGamePadId = "", hand = null, scene = null, camera = null, raycastLayers = 1) {
 
         super();
 
@@ -35,6 +35,7 @@ export class GamePad extends THREE.Object3D {
         this.matrixAutoUpdate = false;
         this.standingMatrix = new THREE.Matrix4();
         this.engaged = false;
+        this.warningsFired = {};
 
         this.buttons = [
             KEY_CODES.KEY1,
@@ -52,12 +53,12 @@ export class GamePad extends THREE.Object3D {
         this.enabled = true;
     }
 
-    enable() {
+    enable () {
         this.enabled = true;
         this.onEnable();
     }
 
-    disable() {
+    disable () {
         this.enabled = false;
         this.onDisable();
     }
@@ -68,7 +69,7 @@ export class GamePad extends THREE.Object3D {
      * @param {string, null} hand
      * @returns {Object} controller or null
      */
-    static getControllerFromNavigator(id, hand = null) {
+    static getControllerFromNavigator (id, hand = null) {
         let controllers = [];
         try {
             controllers = [...navigator.getGamepads()];
@@ -104,7 +105,7 @@ export class GamePad extends THREE.Object3D {
      *
      * @param {THREE.Scene} scene
      */
-    setRaycasterScene(scene) {
+    setRaycasterScene (scene) {
         this.raycaster.setScene(scene);
     }
 
@@ -113,7 +114,7 @@ export class GamePad extends THREE.Object3D {
      *
      * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
      */
-    setRaycasterCamera(camera) {
+    setRaycasterCamera (camera) {
         this.camera = camera;
     }
 
@@ -121,21 +122,25 @@ export class GamePad extends THREE.Object3D {
      * Getter for GamePad axes.
      * @returns {Array} An array of double values
      */
-    get axes() {
+    get axes () {
         return GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand).axes;
     }
 
     /**
      * Checks the gamepad state, calls the appropriate methods
      */
-    update() {
+    update () {
         if (!this.enabled)
             return;
 
         let controller = GamePad.getControllerFromNavigator(this.navigatorGamePadId, this.hand);
 
         if (!controller) {
-            return console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
+            if(!this.warningsFired[this.navigatorGamePadId]){
+                this.warningsFired[this.navigatorGamePadId] = true;
+                console.warn(`Controller by id ${this.navigatorGamePadId} not found`);
+            }
+            return;
         }
 
         for (let i = 0; i < controller.buttons.length; i++) {
@@ -182,7 +187,7 @@ export class GamePad extends THREE.Object3D {
      * update controller object in scene, update position and rotation
      * @param {Object} controller
      */
-    updateObject(controller) {
+    updateObject (controller) {
         if (controller.pose) {
             let pose = controller.pose;
 
@@ -198,13 +203,14 @@ export class GamePad extends THREE.Object3D {
     /**
      * Checks all intersect and emits hover and hoverout events
      */
-    //TODO: Fix continious hover emitting
-    intersectObjects(controller) {
+    intersectObjects (controller) {
         if (!this.getIntersections) {
             console.warn(`getIntersections method is not defined`);
         }
 
-        if (this.engaged)return;
+        if (this.engaged)
+            return
+
         let intersections = this.getIntersections(controller);
 
         if (intersections.length > 0) {
@@ -216,24 +222,25 @@ export class GamePad extends THREE.Object3D {
         this.intersected.map(intersect => {
             let found = false;
             for (let int = 0; int < intersections.length; int++) {
-                if (intersections[int].object.Sculpt === intersect) {
+                if (intersections[int].object.Sculpt === intersect.object.Sculpt) {
                     found = true;
                 }
             }
             if (!found) {
                 this.gamepadHoverOut();
-                let evt = new Event(intersect.object3D.Sculpt, null, null, "", this);
-                intersect.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT, evt);
+                let evt = new Event(intersect.object.Sculpt, null, null, "", this);
+                intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT, evt);
             }
         });
 
         let currentIntersected = [];
         if (intersections.length > 0) {
             intersections.map(intersect => {
-                currentIntersected.push(intersect.object.Sculpt);
-                if(this.intersected.indexOf(intersect.object.Sculpt) === -1){
+                currentIntersected.push(intersect);
+                if(this.intersected.indexOf(intersect.object.Sculpt) === -1 || intersect.object.Sculpt.forceHover){
                     let evt = new Event(intersect.object.Sculpt, null, null, "", this);
                     evt.distance = intersect.distance;
+                    evt.uv = intersect.uv;
                     this.gamepadHover(intersect);
                     intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, evt);
                 }
@@ -248,41 +255,42 @@ export class GamePad extends THREE.Object3D {
      * @param {number} keyCode
      * @param {GamePad} controller
      */
-    raycastAndEmitEvent(eventName, DOMEvent, keyCode, controller = null) {
+    raycastAndEmitEvent (eventName, DOMEvent, keyCode, controller = null) {
         if (this.intersected && this.intersected.length > 0) {
             this.intersected.map(intersect => {
-                let evt = new Event(intersect.object3D.Sculpt, DOMEvent, keyCode, this.hand, controller);
+                let evt = new Event(intersect.object.Sculpt, DOMEvent, keyCode, this.hand, controller);
                 evt.distance = intersect.distance;
-                intersect.object3D.Sculpt.emit(eventName, evt);
+                evt.uv = intersect.uv;
+                intersect.object.Sculpt.emit(eventName, evt);
             });
         }
     }
 
-    get valueChange() {
+    get valueChange () {
         return (keyCode) => {
             this.onValueChange && this.onValueChange(keyCode);
             this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_VALUE_CHANGE, null, keyCode, this);
         }
     }
 
-    set valueChange(value) {
+    set valueChange (value) {
         throw new ErrorProtectedFieldChange('valueChange');
     }
 
     /**
      * @param {number} value
      */
-    onValueChange(value) {
+    onValueChange (value) {
     }
 
-    get keyDown() {
+    get keyDown () {
         return (keyCode) => {
             this.onKeyDown && this.onKeyDown(keyCode);
             this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_KEY_DOWN, null, keyCode, this);
         }
     }
 
-    set keyDown(value) {
+    set keyDown (value) {
         throw new ErrorProtectedFieldChange('keyDown');
     }
 
@@ -290,39 +298,39 @@ export class GamePad extends THREE.Object3D {
     /**
      * @param {number} keyCode
      */
-    onKeyDown(keyCode) {
+    onKeyDown (keyCode) {
     }
 
 
-    get keyUp() {
+    get keyUp () {
         return (keyCode) => {
             this.onKeyUp && this.onKeyUp(keyCode);
             this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode, this);
         }
     }
 
-    set keyUp(value) {
+    set keyUp (value) {
         throw new ErrorProtectedFieldChange('keyUp');
     }
 
     /**
      * @param {number} keyCode
      */
-    onKeyUp(keyCode) {
+    onKeyUp (keyCode) {
     }
 
     /**
      *
      */
 
-    get touchDown() {
+    get touchDown () {
         return (keyCode, gamepad) => {
             this.onTouchDown && this.onTouchDown(keyCode, gamepad);
             this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_TOUCH_START, null, keyCode, this);
         }
     }
 
-    set touchDown(value) {
+    set touchDown (value) {
         throw new ErrorProtectedFieldChange('touchDown');
     }
 
@@ -330,18 +338,18 @@ export class GamePad extends THREE.Object3D {
      * @param {number} keyCode
      * @param {object} gamepad
      */
-    onTouchDown(keyCode, gamepad) {
+    onTouchDown (keyCode, gamepad) {
     }
 
 
-    get touchUp() {
+    get touchUp () {
         return (keyCode, gamepad) => {
             this.onTouchUp && this.onTouchUp(keyCode, gamepad);
             this.raycastAndEmitEvent(EVENT_NAMES.CONTROLLER_TOUCH_END, null, keyCode, this);
         }
     }
 
-    set touchDown(value) {
+    set touchDown (value) {
         throw new ErrorProtectedFieldChange('touchUp');
     }
 
@@ -349,25 +357,25 @@ export class GamePad extends THREE.Object3D {
      * @param {number} keyCode
      * @param {object} gamepad
      */
-    onTouchUp(keyCode, gamepad) {
+    onTouchUp (keyCode, gamepad) {
     }
 
 
-    onDisable(){
+    onDisable () {
 
     }
 
-    onEnable(){
+    onEnable () {
 
     }
 
 
-    onControllerUpdate() {
+    onControllerUpdate () {
     }
 
-    gamepadHover(intersect) {
+    gamepadHover (intersect) {
     }
 
-    gamepadHoverOut() {
+    gamepadHoverOut () {
     }
 }

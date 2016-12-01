@@ -46,7 +46,7 @@ const IMG = ['src/img/**/*.{jpg,jpeg,ico,png}'];
 const SHADER = ['src/shader/**/*'];
 const MODEL = ['src/model/**/*'];
 const VIDEO = ['src/video/**/*'];
-const EX_JS = ['examples/**/index.js', '!examples/**/model/**/*.js'];
+const EX_JS = ['examples/**/*.js', '!examples/**/*_c.js', '!examples/**/model/**/*.js'];
 
 const VENDOR = require('./vendor.json');
 
@@ -246,7 +246,7 @@ gulp.task('connect', () => {
 
 
 gulp.task('prod', (done) => {
-    sequence('clean', ['js-prod', 'vendor', 'systemjs', 'examples', 'sass-prod', 'font', 'img', 'connect'], done);
+    sequence('clean', ['js-prod', 'vendor', 'systemjs', 'examples', 'sass-prod', 'font', 'img'], done);
 });
 
 gulp.task('default', (done) => {

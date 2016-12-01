@@ -33,7 +33,7 @@ while (i--) {
         width: 0.01,
         color: 0xff8800,
         opacity: 1,
-        radius: 0.3
+        radius: 0.4
     };
     params.label = {
         text: "Rodin " + i,

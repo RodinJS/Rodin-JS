@@ -37,3 +37,8 @@ export const CONTROLLER_TAP = 'controllertap';
 export const ANIMATION_START = 'animationstart';
 export const ANIMATION_STOP = 'animationstop';
 export const ANIMATION_COMPLETE = 'animationcomplete';
+
+export const GLOBALS = {
+    CONTROLLER_KEY_DOWN: `globals${CONTROLLER_KEY_DOWN}`,
+    CONTROLLER_KEY_UP: `globals${CONTROLLER_KEY_UP}`
+};

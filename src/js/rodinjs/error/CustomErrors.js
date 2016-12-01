@@ -77,6 +77,12 @@ export class ErrorOculusControllerAlreadyExists extends CustomError {
     }
 }
 
+export class ErrorKeyboardControllerAlreadyExists extends CustomError {
+    constructor () {
+        super(`Error Cardboard controller already exists`)
+    }
+}
+
 export class ErrorInvalidFileFormat extends CustomError {
     constructor () {
         super(`Invalid URL for ${filed}`)
