@@ -2,7 +2,14 @@ import {TWEEN} from '../Tween.js';
 import {Event} from '../Event.js';
 import {EVENT_NAMES} from '../constants/constants.js';
 
+/**
+ * Class Animation
+ */
 export class Animation {
+    /**
+     * @param name {string}
+     * @param params {Object}
+     */
     constructor (name, params) {
         this._loop  = false;
         this.sculpt = {};
@@ -83,7 +90,7 @@ export class Animation {
     }
 
     /**
-     * Start animation
+     * Play animation
      * @param forceStart {boolean}
      * @returns {boolean}
      */
@@ -115,6 +122,8 @@ export class Animation {
 
     /**
      * reset all initial props
+     * when animation start, it will save all properties that he change.
+     * this function returns values before animation start
      */
     reset () {
         for (let i in this.initialProps) {
@@ -132,8 +141,9 @@ export class Animation {
 
     /**
      * Set loop
+     * Set value if parameter given, otherwise returns current value
      * @param loop
-     * @returns {Animation}
+     * @returns {boolean, Animation}
      */
     loop (loop = null) {
         if (loop === null) {
@@ -146,8 +156,9 @@ export class Animation {
 
     /**
      * Set duration
+     * Set value if parameter given, otherwise returns current value
      * @param duration
-     * @returns {Animation}
+     * @returns {boolean, Animation}
      */
     duration (duration = null) {
         if (duration === null) {
@@ -160,8 +171,9 @@ export class Animation {
 
     /**
      * Set delay
+     * Set value if parameter given, otherwise returns current value
      * @param delay
-     * @returns {Animation}
+     * @returns {boolean, Animation}
      */
     delay (delay = null) {
         if (delay === null) {
@@ -174,8 +186,9 @@ export class Animation {
 
     /**
      * Set easing
+     * Set value if parameter given, otherwise returns current value
      * @param easing
-     * @returns {Animation}
+     * @returns {boolean, Animation}
      */
     easing (easing = null) {
         if (easing === null) {

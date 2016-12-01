@@ -246,7 +246,7 @@ gulp.task('connect', () => {
 
 
 gulp.task('prod', (done) => {
-    sequence('clean', ['js-prod', 'vendor', 'systemjs', 'examples', 'sass-prod', 'font', 'img', 'connect'], done);
+    sequence('clean', ['js-prod', 'vendor', 'systemjs', 'examples', 'sass-prod', 'font', 'img'], done);
 });
 
 gulp.task('default', (done) => {

@@ -2,7 +2,9 @@ import { THREE } from '../../vendor/three/THREE.GLOBAL.js';
 import { Raycastables } from '../objects.js';
 import { ErrorNoSceneProvided } from '../error/CustomErrors.js';
 
-
+/**
+ * Class Raycaster
+ */
 export class Raycaster extends THREE.Raycaster {
     constructor(_scene) {
         super();
@@ -11,6 +13,10 @@ export class Raycaster extends THREE.Raycaster {
         this.getScene = () => scene;
     }
 
+    /**
+     * Raycast
+     * @returns [Sculpt] all raycast objects that added to scene.
+     */
     raycast() {
         let scene = this.getScene();
         if (!scene) {
@@ -40,7 +46,7 @@ export class Raycaster extends THREE.Raycaster {
 
             if (!centerObj || !centerObj.Sculpt) continue;
 
-            var parentObj = centerObj.Sculpt.object3D.parent;
+            let parentObj = centerObj.Sculpt.object3D.parent;
             while (parentObj) {
                 if (parentObj === scene) {
                     ret.push(intersects[i]);
