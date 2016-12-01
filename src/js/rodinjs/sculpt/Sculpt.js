@@ -5,24 +5,40 @@ import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
 import {Animator} from '../animation/Animator.js';
 import {EVENT_NAMES} from '../constants/constants.js';
-import {ErrorAbstractClassInstance} from '../error/CustomErrors';
+import {ErrorAbstractClassInstance, ErrorProtectedMethodCall} from '../error/CustomErrors';
+
+/**
+ * this function allows that only sculpt can add native event listeners
+ */
+function Enforce () {
+}
 
 /**
  * Abstract class Sculpt
  */
 export class Sculpt {
-    constructor(id) {
+    constructor (id) {
         if (this.constructor == Sculpt) {
             throw new ErrorAbstractClassInstance();
         }
 
-        /**git
+        /**
+         * git
          * private properties
          */
 
         this.id = id;
         let events = {};
         this.getEvents = () => events;
+
+        let nativeEvents = {};
+        this.getNativeEvents = (enforce) => {
+            if (enforce !== Enforce) {
+                throw new ErrorProtectedMethodCall('getNativeEvents');
+            }
+
+            return nativeEvents;
+        };
 
         this.isHovered = false;
         this.forceHover = false;
@@ -66,11 +82,11 @@ export class Sculpt {
          */
         this.on(EVENT_NAMES.HOVER, () => {
             this.isHovered = true;
-        });
+        }, Enforce);
 
         this.on(EVENT_NAMES.HOVER_OUT, () => {
             this.isHovered = false;
-        });
+        }, Enforce);
 
         /**
          * MOUSE ACTIONS
@@ -85,7 +101,7 @@ export class Sculpt {
         this.on(EVENT_NAMES.MOUSE_DOWN, () => {
             this.isPressed = true;
             touchStartTime = Date.now();
-        });
+        }, Enforce);
 
         this.on(EVENT_NAMES.MOUSE_UP, (evt) => {
             this.isPressed = false;
@@ -93,15 +109,15 @@ export class Sculpt {
                 this.emit(EVENT_NAMES.CLICK, evt);
             }
             touchStartTime = 0;
-        });
+        }, Enforce);
 
         this.on(EVENT_NAMES.MOUSE_ENTER, () => {
             this.isMouseOvered = true;
-        });
+        }, Enforce);
 
         this.on(EVENT_NAMES.MOUSE_LEAVE, () => {
             this.isMouseOvered = false;
-        });
+        }, Enforce);
 
         /**
          * STEREO MODE MOUSE ACTIONS
@@ -110,14 +126,14 @@ export class Sculpt {
          */
         this.on(EVENT_NAMES.STEREO_MOUSE_DOWN, () => {
             touchStartTime = Date.now();
-        });
+        }, Enforce);
 
         this.on(EVENT_NAMES.STEREO_MOUSE_UP, (evt) => {
             if (Date.now() - touchStartTime < 200) {
                 this.emit(EVENT_NAMES.STEREO_CLICK, evt);
             }
             touchStartTime = 0;
-        });
+        }, Enforce);
 
         /**
          * CONTROLLER KEY ACTIONS
@@ -126,14 +142,14 @@ export class Sculpt {
          */
         this.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
             keyDownStartTime[evt.keyCode] = Date.now();
-        });
+        }, Enforce);
 
         this.on(EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
             if (Date.now() - keyDownStartTime[evt.keyCode] < 300) {
                 this.emit(EVENT_NAMES.CONTROLLER_CLICK, evt);
             }
             keyDownStartTime[evt.keyCode] = 0;
-        });
+        }, Enforce);
 
         /**
          * CONTROLLER TOUCH ACTIONS
@@ -142,14 +158,14 @@ export class Sculpt {
          */
         this.on(EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
             keyDownStartTime[evt.keyCode] = Date.now();
-        });
+        }, Enforce);
 
         this.on(EVENT_NAMES.CONTROLLER_TOUCH_END, (evt) => {
             if (Date.now() - keyDownStartTime[evt.keyCode] < 300) {
                 this.emit(EVENT_NAMES.CONTROLLER_TAP, evt);
             }
             keyDownStartTime[evt.keyCode] = 0;
-        });
+        }, Enforce);
 
         /**
          * TOUCH ACTIONS
@@ -159,7 +175,7 @@ export class Sculpt {
         this.on(EVENT_NAMES.TOUCH_START, () => {
             this.isTouched = true;
             touchStartTime = Date.now();
-        });
+        }, Enforce);
 
         this.on(EVENT_NAMES.TOUCH_END, (evt) => {
             this.isTouched = false;
@@ -167,7 +183,7 @@ export class Sculpt {
                 this.emit(EVENT_NAMES.TAP, evt);
             }
             touchStartTime = 0;
-        });
+        }, Enforce);
 
 
         /**
@@ -177,17 +193,17 @@ export class Sculpt {
             if (evt.domEvent && evt.domEvent.which === 3) {
                 this.emit(EVENT_NAMES.RIGHT_CLICK, evt);
             }
-        });
+        }, Enforce);
 
         this.on("rightclick", (evt) => {
             WTF.is(evt.target);
-        });
+        }, Enforce);
     }
 
     /**
      * init
      */
-    init(object3D) {
+    init (object3D) {
         this.object3D = object3D;
         this.object3D.Sculpt = this;
         Objects.push(this);
@@ -195,12 +211,13 @@ export class Sculpt {
 
     /**
      * add listener to Event Alias
-     * @param evts
-     * @param callback
+     * @param evts {[string], string}
+     * @param callback {function}
+     * @param enforce {function}
      */
-    on(evts, callback) {
-        let events = this.getEvents();
-        if(!Array.isArray(evts)) {
+    on (evts, callback, enforce = null) {
+        let events = enforce === Enforce ? this.getNativeEvents(enforce) : this.getEvents();
+        if (!Array.isArray(evts)) {
             evts = [evts];
         }
         for (let i = 0; i < evts.length; i++) {
@@ -219,7 +236,7 @@ export class Sculpt {
      * @param evts
      * @param callback
      */
-    addEventListener(evts, callback) {
+    addEventListener (evts, callback) {
         this.on(evts, callback);
     }
 
@@ -228,7 +245,7 @@ export class Sculpt {
      * @param evt
      * @param callback
      */
-    removeEventListener(evt, callback) {
+    removeEventListener (evt, callback) {
         let events = this.getEvents();
         let i = events[evt].indexOf(callback);
         if (events[evt] && i !== -1) {
@@ -242,8 +259,14 @@ export class Sculpt {
      * @param {Event} customEvt
      * @param {Array} args
      */
-    emit(evt, customEvt, ...args) {
+    emit (evt, customEvt, ...args) {
         customEvt.name = evt;
+        this.emitNative(evt, customEvt, Enforce);
+
+        if (customEvt.propagation === false) {
+            return;
+        }
+
         let events = this.getEvents();
         if (events[evt] && events[evt].length > 0) {
             for (let f = 0; f < events[evt].length; f++) {
@@ -254,12 +277,26 @@ export class Sculpt {
         }
     }
 
+    emitNative (evt, customEvt, enforce) {
+        if (enforce !== Enforce) {
+            throw  new ErrorProtectedMethodCall('emitNative')
+        }
+
+        let events = this.getNativeEvents(Enforce);
+        if (events[evt] && events[evt].length > 0) {
+            for (let f = 0; f < events[evt].length; f++) {
+                if (typeof events[evt][f] === "function") {
+                    events[evt][f].apply((customEvt && customEvt.target), [customEvt]);
+                }
+            }
+        }
+    }
 
     /**
      * remove all listeners from Event Alias
      * @param {Event} evt
      */
-    removeAllListeners(evt) {
+    removeAllListeners (evt) {
         let events = this.getEvents();
         if (events[evt]) {
             delete events[evt];
@@ -270,7 +307,7 @@ export class Sculpt {
      * get global position of object
      * @returns {THREE.Vector3}
      */
-    globalPosition() {
+    globalPosition () {
         return new THREE.Vector3().setFromMatrixPosition(this.object3D.matrixWorld);
     }
 
@@ -279,7 +316,7 @@ export class Sculpt {
      * @param {Object} params
      * @param next
      */
-    animate(params, next) {
+    animate (params, next) {
         if (!params.to) {
             throw new Error("Invalid end valus");
         }
@@ -373,7 +410,7 @@ export class Sculpt {
      * @param {Object} params
      * @param next
      */
-    rotateAroundNull(params, next) {
+    rotateAroundNull (params, next) {
         let duration = params.duration || 500;
         let delay = params.delay || 0;
         let easing = params.easing || TWEEN.Easing.Quadratic.InOut;
@@ -391,7 +428,7 @@ export class Sculpt {
 
         let object = this.object3D;
 
-        function updateCallback() {
+        function updateCallback () {
             let t = this.t;
 
             object.position.y = r * Math.cos(t);
@@ -399,7 +436,7 @@ export class Sculpt {
         }
 
         this.rotateTween = new TWEEN.Tween(elem)
-            .to({t: 2 * cycles * Math.PI}, duration)
+            .to({ t: 2 * cycles * Math.PI }, duration)
             .delay(delay)
             .onUpdate(updateCallback)
             .easing(easing)
@@ -411,7 +448,7 @@ export class Sculpt {
      * get Objects forward vector
      * @returns {Vector3}
      */
-    get forward() {
-        return (new THREE.Vector3(0,0,1)).applyQuaternion(this.object3D.quaternion);
+    get forward () {
+        return (new THREE.Vector3(0, 0, 1)).applyQuaternion(this.object3D.quaternion);
     }
 }
