@@ -25,6 +25,7 @@ export class Sculpt {
         this.getEvents = () => events;
 
         this.isHovered = false;
+        this.forceHover = false;
         this.isPressed = false;
         this.isTouched = false;
         this.isMouseOvered = false;

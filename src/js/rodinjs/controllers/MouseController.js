@@ -11,7 +11,7 @@ export class MouseController extends GamePad {
             throw new ErrorMouseControllerAlreadyExists();
         }
         controllerCreated = true;
-        super("mouse", null, scene, camera, 2);
+        super("mouse", null, scene, camera, 1);
 
         this.setRaycasterScene(scene);
         this.setRaycasterCamera(camera);

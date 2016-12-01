@@ -1,17 +1,28 @@
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
+import {Time} from '../time/Time.js';
+
+const time = Time.getInstance();
 
 export class MaterialPlayer {
-    constructor(url, stereoscopic = false, format = "mp4", fps = 25) {
+    constructor (url, stereoscopic = false, format = "mp4", fps = 25) {
+        if ((typeof url) === "string") {
+            url = {
+                0: url,
+                default: "0"
+            }
+        }
+
         let bufferCounter = 0;
         let lastTime = 0;
+        let speed = 1;
         this.framesToLoader = 30;
         this.isBuffering = false;
         let video = document.createElement('video');
         let sourceMP4 = document.createElement("source");
         let currDelta = 0;
-        let frameDuration = 1000/fps;
+        let frameDuration = 1000 / fps;
         sourceMP4.type = "video/" + format;
-        sourceMP4.src = url;
+        sourceMP4.src = url[url.default];
         video.appendChild(sourceMP4);
         video.width = 512;
         video.height = 256;
@@ -46,15 +57,31 @@ export class MaterialPlayer {
             console.log("buffering");
         };
 
+        this.switchTo = function (key) {
+
+            this.pause();
+            let timePoint = video.currentTime;
+
+            video.innerHTML = "";
+
+            let sourceMP4 = document.createElement("source");
+            sourceMP4.type = "video/" + format;
+            sourceMP4.src = url[key];
+
+            video.appendChild(sourceMP4);
+            video.load();
+            video.currentTime = timePoint;
+        };
+
         this.onBufferEnd = function () {
-        /*
-            let i = this.buffer.length;
-            while (i--) {
-                let x1 = this.buffer.start(i);
-                let x2 = this.buffer.end(i);
-                console.log(x1, x2);
-            }
-        */
+            /*
+             let i = this.buffer.length;
+             while (i--) {
+             let x1 = this.buffer.start(i);
+             let x2 = this.buffer.end(i);
+             console.log(x1, x2);
+             }
+             */
             console.log("playing");
         };
         this.isPlaying = function () {
@@ -71,6 +98,10 @@ export class MaterialPlayer {
 
         this.isMute = () => {
             return video.muted;
+        };
+
+        this.mute = (value = true) => {
+            video.muted = value;
         };
 
         this.play = () => {
@@ -93,9 +124,20 @@ export class MaterialPlayer {
             video.currentTime = video.duration * percent;
         };
 
+        this.getTime = () => {
+            return video.currentTime;
+        };
+        this.getLength = () => {
+            return video.duration;
+        };
+
         this.update = (delta) => {
+            if(time.speed * speed !== video.playbackRate) {
+                video.playbackRate = time.speed * speed;
+            }
+
             currDelta += delta;
-            if(currDelta < frameDuration){
+            if (currDelta < frameDuration) {
                 return;
             }
             //console.log(currDelta);
@@ -110,10 +152,10 @@ export class MaterialPlayer {
                 }
             }
 
-            if(bufferCounter == 0 && !this.isBuffering && this.isPlaying()){
+            if (bufferCounter == 0 && !this.isBuffering && this.isPlaying()) {
                 this.isBuffering = true;
                 this.onBufferStart();
-            }else if(bufferCounter >= 3 && this.isBuffering){
+            } else if (bufferCounter >= 3 && this.isBuffering) {
                 this.isBuffering = false;
                 this.onBufferEnd();
             }
@@ -133,7 +175,17 @@ export class MaterialPlayer {
 
         this.destroy = () => {
             video.pause();
+            video = null;
         };
+
+        Object.defineProperty(this, "speed", {
+            get: function () {
+                return speed;
+            },
+            set: function (value) {
+                speed = value;
+                video.playbackRate = time.speed * speed;
+            }
+        });
     }
 }
-;

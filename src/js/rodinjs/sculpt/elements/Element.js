@@ -13,8 +13,9 @@ export class Element extends Sculpt {
         height = 0.15,
         background = {},
         border = {},
-        label = {},
+        label,
         image,
+        transparent = true,
         ppm = 500
         }) {
         super(0);
@@ -25,21 +26,22 @@ export class Element extends Sculpt {
         this.border = border;
         this.label = label;
         this.image = image;
+        this.transparent = transparent;
         this.ppm = ppm;
         this.canvas = document.createElement("canvas");
-        if(this.background.opacity === undefined && (this.background.color || this.background.image)){
+        if (this.background.opacity === undefined && (this.background.color !== undefined || this.background.image !== undefined)) {
             this.background.opacity = 1;
         }
-        if(!this.border.radius || this.border.radius < 0){
-            this.border.radius = 0.00000001;
+        if (!this.border.radius || this.border.radius <= 0) {
+            this.border.radius = 0.001;
         }
-        if(this.border.radius >= Math.min(this.width/2, this.height/2)){
-            this.border.radius = Math.min(this.width/2, this.height/2)-0.00000001;
+        if (this.border.radius >= Math.min(this.width / 2, this.height / 2)) {
+            this.border.radius = Math.min(this.width / 2, this.height / 2) - 0.001;
         }
-        if(this.label.fontSize === undefined ){
-            this.label.fontSize = Math.min(this.height, this.width)/4;
+        if (this.label && this.label.fontSize === undefined) {
+            this.label.fontSize = Math.min(this.height, this.width) / 4;
         }
-        if(this.image !== undefined && this.image.url === undefined ){
+        if (this.image !== undefined && this.image.url === undefined) {
             this.image = null;
         }
         const checkImageLoad = () => {
@@ -53,7 +55,11 @@ export class Element extends Sculpt {
             utils3D.roundRect(buttonShape, this.width, this.height, this.border.radius);
             let buttonGeo = utils3D.createGeometryFromShape(buttonShape);
 
-            let canvas = utils3D.setupCanvas({width: this.ppm * this.width, height: this.ppm * this.height, canvas: this.canvas});
+            let canvas = utils3D.setupCanvas({
+                width: this.ppm * this.width,
+                height: this.ppm * this.height,
+                canvas: this.canvas
+            });
             // Background
             /*            let buttonBGMat = new THREE.MeshBasicMaterial({
              color: this.background.color ? this.background.color : 0xffffff,
@@ -82,7 +88,8 @@ export class Element extends Sculpt {
                  canvas.style.top = "0";
                  canvas.style.left = "0";
                  */
-            } else if (this.background.color) {
+            }
+            else if (this.background.color) {
                 let ctx = this.canvas.getContext("2d");
                 let rgb = utils3D.hexToRgb(this.background.color);
                 ctx.fillStyle = "rgba("
@@ -103,7 +110,19 @@ export class Element extends Sculpt {
                     this.label.fontFamily,
                     this.label.fontSize * this.ppm,
                     this.canvas
-                )
+                );
+
+                if (textSize.x > (this.ppm * this.width)) {
+                    this.label.fontSize *= (this.ppm * this.width) / (textSize.x * 1.01);
+                    console.warn("Text label '" + this.label.text + "' (" + textSize.x + " px) exceeds the element size (" + (this.ppm * this.width) + " px). " +
+                        "\nThe label has been resized to fit the element.");
+                    textSize = utils3D.measureTextOnCanvas(
+                        this.label.text,
+                        this.label.fontFamily,
+                        this.label.fontSize * this.ppm,
+                        this.canvas
+                    );
+                }
                 if (this.label.position && this.label.position.h) {
                     x = this.label.position.h * (this.ppm * this.width) / 100 - textSize.x / 2;
                 }
@@ -129,10 +148,10 @@ export class Element extends Sculpt {
                 let w = this.ppm * this.image.width;
                 let h = this.ppm * this.image.height;
                 if (this.image.position && this.image.position.h) {
-                    x = this.image.position.h * (this.ppm * this.width) / 100 - w/2;
+                    x = this.image.position.h * (this.ppm * this.width) / 100 - w / 2;
                 }
                 if (this.image.position && this.image.position.v) {
-                    y = this.image.position.v * (this.ppm * this.height) / 100 - h/2;
+                    y = this.image.position.v * (this.ppm * this.height) / 100 - h / 2;
                 }
                 utils3D.drawImageOnCanvas({
                     image: this.image.element,
@@ -154,7 +173,7 @@ export class Element extends Sculpt {
                 let ctx = this.canvas.getContext("2d");
                 ctx.globalAlpha = 1;
                 ctx.beginPath();
-                utils3D.roundRectCanvas(ctx, this.width* this.ppm, this.height* this.ppm, this.border.radius * this.ppm);
+                utils3D.roundRectCanvas(ctx, this.width * this.ppm, this.height * this.ppm, this.border.radius * this.ppm);
                 ctx.closePath();
                 ctx.lineWidth = this.border.width * 2 * this.ppm;
                 let rgb = utils3D.hexToRgb(this.border.color);
@@ -165,7 +184,7 @@ export class Element extends Sculpt {
                     + (this.border.opacity ? this.border.opacity : 1)
                     + ")";
                 ctx.stroke();
-      /*                          document.body.appendChild(canvas);
+                /*                          document.body.appendChild(canvas);
                  canvas.style.zIndex = 9999999999;
                  canvas.style.position = "absolute";
                  canvas.style.top = "0";
@@ -174,26 +193,27 @@ export class Element extends Sculpt {
 
             let buttonMat = null;
 
-            if (this.image || this.label || this.background.image || this.background.color) {
+            if (this.image || this.label || this.background.image || this.background.color|| this.border.width) {
                 let w = utils3D.nearestPow2(this.canvas.width) / this.canvas.width;
                 let h = utils3D.nearestPow2(this.canvas.height) / this.canvas.height;
 
                 let inMemCanvas = document.createElement('canvas');
                 let inMemCtx = inMemCanvas.getContext('2d');
-                inMemCanvas.width = this.canvas.width*w;
-                inMemCanvas.height = this.canvas.height*h;
-                inMemCtx.drawImage(this.canvas, 0, 0, this.canvas.width*w, this.canvas.height*h);
+                inMemCanvas.width = this.canvas.width * w;
+                inMemCanvas.height = this.canvas.height * h;
+                inMemCtx.drawImage(this.canvas, 0, 0, this.canvas.width * w, this.canvas.height * h);
 
                 let tex = new THREE.Texture(inMemCanvas);
                 tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
                 tex.repeat.set(1 / this.width, 1 / this.height);
+
                 buttonMat = new THREE.MeshBasicMaterial({
                     side: THREE.DoubleSide,
                     map: tex,
-                    transparent: true
+                    transparent: this.transparent
                 });
                 tex.needsUpdate = true;
-                delete this.canvas
+                delete this.canvas;
                 inMemCanvas = null;
             }
 
@@ -237,28 +257,28 @@ export class Element extends Sculpt {
     }
 
 
-/*    createMaterial(configs, imageObj) {
-        let tileSize = imageObj.height / 3;
-        let left = configs.position[0] * tileSize + 1;
-        let top = configs.position[1] * tileSize + 1;
-        let canvas = document.createElement('canvas');
-        let context = canvas.getContext('2d');
+    /*    createMaterial(configs, imageObj) {
+     let tileSize = imageObj.height / 3;
+     let left = configs.position[0] * tileSize + 1;
+     let top = configs.position[1] * tileSize + 1;
+     let canvas = document.createElement('canvas');
+     let context = canvas.getContext('2d');
 
-        canvas.width = tileSize;
-        canvas.height = tileSize;
+     canvas.width = tileSize;
+     canvas.height = tileSize;
 
 
-        canvas.style.position = "absolute";
-        canvas.style.left = "-150%";
-        canvas.style.top = "-150%";
+     canvas.style.position = "absolute";
+     canvas.style.left = "-150%";
+     canvas.style.top = "-150%";
 
-        context.rotate(configs.rotate);
-        context.translate(configs.translate[0] * tileSize, configs.translate[1] * tileSize);
-        context.drawImage(imageObj, left, top, tileSize - 2, tileSize - 2, 0, 0, tileSize, tileSize);
+     context.rotate(configs.rotate);
+     context.translate(configs.translate[0] * tileSize, configs.translate[1] * tileSize);
+     context.drawImage(imageObj, left, top, tileSize - 2, tileSize - 2, 0, 0, tileSize, tileSize);
 
-        let texture = new THREE.Texture();
-        texture.image = canvas;
-        texture.needsUpdate = true;
-        return texture;
-    }*/
+     let texture = new THREE.Texture();
+     texture.image = canvas;
+     texture.needsUpdate = true;
+     return texture;
+     }*/
 }
