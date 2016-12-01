@@ -4,7 +4,7 @@ import io from '../../vendor/socket.io/socket.io.js';
 let _socket;
 
 export class Socket extends SocketInterface {
-    constructor (url = "http://localhost:1234/", params = {
+    constructor(url = "//ws.rodin.space/", params = {
         transports: ['websocket', 'polling']
     }) {
         super();
@@ -14,11 +14,11 @@ export class Socket extends SocketInterface {
         }
     }
 
-    on () {
+    on() {
         _socket.on(...arguments);
     };
 
-    emit () {
+    emit() {
         _socket.emit(...arguments);
     };
 
