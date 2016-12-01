@@ -25,6 +25,7 @@ export class Sculpt {
         this.getEvents = () => events;
 
         this.isHovered = false;
+        this.forceHover = false;
         this.isPressed = false;
         this.isTouched = false;
         this.isMouseOvered = false;
@@ -406,6 +407,10 @@ export class Sculpt {
             .onComplete(next);
     }
 
+    /**
+     * get Objects forward vector
+     * @returns {Vector3}
+     */
     get forward() {
         return (new THREE.Vector3(0,0,1)).applyQuaternion(this.object3D.quaternion);
     }

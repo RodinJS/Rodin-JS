@@ -23,6 +23,11 @@ export class Event {
 		this.timeStamp = Date.now();
 	}
 
+    /**
+	 * getKey function.
+     * @param keyCode {number}
+     * @returns {boolean} true if controller key is pressed, false otherwise
+     */
 	getKey(keyCode) {
 		return this.keys.indexOf(keyCode) !== -1
     }

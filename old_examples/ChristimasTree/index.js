@@ -1,65 +1,78 @@
-import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
-
-import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
-
+//import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
-import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
-import {Snow} from '../../_build/js/rodinjs/sculpt/Snow.js';
-import {JSONModelObject} from '../../_build/js/rodinjs/sculpt/JSONModelObject.js';
-import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
-import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
+
+console.log(RODIN);
+
+import '../../_build/js/rodinjs/utils/Math.js';
+import '../../_build/js/vendor/three/examples/js/controls/VRControls.js';
+import '../../_build/js/vendor/three/examples/js/effects/VREffect.js';
+import '../../_build/js/vendor/three/examples/js/ImprovedNoise.js';
+import '../../_build/js/vendor/three/examples/js/SkyShader.js';
+import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
+import '../../_build/js/vendor/three/examples/js/WebVR.js';
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
-
-let scene = SceneManager.get();
-let camera = scene.camera;
-let controls = scene.controls;
-let renderer = scene.renderer;
-let threeScene = scene.scene;
+RODIN.WTF.is('Rodin.JS v0.0.1');
 
 
+// Setup three.js WebGL renderer. Note: Antialiasing is a big performance hit.
+// Only enable it if you actually need to.
+let renderer = new THREE.WebGLRenderer({antialias: window.devicePixelRatio < 2});
 renderer.setPixelRatio(window.devicePixelRatio);
-
 renderer.shadowMap.enabled = false;
 
+// Append the canvas element created by the renderer to document body element.
+document.body.appendChild(renderer.domElement);
+let ua = (navigator.userAgent || navigator.vendor || window.opera);
+//alert( ua + "_______" + ua.match( /iPhone OS \d\d_/i ))
 
-scene.setCameraProperty("far", 200);
+// Create a three.js scene.
+let scene = new THREE.Scene();
 
-threeScene.fog = new THREE.Fog(0x7a8695, 0, 23);
+// Add a skybox.
+let boxSize = 30;
+let skybox = new THREE.Mesh(new THREE.BoxGeometry(boxSize * 2, boxSize * 2, boxSize * 2), new THREE.MeshBasicMaterial({color: 0x000000}));
+scene.fog = new THREE.Fog(0x7a8695, 0, 23);
 
-/// mouse controller
+// Create a three.js camera.
+let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 200);
 
-let mouseController = new MouseController();
-mouseController.onControllerUpdate = mouseControllerUpdate;
-SceneManager.addController(mouseController);
+// Apply VR headset positional data to camera.
+let controls = new THREE.VRControls(camera);
+controls.standing = true;
 
+scene.add(skybox);
+skybox.position.y = controls.userHeight;
+skybox.scale.set(1, 1, -1);
 
-/// vive controllers
+let snowContainer = new THREE.Object3D();
 
-let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, threeScene, null, 2);
-controllerL.standingMatrix = controls.getStandingMatrix();
+// Apply VR stereo rendering to renderer.
+let effect = new THREE.VREffect(renderer);
+effect.setSize(window.innerWidth, window.innerHeight);
 
+// Create a VR manager helper to enter and exit VR mode.
+let params = {
+    hideButton: false, // Default: false.
+    isUndistorted: true // Default: false.
+};
+let manager = new WebVRManager(renderer, effect, params);
 
-controllerL.onKeyDown = controllerKeyDown;
-controllerL.onKeyUp = controllerKeyUp;
-controllerL.onTouchUp = controllerTouchUp;
-controllerL.onTouchDown = controllerTouchDown;
+let viveControllerL = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
+viveControllerL.standingMatrix = controls.getStandingMatrix();
+viveControllerL.onKeyDown = controllerKeyDown;
+viveControllerL.onKeyUp = controllerKeyUp;
+viveControllerL.onTouchUp = controllerTouchUp;
+viveControllerL.onTouchDown = controllerTouchDown;
+scene.add(viveControllerL);
 
-SceneManager.addController(controllerL);
-
-scene.add(controllerL);
-
-let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, threeScene, null, 3);
-controllerR.standingMatrix = controls.getStandingMatrix();
-
-controllerR.onKeyDown = controllerKeyDown;
-controllerR.onKeyUp = controllerKeyUp;
-controllerR.onTouchUp = controllerTouchUp;
-controllerR.onTouchDown = controllerTouchDown;
-
-SceneManager.addController(controllerR);
-
-scene.add(controllerR);
+let viveControllerR = new RODIN.ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
+viveControllerR.standingMatrix = controls.getStandingMatrix();
+viveControllerR.onKeyDown = controllerKeyDown;
+viveControllerR.onKeyUp = controllerKeyUp;
+viveControllerR.onTouchUp = controllerTouchUp;
+viveControllerR.onTouchDown = controllerTouchDown;
+scene.add(viveControllerR);
 
 let loader = new THREE.OBJLoader();
 loader.setPath('./models/');
@@ -71,12 +84,49 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
     object.children[0].material.map = loader.load('onepointfive_texture.png');
     object.children[0].material.specularMap = loader.load('onepointfive_spec.png');
 
-    controllerL.add(object.clone());
-    controllerR.add(object.clone());
+    viveControllerL.add(object.clone());
+    viveControllerR.add(object.clone());
 });
 
 
-/// Add light
+let mouseController = new RODIN.MouseController();
+mouseController.setRaycasterScene(scene);
+mouseController.setRaycasterCamera(camera);
+mouseController.onKeyDown = mouseControllerKeyDown;
+mouseController.onKeyUp = mouseControllerKeyUp;
+mouseController.onControllerUpdate = mouseControllerUpdate;
+
+// Add a skybox.
+boxSize = 21;
+let snowBoxSize = 18;
+
+snowContainer.rotation.y = -Math.PI / 2;
+snowContainer.position.y = -boxSize / 2 + snowBoxSize / 2;
+
+//snow = new RODIN.Snow(
+//    id,
+//    snow flake image URL,
+//    snow Box size in m,
+//    flake size in m,
+//    number of flakes in a cube of 1m x 1m x 1m ,
+//    windspeed in m/s,
+//    gravity value
+//);
+let snow = new RODIN.Snow(0,
+    'img/particle_snow2.png',
+    snowBoxSize,
+    0.03,
+    3,
+    0.2,
+    1
+);
+
+snow.on("ready", (evt) => {
+    evt.target.object3D.renderOrder = 1;
+    snowContainer.add(evt.target.object3D);
+    scene.add(snowContainer);
+});
+
 let light1 = new THREE.DirectionalLight(0xbbbbbb);
 light1.position.set(0, 6, 1);
 light1.castShadow = true;
@@ -89,42 +139,8 @@ scene.add(light1);
 
 scene.add(new THREE.AmbientLight(0xaaaaaa));
 
-
-let boxSize = 30;
-let snowBoxSize = 18;
-
-// Add a skybox.
-let skybox = new THREE.Mesh(new THREE.BoxGeometry(boxSize * 2, boxSize * 2, boxSize * 2), new THREE.MeshBasicMaterial({color: 0x000000}));
-skybox.position.y = controls.userHeight;
-skybox.scale.set(1, 1, -1);
-scene.add(skybox);
-
-boxSize = 21;
-
-// Add a snowContainer.
-let snowContainer = new THREE.Object3D();
-snowContainer.rotation.y = -Math.PI / 2;
-snowContainer.position.y = -boxSize / 2 + snowBoxSize / 2;
-scene.add(snowContainer);
-
-/// Add snow
-let snow = new Snow(0,
-    'img/particle_snow2.png',
-    snowBoxSize,
-    0.03,
-    3,
-    0.2,
-    1
-);
-
-snow.on("ready", (evt) => {
-    evt.target.object3D.renderOrder = 1;
-    snowContainer.add(evt.target.object3D);
-});
-
-
-/// Add terrain
-let terrain = new JSONModelObject(0, "./models/terrain.json");
+//terrain
+let terrain = new RODIN.JSONModelObject(0, "./models/terrain.json");
 terrain.on('ready', () => {
     let textureSnow = new THREE.TextureLoader().load("./models/snow_texture.jpg");
     textureSnow.wrapS = THREE.RepeatWrapping;
@@ -144,10 +160,10 @@ terrain.on('ready', () => {
     scene.add(mesh);
 });
 
+let s = 0.05;
 
 // christmasTree
-let s = 0.05;
-let christmasTree = new JSONModelObject(0, './models/christmasTree.json');
+let christmasTree = new RODIN.JSONModelObject(0, './models/christmasTree.json');
 christmasTree.on('ready', () => {
     christmasTree.object3D.material.materials[0].alphaTest = 0.35;
     christmasTree.object3D.material.materials[0].transparent = false;
@@ -165,7 +181,7 @@ christmasTree.on('ready', () => {
 });
 
 // random tree
-let tree = new JSONModelObject(0, './models/tree.json');
+let tree = new RODIN.JSONModelObject(0, './models/tree.json');
 tree.on('ready', () => {
     for (let i = 0; i < 25; i++) {
         let s = Math.randomFloatIn(0.05, 0.15);
@@ -183,7 +199,6 @@ tree.on('ready', () => {
         scene.add(t);
     }
 });
-
 
 // christmasTree toys
 let toyURLS = [
@@ -215,7 +230,7 @@ let toyReady = function () {
 
     // hover
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
-        if (evt.controller instanceof ViveController) {
+        if (evt.controller instanceof RODIN.ViveController) {
             if (!obj.hoveringObjects) {
                 obj.hoveringObjects = [];
             }
@@ -223,12 +238,12 @@ let toyReady = function () {
             obj.hoveringObjects.push(evt.controller);
         }
 
-        if (evt.controller instanceof MouseController) {
+        if (evt.controller instanceof RODIN.MouseController) {
         }
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt) => {
-        if (evt.controller instanceof ViveController) {
+        if (evt.controller instanceof RODIN.ViveController) {
             if (obj.hoveringObjects.indexOf(evt.controller) > -1) {
                 obj.hoveringObjects.splice(obj.hoveringObjects.indexOf(evt.controller));
             }
@@ -237,7 +252,7 @@ let toyReady = function () {
             }
         }
 
-        if (evt.controller instanceof MouseController) {
+        if (evt.controller instanceof RODIN.MouseController) {
         }
     });
 
@@ -245,11 +260,11 @@ let toyReady = function () {
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
         let controller = evt.controller;
         let target = evt.target;
-        if (controller instanceof MouseController) {
+        if (controller instanceof RODIN.MouseController) {
             controller.pickedItems.push(target.object3D);
 
             let initParent = target.object3D.parent;
-            changeParent(target.object3D, threeScene);
+            changeParent(target.object3D, scene);
 
             target.object3D.raycastCameraPlane = new THREE.Plane();
             target.object3D.offset = new THREE.Vector3();
@@ -272,7 +287,7 @@ let toyReady = function () {
             }
             changeParent(target.object3D, initParent);
         }
-        else if (controller instanceof ViveController) {
+        else if (controller instanceof RODIN.ViveController) {
             if (target.object3D.parent != target.object3D.initialParent) {
                 return;
             }
@@ -294,9 +309,9 @@ let toyReady = function () {
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
         let controller = evt.controller;
         let target = evt.target;
-        if (controller instanceof MouseController) {
+        if (controller instanceof RODIN.MouseController) {
         }
-        else if (controller instanceof ViveController) {
+        else if (controller instanceof RODIN.ViveController) {
             let targetParent = target.object3D.parent;
             changeParent(target.object3D, target.object3D.initialParent);
             controller.reycastingLine.remove(targetParent);
@@ -308,8 +323,8 @@ let toyReady = function () {
 
         let controller = evt.controller;
         let target = evt.target;
-        if (controller instanceof MouseController) {
-            let gamePad = MouseController.getGamepad();
+        if (controller instanceof RODIN.MouseController) {
+            let gamePad = RODIN.MouseController.getGamepad();
             if (evt.keyCode === 2) {
                 let initParent = target.object3D.parent;
                 changeParent(target.object3D, camera);
@@ -339,25 +354,24 @@ let toyReady = function () {
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt) => {
     });
 };
-let colors = [0x0d2a70, 0x690000, 0xd2d2d2];
+let colors = [ 0x0d2a70 , 0x690000, 0xd2d2d2];
 for (let i = 0; i < 10; i++) {
     let url = toyURLS[Math.randomIntIn(0, 5)];
-    let toy = new JSONModelObject(i, url);
+    let toy = new RODIN.JSONModelObject(i, url);
 
     toy.on('ready', toyReady);
     toy.on('ready', () => {
-            toy.object3D.geometry.computeVertexNormals();
+        toy.object3D.geometry.computeVertexNormals();
 
-            toy.object3D.material.materials[0].reflectivity = 1;
-            toy.object3D.material.materials[0].hue = 1;
-            if (url !== toyURLS[1]) {
-                toy.object3D.material.materials[0].color = new THREE.Color(colors[Math.randomIntIn(0, colors.length - 1)]);
-            }
+        toy.object3D.material.materials[0].reflectivity = 1;
+        toy.object3D.material.materials[0].hue = 1;
+        if (url !== toyURLS[1]){
+            toy.object3D.material.materials[0].color = new THREE.Color(colors[Math.randomIntIn(0, colors.length - 1)]);
         }
-    )
-}
+    }
+)}
 
-let toy = new JSONModelObject(10, toyURLS[6]);
+let toy = new RODIN.JSONModelObject(10, toyURLS[6]);
 toy.on('ready', toyReady);
 toy.on('ready', () => {
     toy.object3D.geometry.center();
@@ -449,7 +463,7 @@ function mouseControllerUpdate() {
             if (this.raycaster.ray.intersectPlane(item.raycastCameraPlane, item.intersection)) {
                 if (this.keyCode === 1) {
                     let initParent = item.parent;
-                    changeParent(item, threeScene);
+                    changeParent(item, scene);
                     item.position.copy(item.intersection.sub(item.offset));
                     changeParent(item, initParent);
                 } else if (this.keyCode === 3) {
@@ -468,5 +482,64 @@ function mouseControllerUpdate() {
                 }
             }
         });
+    }
+}
+
+function mouseControllerKeyDown(keyCode) {
+
+    if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
+    this.keyCode = keyCode;
+    this.engaged = true;
+    if (!this.pickedItems) {
+        this.pickedItems = [];
+    }
+
+    if (this.intersected && this.intersected.length > 0) {
+        this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
+        this.stopPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
+    }
+}
+
+function mouseControllerKeyUp(keyCode) {
+    if (keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) return;
+    this.keyCode = null;
+    this.engaged = false;
+    this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_DOWN);
+    this.startPropagation(RODIN.CONSTANTS.EVENT_NAMES.MOUSE_MOVE);
+    this.pickedItems = [];
+}
+
+// Kick off animation loop
+requestAnimationFrame(animate);
+
+window.addEventListener('resize', onResize, true);
+window.addEventListener('vrdisplaypresentchange', onResize, true);
+
+// Request animation frame loop function
+let lastRender = 0;
+function animate(timestamp) {
+    let delta = Math.min(timestamp - lastRender, 500);
+    lastRender = timestamp;
+
+    // Update controller.
+    viveControllerL.update();
+    viveControllerR.update();
+    mouseController.update();
+
+    // Update VR headset position and apply to camera.
+    controls.update();
+    snow.emit('update');
+
+    // Render the scene through the manager.
+    manager.render(scene, camera, timestamp);
+    requestAnimationFrame(animate);
+}
+
+function onResize(e) {
+    effect.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    if (window.devicePixelRatio >= 2) {
+        manager.renderer.setPixelRatio(2);
     }
 }

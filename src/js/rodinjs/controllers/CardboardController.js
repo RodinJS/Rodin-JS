@@ -5,6 +5,9 @@ import {ErrorInvalidEventType} from '../error/CustomErrors';
 
 let controllerCreated = false;
 
+/**
+ * Class CardboardController
+ */
 export class CardboardController extends GamePad {
     constructor(scene = null, camera = null) {
         if (controllerCreated) {
@@ -25,11 +28,20 @@ export class CardboardController extends GamePad {
         }, true);
     }
 
+    /**
+     * getIntersections method
+     * @returns [Sculpt]
+     */
     getIntersections() {
         this.raycaster.set(this.camera.getWorldPosition(), this.camera.getWorldDirection());
         return this.raycaster.raycast();
     }
 
+    /**
+     * Set propagation value for event.
+     * @param eventName {string}
+     * @param value {boolean}
+     */
     setPropagation(eventName, value) {
         let gamePad = CardboardController.getGamepad();
         value = !value;
@@ -51,14 +63,26 @@ export class CardboardController extends GamePad {
         throw new ErrorInvalidEventType(eventName, 'setPropagation');
     }
 
+    /**
+     * start propagation for event
+     * @param eventName {string}
+     */
     startPropagation(eventName) {
         this.setPropagation(eventName, true);
     }
 
+    /**
+     * stop propagation for event
+     * @param eventName {string}
+     */
     stopPropagation(eventName) {
         this.setPropagation(eventName, false);
     }
 
+    /**
+     * OnKeyDown function
+     * @param keyCode {number}
+     */
     onKeyDown(keyCode) {
 
         this.keyCode = keyCode;
@@ -73,6 +97,10 @@ export class CardboardController extends GamePad {
         }
     }
 
+    /**
+     * OnKeyUp function
+     * @param keyCode {number}
+     */
     onKeyUp(keyCode) {
         this.engaged = false;
         this.pickedItems = [];
@@ -82,6 +110,10 @@ export class CardboardController extends GamePad {
         this.startPropagation(EVENT_NAMES.MOUSE_MOVE);
     }
 
+    /**
+     * get gamepad from navigator
+     * @returns {MouseGamePad}
+     */
     static getGamepad() {
         return navigator.cardboardGamePad;
     }
