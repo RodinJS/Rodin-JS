@@ -32,19 +32,19 @@ skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
 
 
 
-let obj = new JSONModelObject(0, './model/monster.js');
+let obj = new JSONModelObject(0, './model/Serg.js');
 
 obj.on('ready', () => {
-    let s = 0.001;
+    let s = 0.18;
     obj.object3D.scale.set(s, s, s);
 
-    obj.object3D.position.y = controls.userHeight - 1.6;
-    obj.object3D.position.z = -3;
+    obj.object3D.position.y = controls.userHeight-0.15;
+    obj.object3D.position.z = -0.5;
 
-    obj.object3D.rotation.y = -Math.PI / 4;
+    obj.object3D.rotation.y = Math.PI ;
     scene.add(obj.object3D);
 });
 
 obj.on('update', () => {
-    obj.object3D && (obj.object3D.rotation.y += 0.001);
+    //obj.object3D && (obj.object3D.rotation.y += 0.001);
 });
