@@ -21,6 +21,7 @@ export class Event {
 		this.keys = [];
 
 		this.timeStamp = Date.now();
+		this.propagation = true;
 	}
 
     /**
@@ -31,4 +32,8 @@ export class Event {
 	getKey(keyCode) {
 		return this.keys.indexOf(keyCode) !== -1
     }
+
+    stopPropagation() {
+		this.propagation = false;
+	}
 }
