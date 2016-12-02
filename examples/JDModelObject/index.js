@@ -22,8 +22,6 @@ scene.add(light2);
 let amlight = new THREE.AmbientLight(0x3e3e3e);
 scene.add(amlight);
 
-
-
 let skybox = new CubeObject(15, 'img/boxW.jpg');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
     scene.add(evt.target.object3D);

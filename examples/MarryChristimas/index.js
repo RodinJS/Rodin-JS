@@ -14,6 +14,7 @@ import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import {EVENT_NAMES} from '../../_build/js/rodinjs/constants/constants.js'
+import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
 
 
 let scene = SceneManager.get();
@@ -22,6 +23,8 @@ let controls = scene.controls;
 let renderer = scene.renderer;
 let threeScene = scene.scene;
 
+window.camera = camera;
+
 
 renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -29,6 +32,12 @@ renderer.shadowMap.enabled = false;
 
 
 scene.setCameraProperty("far", 200);
+
+let skybox = new CubeObject(25, 'img/horizontalSkyBox.png');
+skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
+    scene.add(evt.target.object3D);
+    evt.target.object3D.position.y = scene.controls.userHeight;
+});
 
 //threeScene.fog = new THREE.Fog(0x7a8695, 0, 23);
 
@@ -121,7 +130,7 @@ scene.add(new THREE.AmbientLight(0xaaaaaa, 0.5));
 let snowBoxSize = 15;
 
 /// Add snow
-let snow = new Snow(0,
+let snow1 = new Snow(0,
     'img/particle_snow2.png',
     snowBoxSize,
     0.02,
@@ -130,16 +139,33 @@ let snow = new Snow(0,
     1
 );
 
-snow.on("ready", (evt) => {
+snow1.on("ready", (evt) => {
     evt.target.object3D.renderOrder = 1;
-    snow.object3D.scale.z = 0.1;
-    snow.object3D.position.set(0, 0, 11.5);
-    scene.add(snow.object3D);
-    //snowContainer.add(evt.target.object3D);
+    snow1.object3D.scale.z = 0.1;
+    snow1.object3D.position.set(0, 0, 9);
+    scene.add(snow1.object3D);
 });
 
+/// Add snow
+let snow2 = new Snow(0,
+    'img/particle_snow2.png',
+    snowBoxSize,
+    0.02,
+    2,
+    0.2,
+    1
+);
+
+snow2.on("ready", (evt) => {
+    evt.target.object3D.renderOrder = 1;
+    snow2.object3D.scale.x = 0.1;
+    snow2.object3D.position.set(-4, 0, 0);
+    scene.add(snow2.object3D);
+});
+
+
 // christmasRoom
-let s = 0.026;
+let s = 0.024;
 let christmasRoom = new JDModelObject(0, './models/ChristmasRoom.JD');
 christmasRoom.on('ready', () => {
     christmasRoom.object3D.children[0].material.materials[0].alphaTest = 0.35;
@@ -148,7 +174,6 @@ christmasRoom.on('ready', () => {
     christmasRoom.object3D.children[0].material.materials[0].clipShadows = true;
 
     christmasRoom.object3D.scale.set(s, s, s);
-    christmasRoom.object3D.position.z = 5;
 
     christmasRoom.object3D.castShadow = true;
     christmasRoom.object3D.receiveShadow = true;
@@ -171,7 +196,6 @@ christmasFire.on('ready', () => {
     );
 
     christmasFire.object3D.scale.set(s, s, s);
-    christmasFire.object3D.position.z = 5;
 
     christmasFire.object3D.castShadow = false;
     christmasFire.object3D.receiveShadow = false;
@@ -181,8 +205,8 @@ christmasFire.on('ready', () => {
 let fireLight1 = new RODIN.THREEObject(new THREE.PointLight(0xff983c, 5, 1));
 fireLight1.on('ready', (evt) => {
     fireLight1.object3D.position.set(0.2, 0.7, -5);
-//fireLight1.add(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10)));
     scene.add(fireLight1.object3D);
+    //fireLight1.object3D.add(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10)));
 });
 
 let animationsFire = [
@@ -236,6 +260,55 @@ fireLight1.on(EVENT_NAMES.ANIMATION_COMPLETE, (evt) => {
     spotLight.animator.start(play);
 });
 
+let candleLight1 = new RODIN.THREEObject(new THREE.PointLight(0xff7836, 2, 0.5));
+candleLight1.on('ready', (evt) => {
+
+    let map = [{
+        x: -0.36,
+        y: 1.8,
+        z: -4.1,
+        ints: 1.8
+    },{
+        x: 0.7,
+        y: 1.8,
+        z: -4.1,
+        ints: 1.8
+    },{
+        x: 1.4,
+        y: 0.9,
+        z: -3.6,
+        ints: 5
+    },{
+        x: 1.7,
+        y: 0.8,
+        z: 3.7,
+        ints: 3.5
+    },{
+        x: -2.25,
+        y: 1.85,
+        z: 3.7,
+        ints: 3.5
+    },{
+        x: 0.7,
+        y: 1.2,
+        z: 5,
+        ints: 4
+    }];
+
+    for (let i = 0, ln = map.length; i < ln; i++) {
+        let pos = map[i];
+        let obj = candleLight1.object3D.clone();
+
+        obj.intensity = pos.ints;
+        obj.position.set(pos.x, pos.y, pos.z);
+        //obj.add(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10)));
+        scene.add(obj);
+
+        window.ob = obj;
+    }
+
+
+});
 
 /*/// Add terrain
  let terrain = new JSONModelObject(0, "./models/terrain.json");
