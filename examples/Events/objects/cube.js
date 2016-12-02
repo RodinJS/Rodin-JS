@@ -11,7 +11,7 @@ cube.on(EVENT_NAMES.READY, (evt) => {
     evt.target.object3D.position.z = -1;
     evt.target.object3D.position.x = -0.5;
     scene.add(evt.target.object3D);
-    RODIN.Raycastables.push(evt.target.object3D);
+    RODIN.Raycastables.push(evt.target);
 });
 
 cube.on(EVENT_NAMES.UPDATE, (evt) => {
