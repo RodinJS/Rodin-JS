@@ -91,41 +91,52 @@ SceneManager.addController(controllerR);
 //light1.shadow.mapSize.set(2048, 2048);
 //scene.add(light1);
 
+/*color — Numeric value of the RGB component of the color.
+ intensity — Numeric value of the light's strength/intensity.
+ distance -- Maximum distance from origin where light will shine whose intensity is attenuated linearly based on distance from origin.
+ angle -- Maximum angle of light dispersion from its direction whose upper bound is Math.PI/2.
+ penumbra -- Percent of the spotlight cone that is attenuated due to penumbra. Takes values between zero and 1. Default is zero.
+ decay -- The amount the light dims along the distance of the light.
+ */
+
+let spotLight = new RODIN.THREEObject(new THREE.SpotLight(0xff983c, 2, 15, 1, 0.5, 1));
+spotLight.on('ready', (evt) => {
+
+    spotLight.object3D.position.set(0.2, 0.7, -5);
+
+    spotLight.object3D.castShadow = true;
+    spotLight.object3D.shadow.mapSize.width = 1024;
+    spotLight.object3D.shadow.mapSize.height = 1024;
+    spotLight.object3D.shadow.camera.near = 5;
+    spotLight.object3D.shadow.camera.far = 40;
+    spotLight.object3D.shadow.camera.fov = 0.5;
+    spotLight.object3D.target.position.set(0, 0, 5);
+
+    scene.add(spotLight.object3D);
+    scene.add(spotLight.object3D.target);
+});
+
 scene.add(new THREE.AmbientLight(0xaaaaaa, 0.5));
 
-
-let boxSize = 30;
-let snowBoxSize = 18;
-
-// Add a skybox.
-/*let skybox = new THREE.Mesh(new THREE.BoxGeometry(boxSize * 2, boxSize * 2, boxSize * 2), new THREE.MeshBasicMaterial({color: 0x000000}));
- skybox.position.y = controls.userHeight;
- skybox.scale.set(1, 1, -1);
- scene.add(skybox);*/
-
-boxSize = 21;
-
-// Add a snowContainer.
-/*let snowContainer = new THREE.Object3D();
- snowContainer.rotation.y = -Math.PI / 2;
- snowContainer.position.y = -boxSize / 2 + snowBoxSize / 2;
- scene.add(snowContainer);*/
+let snowBoxSize = 15;
 
 /// Add snow
-/*
- let snow = new Snow(0,
- 'img/particle_snow2.png',
- snowBoxSize,
- 0.03,
- 3,
- 0.2,
- 1
- );
+let snow = new Snow(0,
+    'img/particle_snow2.png',
+    snowBoxSize,
+    0.02,
+    2,
+    0.2,
+    1
+);
 
- snow.on("ready", (evt) => {
- evt.target.object3D.renderOrder = 1;
- snowContainer.add(evt.target.object3D);
- });*/
+snow.on("ready", (evt) => {
+    evt.target.object3D.renderOrder = 1;
+    snow.object3D.scale.z = 0.1;
+    snow.object3D.position.set(0, 0, 11.5);
+    scene.add(snow.object3D);
+    //snowContainer.add(evt.target.object3D);
+});
 
 // christmasRoom
 let s = 0.026;
@@ -145,8 +156,6 @@ christmasRoom.on('ready', () => {
 });
 
 let christmasFire = new JDModelObject(1, './models/fire.JD');
-//let christmasRoom = new JSONModelObject(0, './models/ChristmasRoom.js');
-
 christmasFire.on('ready', () => {
 
     let txt = new THREE.TextureLoader();
@@ -176,7 +185,7 @@ fireLight1.on('ready', (evt) => {
     scene.add(fireLight1.object3D);
 });
 
-let animations = [
+let animationsFire = [
     new Animation('light1', {
         intensity: 5
     }),
@@ -194,16 +203,39 @@ let animations = [
     })
 ];
 
-for(let i = 0; i < animations.length; i ++) {
-    animations[i].duration(200);
-    fireLight1.animator.add(animations[i]);
+let animationsSpotLight = [
+    new Animation('light1', {
+        intensity: 2
+    }),
+    new Animation('light2', {
+        intensity: 1.6
+    }),
+    new Animation('light3', {
+        intensity: 1.2
+    }),
+    new Animation('light4', {
+        intensity: 2.4
+    }),
+    new Animation('light5', {
+        intensity: 1.8
+    })
+];
+
+for (let i = 0; i < animationsFire.length; i++) {
+    animationsFire[i].duration(200);
+    animationsSpotLight[i].duration(200);
+    fireLight1.animator.add(animationsFire[i]);
+    spotLight.animator.add(animationsSpotLight[i]);
 }
 
 fireLight1.animator.start('light1');
+spotLight.animator.start('light1');
 fireLight1.on(EVENT_NAMES.ANIMATION_COMPLETE, (evt) => {
-    let play = animations[Math.randomIntIn(0, animations.length - 1)].name;
+    let play = animationsFire[Math.randomIntIn(0, animationsFire.length - 1)].name;
     fireLight1.animator.start(play);
+    spotLight.animator.start(play);
 });
+
 
 /*/// Add terrain
  let terrain = new JSONModelObject(0, "./models/terrain.json");
