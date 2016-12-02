@@ -26,14 +26,14 @@ let threeScene = scene.scene;
 window.camera = camera;
 
 
-renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(window.devicePixelRatio > 2 ? 2 : window.devicePixelRatio);
 
 renderer.shadowMap.enabled = false;
 
 
 scene.setCameraProperty("far", 200);
 
-let skybox = new CubeObject(25, 'img/horizontalSkyBox.png');
+let skybox = new CubeObject(25, 'img/horizontalSkyBox1.jpg');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
     scene.add(evt.target.object3D);
     evt.target.object3D.position.y = scene.controls.userHeight;
@@ -113,12 +113,12 @@ spotLight.on('ready', (evt) => {
 
     spotLight.object3D.position.set(0.2, 0.7, -5);
 
-    spotLight.object3D.castShadow = true;
-    spotLight.object3D.shadow.mapSize.width = 1024;
-    spotLight.object3D.shadow.mapSize.height = 1024;
-    spotLight.object3D.shadow.camera.near = 5;
-    spotLight.object3D.shadow.camera.far = 40;
-    spotLight.object3D.shadow.camera.fov = 0.5;
+    //spotLight.object3D.castShadow = true;
+    //spotLight.object3D.shadow.mapSize.width = 1024;
+    //spotLight.object3D.shadow.mapSize.height = 1024;
+    //spotLight.object3D.shadow.camera.near = 5;
+    //spotLight.object3D.shadow.camera.far = 40;
+    //spotLight.object3D.shadow.camera.fov = 0.5;
     spotLight.object3D.target.position.set(0, 0, 5);
 
     scene.add(spotLight.object3D);
@@ -171,12 +171,12 @@ christmasRoom.on('ready', () => {
     christmasRoom.object3D.children[0].material.materials[0].alphaTest = 0.35;
     christmasRoom.object3D.children[0].material.materials[0].transparent = false;
     christmasRoom.object3D.children[0].material.materials[0].side = THREE.DoubleSide;
-    christmasRoom.object3D.children[0].material.materials[0].clipShadows = true;
+    //christmasRoom.object3D.children[0].material.materials[0].clipShadows = true;
 
     christmasRoom.object3D.scale.set(s, s, s);
 
-    christmasRoom.object3D.castShadow = true;
-    christmasRoom.object3D.receiveShadow = true;
+    //christmasRoom.object3D.castShadow = true;
+    //christmasRoom.object3D.receiveShadow = true;
     scene.add(christmasRoom.object3D);
 });
 
@@ -192,7 +192,7 @@ christmasFire.on('ready', () => {
                 skinning: true
             });
             console.log(christmasFire.object3D.children[0].material.materials[0]);
-        },
+        }
     );
 
     christmasFire.object3D.scale.set(s, s, s);
