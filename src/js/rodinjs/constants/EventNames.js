@@ -27,6 +27,8 @@ export const CONTROLLER_HOVER_OUT = 'controllerhoverout';
 
 export const CONTROLLER_KEY_DOWN = 'controllerkeydown';
 export const CONTROLLER_KEY_UP = 'controllerkeyup';
+export const CONTROLLER_KEY = 'controllerkey';
+
 export const CONTROLLER_VALUE_CHANGE = 'controllervaluechange';
 export const CONTROLLER_CLICK = 'controllerclick';
 

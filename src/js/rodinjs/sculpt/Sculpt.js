@@ -22,11 +22,6 @@ export class Sculpt {
             throw new ErrorAbstractClassInstance();
         }
 
-        /**
-         * git
-         * private properties
-         */
-
         this.id = id;
         let events = {};
         this.getEvents = () => events;
@@ -40,16 +35,11 @@ export class Sculpt {
             return nativeEvents;
         };
 
-        this.isHovered = false;
         this.forceHover = false;
-        this.isPressed = false;
-        this.isTouched = false;
-        this.isMouseOvered = false;
-        this.busy = false;
         this.locked = false;
-        this.lockedBy = undefined;
         this.isSculpt = true;
         this.object3D = null;
+
         /**
          * this future is responsible for mouse and tap actions
          * If true, then all mouse and tap actions called on object will called on parent too.
@@ -61,143 +51,11 @@ export class Sculpt {
          */
         this.passActionToParent = true;
 
-        this.mouseX = 0;
-        this.mouseY = 0;
-        this.touchX = 0;
-        this.touchY = 0;
-
-        let touchStartTime = 0;
-        let keyDownStartTime = {};
-
         this.style = {
             cursor: "default"
         };
 
         this.animator = new Animator(this);
-
-
-        /**
-         * HOVER ACTIONS
-         * use isHovered flag for check if object is hovered
-         */
-        this.on(EVENT_NAMES.HOVER, () => {
-            this.isHovered = true;
-        }, Enforce);
-
-        this.on(EVENT_NAMES.HOVER_OUT, () => {
-            this.isHovered = false;
-        }, Enforce);
-
-        /**
-         * MOUSE ACTIONS
-         *
-         * use isPressed flag for check if object is pressed
-         * mousedown actions calls when you mousedown on object, and mouseup action calls only when you mouseup,
-         * so please note, that when you mousedown on object and start dragging outside of object, mousemove event will
-         * emitted on object
-         *
-         * if delay between mousedown and mouseup actions is less, then emits click event
-         */
-        this.on(EVENT_NAMES.MOUSE_DOWN, () => {
-            this.isPressed = true;
-            touchStartTime = Date.now();
-        }, Enforce);
-
-        this.on(EVENT_NAMES.MOUSE_UP, (evt) => {
-            this.isPressed = false;
-            if (Date.now() - touchStartTime < 200) {
-                this.emit(EVENT_NAMES.CLICK, evt);
-            }
-            touchStartTime = 0;
-        }, Enforce);
-
-        this.on(EVENT_NAMES.MOUSE_ENTER, () => {
-            this.isMouseOvered = true;
-        }, Enforce);
-
-        this.on(EVENT_NAMES.MOUSE_LEAVE, () => {
-            this.isMouseOvered = false;
-        }, Enforce);
-
-        /**
-         * STEREO MODE MOUSE ACTIONS
-         *
-         * same MOUSE ACTIONS logic
-         */
-        this.on(EVENT_NAMES.STEREO_MOUSE_DOWN, () => {
-            touchStartTime = Date.now();
-        }, Enforce);
-
-        this.on(EVENT_NAMES.STEREO_MOUSE_UP, (evt) => {
-            if (Date.now() - touchStartTime < 200) {
-                this.emit(EVENT_NAMES.STEREO_CLICK, evt);
-            }
-            touchStartTime = 0;
-        }, Enforce);
-
-        /**
-         * CONTROLLER KEY ACTIONS
-         *
-         * same MOUSE ACTIONS logic
-         */
-        this.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-            keyDownStartTime[evt.keyCode] = Date.now();
-        }, Enforce);
-
-        this.on(EVENT_NAMES.CONTROLLER_KEY_UP, (evt) => {
-            if (Date.now() - keyDownStartTime[evt.keyCode] < 300) {
-                this.emit(EVENT_NAMES.CONTROLLER_CLICK, evt);
-            }
-            keyDownStartTime[evt.keyCode] = 0;
-        }, Enforce);
-
-        /**
-         * CONTROLLER TOUCH ACTIONS
-         *
-         * same MOUSE ACTIONS logic
-         */
-        this.on(EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
-            keyDownStartTime[evt.keyCode] = Date.now();
-        }, Enforce);
-
-        this.on(EVENT_NAMES.CONTROLLER_TOUCH_END, (evt) => {
-            if (Date.now() - keyDownStartTime[evt.keyCode] < 300) {
-                this.emit(EVENT_NAMES.CONTROLLER_TAP, evt);
-            }
-            keyDownStartTime[evt.keyCode] = 0;
-        }, Enforce);
-
-        /**
-         * TOUCH ACTIONS
-         *
-         * same MOUSE ACTIONS logic
-         */
-        this.on(EVENT_NAMES.TOUCH_START, () => {
-            this.isTouched = true;
-            touchStartTime = Date.now();
-        }, Enforce);
-
-        this.on(EVENT_NAMES.TOUCH_END, (evt) => {
-            this.isTouched = false;
-            if (Date.now() - touchStartTime < 200) {
-                this.emit(EVENT_NAMES.TAP, evt);
-            }
-            touchStartTime = 0;
-        }, Enforce);
-
-
-        /**
-         * CLICK ACTIONS
-         */
-        this.on(EVENT_NAMES.CLICK, (evt) => {
-            if (evt.domEvent && evt.domEvent.which === 3) {
-                this.emit(EVENT_NAMES.RIGHT_CLICK, evt);
-            }
-        }, Enforce);
-
-        this.on("rightclick", (evt) => {
-            WTF.is(evt.target);
-        }, Enforce);
     }
 
     /**
