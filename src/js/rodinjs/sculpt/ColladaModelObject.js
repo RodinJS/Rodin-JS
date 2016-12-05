@@ -42,12 +42,13 @@ export class ColladaModelObject extends Sculpt {
         new THREE.ColladaLoader().load(
             URL,
             (mesh) => {
-                mesh.scene.traverse((child) => {
+                //console.log(mesh);
+                /*mesh.scene.traverse((child) => {
                     if (child instanceof THREE.SkinnedMesh) {
                         let animation = new THREE.Animation(child, child.geometry.animation);
                         animation.play();
                     }
-                });
+                });*/
 
                 this.init(mesh.scene);
 
@@ -58,7 +59,7 @@ export class ColladaModelObject extends Sculpt {
             }, onProgress, onError);
 
         this.on("update", (evt) => {
-            THREE.AnimationHandler.update(RODIN.Time.deltaTime()/1000);
+            //THREE.AnimationHandler.update(RODIN.Time.deltaTime()/1000);
         });
 
         // todo create resetAxis function

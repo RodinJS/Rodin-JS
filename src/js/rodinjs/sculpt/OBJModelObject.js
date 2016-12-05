@@ -1,6 +1,7 @@
 'use strict';
 
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
+import {WTF} from '../logger/Logger.js';
 
 import '../../vendor/three/examples/js/loaders/collada/AnimationHandler.js';
 import '../../vendor/three/examples/js/loaders/collada/KeyFrameAnimation.js';
@@ -40,7 +41,7 @@ export class OBJModelObject extends Sculpt {
         let onProgress = function (xhr) {
             if (xhr.lengthComputable) {
                 let percentComplete = xhr.loaded / xhr.total * 100;
-                console.log(Math.round(percentComplete, 2) + '% downloaded');
+                WTF.is(Math.round(percentComplete, 2) + '% downloaded');
             }
         };
 
