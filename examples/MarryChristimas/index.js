@@ -31,7 +31,39 @@ renderer.shadowMap.enabled = false;
 
 scene.setCameraProperty("far", 200);
 
-let skybox = new CubeObject(25, 'img/horizontalSkyBox1.jpg');
+/*
+ var n = navigator.userAgent;
+ if (n.match(/Android/i) || n.match(/webOS/i) || n.match(/iPhone/i) || n.match(/iPad/i) || n.match(/iPod/i) || n.match(/BlackBerry/i) || n.match(/Windows Phone/i)){ isMobile = true;  antialias = false; document.getElementById("MaxNumber").value = 200; }
+
+ var materialType = 'MeshBasicMaterial';
+
+ if(!isMobile){
+ scene.add( new THREE.AmbientLight( 0x3D4143 ) );
+ light = new THREE.DirectionalLight( 0xffffff , 1.4);
+ light.position.set( 300, 1000, 500 );
+ light.target.position.set( 0, 0, 0 );
+ light.castShadow = true;
+ light.shadowCameraNear = 500;
+ light.shadowCameraFar = 1600;
+ light.shadowCameraFov = 70;
+ light.shadowBias = 0.0001;
+ light.shadowDarkness = 0.7;
+ //light.shadowCameraVisible = true;
+ light.shadowMapWidth = light.shadowMapHeight = 1024;
+ scene.add( light );
+
+ materialType = 'MeshPhongMaterial';
+
+ renderer.shadowMap.enabled = true;
+ renderer.shadowMap.type = THREE.PCFShadowMap;//THREE.BasicShadowMap;
+ }*/
+
+/*
+let n = navigator.userAgent;
+if (n.match(/Android/i) || n.match(/webOS/i) || n.match(/iPhone/i) || n.match(/iPad/i) || n.match(/iPod/i) || n.match(/BlackBerry/i) || n.match(/Windows Phone/i)){ isMobile = true;  antialias = false; document.getElementById("MaxNumber").value = 200; }
+*/
+
+let skybox = new CubeObject(25, 'img/horizontalSkyBox_mobile.jpg');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
     scene.add(evt.target.object3D);
     evt.target.object3D.position.y = scene.controls.userHeight;
@@ -42,6 +74,9 @@ let mouseController = new MouseController();
 mouseController.onControllerUpdate = mouseControllerUpdate;
 SceneManager.addController(mouseController);
 
+let stats = new Stats();
+document.body.appendChild( stats.dom );
+scene.preRender(stats.update.bind(stats));
 
 /// vive controllers
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, threeScene, null, 2);
@@ -178,7 +213,7 @@ christmasFire.on('ready', () => {
 
     let txt = new THREE.TextureLoader();
     txt.load(
-        'models/fire.jpg',
+        'models/fire_mobile.jpg',
         function (texture) {
             christmasFire.object3D.children[0].material.materials[0] = new THREE.MeshBasicMaterial({
                 map: texture,
@@ -255,8 +290,7 @@ fireLight1.on(EVENT_NAMES.ANIMATION_COMPLETE, (evt) => {
 
 let candleLight1 = new RODIN.THREEObject(new THREE.PointLight(0xff7836, 2, 0.5));
 candleLight1.on('ready', (evt) => {
-
-    let map = [{
+    let map = [/*{
         x: -0.36,
         y: 1.8,
         z: -4.1,
@@ -266,7 +300,7 @@ candleLight1.on('ready', (evt) => {
         y: 1.8,
         z: -4.1,
         ints: 1.8
-    },{
+    },*/{
         x: 1.4,
         y: 0.9,
         z: -3.6,
@@ -299,7 +333,6 @@ candleLight1.on('ready', (evt) => {
 
         window.ob = obj;
     }
-
 
 });
 
