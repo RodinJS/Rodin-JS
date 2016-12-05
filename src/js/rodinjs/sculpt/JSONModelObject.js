@@ -39,7 +39,8 @@ export class JSONModelObject extends Sculpt {
 
         let mixers = [];
 
-        new THREE.JSONLoader().load(
+        let loader = new THREE.JSONLoader();
+        loader.load(
             URL,
             (geometry, materials) => {
                 let material = materials[0];

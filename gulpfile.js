@@ -38,7 +38,7 @@ const plumber = require('gulp-plumber');
 const size = require('gulp-size');
 const connect = require('gulp-connect');
 
-const JS = ['src/js/**/*.js', '!src/js/systemjs/system.js', '!src/js/systemjs/glsl.js', '!src/js/{vendor,vendor/**}', '!src/js/Three.custom.js', '!src/js/THREE.GLOBAL.js'];
+const JS = ['src/js/**/*.js', '!src/js/systemjs/system.js', '!src/js/rodinjs/resources/**/*', '!src/js/systemjs/glsl.js', '!src/js/{vendor,vendor/**}', '!src/js/Three.custom.js', '!src/js/THREE.GLOBAL.js'];
 const SYSTEMJS = ['src/js/systemjs/*.js'];
 const SASS = ['src/sass/**/*.scss', '!src/sass/{vendor,vendor/**}'];
 const FONT = ['src/font/**/*.{ttf,woff,woff2,eof,svg}'];
@@ -49,6 +49,7 @@ const VIDEO = ['src/video/**/*'];
 const EX_JS = ['examples/**/*.js', '!examples/**/*_c.js', '!examples/**/model/**/*.js'];
 
 const VENDOR = require('./vendor.json');
+const RESOURCES = ['src/js/rodinjs/resources/**/*'];
 
 const AUTOPREFIXER_BROWSERS = [
     'ie >= 10',
@@ -115,6 +116,11 @@ gulp.task('vendor', () => {
     }
 
     return true;
+});
+
+gulp.task('resources', () => {
+    return gulp.src(RESOURCES)
+        .pipe(gulp.dest('./_build/js/rodinjs/resources'));
 });
 
 gulp.task('systemjs', () => {
@@ -246,11 +252,11 @@ gulp.task('connect', () => {
 
 
 gulp.task('prod', (done) => {
-    sequence('clean', ['js-prod', 'vendor', 'systemjs', 'examples', 'sass-prod', 'font', 'img'], done);
+    sequence('clean', ['js-prod', 'vendor', 'resources', 'systemjs', 'examples', 'sass-prod', 'font', 'img'], done);
 });
 
 gulp.task('default', (done) => {
-    sequence('clean', ['js', 'vendor', 'systemjs', 'examples', 'sass', 'font', 'img', 'connect', 'watch'], done);
+    sequence('clean', ['js', 'vendor', 'resources', 'systemjs', 'examples', 'sass', 'font', 'img', 'connect', 'watch'], done);
 });
 
 
