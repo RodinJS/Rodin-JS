@@ -7,10 +7,10 @@ export class CubeMapFromModel extends Sculpt {
     constructor (id, size, textureURL, material) {
         super(id);
         // todo ASAP: find normal method
-        let cube = new JSONModelObject(id, '/_build/resources/models/cubemap.js');
+        let cube = new JSONModelObject(id, '/_build/js/rodinjs/resources/models/cubemap.js');
         cube.on('ready', () => {
             if (textureURL) {
-                let texture = new THREE.TextureLoader().load(textureURL, (texture) => {
+                new THREE.TextureLoader().load(textureURL, (texture) => {
                     let cubeMat = new THREE.MeshBasicMaterial({
                         color: 0xffffff,
                         map: texture
