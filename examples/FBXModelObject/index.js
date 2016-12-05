@@ -22,17 +22,13 @@ scene.add(light2);
 let amlight = new THREE.AmbientLight(0x3e3e3e);
 scene.add(amlight);
 
-
-
 let skybox = new CubeObject(15, 'img/boxW.jpg');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
     scene.add(evt.target.object3D);
     evt.target.object3D.position.y = scene.controls.userHeight;
 });
 
-
-
-let obj = new FBXModelObject(0, './model/xsi_man_skinning.FBX', ['./model/Char_UV_Texture.gif']);
+let obj = new FBXModelObject('./model/xsi_man_skinning.FBX', ['./model/Char_UV_Texture.gif']);
 
 obj.on('ready', () => {
     let s = 0.1;

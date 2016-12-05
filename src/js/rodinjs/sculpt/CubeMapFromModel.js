@@ -11,12 +11,12 @@ export class CubeMapFromModel extends Sculpt {
         cube.on('ready', () => {
             if (textureURL) {
                 new THREE.TextureLoader().load(textureURL, (texture) => {
-                    let cubeMat = new THREE.MeshBasicMaterial({
+                    let material = new THREE.MeshBasicMaterial({
                         color: 0xffffff,
                         map: texture
                     });
                     cube.object3D.scale.set(size, size, size);
-                    cube.object3D.material = cubeMat;
+                    cube.object3D.material = material;
                     super.init(cube.object3D);
                     return this.emit("ready", new Event(this));
                 });

@@ -22,13 +22,11 @@ scene.add(amlight);
 
 let skybox = new CubeObject(15, 'img/boxW.jpg');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
-    //scene.add(evt.target.object3D);
+    scene.add(evt.target.object3D);
     evt.target.object3D.position.y = scene.controls.userHeight;
 });
 
-
-
-let obj = new ColladaModelObject(0, './model/avatar.dae');
+let obj = new ColladaModelObject('./model/avatar.dae');
 
 obj.on('ready', () => {
     let s = 1.1;
