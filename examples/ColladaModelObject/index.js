@@ -9,10 +9,6 @@ let scene = SceneManager.get();
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
-
-
-
-
 let light1 = new THREE.DirectionalLight(0xffffff);
 light1.position.set(1, 1, 1);
 scene.add(light1);
@@ -24,14 +20,9 @@ scene.add(light2);
 let amlight = new THREE.AmbientLight(0x3e3e3e);
 scene.add(amlight);
 
-
-
-
-
-
 let skybox = new CubeObject(15, 'img/boxW.jpg');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
-    scene.add(evt.target.object3D);
+    //scene.add(evt.target.object3D);
     evt.target.object3D.position.y = scene.controls.userHeight;
 });
 
@@ -42,7 +33,6 @@ let obj = new ColladaModelObject(0, './model/avatar.dae');
 obj.on('ready', () => {
     let s = 1.1;
     obj.object3D.scale.set(s, s, s);
-    // obj.object3D.position.y = 1.6;
     obj.object3D.position.z = - 1.6;
     obj.object3D.rotation.x = -Math.PI / 2;
 

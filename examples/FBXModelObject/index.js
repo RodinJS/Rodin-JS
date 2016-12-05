@@ -40,6 +40,7 @@ obj.on('ready', () => {
     obj.object3D.position.z = -2;
     obj.object3D.position.y = controls.userHeight - 1.6;
     scene.add(obj.object3D);
+    console.log(obj);
 });
 
 obj.on('update', () => {
