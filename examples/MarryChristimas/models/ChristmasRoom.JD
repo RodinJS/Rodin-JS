@@ -18,12 +18,6 @@
                     "type": "diffuse",
                     "uvsIndex": 0,
                     "file": "ChristmasRoom.png"
-                },
-                {
-                    "name": "Map__4468703",
-                    "type": "opacity",
-                    "uvsIndex": 0,
-                    "file": "ChristmasRoom_transparent_chanal.png"
                 }
             ]
         },

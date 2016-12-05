@@ -25,11 +25,9 @@ let threeScene = scene.scene;
 
 window.camera = camera;
 
-
 renderer.setPixelRatio(window.devicePixelRatio > 2 ? 2 : window.devicePixelRatio);
 
 renderer.shadowMap.enabled = false;
-
 
 scene.setCameraProperty("far", 200);
 
@@ -39,17 +37,13 @@ skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
     evt.target.object3D.position.y = scene.controls.userHeight;
 });
 
-//threeScene.fog = new THREE.Fog(0x7a8695, 0, 23);
-
 /// mouse controller
-
 let mouseController = new MouseController();
 mouseController.onControllerUpdate = mouseControllerUpdate;
 SceneManager.addController(mouseController);
 
 
 /// vive controllers
-
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, threeScene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
@@ -87,7 +81,6 @@ SceneManager.addController(controllerR);
  controllerL.add(object.clone());
  controllerR.add(object.clone());
  });*/
-
 
 /// Add light
 //let light1 = new THREE.DirectionalLight(0xbbbbbb);
@@ -197,8 +190,8 @@ christmasFire.on('ready', () => {
 
     christmasFire.object3D.scale.set(s, s, s);
 
-    christmasFire.object3D.castShadow = false;
-    christmasFire.object3D.receiveShadow = false;
+    //christmasFire.object3D.castShadow = false;
+    //christmasFire.object3D.receiveShadow = false;
     scene.add(christmasFire.object3D);
 });
 
