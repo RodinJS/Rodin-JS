@@ -27,14 +27,14 @@ let images = [];
 let carousel = null;
 let readyCheck = () => {
     if(readyImages === imageCount){
-        carousel = new Carousel({size: 0.8, elements: images});
+        carousel = new Carousel({size: 1, elements: images});
         carousel.on("ready", (evt) => {
             scene.add(carousel.object3D);
             carousel.object3D.position.z = -1.5;
-            carousel.object3D.position.y = 0.6;
+            carousel.object3D.position.y = controls.userHeight;
         });
         carousel.on("update", (evt) => {
-            evt.target.angle += 0.02;
+            evt.target.angle += 0.005;
             evt.target.draw();
         });
     }
@@ -230,7 +230,7 @@ function mouseControllerUpdate() {
 }
 
 for (let i = 0; i < imageCount; i++) {
-    let params = {name: "image " + i, width: 0.4, height: 0.4, transparent: false};
+    let params = {name: "image " + i, width: 0.4, height: 0.3, transparent: false};
 
     params.background = {
         image: {
