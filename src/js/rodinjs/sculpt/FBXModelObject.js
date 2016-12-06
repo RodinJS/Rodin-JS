@@ -36,22 +36,19 @@ export class FBXModelObject extends Sculpt {
         let onError = function (xhr) {
         };
 
-        // let mixers = [];
+        let mixers = [];
         new THREE.FBXLoader().load(URL, mesh => {
             mesh.traverse(function (child) {
-                console.log(child);
-                // for (let i = 0; i < TextureURL.length; i++) {
-                //     child.material.color = [1, 1, 1];
-                //     child.material.map = new THREE.TextureLoader().load(TextureURL[i]);
-                // }
-
                 if (child instanceof THREE.SkinnedMesh) {
-                    // if (child.geometry.animations !== undefined || child.geometry.morphAnimations !== undefined) {
-                    //     child.mixer = new THREE.AnimationMixer();
-                    //     child.mixer.clipAction(child.geometry.animations[0], child).setDuration(1).play();
-                    //
-                    //     mixers.push(child.mixer);
-                    // }
+                     if (child.geometry.animations !== undefined || child.geometry.morphAnimations !== undefined) {
+                //        child.mixer = new THREE.AnimationMixer();
+                //        child.mixer.clipAction(child.geometry.animations[0], child).setDuration(1).play();
+
+                         for (let i = 0; i < TextureURL.length; i++) {
+                             child.material.color = [1, 1, 1];
+                         }
+                //        mixers.push(child.mixer);
+                     }
                 }
             });
 
