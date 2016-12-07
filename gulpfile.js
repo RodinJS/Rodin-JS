@@ -46,7 +46,7 @@ const IMG = ['src/img/**/*.{jpg,jpeg,ico,png}'];
 const SHADER = ['src/shader/**/*'];
 const MODEL = ['src/model/**/*'];
 const VIDEO = ['src/video/**/*'];
-const EX_JS = ['examples/**/*.js', '!examples/**/*_c.js', '!examples/**/model/**/*.js'];
+const EX_JS = ['examples/**/*.js', '!examples/**/*_c.js', '!examples/**/model/**/*.js', '!examples/**/models/**/*.js'];
 
 const VENDOR = require('./vendor.json');
 const RESOURCES = ['src/js/rodinjs/resources/**/*'];

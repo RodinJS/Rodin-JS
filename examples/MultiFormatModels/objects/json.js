@@ -9,24 +9,24 @@ import {Text} from '../../../_build/js/rodinjs/sculpt/elements/Text.js';
 const time = Time.getInstance();
 let scene = SceneManager.get();
 
-// export obj group
-export const objGroup = new RODIN.THREEObject(new THREE.Object3D());
+// export json group
+export const jsonGroup = new RODIN.THREEObject(new THREE.Object3D());
 
-const objObject = ModelLoader.load('./models/obj/boxes.obj');
-objObject.on(EVENT_NAMES.READY, () => {
-    objGroup.object3D.add(objObject.object3D);
+const jsonObject = ModelLoader.load('./models/json/boxes.js');
+jsonObject.on(EVENT_NAMES.READY, () => {
+    jsonGroup.object3D.add(jsonObject.object3D);
 });
 
-objObject.on(EVENT_NAMES.UPDATE, () => {
-    objObject.object3D.rotation.y += time.deltaTime() * 0.0001;
+jsonObject.on(EVENT_NAMES.UPDATE, () => {
+    jsonObject.object3D.rotation.y += time.deltaTime() * 0.0001;
 });
 
-const text = new Text({text: 'OBJ', fontSize: 1, color: 0xffffff});
+const text = new Text({text: 'json', fontSize: 1, color: 0xffffff});
 
 text.on(EVENT_NAMES.READY, () => {
-    text.object3D.rotation.y = -Math.PI / 4;
+    text.object3D.rotation.y = Math.PI / 4;
     text.object3D.position.y = 4;
-    objGroup.object3D.add(text.object3D);
+    jsonGroup.object3D.add(text.object3D);
 });
 
-scene.add(objGroup.object3D);
+scene.add(jsonGroup.object3D);

@@ -1,12 +1,17 @@
 import {ColladaModelObject} from './ColladaModelObject.js';
 import {FBXModelObject} from './FBXModelObject.js';
 import {OBJModelObject} from './OBJModelObject.js';
+import {JSONModelObject} from './JSONModelObject.js';
+import {JDModelObject} from './JDModelObject.js';
 import {ErrorInstantiationFailed, ErrorUnsupportedModelType} from '../error/CustomErrors.js';
 
-const types = {
+const supportedTypes = {
     'dae': ColladaModelObject,
     'fbx': FBXModelObject,
     'obj': OBJModelObject,
+    'json': JSONModelObject,
+    'js': JSONModelObject,
+    'jd': JDModelObject
 };
 
 export class ModelLoader {
@@ -18,8 +23,8 @@ export class ModelLoader {
         const urlSplitted = url.split('.');
         const type = urlSplitted[urlSplitted.length - 1].toLowerCase();
 
-        if(Object.keys(type).indexOf(type) !== -1) {
-            return new types[type](url);
+        if(Object.keys(supportedTypes).indexOf(type) !== -1) {
+            return new supportedTypes[type](url);
         } else {
             throw new ErrorUnsupportedModelType(type);
         }

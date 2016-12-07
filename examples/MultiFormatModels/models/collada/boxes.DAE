@@ -6,8 +6,8 @@
       <authoring_tool>OpenCOLLADA for 3ds Max;  ;  </authoring_tool>
       <source_data>file:///C:/Users/Knox/Desktop/b.max</source_data>
     </contributor>
-    <created>2016-12-06T13:27:26</created>
-    <modified>2016-12-06T13:27:26</modified>
+    <created>2016-12-07T18:05:08</created>
+    <modified>2016-12-07T18:05:08</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -536,19 +536,19 @@
   </library_lights>
   <library_images>
     <image id="__jpg_1">
-      <init_from>./images/1.jpg</init_from>
+      <init_from>../json/1.jpg</init_from>
     </image>
     <image id="__jpg">
-      <init_from>./images/2.jpg</init_from>
+      <init_from>../json/2.jpg</init_from>
     </image>
     <image id="__jpg_2">
-      <init_from>./images/3.jpg</init_from>
+      <init_from>../json/3.jpg</init_from>
     </image>
     <image id="__jpg_3">
-      <init_from>./images/4.jpg</init_from>
+      <init_from>../json/4.jpg</init_from>
     </image>
     <image id="__jpg_4">
-      <init_from>./images/5.jpg</init_from>
+      <init_from>../json/5.jpg</init_from>
     </image>
   </library_images>
   <library_visual_scenes>
@@ -557,16 +557,19 @@
         <instance_light url="#EnvironmentAmbientLight"/>
       </node>
       <node id="node-BoxSingle" name="BoxSingle">
-        <matrix>1 0 0 3 0 1 0 3 0 0 1 0 0 0 0 1</matrix>
-        <instance_geometry url="#geom-BoxSingle">
-          <bind_material>
-            <technique_common>
-              <instance_material symbol="Material__17_1" target="#Material__17-material">
-                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-            </technique_common>
-          </bind_material>
-        </instance_geometry>
+        <matrix>0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 1</matrix>
+        <node>
+          <matrix>1 0 0 3 0 1 0 2.500227 0 0 1 0 0 0 0 1</matrix>
+          <instance_geometry url="#geom-BoxSingle">
+            <bind_material>
+              <technique_common>
+                <instance_material symbol="Material__17_1" target="#Material__17-material">
+                  <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
+                </instance_material>
+              </technique_common>
+            </bind_material>
+          </instance_geometry>
+        </node>
         <extra>
           <technique profile="OpenCOLLADA">
             <cast_shadows>1</cast_shadows>
@@ -577,19 +580,22 @@
         </extra>
       </node>
       <node id="node-BoxAttach" name="BoxAttach">
-        <matrix>1 0 0 -4 0 1 0 -2 0 0 1 4.76837e-8 0 0 0 1</matrix>
-        <instance_geometry url="#geom-BoxAttach">
-          <bind_material>
-            <technique_common>
-              <instance_material symbol="Material__13_1" target="#Material__13-material">
-                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Material__14_1" target="#Material__14-material">
-                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-            </technique_common>
-          </bind_material>
-        </instance_geometry>
+        <matrix>0.4984548 0 0 0 0 0.4984548 0 0 0 0 0.4984548 0 0 0 0 1</matrix>
+        <node>
+          <matrix>1 0 0 -4.0124 0 1 0 -1.0031 0 0 1 9.56631e-8 0 0 0 1</matrix>
+          <instance_geometry url="#geom-BoxAttach">
+            <bind_material>
+              <technique_common>
+                <instance_material symbol="Material__14_1" target="#Material__14-material">
+                  <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
+                </instance_material>
+                <instance_material symbol="Material__13_1" target="#Material__13-material">
+                  <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
+                </instance_material>
+              </technique_common>
+            </bind_material>
+          </instance_geometry>
+        </node>
         <extra>
           <technique profile="OpenCOLLADA">
             <cast_shadows>1</cast_shadows>
@@ -600,9 +606,9 @@
         </extra>
       </node>
       <node id="node-BoxGroup" name="BoxGroup">
-        <matrix>0.09999999 0 0 0 0 0.09999999 0 -4 0 0 0.09999999 1 0 0 0 1</matrix>
+        <matrix>0.04984548 0 0 0 0 0.04984548 0 0 0 0 0.04984548 0 0 0 0 1</matrix>
         <node id="node-BoxG2" name="BoxG2">
-          <matrix>1 0 0 -20 0 1 0 0 0 0 1 -10 0 0 0 1</matrix>
+          <matrix>1 0 0 -20.062 0 1 0 -30.093 0 0 1 0 0 0 0 1</matrix>
           <instance_geometry url="#geom-BoxG2">
             <bind_material>
               <technique_common>
@@ -622,7 +628,7 @@
           </extra>
         </node>
         <node id="node-BoxG2_1" name="BoxG2">
-          <matrix>1 0 0 20 0 1 0 0 0 0 1 -10 0 0 0 1</matrix>
+          <matrix>1 0 0 20.062 0 1 0 -30.093 0 0 1 0 0 0 0 1</matrix>
           <instance_geometry url="#geom-BoxG2_1">
             <bind_material>
               <technique_common>
