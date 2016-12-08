@@ -14,8 +14,6 @@ export const fbxGroup = new RODIN.THREEObject(new THREE.Object3D());
 
 const fbxObject = ModelLoader.load('./models/fbx/boxes.FBX');
 fbxObject.on(EVENT_NAMES.READY, () => {
-    let s = 0.1;
-    fbxObject.object3D.scale.set(s, s, s);
     fbxObject.object3D.rotation.x = -Math.PI / 2;
     fbxGroup.object3D.add(fbxObject.object3D);
 });
