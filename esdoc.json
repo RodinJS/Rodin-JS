@@ -1,0 +1,6 @@
+{
+  "title": "Rodin-JS",
+  "source": "./src/js/rodinjs",
+  "destination": "./docs",
+  "includeSource": false
+}
