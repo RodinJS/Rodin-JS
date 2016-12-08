@@ -120,18 +120,17 @@ christmasTree.on('ready', () => {
     christmasTree.object3D.receiveShadow = true;*/
     scene.add(christmasTree.object3D);
 });
-
 // random tree
 let tree = new JSONModelObject(0, './models/tree.json');
 tree.on('ready', () => {
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 15; i++) {
         let s = Math.randomFloatIn(0.05, 0.15);
         let t = tree.object3D.clone();
         let alpha = Math.randomFloatIn(-Math.PI, Math.PI);
 
-        t.position.x = (Math.sin(alpha) + s) * Math.randomFloatIn(9, 20);
+        t.position.x = (Math.sin(alpha) + s) * Math.randomFloatIn(5, 15);
         t.position.y = 0;
-        t.position.z = (Math.cos(alpha) + s) * Math.randomFloatIn(9, 20);
+        t.position.z = (Math.cos(alpha) + s) * Math.randomFloatIn(5, 15);
         t.rotation.y = (Math.random() - 0.5) * 2 * Math.PI / 2;
         t.scale.set(s, s, s);
 

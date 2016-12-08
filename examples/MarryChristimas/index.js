@@ -158,7 +158,7 @@ christmasFire.on('ready', () => {
                 skinning: true
             });
             console.log(christmasFire.object3D.children[0].material.materials[0]);
-        },
+        }
     );
 
     christmasFire.object3D.scale.set(s, s, s);
