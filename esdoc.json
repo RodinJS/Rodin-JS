@@ -2,5 +2,9 @@
   "title": "Rodin-JS",
   "source": "./src/js/rodinjs",
   "destination": "./docs",
-  "includeSource": false
+  "includeSource": true,
+  "access": ["public", "protected"],
+  "plugins": [
+    {"name": "esdoc-es7-plugin"}
+  ]
 }
