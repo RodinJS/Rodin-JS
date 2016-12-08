@@ -10,6 +10,7 @@ import {Time} from './../time/Time.js';
  * You can export JD file from 3ds max
  * For export use Json 3D Exporter for 3ds Max 2016 - http://www.cgdev.net/json/download.php
  */
+
 const time = Time.getInstance();
 export class JDModelObject extends Sculpt {
     /**
@@ -43,13 +44,13 @@ export class JDModelObject extends Sculpt {
 
                 meshes.add(mesh);
 
-                /*if (mesh.geometry.animations) {
+                if (mesh.geometry.animations) {
                     let mixer = new THREE.AnimationMixer();
                     mixers.push(mixer);
                     mixer.clipAction(mesh.geometry.animations[0], mesh)
                         .setDuration(1)
                         .play();
-                }*/
+                }
             }
 
             this.init(meshes);
@@ -59,13 +60,13 @@ export class JDModelObject extends Sculpt {
         }, onProgress, onError);
 
         this.on("update", () => {
-            // if (mixers) {
-            //     if (mixers.length > 0) {
-            //         for (let i = 0; i < mixers.length; i++) {
-            //             mixers[i].update(time.deltaTime() / 1000);
-            //         }
-            //     }
-            // }
+            if (mixers) {
+                if (mixers.length > 0) {
+                    for (let i = 0; i < mixers.length; i++) {
+                        mixers[i].update(time.deltaTime() / 1000);
+                    }
+                }
+            }
         });
     }
 }

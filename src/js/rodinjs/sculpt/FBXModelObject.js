@@ -1,3 +1,5 @@
+'use strict';
+
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
@@ -6,13 +8,16 @@ import {WTF} from '../logger/Logger.js';
 
 import '../../vendor/three/examples/js/loaders/FBXLoader.js';
 
-const time = Time.getInstance();
-
 /**
  * You can export FBX file from 3ds max
  * For export use ASCII format
  */
+/**
+ * in oder to maintain correct positions to each other, all exported objects must have their pivots shifted to {0, 0, 0} position of the scene.
+ * This is due to FBX format positioning all objects in {0,0,0} position.
+ */
 
+const time = Time.getInstance();
 export class FBXModelObject extends Sculpt {
     /**
      * FBXModelObject constructor.
@@ -37,17 +42,19 @@ export class FBXModelObject extends Sculpt {
         };
 
         let mixers = [];
-        new THREE.FBXLoader().load(URL, mesh => {
+        let fbxLoader = new THREE.FBXLoader();
+        fbxLoader.load(URL, mesh => {
+            console.log(fbxLoader);
             mesh.traverse(function (child) {
                 if (child instanceof THREE.SkinnedMesh) {
                      if (child.geometry.animations !== undefined || child.geometry.morphAnimations !== undefined) {
-                //        child.mixer = new THREE.AnimationMixer();
-                //        child.mixer.clipAction(child.geometry.animations[0], child).setDuration(1).play();
+                        child.mixer = new THREE.AnimationMixer();
+                        child.mixer.clipAction(child.geometry.animations[0], child).setDuration(1).play();
 
                          for (let i = 0; i < TextureURL.length; i++) {
                              child.material.color = [1, 1, 1];
                          }
-                //        mixers.push(child.mixer);
+                        mixers.push(child.mixer);
                      }
                 }
             });
@@ -58,15 +65,15 @@ export class FBXModelObject extends Sculpt {
             WTF.is("FBX file was loaded");
         }, onProgress, onError);
 
-        // this.on("update", (evt) => {
-        //     if (mixers) {
-        //         if (mixers.length > 0) {
-        //             for (let i = 0; i < mixers.length; i++) {
-        //                 mixers[i].update(time.deltaTime() / 1000);
-        //             }
-        //         }
-        //     }
-        // });
+        this.on("update", () => {
+            if (mixers) {
+                if (mixers.length > 0) {
+                    for (let i = 0; i < mixers.length; i++) {
+                        mixers[i].update(time.deltaTime() / 1000);
+                    }
+                }
+            }
+        });
     }
 }
 
