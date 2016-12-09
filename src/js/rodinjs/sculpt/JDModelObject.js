@@ -45,7 +45,7 @@ export class JDModelObject extends Sculpt {
                 meshes.add(mesh);
 
                 if (mesh.geometry.animations) {
-                    let mixer = new THREE.AnimationMixer();
+                    let mixer = new THREE.AnimationMixer(mesh);
                     mixers.push(mixer);
                     mixer.clipAction(mesh.geometry.animations[0], mesh)
                         .setDuration(1)
