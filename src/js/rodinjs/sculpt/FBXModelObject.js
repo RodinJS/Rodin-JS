@@ -44,7 +44,6 @@ export class FBXModelObject extends Sculpt {
         let mixers = [];
         let fbxLoader = new THREE.FBXLoader();
         fbxLoader.load(URL, mesh => {
-            console.log(fbxLoader);
             mesh.traverse(function (child) {
                 if (child instanceof THREE.SkinnedMesh) {
                      if (child.geometry.animations !== undefined || child.geometry.morphAnimations !== undefined) {

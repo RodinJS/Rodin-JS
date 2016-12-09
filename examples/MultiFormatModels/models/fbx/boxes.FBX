@@ -1,20 +1,20 @@
-; FBX 7.4.0 project file
+; FBX 7.5.0 project file
 ; Copyright (C) 1997-2010 Autodesk Inc. and/or its licensors.
 ; All rights reserved.
 ; ----------------------------------------------------
 
 FBXHeaderExtension:  {
 	FBXHeaderVersion: 1003
-	FBXVersion: 7400
+	FBXVersion: 7500
 	CreationTimeStamp:  {
 		Version: 1000
 		Year: 2016
 		Month: 12
 		Day: 9
-		Hour: 10
-		Minute: 45
-		Second: 42
-		Millisecond: 60
+		Hour: 16
+		Minute: 10
+		Second: 39
+		Millisecond: 582
 	}
 	Creator: "FBX SDK/FBX Plugins version 2016.0"
 	SceneInfo: "SceneInfo::GlobalInfo", "UserData" {
@@ -36,13 +36,13 @@ FBXHeaderExtension:  {
 			P: "Original|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "Original|ApplicationName", "KString", "", "", "3ds Max"
 			P: "Original|ApplicationVersion", "KString", "", "", "2014"
-			P: "Original|DateTime_GMT", "DateTime", "", "", "09/12/2016 06:45:42.059"
+			P: "Original|DateTime_GMT", "DateTime", "", "", "09/12/2016 12:10:39.581"
 			P: "Original|FileName", "KString", "", "", "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\boxes.fbx"
 			P: "LastSaved", "Compound", "", ""
 			P: "LastSaved|ApplicationVendor", "KString", "", "", "Autodesk"
 			P: "LastSaved|ApplicationName", "KString", "", "", "3ds Max"
 			P: "LastSaved|ApplicationVersion", "KString", "", "", "2014"
-			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "09/12/2016 06:45:42.059"
+			P: "LastSaved|DateTime_GMT", "DateTime", "", "", "09/12/2016 12:10:39.581"
 		}
 	}
 }
@@ -77,7 +77,7 @@ GlobalSettings:  {
 
 Documents:  {
 	Count: 1
-	Document: 2089662000, "", "Scene" {
+	Document: 1460337504, "", "Scene" {
 		Properties70:  {
 			P: "SourceObject", "object", "", ""
 			P: "ActiveAnimStackName", "KString", "", "", ""
@@ -310,7 +310,7 @@ Definitions:  {
 ;------------------------------------------------------------------
 
 Objects:  {
-	Geometry: 1668173744, "Geometry::", "Mesh" {
+	Geometry: 1867002896, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0,0,0
 		}
@@ -386,10 +386,10 @@ Objects:  {
 			}
 		}
 	}
-	NodeAttribute: 2091607200, "NodeAttribute::", "Null" {
+	NodeAttribute: 1877727840, "NodeAttribute::", "Null" {
 		TypeFlags: "Null"
 	}
-	Geometry: 1668164496, "Geometry::", "Mesh" {
+	Geometry: 1867000720, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0,0,0
 		}
@@ -465,7 +465,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 1668172656, "Geometry::", "Mesh" {
+	Geometry: 1867011056, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0,0,0
 		}
@@ -541,7 +541,7 @@ Objects:  {
 			}
 		}
 	}
-	Geometry: 1668165584, "Geometry::", "Mesh" {
+	Geometry: 1867011600, "Geometry::", "Mesh" {
 		Properties70:  {
 			P: "Color", "ColorRGB", "Color", "",0,0,0
 		}
@@ -617,7 +617,7 @@ Objects:  {
 			}
 		}
 	}
-	Model: 2094065392, "Model::BoxAttach", "Mesh" {
+	Model: 2192232192, "Model::BoxAttach", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -635,7 +635,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 2094039088, "Model::BoxGroup", "Null" {
+	Model: 2192262880, "Model::BoxGroup", "Null" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -647,7 +647,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 2094041280, "Model::BoxG1", "Mesh" {
+	Model: 2192271648, "Model::BoxG1", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -665,7 +665,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 2094036896, "Model::BoxG2", "Mesh" {
+	Model: 2192265072, "Model::BoxG2", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -683,7 +683,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Model: 2094067584, "Model::BoxSingle", "Mesh" {
+	Model: 2192269456, "Model::BoxSingle", "Mesh" {
 		Version: 232
 		Properties70:  {
 			P: "InheritType", "enum", "", "",1
@@ -701,7 +701,7 @@ Objects:  {
 		Shading: T
 		Culling: "CullingOff"
 	}
-	Material: 2038454448, "Material::Material #13", "" {
+	Material: 2191460112, "Material::Material #13", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -723,7 +723,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Material: 2038459248, "Material::Material #14", "" {
+	Material: 2191463472, "Material::Material #14", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -745,7 +745,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Material: 2038460208, "Material::Material #15", "" {
+	Material: 2191475472, "Material::Material #15", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -767,7 +767,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Material: 1674151520, "Material::Material #16", "" {
+	Material: 2191461552, "Material::Material #16", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -789,7 +789,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Material: 2096712352, "Material::Material #17", "" {
+	Material: 2191462032, "Material::Material #17", "" {
 		Version: 102
 		ShadingModel: "phong"
 		MultiLayer: 0
@@ -811,7 +811,7 @@ Objects:  {
 			P: "Reflectivity", "double", "Number", "",0
 		}
 	}
-	Video: 2091903456, "Video::Map #1", "Clip" {
+	Video: 2193434912, "Video::Map #1", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\1.jpg"
@@ -820,7 +820,7 @@ Objects:  {
 		Filename: "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\1.jpg"
 		RelativeFilename: "textures\1.jpg"
 	}
-	Video: 2091901456, "Video::Map #2", "Clip" {
+	Video: 2193428112, "Video::Map #2", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\3.jpg"
@@ -829,7 +829,7 @@ Objects:  {
 		Filename: "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\3.jpg"
 		RelativeFilename: "textures\3.jpg"
 	}
-	Video: 2091901056, "Video::Map #3", "Clip" {
+	Video: 2193429312, "Video::Map #3", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\4.jpg"
@@ -838,7 +838,7 @@ Objects:  {
 		Filename: "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\4.jpg"
 		RelativeFilename: "textures\4.jpg"
 	}
-	Video: 2091904656, "Video::Map #4", "Clip" {
+	Video: 2193429712, "Video::Map #4", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\5.jpg"
@@ -847,7 +847,7 @@ Objects:  {
 		Filename: "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\5.jpg"
 		RelativeFilename: "textures\5.jpg"
 	}
-	Video: 2091903856, "Video::Map #5", "Clip" {
+	Video: 2193432512, "Video::Map #5", "Clip" {
 		Type: "Clip"
 		Properties70:  {
 			P: "Path", "KString", "XRefUrl", "", "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\2.jpg"
@@ -856,7 +856,7 @@ Objects:  {
 		Filename: "D:\work\Rodin-JS\examples\MultiFormatModels\models\fbx\textures\2.jpg"
 		RelativeFilename: "textures\2.jpg"
 	}
-	Texture: 2038454928, "Texture::Map #1", "" {
+	Texture: 2191473552, "Texture::Map #1", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map #1"
@@ -872,7 +872,7 @@ Objects:  {
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	Texture: 2038455408, "Texture::Map #2", "" {
+	Texture: 2191474032, "Texture::Map #2", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map #2"
@@ -888,7 +888,7 @@ Objects:  {
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	Texture: 1674153920, "Texture::Map #3", "" {
+	Texture: 2191468272, "Texture::Map #3", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map #3"
@@ -904,7 +904,7 @@ Objects:  {
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	Texture: 1664718368, "Texture::Map #4", "" {
+	Texture: 2191469232, "Texture::Map #4", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map #4"
@@ -920,7 +920,7 @@ Objects:  {
 		Texture_Alpha_Source: "None"
 		Cropping: 0,0,0,0
 	}
-	Texture: 2096707552, "Texture::Map #5", "" {
+	Texture: 2191474512, "Texture::Map #5", "" {
 		Type: "TextureVideoClip"
 		Version: 202
 		TextureName: "Texture::Map #5"
@@ -944,80 +944,80 @@ Objects:  {
 Connections:  {
 	
 	;Model::BoxAttach, Model::RootNode
-	C: "OO",2094065392,0
+	C: "OO",2192232192,0
 	
 	;Model::BoxGroup, Model::RootNode
-	C: "OO",2094039088,0
+	C: "OO",2192262880,0
 	
 	;Model::BoxSingle, Model::RootNode
-	C: "OO",2094067584,0
+	C: "OO",2192269456,0
 	
 	;AnimLayer::BaseLayer, AnimStack::Take 001
-	C: "OO",1233757792,2094713760
+	C: "OO",1879807088,1460111936
 	
 	;Geometry::, Model::BoxAttach
-	C: "OO",1668173744,2094065392
+	C: "OO",1867002896,2192232192
 	
 	;Material::Material #13, Model::BoxAttach
-	C: "OO",2038454448,2094065392
+	C: "OO",2191460112,2192232192
 	
 	;Material::Material #14, Model::BoxAttach
-	C: "OO",2038459248,2094065392
+	C: "OO",2191463472,2192232192
 	
 	;Model::BoxG1, Model::BoxGroup
-	C: "OO",2094041280,2094039088
+	C: "OO",2192271648,2192262880
 	
 	;Model::BoxG2, Model::BoxGroup
-	C: "OO",2094036896,2094039088
+	C: "OO",2192265072,2192262880
 	
 	;NodeAttribute::, Model::BoxGroup
-	C: "OO",2091607200,2094039088
+	C: "OO",1877727840,2192262880
 	
 	;Geometry::, Model::BoxG1
-	C: "OO",1668164496,2094041280
+	C: "OO",1867000720,2192271648
 	
 	;Material::Material #15, Model::BoxG1
-	C: "OO",2038460208,2094041280
+	C: "OO",2191475472,2192271648
 	
 	;Geometry::, Model::BoxG2
-	C: "OO",1668172656,2094036896
+	C: "OO",1867011056,2192265072
 	
 	;Material::Material #16, Model::BoxG2
-	C: "OO",1674151520,2094036896
+	C: "OO",2191461552,2192265072
 	
 	;Geometry::, Model::BoxSingle
-	C: "OO",1668165584,2094067584
+	C: "OO",1867011600,2192269456
 	
 	;Material::Material #17, Model::BoxSingle
-	C: "OO",2096712352,2094067584
+	C: "OO",2191462032,2192269456
 	
 	;Texture::Map #1, Material::Material #13
-	C: "OP",2038454928,2038454448, "DiffuseColor"
+	C: "OP",2191473552,2191460112, "DiffuseColor"
 	
 	;Video::Map #1, Texture::Map #1
-	C: "OO",2091903456,2038454928
+	C: "OO",2193434912,2191473552
 	
 	;Texture::Map #2, Material::Material #14
-	C: "OP",2038455408,2038459248, "DiffuseColor"
+	C: "OP",2191474032,2191463472, "DiffuseColor"
 	
 	;Video::Map #2, Texture::Map #2
-	C: "OO",2091901456,2038455408
+	C: "OO",2193428112,2191474032
 	
 	;Texture::Map #3, Material::Material #15
-	C: "OP",1674153920,2038460208, "DiffuseColor"
+	C: "OP",2191468272,2191475472, "DiffuseColor"
 	
 	;Video::Map #3, Texture::Map #3
-	C: "OO",2091901056,1674153920
+	C: "OO",2193429312,2191468272
 	
 	;Texture::Map #4, Material::Material #16
-	C: "OP",1664718368,1674151520, "DiffuseColor"
+	C: "OP",2191469232,2191461552, "DiffuseColor"
 	
 	;Video::Map #4, Texture::Map #4
-	C: "OO",2091904656,1664718368
+	C: "OO",2193429712,2191469232
 	
 	;Texture::Map #5, Material::Material #17
-	C: "OP",2096707552,2096712352, "DiffuseColor"
+	C: "OP",2191474512,2191462032, "DiffuseColor"
 	
 	;Video::Map #5, Texture::Map #5
-	C: "OO",2091903856,2096707552
+	C: "OO",2193432512,2191474512
 }

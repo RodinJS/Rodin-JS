@@ -9,25 +9,25 @@ import {Text} from '../../../_build/js/rodinjs/sculpt/elements/Text.js';
 const time = Time.getInstance();
 let scene = SceneManager.get();
 
-// export fbx group
-export const fbxGroup = new RODIN.THREEObject(new THREE.Object3D());
+// export json group
+export const jsonGroup = new RODIN.THREEObject(new THREE.Object3D());
 
-const fbxObject = ModelLoader.load('./models/fbx/boxes.fbx');
-fbxObject.on(EVENT_NAMES.READY, () => {
-    fbxObject.object3D.rotation.x = -Math.PI / 2;
-    fbxGroup.object3D.add(fbxObject.object3D);
+const jsonObject = ModelLoader.load('./models/json/box_anim.js');
+jsonObject.on(EVENT_NAMES.READY, () => {
+    jsonGroup.object3D.add(jsonObject.object3D);
+    jsonObject.object3D.rotation.x = -Math.PI/2;
 });
 
-fbxObject.on(EVENT_NAMES.UPDATE, () => {
-    fbxObject.object3D.rotation.z += time.deltaTime() * 0.0001;
+jsonObject.on(EVENT_NAMES.UPDATE, () => {
+    //jsonObject.object3D.rotation.y += time.deltaTime() * 0.0001;
 });
 
-const text = new Text({text: 'FBX', fontSize: 1, color: 0xffffff});
+const text = new Text({text: 'json', fontSize: 1, color: 0xffffff});
 
 text.on(EVENT_NAMES.READY, () => {
-    text.object3D.rotation.y = -Math.PI / 2;
+    text.object3D.rotation.y = Math.PI / 4;
     text.object3D.position.y = 4;
-    fbxGroup.object3D.add(text.object3D);
+    jsonGroup.object3D.add(text.object3D);
 });
 
-scene.add(fbxGroup.object3D);
+scene.add(jsonGroup.object3D);
