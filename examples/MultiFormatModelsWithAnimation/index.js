@@ -14,6 +14,8 @@ let alpha = 0;
 [colladaGroup, fbxGroup, objGroup, jsonGroup, jdGroup].map(group => {
     group.object3D.position.x = Math.sin(alpha) * 7;
     group.object3D.position.z = Math.cos(alpha) * 7;
+    // group.object3D.children[0].scale.set(.5, .5, .5);
+    console.log(group);
     alpha += 2 * Math.PI / 5;
 });
 
