@@ -34,9 +34,11 @@ export class JSONModelObject extends Sculpt {
         let mixers = [];
 
         new THREE.JSONLoader().load(URL, (geometry, materials) => {
+            console.log(geometry);
             let material = materials[0];
             material.morphTargets = true;
             let faceMaterial = new THREE.MultiMaterial(materials);
+            let group = new THREE.Group();
             let mesh = new THREE.SkinnedMesh(geometry, faceMaterial);
 
             if (mesh.geometry.animations) {
@@ -47,7 +49,8 @@ export class JSONModelObject extends Sculpt {
                     .play();
             }
 
-            this.init(mesh);
+            group.add(mesh);
+            this.init(group);
             this.emit('ready', new Event(this));
 
             console.log("JSON file was loaded");
