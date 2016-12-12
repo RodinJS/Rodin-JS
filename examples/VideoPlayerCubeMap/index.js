@@ -27,7 +27,7 @@ let material = new THREE.MeshBasicMaterial({
 
 // Add a skybox.
 let boxSize = 150;
-let skybox = new CubeMapFromModel(0, boxSize, null, material);
+let skybox = new CubeMapFromModel(boxSize, null, material);
 
 skybox.on('ready', () => {
     scene.add(skybox.object3D);

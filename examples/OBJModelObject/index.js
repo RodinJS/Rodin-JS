@@ -6,26 +6,29 @@ import {MouseController} from '../../_build/js/rodinjs/controllers/MouseControll
 import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
 
 let scene = SceneManager.get();
+scene.scene.background = new THREE.Color(0xb5b5b5);
+
 let controls = scene.controls;
+
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
-let light1 = new THREE.DirectionalLight(0xffffff);
-light1.position.set(1, 1, 1);
+let floor = new RODIN.THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(25, 25, 50, 50), new THREE.MeshLambertMaterial({color: 0x869295, wireframe:true})));
+floor.on('ready', (e) => {
+    scene.add(e.target.object3D);
+    e.target.object3D.rotation.x = Math.PI/2;
+});
+
+/// Add light
+let light1 = new THREE.DirectionalLight(0xcccccc);
+light1.position.set(2, 3, 2);
 scene.add(light1);
 
-let light2 = new THREE.DirectionalLight(0xcccccc);
-light2.position.set(-1, -1, -1);
+scene.add(new THREE.AmbientLight(0xaaaaaa));
+
+let light2 = new THREE.DirectionalLight(0xb5b5b5);
+light2.position.set(-3, -3, -3);
 scene.add(light2);
-
-let amlight = new THREE.AmbientLight(0x3e3e3e);
-scene.add(amlight);
-
-let skybox = new CubeObject(15, 'img/boxW.jpg');
-skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
-    scene.add(evt.target.object3D);
-    evt.target.object3D.position.y = scene.controls.userHeight;
-});
 
 let obj = ModelLoader.load('./model/cardboard.obj');
 obj.on('ready', () => {
