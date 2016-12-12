@@ -10,7 +10,7 @@ export default function changeParent(object = null, targetParent = null) {
     let initQuat = object.getWorldQuaternion();
     let initScale = object.getWorldScale();
 
-    currParent.remove(object);
+    currParent && currParent.remove(object);
     object.position.copy(initPos);
     object.quaternion.copy(initQuat);
     object.scale.copy(initScale);
@@ -19,6 +19,5 @@ export default function changeParent(object = null, targetParent = null) {
     targetParent.updateMatrixWorld();
     object.applyMatrix(new THREE.Matrix4().getInverse(targetParent.matrixWorld));
     targetParent.add(object);
-
 }
 
