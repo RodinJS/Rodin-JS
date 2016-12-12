@@ -101,6 +101,12 @@ export class ErrorProtectedFieldChange extends CustomError {
     }
 }
 
+export class ErrorProtectedMethodCall extends CustomError {
+    constructor (method = '') {
+        super(`Protected method ${method} can not be called`);
+    }
+}
+
 export class ErrorInvalidEventType extends CustomError {
     constructor (eventName = '', action = '') {
         super(`Invalid event name ${eventName} for action ${action}`);
@@ -112,3 +118,16 @@ export class ErrorParameterTypeDontMatch extends CustomError {
         super(`Parameter ${paramName} must be in type ${type}`);
     }
 }
+
+export class ErrorInstantiationFailed extends CustomError {
+    constructor (classname) {
+        super(`Instantiation failed for class ${classname}. Use static functions instead of new`);
+    }
+}
+
+export class ErrorUnsupportedModelType extends CustomError {
+    constructor (typename) {
+        super(`Unsupported model type ${typename}.`);
+    }
+}
+

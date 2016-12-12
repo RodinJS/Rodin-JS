@@ -21,9 +21,10 @@ SceneManager.addController(oculusController);
 scene.setCameraProperty("far", 350);
 
 let player = new MaterialPlayer({
-    HD: "video/test1.mp4",
-    SD: "video/test2.mp4",
-    default: "HD"
+    HD: "video/test.mp4",
+    SD: "video/test1.mp4",
+    LD: "video/test2.mp4",
+    default: "SD"
 });
 
 let material = new THREE.MeshBasicMaterial({

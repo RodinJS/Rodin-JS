@@ -1,46 +1,40 @@
+'use strict';
+
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-
-import '../../vendor/three/examples/js/loaders/FBXLoader.js';
-
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 import {Time} from '../time/Time.js';
+import {WTF} from '../logger/Logger.js';
 
-const time = Time.getInstance();
+import '../../vendor/three/examples/js/loaders/FBXLoader.js';
 
 /**
  * You can export FBX file from 3ds max
  * For export use ASCII format
  */
+/**
+ * in oder to maintain correct positions to each other, all exported objects must have their pivots shifted to {0, 0, 0} position of the scene.
+ * This is due to FBX format positioning all objects in {0,0,0} position.
+ */
 
+const time = Time.getInstance();
 export class FBXModelObject extends Sculpt {
     /**
      * FBXModelObject constructor.
-     * @param {number} [id = 0]
      * @param {string} [URL = '']
      * @param {array} [TextureURL = []]
      */
-    constructor(id = 0,
-                URL = '',
-                TextureURL = []) {
-
-        super(id);
+    constructor (URL = '', TextureURL = []) {
+        super();
 
         if (!(TextureURL instanceof Array)) {
             TextureURL = [TextureURL];
         }
 
-        super(id);
-
-        // let manager = new THREE.LoadingManager();
-        // manager.onProgress = function (item, loaded, total) {
-        //     console.log(item, loaded, total);
-        // };
-
         let onProgress = function (xhr) {
             if (xhr.lengthComputable) {
                 let percentComplete = xhr.loaded / xhr.total * 100;
-                console.log(Math.round(percentComplete, 2) + '% downloaded');
+                WTF.is(Math.round(percentComplete, 2) + '% downloaded');
             }
         };
 
@@ -48,43 +42,29 @@ export class FBXModelObject extends Sculpt {
         };
 
         let mixers = [];
+        let fbxLoader = new THREE.FBXLoader();
+        fbxLoader.load(URL, mesh => {
+            mesh.traverse(function (child) {
+                if (child instanceof THREE.SkinnedMesh) {
+                     if (child.geometry.animations !== undefined || child.geometry.morphAnimations !== undefined) {
+                        child.mixer = new THREE.AnimationMixer();
+                        child.mixer.clipAction(child.geometry.animations[0], child).setDuration(1).play();
 
-        let loader = new THREE.FBXLoader(/*manager*/);
-        loader.load(
-            URL,
-            mesh => {
-                mesh.traverse(function (child) {
-                    if (child instanceof THREE.Mesh) {
-                        // pass
-                    }
+                         for (let i = 0; i < TextureURL.length; i++) {
+                             child.material.color = [1, 1, 1];
+                         }
+                        mixers.push(child.mixer);
+                     }
+                }
+            });
 
-                    if (child instanceof THREE.SkinnedMesh) {
-                        if (TextureURL) {
-                            for (let i = 0; i < TextureURL.length; i++) {
-                                child.material.color = [1, 1, 1];
-                                child.material.map = new THREE.TextureLoader().load(TextureURL[i]);
-                            }
-                        }
+            this.init(mesh);
+            this.emit('ready', new Event(this));
 
-                        if (child.geometry.animations !== undefined || child.geometry.morphAnimations !== undefined) {
-                            child.mixer = new THREE.AnimationMixer();
-                            child.mixer.clipAction(child.geometry.animations[0], child)
-                                .setDuration(1)
-                                .play();
+            WTF.is("FBX file was loaded");
+        }, onProgress, onError);
 
-                            mixers.push(child.mixer);
-                        }
-                    }
-                });
-
-                this.init(mesh);
-                this.emit('ready', new Event(this));
-
-                console.log("FBX file was loaded");
-
-            }, onProgress, onError);
-
-        this.on("update", (evt) => {
+        this.on("update", () => {
             if (mixers) {
                 if (mixers.length > 0) {
                     for (let i = 0; i < mixers.length; i++) {
