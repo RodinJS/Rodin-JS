@@ -8,6 +8,8 @@ import {OBJModelObject} from '../../_build/js/rodinjs/sculpt/OBJModelObject.js';
 
 
 let scene = SceneManager.get();
+scene.scene.background = new THREE.Color(0x383838);
+
 scene.add(new THREE.AmbientLight());
 scene.setCameraProperty('far', 100);
 let dl = new THREE.DirectionalLight();

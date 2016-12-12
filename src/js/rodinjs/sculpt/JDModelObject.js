@@ -10,22 +10,16 @@ import {Time} from './../time/Time.js';
  * You can export JD file from 3ds max
  * For export use Json 3D Exporter for 3ds Max 2016 - http://www.cgdev.net/json/download.php
  */
+
 const time = Time.getInstance();
 export class JDModelObject extends Sculpt {
     /**
      * JDModelObject constructor.
-     * @param {number} [id = 0]
      * @param {string} [URL = '']
      */
-    constructor(id = 0,
-                URL = '') {
+    constructor(URL = '') {
 
-        super(id);
-
-        // let manager = new THREE.LoadingManager();
-        // manager.onProgress = function (item, loaded, total) {
-        //     console.log(item, loaded, total);
-        // };
+        super();
 
         let onProgress = function (xhr) {
             if (xhr.lengthComputable) {
@@ -39,39 +33,37 @@ export class JDModelObject extends Sculpt {
 
         let mixers = [];
 
-        new THREE.JDLoader().load(
-            URL,
-            (data) => { // data: { materials, geometries, boundingSphere }
-                let multiMaterial = new THREE.MultiMaterial(data.materials);
-                let meshes = new THREE.Object3D;
+        new THREE.JDLoader().load(URL, (data) => { // data: { materials, geometries, boundingSphere }
+            let multiMaterial = new THREE.MultiMaterial(data.materials);
+            let meshes = new THREE.Group();
 
-                for (let i = 0; i < data.geometries.length; ++i) {
-                    let mesh = new THREE.SkinnedMesh(data.geometries[i], multiMaterial);
-                    mesh.matrixAutoUpdate = false;
-                    mesh.updateMatrix();
+            for (let i = 0; i < data.geometries.length; ++i) {
+                let mesh = new THREE.SkinnedMesh(data.geometries[i], multiMaterial);
+                mesh.matrixAutoUpdate = false;
+                mesh.updateMatrix();
 
-                    meshes.add(mesh);
+                meshes.add(mesh);
 
-                    if (mesh.geometry.animations) {
-                        let mixer = new THREE.AnimationMixer();
-                        mixers.push(mixer);
-                        mixer.clipAction(mesh.geometry.animations[0], mesh)
-                            .setDuration(1)
-                            .play();
-                    }
+                if (mesh.geometry.animations) {
+                    let mixer = new THREE.AnimationMixer(mesh);
+                    mixers.push(mixer);
+                    mixer.clipAction(mesh.geometry.animations[0], mesh)
+                        .setDuration(1)
+                        .play();
                 }
+            }
 
-                this.init(meshes);
-                this.emit('ready', new Event(this));
+            this.init(meshes);
+            this.emit('ready', new Event(this));
 
-                console.log("JD file was loaded");
-            }, onProgress, onError);
+            console.log("JD file was loaded");
+        }, onProgress, onError);
 
         this.on("update", () => {
             if (mixers) {
                 if (mixers.length > 0) {
                     for (let i = 0; i < mixers.length; i++) {
-                        mixers[i].update(time.deltaTime()/1000);
+                        mixers[i].update(time.deltaTime() / 1000);
                     }
                 }
             }
