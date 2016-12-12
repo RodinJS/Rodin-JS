@@ -156,25 +156,23 @@ export class RodinPhysics {
             this.world.step();
 
             let i = this.rigidBodies.length;
+
+
             while (i--) {
                 if (!this.rigidBodies[i].sleeping) {
-
-                    let newPositionMatrix = new THREE.Matrix4();
-
-                    //let newRotationMatrix = new THREE.Matrix4();
-                    newPositionMatrix.makeRotationFromQuaternion(
-                        PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()));
-                    //todo: Matrix.compose
-
-                    newPositionMatrix.setPosition(this.rigidBodies[i].body.position);
+                    let newGlobalMatrix = new THREE.Matrix4();
+                    newGlobalMatrix.compose(
+                        PhysicsUtils.oimoToThree(this.rigidBodies[i].body.position),
+                        PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()),
+                        this.rigidBodies[i].owner.scale);
 
                     let inverseParentMatrix = new THREE.Matrix4();
                     inverseParentMatrix.getInverse(this.rigidBodies[i].owner.parent.matrixWorld);
-                    newPositionMatrix.multiplyMatrices(inverseParentMatrix, newPositionMatrix);
+                    newGlobalMatrix.multiplyMatrices(inverseParentMatrix, newGlobalMatrix);
 
                     this.rigidBodies[i].owner.matrixAutoUpdate = false;
                     //this.rigidBodies[i].owner.matrixWorldNeedsUpdate = false;
-                    this.rigidBodies[i].owner.matrix = newPositionMatrix;
+                    this.rigidBodies[i].owner.matrix = newGlobalMatrix;
                 }
             }
         }

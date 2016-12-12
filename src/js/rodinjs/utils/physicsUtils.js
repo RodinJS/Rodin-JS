@@ -28,3 +28,5 @@ export function oimoToThree(a) {
 export function ThreeToOimo(a) {
     //todo: implement this stuff
 }
+
+export const IdentityScaleVector = new THREE.Vector3(1, 1, 1);
