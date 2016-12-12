@@ -6,6 +6,9 @@ const enforce = function () {
 let instance = null;
 
 export class CardboardGamePad {
+    /**
+     * Constructor - only for inherited classes
+     */
     constructor(e) {
         if (e !== enforce) {
             throw new ErrorSingletonClass();

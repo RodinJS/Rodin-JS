@@ -6,9 +6,15 @@ import {ErrorInvalidEventType} from '../error/CustomErrors';
 let controllerCreated = false;
 
 /**
+ * A controller class for describing event handlers for cardboard use.
  * Class CardboardController
  */
 export class CardboardController extends GamePad {
+    /**
+     * Constructor
+     * @param {THREE.Scene} scene Required - the scene where the controller will be used.
+     * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera Required - the camera where the controller will be used.
+     */
     constructor(scene = null, camera = null) {
         if (controllerCreated) {
             throw new ErrorCardboardControllerAlreadyExists();
@@ -29,8 +35,8 @@ export class CardboardController extends GamePad {
     }
 
     /**
-     * getIntersections method
-     * @returns [Sculpt]
+     * Get raycasted objects ({distance, point, face, faceIndex, indices, object}) that are in camera's center.
+     * @returns [Object]
      */
     getIntersections() {
         this.raycaster.set(this.camera.getWorldPosition(), this.camera.getWorldDirection());
@@ -38,9 +44,9 @@ export class CardboardController extends GamePad {
     }
 
     /**
-     * Set propagation value for event.
-     * @param eventName {string}
-     * @param value {boolean}
+     * Set propagation value for standard events, recommended, when using custom handlers on mousedown(touchstart) or mouseup(touchend).
+     * @param {string} eventName - 'mousedown', 'mouseup', mousemove'.
+     * @param {boolean} value - true, false.
      */
     setPropagation(eventName, value) {
         let gamePad = CardboardController.getGamepad();
@@ -64,7 +70,7 @@ export class CardboardController extends GamePad {
     }
 
     /**
-     * start propagation for event
+     * Start propagation for event.
      * @param eventName {string}
      */
     startPropagation(eventName) {
@@ -72,7 +78,7 @@ export class CardboardController extends GamePad {
     }
 
     /**
-     * stop propagation for event
+     * Stop propagation for event.
      * @param eventName {string}
      */
     stopPropagation(eventName) {
@@ -80,7 +86,7 @@ export class CardboardController extends GamePad {
     }
 
     /**
-     * OnKeyDown function
+     * Key down (cardboard button press) event handler.
      * @param keyCode {number}
      */
     onKeyDown(keyCode) {
@@ -98,7 +104,7 @@ export class CardboardController extends GamePad {
     }
 
     /**
-     * OnKeyUp function
+     * Key up (cardboard button up) event handler.
      * @param keyCode {number}
      */
     onKeyUp(keyCode) {
@@ -111,8 +117,8 @@ export class CardboardController extends GamePad {
     }
 
     /**
-     * get gamepad from navigator
-     * @returns {MouseGamePad}
+     * Get gamepad from navigator.
+     * @returns {CardboardGamePad}
      */
     static getGamepad() {
         return navigator.cardboardGamePad;

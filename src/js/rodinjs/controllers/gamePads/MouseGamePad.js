@@ -6,6 +6,9 @@ const enforce = function () {
 let instance = null;
 
 export class MouseGamePad {
+    /**
+     * Constructor - only for inherited classes
+     */
     constructor(e) {
         if (e !== enforce) {
             throw new ErrorSingletonClass();
@@ -119,7 +122,10 @@ export class MouseGamePad {
         }, false);
         document.body.addEventListener('wheel', scroll, false);
     }
-
+    /**
+     * get gamepad instance
+     * @returns {MouseGamePad} mouseGamePad
+     */
     static getInstance() {
         if (!instance) {
             instance = new MouseGamePad(enforce);

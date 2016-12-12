@@ -20,7 +20,6 @@ const containsIntersect = function (interArray, inter) {
 export class GamePad extends THREE.Object3D {
 
     /**
-     *
      * @param {string} navigatorGamePadId Required
      * @param {string, null} hand
      * @param {THREE.Scene} scene
@@ -32,27 +31,85 @@ export class GamePad extends THREE.Object3D {
         super();
 
         this._lastKeyDownTimestamp = {};
+        /**
+         * The maximum time (ms) that may pass between keydown and keyup events, in order to trigger CONTROLLER_KEY event.
+         * @type {number}
+         */
         this.keyHandleDelta = 200;
 
         this._lastToudhTimestamp = {};
+        /**
+         * The maximum time (ms) that may pass between touchstart and touchend events, in order to trigger CONTROLLER_TAP event.
+         * @type {number}
+         */
         this.touchHandleDelta = 200;
 
         navigator.mouseGamePad = MouseGamePad.getInstance();
         navigator.cardboardGamePad = CardboardGamePad.getInstance();
+
+        /**
+         * The id (name) of the gamePad of current instance.
+         * @type {string}
+         */
         this.navigatorGamePadId = navigatorGamePadId;
+
+        /**
+         * The name of the hand (left or right) of the gamePad of current instance.
+         * @type {string}
+         */
         this.hand = hand;
 
+        /**
+         * Raycaster object used to pick/select items with current controller.
+         * @type {Raycaster}
+         */
         this.raycaster = new Raycaster();
         this.raycaster.setScene(scene);
+
+        /**
+         * Camera object used to render current scene.
+         * @type {THREE.PerspectiveCamera}
+         */
         this.camera = camera;
+
+        /**
+         * The number of objects that can be reycasted by the same ray.
+         * @type {numbers}
+         */
         this.raycastLayers = raycastLayers;
+
+        /**
+         * Objects currently intersected by this gamepad.
+         * @type {Object}
+         */
         this.intersected = [];
+        /**
+         * Just a temporary matrix, used in extended controller classes, to perform raycasting.
+         * @type {THREE.Matrix4}
+         */
         this.tempMatrix = new THREE.Matrix4();
+        // TODO: check if we need this shit
         this.matrixAutoUpdate = false;
+        /**
+         * Matrix used to correctly position the controller object (if any) in the scene.
+         * @type {THREE.Matrix4}
+         */
         this.standingMatrix = new THREE.Matrix4();
+        /**
+         * Shows if the controller is engaged in an event or not.
+         * @type {boolean}
+         */
         this.engaged = false;
+        /**
+         * A map, showing if a particular warning has already been fired or not.
+         * @type {Object}
+         */
         this.warningsFired = {};
 
+        /**
+         * An array of gamepad key names/ids.
+         * @type {[string]}
+         */
         this.buttons = [
             KEY_CODES.KEY1,
             KEY_CODES.KEY2,
@@ -62,18 +119,41 @@ export class GamePad extends THREE.Object3D {
             KEY_CODES.KEY6
         ];
 
+        /**
+         * An array, showing the Pressed state of the button.
+         * @type {[boolean]}
+         */
         this.buttonsPressed = new Array(this.buttons.length).fill(false);
+        /**
+         * An array, showing the Touched state of the button.
+         * @type {[boolean]}
+         */
         this.buttonsTouched = new Array(this.buttons.length).fill(false);
+        /**
+         * An array, showing the Value state of the button.
+         * @type {[number]}
+         */
         this.buttonsValues = new Array(this.buttons.length).fill(0);
 
+        /**
+         * The gamepad state (enabled/disabled).
+         * @type {boolean}
+         */
         this.enabled = true;
     }
 
+    /**
+     * enable gamepad
+     */
     enable () {
         this.enabled = true;
         this.onEnable();
     }
 
+
+    /**
+     * disable gamepad
+     */
     disable () {
         this.enabled = false;
         this.onDisable();
@@ -217,7 +297,8 @@ export class GamePad extends THREE.Object3D {
     }
 
     /**
-     * Checks all intersect and emits hover and hoverout events
+     * Checks all intersect and emits hover and hoverOut events
+     * @param {Object} controller
      */
     intersectObjects (controller) {
         if (!this.getIntersections) {
@@ -276,6 +357,7 @@ export class GamePad extends THREE.Object3D {
     }
 
     /**
+     * Emits the given event for currently raycasted objects.
      * @param {string} eventName
      * @param {*} DOMEvent
      * @param {number} keyCode
