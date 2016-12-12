@@ -2,7 +2,6 @@ import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
-import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
 import {THREEObject} from '../../_build/js/rodinjs/sculpt/THREEObject.js';
 import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
 import {RigidBody} from '../../_build/js/rodinjs/physics/RigidBody.js';
@@ -159,14 +158,13 @@ groundRigitBody.name = "ground";
 let mass = 0.2;
 
 let group = new THREE.Group();
-//todo shifted position
-//group.position.set(0, 3, 5);
-//group.rotation.x = Math.PI;
+group.position.set(0, 3, 5);
+// group.rotation.x = Math.PI/3;
 scene.add(group);
 
 let geometries = [
     new THREE.BoxGeometry(0.2, 0.5, 0.2),
-    new THREE.SphereGeometry(0.2, 64),
+    //new THREE.SphereGeometry(0.2, 64),
     //new THREE.ConeGeometry(0.2, 0.2, 64),
     //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
     //new THREE.IcosahedronGeometry(0.2, 1),
@@ -177,7 +175,7 @@ let startPhysics = false;
 setTimeout(()=>{startPhysics = true}, 5000);
 
 // add raycastable objects to scene
-for (let i = 0; i < 300; i++) {
+for (let i = 0; i < 3; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -187,8 +185,8 @@ for (let i = 0; i < 300; i++) {
 
     let object = new THREE.Mesh(geometry, material);
     object.position.x = (Math.random() - 0.5) * 3;
-    object.position.y = (Math.random() - 0.5) * 3 + 3;
-    object.position.z = (Math.random() - 0.5) * 3 + 5;
+    object.position.y = (Math.random() - 0.5) * 3;
+    object.position.z = (Math.random() - 0.5) * 3;
     //object.position.set(0, 5, 0);
     object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
     object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
@@ -214,7 +212,7 @@ for (let i = 0; i < 300; i++) {
     });
 
     // hover
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt, controller) => {
+    /*obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt, controller) => {
         if (!obj.hoveringObjects) {
             obj.hoveringObjects = [];
         }
@@ -258,7 +256,7 @@ for (let i = 0; i < 300; i++) {
     });
 
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt, controller) => {
-    });
+    });*/
 }
 /*
  controllerL.onKeyDown = controllerKeyDown;

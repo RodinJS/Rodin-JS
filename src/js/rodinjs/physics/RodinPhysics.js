@@ -161,6 +161,7 @@ export class RodinPhysics {
                     obj.position.copy(this.rigidBodies[i].body.position);
                     obj.quaternion.copy(this.rigidBodies[i].body.getQuaternion());
 
+                    // TODO: changeParent makes it slower
                     changeParent(obj, this.rigidBodies[i].owner.parent);
                     this.rigidBodies[i].owner.position.copy(obj.position);
                     this.rigidBodies[i].owner.quaternion.copy(obj.quaternion);
