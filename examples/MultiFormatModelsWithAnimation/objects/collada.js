@@ -16,12 +16,14 @@ const colladaObject = ModelLoader.load('./models/collada/box_anim.DAE');
 colladaObject.on(EVENT_NAMES.READY, () => {
     colladaObject.object3D.rotation.x = -Math.PI / 2;
     colladaGroup.object3D.add(colladaObject.object3D);
+    colladaObject.object3D.scale.set(.5, .5, .5);
 });
+
 colladaObject.on(EVENT_NAMES.UPDATE, () => {
     //colladaObject.object3D.rotation.z += time.deltaTime() * 0.0001;
 });
 
-const text = new Text({text: 'Collada', fontSize: 1, color: 0xffffff});
+const text = new Text({ text: 'Collada', fontSize: 1, color: 0xffffff });
 
 text.on(EVENT_NAMES.READY, () => {
     text.object3D.rotation.y = Math.PI;

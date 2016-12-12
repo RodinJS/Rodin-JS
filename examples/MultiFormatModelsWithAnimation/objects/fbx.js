@@ -16,6 +16,7 @@ const fbxObject = ModelLoader.load('./models/fbx/box_anim.fbx');
 fbxObject.on(EVENT_NAMES.READY, () => {
     fbxObject.object3D.rotation.y = -Math.PI / 2;
     fbxGroup.object3D.add(fbxObject.object3D);
+    fbxGroup.object3D.scale.set(.5, .5, .5);
 });
 
 fbxObject.on(EVENT_NAMES.UPDATE, () => {

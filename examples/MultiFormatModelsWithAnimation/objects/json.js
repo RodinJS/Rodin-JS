@@ -16,6 +16,7 @@ const jsonObject = ModelLoader.load('./models/json/box_anim.js');
 jsonObject.on(EVENT_NAMES.READY, () => {
     jsonGroup.object3D.add(jsonObject.object3D);
     jsonObject.object3D.rotation.x = -Math.PI/2;
+    jsonObject.object3D.scale.set(.5, .5, .5);
 });
 
 jsonObject.on(EVENT_NAMES.UPDATE, () => {
