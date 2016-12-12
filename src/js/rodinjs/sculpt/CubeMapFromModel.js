@@ -1,13 +1,15 @@
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
-import {JSONModelObject} from './JSONModelObject.js';
+import {ModelLoader} from './ModelLoader.js';
+
 
 export class CubeMapFromModel extends Sculpt {
-    constructor (id, size, textureURL, material) {
-        super(id);
+    constructor (size, textureURL, material) {
+        super();
+
         // todo ASAP: find normal method
-        let cube = new JSONModelObject(id, '/_build/js/rodinjs/resources/models/cubemap.js');
+        let cube = ModelLoader.load('/_build/js/rodinjs/resources/models/cubemap.js');
         cube.on('ready', () => {
             if (textureURL) {
                 new THREE.TextureLoader().load(textureURL, (texture) => {

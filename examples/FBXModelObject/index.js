@@ -3,42 +3,42 @@ import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
-import {FBXModelObject} from '../../_build/js/rodinjs/sculpt/FBXModelObject.js';
+import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
 
 let scene = SceneManager.get();
+scene.scene.background = new THREE.Color(0xb5b5b5);
+
 let controls = scene.controls;
+
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
-
-let light1 = new THREE.DirectionalLight(0xffffff);
-light1.position.set(1, 1, 1);
-scene.add(light1);
-
-let light2 = new THREE.DirectionalLight(0xcccccc);
-light2.position.set(-1, -1, -1);
-scene.add(light2);
-
-let amlight = new THREE.AmbientLight(0x3e3e3e);
-scene.add(amlight);
-
-let skybox = new CubeObject(15, 'img/boxW.jpg');
-skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
-    scene.add(evt.target.object3D);
-    evt.target.object3D.position.y = scene.controls.userHeight;
+let floor = new RODIN.THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(25, 25, 50, 50), new THREE.MeshLambertMaterial({color: 0x869295, wireframe:true})));
+floor.on('ready', (e) => {
+    scene.add(e.target.object3D);
+    e.target.object3D.rotation.x = Math.PI/2;
 });
 
-let obj = new FBXModelObject('./model/xsi_man_skinning.FBX', ['./model/Char_UV_Texture.gif']);
+/// Add light
+let light1 = new THREE.DirectionalLight(0xcccccc);
+light1.position.set(2, 3, 2);
+scene.add(light1);
 
+scene.add(new THREE.AmbientLight(0xaaaaaa));
+
+let light2 = new THREE.DirectionalLight(0xb5b5b5);
+light2.position.set(-3, -3, -3);
+scene.add(light2);
+
+let obj = ModelLoader.load('./model/xsi_man_skinning.FBX');
 obj.on('ready', () => {
     let s = 0.1;
     obj.object3D.scale.set(s, s, s);
     obj.object3D.position.z = -2;
     obj.object3D.position.y = controls.userHeight - 1.6;
     scene.add(obj.object3D);
-    console.log(obj);
 });
 
 obj.on('update', () => {
-    obj.object3D && (obj.object3D.rotation.y += 0.002);
+    obj.object3D && (obj.object3D.rotation.y += RODIN.Time.deltaTime()/2000);
 });

@@ -4,7 +4,7 @@ import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
-import {JSONModelObject} from '../../_build/js/rodinjs/sculpt/JSONModelObject.js';
+import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
 import * as GUI from '../../_build/js/vendor/dat-gui/index.js';
 
 let scene = SceneManager.get();
@@ -20,16 +20,6 @@ skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
     evt.target.object3D.position.y = scene.controls.userHeight;
 });
 
-
-
-class CardboardObject extends JSONModelObject {
-    constructor(id) {
-        super(id, "./model/cardboard/cardboard.js" );
-    }
-}
-
-
-
 let light1 = new THREE.DirectionalLight(0xffffff);
 light1.position.set(1, 1, 1);
 scene.add(light1);
@@ -41,13 +31,11 @@ scene.add(light2);
 let amlight = new THREE.AmbientLight(0x222222);
 scene.add(amlight);
 
-let cardboard = new CardboardObject();
+let cardboard = ModelLoader.load('./model/cardboard/cardboard.js');
 cardboard.on('ready', () => {
     cardboard.object3D.position.x = -3;
     cardboard.object3D.position.z = -5;
     cardboard.object3D.scale.set(0.01, 0.01, 0.01);
-    console.log(cardboard.object3D);
-    //cardboard.object3D.material.materials[0] = new THREE.MeshLambertMaterial({map: new THREE.TextureLoader().load("./model/cardboard/cardboard_m.jpg"), color:0xffffff});
     scene.add(cardboard.object3D);
 });
 
