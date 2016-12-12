@@ -3,8 +3,10 @@ import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import '../../vendor/cannon/cannon.js';
 import '../../vendor/oimo/oimo.js';
 import {RigidBody} from './RigidBody.js';
-import changeParent  from '../../rodinjs/utils/ChangeParent.js';
+import * as PhysicsUtils from '../utils/physicsUtils.js';
 
+
+import changeParent  from '../../rodinjs/utils/ChangeParent.js';
 
 
 // todo make singleton
@@ -157,24 +159,22 @@ export class RodinPhysics {
             while (i--) {
                 if (!this.rigidBodies[i].sleeping) {
 
-                    let obj = new THREE.Object3D();
-                    obj.position.copy(this.rigidBodies[i].body.position);
-                    obj.quaternion.copy(this.rigidBodies[i].body.getQuaternion());
+                    let newPositionMatrix = new THREE.Matrix4();
 
-                    // TODO: changeParent makes it slower
-                    changeParent(obj, this.rigidBodies[i].owner.parent);
-                    this.rigidBodies[i].owner.position.copy(obj.position);
-                    this.rigidBodies[i].owner.quaternion.copy(obj.quaternion);
+                    //let newRotationMatrix = new THREE.Matrix4();
+                    newPositionMatrix.makeRotationFromQuaternion(
+                        PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()));
+                    //todo: Matrix.compose
 
-                    obj.parent.remove(obj);
-                    obj = null;
+                    newPositionMatrix.setPosition(this.rigidBodies[i].body.position);
 
-                    /*this.rigidBodies[i].owner.position.set(
-                        this.rigidBodies[i].body.position.x,
-                        this.rigidBodies[i].body.position.y,
-                        this.rigidBodies[i].body.position.z
-                    );
-                    this.rigidBodies[i].owner.quaternion.copy(this.rigidBodies[i].body.getQuaternion());*/
+                    let inverseParentMatrix = new THREE.Matrix4();
+                    inverseParentMatrix.getInverse(this.rigidBodies[i].owner.parent.matrixWorld);
+                    newPositionMatrix.multiplyMatrices(inverseParentMatrix, newPositionMatrix);
+
+                    this.rigidBodies[i].owner.matrixAutoUpdate = false;
+                    //this.rigidBodies[i].owner.matrixWorldNeedsUpdate = false;
+                    this.rigidBodies[i].owner.matrix = newPositionMatrix;
                 }
             }
         }

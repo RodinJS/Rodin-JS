@@ -159,12 +159,12 @@ let mass = 0.2;
 
 let group = new THREE.Group();
 group.position.set(0, 3, 5);
-// group.rotation.x = Math.PI/3;
+ group.rotation.x = Math.PI/3;
 scene.add(group);
 
 let geometries = [
     new THREE.BoxGeometry(0.2, 0.5, 0.2),
-    //new THREE.SphereGeometry(0.2, 64),
+    new THREE.SphereGeometry(0.2, 64),
     //new THREE.ConeGeometry(0.2, 0.2, 64),
     //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
     //new THREE.IcosahedronGeometry(0.2, 1),
@@ -175,7 +175,7 @@ let startPhysics = false;
 setTimeout(()=>{startPhysics = true}, 5000);
 
 // add raycastable objects to scene
-for (let i = 0; i < 3; i++) {
+for (let i = 0; i < 300; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
