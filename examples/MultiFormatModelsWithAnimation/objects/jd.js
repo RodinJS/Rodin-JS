@@ -16,6 +16,7 @@ const jdObject = ModelLoader.load('./models/jd/box_anim.JD');
 jdObject.on(EVENT_NAMES.READY, () => {
     jdObject.object3D.rotation.y = 3 * Math.PI / 5;
     jdGroup.object3D.add(jdObject.object3D);
+    jdObject.object3D.scale.set(.5, .5, .5);
 });
 
 jdObject.on(EVENT_NAMES.UPDATE, () => {

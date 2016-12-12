@@ -15,6 +15,7 @@ export const objGroup = new RODIN.THREEObject(new THREE.Object3D());
 const objObject = ModelLoader.load('./models/obj/box_anim.obj');
 objObject.on(EVENT_NAMES.READY, () => {
     objGroup.object3D.add(objObject.object3D);
+    objObject.object3D.scale.set(.5, .5, .5);
 });
 
 objObject.on(EVENT_NAMES.UPDATE, () => {
