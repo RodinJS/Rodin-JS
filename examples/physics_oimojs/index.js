@@ -84,10 +84,12 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
 raycaster = new RODIN.Raycaster(scene);
 
 /////////// physics ////////////////////
-scene.physics = RodinPhysics.getInstance("oimo");
+//scene.physics = RodinPhysics.getInstance("oimo");
+scene.physics = RodinPhysics.getInstance("cannon");
 
 //Setting up world
-scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
+scene.physics.setupWorldGeneralParam
+eters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
 
 ///////////////// creating floor ///////////////////////
 let floorWidth = 4;
@@ -113,10 +115,10 @@ ground.receiveShadow = true;
 scene.add(ground);
 // add physic
 let groundRigitBody = new RigidBody({
-    mesh: ground,
+    owner: ground,
     mass: 0,
     type: "plane",
-    dynamic: false
+    move: false
 });
 groundRigitBody.name = "ground";
 
@@ -159,7 +161,7 @@ let mass = 0.2;
 
 let group = new THREE.Group();
 group.position.set(0, 3, 5);
- group.rotation.x = Math.PI/3;
+group.rotation.x = Math.PI/3;
 scene.add(group);
 
 let geometries = [
@@ -175,7 +177,7 @@ let startPhysics = false;
 setTimeout(()=>{startPhysics = true}, 5000);
 
 // add raycastable objects to scene
-for (let i = 0; i < 300; i++) {
+for (let i = 0; i < 500; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -204,9 +206,9 @@ for (let i = 0; i < 300; i++) {
 
         // add physic
         let objectRigitBody = new RigidBody({
-            mesh: obj.object3D,
+            owner: obj.object3D,
             mass: mass,
-            dynamic: true
+            move: true
         });
         objectRigitBody.name = obj.object3D.geometry.type;
     });

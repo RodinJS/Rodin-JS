@@ -5,18 +5,14 @@ import '../../vendor/oimo/oimo.js';
 import {RigidBody} from './RigidBody.js';
 import * as PhysicsUtils from '../utils/physicsUtils.js';
 
-
-import changeParent  from '../../rodinjs/utils/ChangeParent.js';
-
-
 // todo make singleton
 
 export class RodinPhysics {
 
     /**
      *
-     * @param {string, ""} id Required
-     * @param {string, ""} physicsEngine
+     * @param {string, ''} id Required
+     * @param {string, ''} physicsEngine
      */
     constructor(id = "", physicsEngine) {
 
@@ -31,9 +27,9 @@ export class RodinPhysics {
 
         // creating physics world
         if (!this.physicsEngine) {
-            this.physicsEngine = "oimo";
+            this.physicsEngine = 'oimo';
         }
-        if (this.physicsEngine === "cannon") {
+        if (this.physicsEngine === 'cannon') {
             this.world = new CANNON.World();
             this.world.broadphase = new CANNON.NaiveBroadphase();
         }
@@ -44,7 +40,7 @@ export class RodinPhysics {
         // 1 : BruteForce
         // 2 : Sweep and prune , the default
         // 3 : dynamic bounding volume tree
-        if (this.physicsEngine === "oimo") {
+        if (this.physicsEngine === 'oimo') {
 
             // Algorithm used for collision
             // 1: BruteForceBroadPhase  2: sweep and prune  3: dynamic bounding volume tree
@@ -63,7 +59,7 @@ export class RodinPhysics {
      * Returns the appropriate instance
      * of the physics to use.
      *
-     * @param {string, ""} physicsEngine
+     * @param {string, ''} physicsEngine
      **/
     static getInstance(physicsEngine) {
         this.physicsEngine = physicsEngine;
@@ -83,7 +79,7 @@ export class RodinPhysics {
      * @param {number, 8} quatNormalizeSkip
      */
     setupWorldGeneralParameters(gravityX = 0, gravityY = 0, gravityZ = 0, iterations = 8, quatNormalizeFast, quatNormalizeSkip) {
-        if (this.physicsEngine === "cannon") {
+        if (this.physicsEngine === 'cannon') {
             this.world.gravity.set(gravityX, gravityY, gravityZ); // m/s²
             // Max solver iterations: Use more for better force propagation, but keep in mind that it's not very computationally cheap!
             this.world.solver.iterations = iterations;
@@ -91,7 +87,7 @@ export class RodinPhysics {
             //this.world.quatNormalizeFast = quatNormalizeFast;
             //this.world.quatNormalizeSkip = quatNormalizeSkip; // ...and we do not have to normalize every step.
         }
-        if (this.physicsEngine === "oimo") {
+        if (this.physicsEngine === 'oimo') {
             this.world.gravity = new OIMO.Vec3(gravityX, gravityY, gravityZ);
             // The number of iterations for constraint solvers : default 8.
             this.world.numIterations = iterations;
@@ -107,11 +103,11 @@ export class RodinPhysics {
      * @param {{}} rigidBody
      */
     addRigidBodyToWorld(rigidBody) {
-        if (this.physicsEngine === "cannon") {
+        if (this.physicsEngine === 'cannon') {
             this.world.addBody(rigidBody.body);
         }
 
-        if (this.physicsEngine === "oimo") {
+        if (this.physicsEngine === 'oimo') {
             rigidBody.body = this.world.add(rigidBody.body);
         }
         this.rigidBodies.push(rigidBody);
@@ -124,12 +120,11 @@ export class RodinPhysics {
     updateWorldPhysics(timestamp = 0) {
         if (!this.world) return;
 
-        if (this.physicsEngine === "cannon") {
+        /*if (this.physicsEngine === 'cannon') {
             if (this.lastTime !== undefined) {
                 let dt = (timestamp - this.lastTime) / 1000;
                 this.world.step(this.fixedTimeStep, dt, this.maxSubSteps);
             }
-
             if (this.world.numObjects() > 0) {
                 let i = this.rigidBodies.length;
                 while (i--) {
@@ -138,7 +133,6 @@ export class RodinPhysics {
                         this.rigidBodies[i].body.position.y,
                         this.rigidBodies[i].body.position.z
                     );
-
                     let newRotation = new CANNON.Quaternion();
                     this.rigidBodies[i].body.quaternion.mult(RigidBody.threeToCannonAxis.inverse(), newRotation);
                     this.rigidBodies[i].owner.quaternion.set(
@@ -150,20 +144,39 @@ export class RodinPhysics {
                 }
             }
             this.lastTime = timestamp;
+        }*/
+        if (this.lastTime !== undefined) {
+            let dt = (timestamp - this.lastTime) / 1000;
+            this.world.step(this.fixedTimeStep, dt, this.maxSubSteps);
         }
-
-        if (this.physicsEngine === "oimo") {
-            this.world.step();
-
-            let i = this.rigidBodies.length;
-
-
+        let i = this.rigidBodies.length;
+        /*if (this.physicsEngine === 'cannon') {
+            //if (this.world.numObjects() > 0) {
             while (i--) {
-                if (!this.rigidBodies[i].sleeping) {
+                    this.rigidBodies[i].owner.position.set(
+                        this.rigidBodies[i].body.position.x,
+                        this.rigidBodies[i].body.position.y,
+                        this.rigidBodies[i].body.position.z
+                    );
+                    let newRotation = new CANNON.Quaternion();
+                    this.rigidBodies[i].body.quaternion.mult(RigidBody.threeToCannonAxis.inverse(), newRotation);
+                    this.rigidBodies[i].owner.quaternion.set(
+                        newRotation.x,
+                        newRotation.y,
+                        newRotation.z,
+                        newRotation.w
+                    );
+                }
+            //}
+        }*/
+        //if (this.physicsEngine === 'oimo') {
+            while (i--) {
+                //if (!this.rigidBodies[i].sleeping) {
                     let newGlobalMatrix = new THREE.Matrix4();
                     newGlobalMatrix.compose(
                         PhysicsUtils.oimoToThree(this.rigidBodies[i].body.position),
                         PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()),
+                        //todo parent scale
                         this.rigidBodies[i].owner.scale);
 
                     let inverseParentMatrix = new THREE.Matrix4();
@@ -173,8 +186,9 @@ export class RodinPhysics {
                     this.rigidBodies[i].owner.matrixAutoUpdate = false;
                     //this.rigidBodies[i].owner.matrixWorldNeedsUpdate = false;
                     this.rigidBodies[i].owner.matrix = newGlobalMatrix;
-                }
+                //}
             }
-        }
+        //}
+        this.lastTime = timestamp;
     }
 }

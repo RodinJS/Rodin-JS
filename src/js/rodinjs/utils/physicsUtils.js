@@ -1,10 +1,6 @@
-/**
- * Created by Knox on 12/12/2016.
- */
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import '../../vendor/oimo/oimo.js';
 import '../../vendor/cannon/cannon.js';
-
 
 /**
  * Converts oimo datatypes to three datatypes
