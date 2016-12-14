@@ -21,9 +21,19 @@ export class Event {
 		this.keys = [];
 
 		this.timeStamp = Date.now();
+		this.propagation = true;
 	}
 
+    /**
+	 * getKey function.
+     * @param keyCode {number}
+     * @returns {boolean} true if controller key is pressed, false otherwise
+     */
 	getKey(keyCode) {
 		return this.keys.indexOf(keyCode) !== -1
     }
+
+    stopPropagation() {
+		this.propagation = false;
+	}
 }

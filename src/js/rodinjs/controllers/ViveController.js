@@ -32,11 +32,13 @@ export class ViveController extends GamePad {
         this.add(targetLine);
         this.reycastingLine = targetLine;
 
-        if(false){
-            this.disable();
-        }
     }
 
+    /**
+     * Get Intersections
+     * Raycast from controller model
+     * @returns [Sculpt]
+     */
     getIntersections() {
         this.tempMatrix.identity().extractRotation(this.matrixWorld);
         this.raycaster.ray.origin.setFromMatrixPosition(this.matrixWorld);
@@ -44,11 +46,19 @@ export class ViveController extends GamePad {
         return this.raycaster.raycast();
     }
 
+    /**
+     * Gamepad hover function
+     * @param intersect
+     */
     gamepadHover(intersect){
-        this.reycastingLine.geometry.vertices[1].z = -intersect.distance;
+        console.log(intersect);
+        this.reycastingLine.geometry.vertices[1].z = -intersect[0].distance;
         this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
 
+    /**
+     * Gamepad hoverout function
+     */
     gamepadHoverOut(){
         this.reycastingLine.geometry.vertices[1].z = this.targetLineDistance;
         this.reycastingLine.geometry.verticesNeedUpdate = true;

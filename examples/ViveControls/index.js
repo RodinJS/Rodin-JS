@@ -10,27 +10,16 @@ import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
 
 let scene = SceneManager.get();
-let camera = scene.camera;
-let controls = scene.controls;
-let renderer = scene.renderer;
-
-
-renderer.setPixelRatio(window.devicePixelRatio);
-
-renderer.shadowMap.enabled = true;
-renderer.gammaInput = true;
-renderer.gammaOutput = true;
-
-
+scene.scene.background = new THREE.Color(0xb5b5b5);
 scene.setCameraProperty("far", 10000);
 
+let controls = scene.controls;
 
-scene.scene.background = new THREE.Color(0x808080);
-
+let renderer = scene.renderer;
+renderer.setPixelRatio(window.devicePixelRatio);
 
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
-
 
 controllerL.onKeyDown = controllerKeyDown;
 controllerL.onKeyUp = controllerKeyUp;
@@ -38,7 +27,6 @@ controllerL.onTouchUp = controllerTouchUp;
 controllerL.onTouchDown = controllerTouchDown;
 
 SceneManager.addController(controllerL);
-
 scene.add(controllerL);
 
 let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
@@ -50,7 +38,6 @@ controllerR.onTouchUp = controllerTouchUp;
 controllerR.onTouchDown = controllerTouchDown;
 
 SceneManager.addController(controllerR);
-
 scene.add(controllerR);
 
 let loader = new THREE.OBJLoader();
@@ -91,7 +78,6 @@ light.shadow.mapSize.set(4096, 4096);
 scene.add(light);
 
 // add raycastable objects to scene
-
 let group = new THREE.Group();
 group.position.set(1, 1, 0);
 group.rotation.y = 0.4;
@@ -157,7 +143,6 @@ for (let i = 0; i < 12; i++) {
     });
 
     // CONTROLLER_KEY
-
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
         obj.object3D.scale.set(1.1, 1.1, 1.1);
     });
@@ -175,7 +160,6 @@ for (let i = 0; i < 12; i++) {
     });
 
     // Controller touch
-
     obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, (evt) => {
     });
 
@@ -186,7 +170,6 @@ for (let i = 0; i < 12; i++) {
     });
 }
 
-
 function controllerKeyDown(keyCode) {
     if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
     this.engaged = true;
@@ -196,18 +179,18 @@ function controllerKeyDown(keyCode) {
 
     if (this.intersected && this.intersected.length > 0) {
         this.intersected.map(intersect => {
-            if (intersect.object3D.parent != intersect.object3D.initialParent) {
+            console.log(intersect);
+            if (intersect.object.parent != intersect.object.initialParent) {
                 return;
             }
 
-            changeParent(intersect.object3D, this.reycastingLine);
-            //let targetParent = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.04, 12, 12));
+            changeParent(intersect.object, this.reycastingLine);
             let targetParent = new THREE.Object3D();
             this.reycastingLine.add(targetParent);
-            targetParent.position.copy(intersect.object3D.position);
-            changeParent(intersect.object3D, targetParent);
+            targetParent.position.copy(intersect.object.position);
+            changeParent(intersect.object, targetParent);
 
-            this.pickedItems.push(intersect.object3D);
+            this.pickedItems.push(intersect.object);
             if (intersect.initialRotX) {
                 intersect.initialRotX = 0;
                 intersect.initialRotY = 0;
@@ -242,8 +225,8 @@ function controllerTouchDown(keyCode, gamepad) {
 
             if (!intersect.initialRotX && intersect.initialRotX != 0) {
 
-                intersect.initialRotX = +intersect.object3D.parent.rotation.x;
-                intersect.initialRotY = +intersect.object3D.parent.rotation.y;
+                intersect.initialRotX = +intersect.object.parent.rotation.x;
+                intersect.initialRotY = +intersect.object.parent.rotation.y;
             }
             let x = (intersect.initialRotX + ((-gamepad.axes[1]) - gamepad.initialTouchX));
             let y = (intersect.initialRotY + ((-gamepad.axes[0]) - gamepad.initialTouchY));
@@ -256,8 +239,8 @@ function controllerTouchDown(keyCode, gamepad) {
             let quaternionX = new THREE.Quaternion();
             quaternionX.setFromAxisAngle(directionX, x);
 
-            intersect.object3D.parent.updateMatrixWorld();
-            intersect.object3D.parent.quaternion.copy(new THREE.Quaternion().multiplyQuaternions(quaternionX, quaternionY));
+            intersect.object.parent.updateMatrixWorld();
+            intersect.object.parent.quaternion.copy(new THREE.Quaternion().multiplyQuaternions(quaternionX, quaternionY));
         });
     }
 }
@@ -271,10 +254,10 @@ function controllerTouchUp(keyCode, gamepad) {
             intersect.initialRotX = 0;
             intersect.initialRotY = 0;
 
-            let holderObj = intersect.object3D.parent;
-            changeParent(intersect.object3D, intersect.object3D.initialParent);
+            let holderObj = intersect.object.parent;
+            changeParent(intersect.object, intersect.object.initialParent);
             holderObj.rotation.set(0, 0, 0);
-            changeParent(intersect.object3D, holderObj);
+            changeParent(intersect.object, holderObj);
         });
     }
 }

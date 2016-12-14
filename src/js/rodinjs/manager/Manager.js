@@ -1,5 +1,8 @@
 import {ErrorAbstractClassInstance, ErrorParameterTypeDontMatch} from '../error/CustomErrors.js';
 
+/**
+ * Class Manager
+ */
 export class Manager {
     constructor(COSTRUCTOR) {
         if (this.constructor === Manager) {
@@ -11,6 +14,10 @@ export class Manager {
         this._COSTRUCTOR = COSTRUCTOR;
     }
 
+    /**
+     * Create new Instance
+     * @returns {*} created instance
+     */
     create() {
         const item = new this._COSTRUCTOR(...arguments);
         let keys = Object.keys(this._items);
@@ -21,12 +28,21 @@ export class Manager {
         return item;
     }
 
+    /**
+     * Add new Instance
+     * @param item {*} added instance
+     */
     add(item) {
         if (!(item instanceof this._COSTRUCTOR)) {
             throw new ErrorParameterTypeDontMatch('item', this._COSTRUCTOR.toString());
         }
     }
 
+    /**
+     * get instance.
+     * @param index
+     * @returns {*}
+     */
     get(index = this._active) {
         if (index == null) {
             throw new ErrorParameterTypeDontMatch();

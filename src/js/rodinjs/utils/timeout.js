@@ -4,4 +4,5 @@ export let timeout = (cb = function () {
         cb();
         clearTimeout(timer);
     }, delay);
+    return timer;
 };

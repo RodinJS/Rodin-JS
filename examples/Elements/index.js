@@ -13,7 +13,7 @@ let controls = scene.controls;
 let renderer = scene.renderer;
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
-
+scene.scene.background = new THREE.Color(0x383838);
 
 let i = 50;
 while (i--) {
@@ -33,7 +33,7 @@ while (i--) {
         width: 0.01,
         color: 0xff8800,
         opacity: 1,
-        radius: 0.3
+        radius: 0.4
     };
     params.label = {
         text: "Rodin " + i,
@@ -88,7 +88,6 @@ while (i--) {
     });
 
 }
-
 
 /// update TWEEN before start rendering
 scene.preRender(function () {

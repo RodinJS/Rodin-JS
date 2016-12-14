@@ -29,25 +29,37 @@ export class KeyboardController extends GamePad {
     }
 
     /**
-     * Overwrite all functions.
-     * This need for interface
+     * Just keep Interface
      */
     setRaycasterScene () {
     }
 
+    /**
+     * Just keep Interface
+     */
     setRaycasterCamera () {
     }
 
+    /**
+     * Just keep Interface
+     */
     update () {
     }
 
+    /**
+     * Just keep Interface
+     */
     updateObject () {
     }
 
+    /**
+     * Just keep Interface
+     */
     intersectObjects () {
     }
 
     /**
+     * Emit global event for all objects
      * @param {string} eventName
      * @param {*} DOMEvent
      * @param {number} keyCode
@@ -61,9 +73,17 @@ export class KeyboardController extends GamePad {
         });
     }
 
+    /**
+     * Just keep Interface
+     */
     get axes () {
     }
 
+    /**
+     * getKey function
+     * @param keyCode
+     * @returns {boolean} true if key pressed, false otherwise
+     */
     static getKey (keyCode) {
         return keys.indexOf(keyCode) !== -1;
     }
