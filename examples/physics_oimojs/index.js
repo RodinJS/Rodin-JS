@@ -84,12 +84,12 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
 raycaster = new RODIN.Raycaster(scene);
 
 /////////// physics ////////////////////
-//scene.physics = RodinPhysics.getInstance("oimo");
-scene.physics = RodinPhysics.getInstance("cannon");
+//RodinPhysics.PhysicsEngine ='oimo';
+scene.physics = RodinPhysics.getInstance("oimo");
+//scene.physics = RodinPhysics.getInstance("cannon");
 
 //Setting up world
-scene.physics.setupWorldGeneralParam
-eters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
+scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
 
 ///////////////// creating floor ///////////////////////
 let floorWidth = 4;
