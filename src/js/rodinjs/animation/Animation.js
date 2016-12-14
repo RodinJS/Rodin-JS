@@ -7,8 +7,8 @@ import {EVENT_NAMES} from '../constants/constants.js';
  */
 export class Animation {
     /**
-     * @param name {string}
-     * @param params {Object}
+     * @param {string} name
+     * @param {Object} params
      */
     constructor (name, params) {
         this._loop  = false;
@@ -22,8 +22,9 @@ export class Animation {
         this.playing = false;
     }
 
+    //TODO: rename this function to clone()
     /**
-     * copy animation
+     * Get a cloned animation object
      * @returns {Animation}
      */
     copy () {
@@ -33,7 +34,7 @@ export class Animation {
 
     /**
      * Start animation
-     * @param forceStart {boolean}
+     * @param {boolean} forceStart - kills this animation (if currently playing) and starts again, Default - false
      * @returns {boolean}
      */
     start (forceStart = false) {
@@ -91,7 +92,7 @@ export class Animation {
 
     /**
      * Play animation
-     * @param forceStart {boolean}
+     * @param {boolean} forceStart
      * @returns {boolean}
      */
     play (forceStart = false) {
