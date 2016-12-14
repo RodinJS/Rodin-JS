@@ -7,14 +7,21 @@ let instance = null;
 
 export class CardboardGamePad {
     /**
-     * Constructor - only for inherited classes
+     * Custom (virtual) gamepad class, for CardboardController.
      */
     constructor(e) {
         if (e !== enforce) {
             throw new ErrorSingletonClass();
         }
-
+        /**
+         * bulk coordinates in the document.
+         * @type {[number, number]}
+         */
         this.axes = [0, 0];
+        /**
+         * Cardboard button state.
+         * @type {Object}
+         */
         this.buttons = [
             {
                 pressed: false,
@@ -22,12 +29,35 @@ export class CardboardGamePad {
                 value: 0
             }
         ];
-
+        /**
+         * Bulk connection state.
+         * @type {boolean}
+         */
         this.connected = true;
+        /**
+         * A bulk id, not used at the moment.
+         * @type {number}
+         */
         this.displayId = 0;
+        /**
+         *Hhand (left/right), not used at the moment.
+         * @type {string}
+         */
         this.hand = "";
+        /**
+         * Gamepad ID.
+         * @type {string}
+         */
         this.id = "Cardboard Gamepad";
+        /**
+         * Indicates whether the mousedown event should propagate to the document or not.
+         * @type {boolean}
+         */
         this.stopPropagationOnMouseDown = false;
+        /**
+         * Indicates whether the mouseup event should propagate to the document or not.
+         * @type {boolean}
+         */
         this.stopPropagationOnMouseUp = false;
 
 
@@ -52,6 +82,10 @@ export class CardboardGamePad {
         }, false);
     }
 
+    /**
+     * Get gamepad instance
+     * @returns {CardboardGamePad} cardboardGamePad
+     */
     static getInstance() {
         if (!instance) {
             instance = new CardboardGamePad(enforce);

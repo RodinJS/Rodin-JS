@@ -16,7 +16,9 @@ const containsIntersect = function (interArray, inter) {
     }
     return false;
 };
-
+/**
+ * General GamePad class, custom controllers extend this class.
+ */
 export class GamePad extends THREE.Object3D {
 
     /**
@@ -280,7 +282,7 @@ export class GamePad extends THREE.Object3D {
     }
 
     /**
-     * update controller object in scene, update position and rotation
+     * Update controller object in scene, update position and rotation
      * @param {Object} controller
      */
     updateObject (controller) {
@@ -377,6 +379,9 @@ export class GamePad extends THREE.Object3D {
         }
     }
 
+    /**
+     * Returns function(keyCode) to emit the valueChange event via raycastAndEmitEvent function.
+     */
     get valueChange () {
         return (keyCode) => {
             this.onValueChange && this.onValueChange(keyCode);
@@ -389,11 +394,15 @@ export class GamePad extends THREE.Object3D {
     }
 
     /**
+     * Custom callback for gamepad key value change event.
      * @param {number} value
      */
     onValueChange (value) {
     }
 
+    /**
+     * Returns function(keyCode) to emit the keyDown event via raycastAndEmitEvent function.
+     */
     get keyDown () {
         return (keyCode) => {
             this._lastKeyDownTimestamp[keyCode] = Date.now();
@@ -406,14 +415,17 @@ export class GamePad extends THREE.Object3D {
         throw new ErrorProtectedFieldChange('keyDown');
     }
 
-
     /**
+     * Custom callback for gamepad keyDown event.
      * @param {number} keyCode
      */
     onKeyDown (keyCode) {
     }
 
 
+    /**
+     * Returns function(keyCode) to emit the keyUp event via raycastAndEmitEvent function.
+     */
     get keyUp () {
         return (keyCode) => {
             this.onKeyUp && this.onKeyUp(keyCode);
@@ -430,15 +442,15 @@ export class GamePad extends THREE.Object3D {
     }
 
     /**
+     * Custom callback for gamepad keyUp event.
      * @param {number} keyCode
      */
     onKeyUp (keyCode) {
     }
 
     /**
-     *
+     * Returns function(keyCode, gamepad) to emit the touchDown event via raycastAndEmitEvent function.
      */
-
     get touchDown () {
         return (keyCode, gamepad) => {
             this._lastToudhTimestamp[keyCode] = Date.now();
@@ -450,15 +462,17 @@ export class GamePad extends THREE.Object3D {
     set touchDown (value) {
         throw new ErrorProtectedFieldChange('touchDown');
     }
-
     /**
+     * Custom callback for gamepad touchDown event.
      * @param {number} keyCode
      * @param {object} gamepad
      */
     onTouchDown (keyCode, gamepad) {
     }
 
-
+    /**
+     * Returns function(keyCode, gamepad) to emit the touchUp event via raycastAndEmitEvent function.
+     */
     get touchUp () {
         return (keyCode, gamepad) => {
             this.onTouchUp && this.onTouchUp(keyCode, gamepad);
@@ -475,28 +489,40 @@ export class GamePad extends THREE.Object3D {
     }
 
     /**
+     * Custom callback for gamepad touchUp event.
      * @param {number} keyCode
      * @param {object} gamepad
      */
     onTouchUp (keyCode, gamepad) {
     }
 
-
+    /**
+     * Custom callback for gamepad disable event.
+     */
     onDisable () {
 
     }
-
+    /**
+     * Custom callback for gamepad enable event.
+     */
     onEnable () {
 
     }
 
-
+    /**
+     * Custom function for gamepad update (called on each animation frame).
+     */
     onControllerUpdate () {
     }
-
+    /**
+     * Custom callback for gamepad hover event (when gamepada hovers a raycastable object).
+     */
     gamepadHover (intersect) {
     }
 
+    /**
+     * Custom callback for gamepad hoverOut event (when gamepada hovers out of a raycastable object).
+     */
     gamepadHoverOut () {
     }
 }

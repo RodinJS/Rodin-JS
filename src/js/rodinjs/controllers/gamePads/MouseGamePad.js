@@ -4,7 +4,9 @@ const enforce = function () {
 };
 
 let instance = null;
-
+/**
+ * Custom gamepad class, for MouseController, by default the navigator does not see mouse as a gamepad device.
+ */
 export class MouseGamePad {
     /**
      * Constructor - only for inherited classes
@@ -13,8 +15,16 @@ export class MouseGamePad {
         if (e !== enforce) {
             throw new ErrorSingletonClass();
         }
-
+        /**
+         * Mouse coordinates in the document.
+         * @type {[number, number]}
+         */
         this.axes = [-1, -1];
+
+        /**
+         * Mouse buttons states.
+         * @type {Object}
+         */
         this.buttons = [
             {
                 pressed: false,
@@ -32,13 +42,47 @@ export class MouseGamePad {
                 value: 0
             }
         ];
+        /**
+         * Mouse connection state.
+         * @type {boolean}
+         */
         this.connected = true;
+        /**
+         * A bulk id, not used at the moment.
+         * @type {number}
+         */
         this.displayId = 0;
+
+        /**
+         * Mouse hand (left/right), not used at the moment.
+         * @type {string}
+         */
         this.hand = "";
+
+        /**
+         * Mouse gamepad ID.
+         * @type {string}
+         */
         this.id = "Mouse Gamepad";
+        /**
+         * Indicates whether the mousedown event should propagate to the document or not.
+         * @type {boolean}
+         */
         this.stopPropagationOnMouseDown = false;
+        /**
+         * Indicates whether the mousemove event should propagate to the document or not.
+         * @type {boolean}
+         */
         this.stopPropagationOnMouseMove = false;
+        /**
+         * Indicates whether the mouseup event should propagate to the document or not.
+         * @type {boolean}
+         */
         this.stopPropagationOnMouseUp = false;
+        /**
+         * Indicates whether the scroll event should propagate to the document or not.
+         * @type {boolean}
+         */
         this.stopPropagationOnScroll = false;
 
         let mouseMove = (event) => {
@@ -123,7 +167,7 @@ export class MouseGamePad {
         document.body.addEventListener('wheel', scroll, false);
     }
     /**
-     * get gamepad instance
+     * Get gamepad instance
      * @returns {MouseGamePad} mouseGamePad
      */
     static getInstance() {
