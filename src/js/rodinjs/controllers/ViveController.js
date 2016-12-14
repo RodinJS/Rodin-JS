@@ -52,9 +52,6 @@ export class ViveController extends GamePad {
          */
         this.reycastingLine = targetLine;
 
-        if(false){
-            this.disable();
-        }
     }
     /**
      * Get raycasted objects ({distance, point, face, faceIndex, indices, object})of the controller's pointer ray.
@@ -73,7 +70,8 @@ export class ViveController extends GamePad {
      * @param {Object} intersect - intersected object ({distance, point, face, faceIndex, indices, object}) at the time of event.
      */
     gamepadHover(intersect){
-        this.reycastingLine.geometry.vertices[1].z = -intersect.distance;
+        console.log(intersect);
+        this.reycastingLine.geometry.vertices[1].z = -intersect[0].distance;
         this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
 

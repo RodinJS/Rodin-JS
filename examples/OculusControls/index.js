@@ -7,6 +7,8 @@ import {OculusController} from '../../_build/js/rodinjs/controllers/OculusContro
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
 let scene = SceneManager.get();
+scene.scene.background = new THREE.Color(0xb5b5b5);
+
 let camera = scene.camera;
 let target = new THREE.Mesh(new THREE.SphereGeometry(0.01, 5, 5), new THREE.MeshBasicMaterial({color: 0x336699, wireframe: true}));
 target.position.z = -1;
@@ -23,8 +25,6 @@ oculusController.onKeyUp = function () {
 };
 
 SceneManager.addController(oculusController);
-
-scene.scene.background = new THREE.Color(0x808080);
 
 let geometry = new THREE.PlaneGeometry(4, 4);
 let material = new THREE.MeshStandardMaterial({

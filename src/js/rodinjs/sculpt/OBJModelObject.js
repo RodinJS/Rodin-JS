@@ -1,6 +1,7 @@
 'use strict';
 
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
+import {WTF} from '../logger/Logger.js';
 
 import '../../vendor/three/examples/js/loaders/collada/AnimationHandler.js';
 import '../../vendor/three/examples/js/loaders/collada/KeyFrameAnimation.js';
@@ -19,97 +20,47 @@ import {Sculpt} from './Sculpt.js';
  * Obj format doesn't support animation.
  */
 
+THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+
 export class OBJModelObject extends Sculpt {
     /**
      * OBJModelObject constructor.
-     * @param {number} [id = 0]
      * @param {string} [URL = '']
-     * @param {array} [TextureURL = []]
      */
-    constructor(id = 0,
-                URL = '',
-                TextureURL = []) {
+    constructor(URL = '') {
 
-        super(id);
-
-        //let manager = new THREE.LoadingManager();
-        //manager.onProgress = function (item, loaded, total) {
-        //    console.log(item, loaded, total);
-        //};
+        super();
 
         let onProgress = function (xhr) {
             if (xhr.lengthComputable) {
                 let percentComplete = xhr.loaded / xhr.total * 100;
-                console.log(Math.round(percentComplete, 2) + '% downloaded');
+                WTF.is(Math.round(percentComplete, 2) + '% downloaded');
             }
         };
 
         let onError = function (xhr) {
+            WTF.is('cannot load file');
         };
 
-        if (!(TextureURL instanceof Array)) {
-            TextureURL = [TextureURL];
-        }
-
-        THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
-
+        let objLoader = new THREE.OBJLoader();
         let mtlLoader = new THREE.MTLLoader();
 
-        // get mtl file path and name
-        let getMtlLoaderPath = URL.slice(0, URL.lastIndexOf("/") + 1);
-        mtlLoader.setPath(getMtlLoaderPath);
-        let mtlLoaderName = URL.slice(getMtlLoaderPath.length, URL.lastIndexOf("."));
+        objLoader.load(URL, mesh => {
+            const mtlDir = URL.slice(0, URL.lastIndexOf("/") + 1);
 
-        // load mlt file
-        mtlLoader.load(mtlLoaderName + '.mtl', (materials) => {
-            materials.preload();
-            let i = 0;
-            // load textures if their paths are absolute
-            for (let materialName in materials.materialsInfo) {
-                if (materials.materialsInfo.hasOwnProperty(materialName)) {
-                    if (!TextureURL.length) {
-                        // get texture path from mtl file
-                        let mapKa = materials.materialsInfo[materialName].map_ka;
-                        if (mapKa) {
-                            let texturePath = getMtlLoaderPath + mapKa.slice(mapKa.lastIndexOf("\\") + 1);
-                            materials.materials[materialName].map = new THREE.TextureLoader().load(texturePath);
-                        }
-                    } else {
-                        // get texture path from TextureURL array
-                        if (materials.materials[materialName].map) {
-                            materials.materials[materialName].map = new THREE.TextureLoader().load(TextureURL[i]);
-                            i++;
-                        }
-                    }
-                }
-            }
+            mtlLoader.setPath(mtlDir);
+            mtlLoader.load(mesh.materialLibraries[0], (materials) => {
+                materials.preload();
 
-            let objLoader = new THREE.OBJLoader();
-            objLoader.setMaterials(materials);
-            objLoader.load(
-                URL,
-                (mesh) => {
+                objLoader.setMaterials(materials);
+                objLoader.load(URL, mesh => {
                     this.init(mesh);
                     this.emit('ready', new Event(this));
 
-                    console.log("OBJ file was loaded");
                 }, onProgress, onError);
-        }, function () {
-        }, () => {
-            let objLoader = new THREE.OBJLoader();
-            objLoader.load(
-                URL,
-                (mesh) => {
-                    this.init(mesh);
-                    this.emit('ready', new Event(this));
+            });
 
-                    console.log("OBJ file was loaded");
-                }, onProgress, onError);
-        });
-
-
-        this.on("update", (evt, delta) => {
-            THREE.AnimationHandler.update(delta);
-        });
+           WTF.is("OBJ file was loaded");
+        }, onProgress, onError);
     }
 }

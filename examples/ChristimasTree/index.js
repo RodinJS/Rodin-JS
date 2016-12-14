@@ -5,11 +5,10 @@ import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {Snow} from '../../_build/js/rodinjs/sculpt/Snow.js';
-import {JSONModelObject} from '../../_build/js/rodinjs/sculpt/JSONModelObject.js';
+import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
-
 
 let scene = SceneManager.get();
 let camera = scene.camera;
@@ -17,11 +16,8 @@ let controls = scene.controls;
 let renderer = scene.renderer;
 let threeScene = scene.scene;
 
-
 renderer.setPixelRatio(window.devicePixelRatio);
-
 renderer.shadowMap.enabled = false;
-
 
 scene.setCameraProperty("far", 200);
 
@@ -33,12 +29,10 @@ let mouseController = new MouseController();
 mouseController.onControllerUpdate = mouseControllerUpdate;
 SceneManager.addController(mouseController);
 
-
 /// vive controllers
 
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, threeScene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
-
 
 controllerL.onKeyDown = controllerKeyDown;
 controllerL.onKeyUp = controllerKeyUp;
@@ -46,7 +40,6 @@ controllerL.onTouchUp = controllerTouchUp;
 controllerL.onTouchDown = controllerTouchDown;
 
 SceneManager.addController(controllerL);
-
 scene.add(controllerL);
 
 let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, threeScene, null, 3);
@@ -58,13 +51,11 @@ controllerR.onTouchUp = controllerTouchUp;
 controllerR.onTouchDown = controllerTouchDown;
 
 SceneManager.addController(controllerR);
-
 scene.add(controllerR);
 
 let loader = new THREE.OBJLoader();
 loader.setPath('./models/');
 loader.load('vr_controller_vive_1_5.obj', function (object) {
-
     let loader = new THREE.TextureLoader();
     loader.setPath('./img/');
 
@@ -74,7 +65,6 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
     controllerL.add(object.clone());
     controllerR.add(object.clone());
 });
-
 
 /// Add light
 let light1 = new THREE.DirectionalLight(0xbbbbbb);
@@ -86,22 +76,20 @@ light1.shadow.camera.right = 15;
 light1.shadow.camera.left = -15;
 light1.shadow.mapSize.set(2048, 2048);
 scene.add(light1);
-
 scene.add(new THREE.AmbientLight(0xaaaaaa));
 
-
-let boxSize = 30;
-let snowBoxSize = 18;
-
 // Add a skybox.
+let boxSize = 30;
+
 let skybox = new THREE.Mesh(new THREE.BoxGeometry(boxSize * 2, boxSize * 2, boxSize * 2), new THREE.MeshBasicMaterial({color: 0x000000}));
 skybox.position.y = controls.userHeight;
 skybox.scale.set(1, 1, -1);
 scene.add(skybox);
 
+// Add a snowContainer.
+let snowBoxSize = 18;
 boxSize = 21;
 
-// Add a snowContainer.
 let snowContainer = new THREE.Object3D();
 snowContainer.rotation.y = -Math.PI / 2;
 snowContainer.position.y = -boxSize / 2 + snowBoxSize / 2;
@@ -122,16 +110,16 @@ snow.on("ready", (evt) => {
     snowContainer.add(evt.target.object3D);
 });
 
-
 /// Add terrain
-let terrain = new JSONModelObject(0, "./models/terrain.json");
+let terrain = ModelLoader.load("./models/terrain.json");
 terrain.on('ready', () => {
     let textureSnow = new THREE.TextureLoader().load("./models/snow_texture.jpg");
     textureSnow.wrapS = THREE.RepeatWrapping;
     textureSnow.wrapT = THREE.RepeatWrapping;
     textureSnow.repeat.x = 15;
     textureSnow.repeat.y = 15;
-    let mesh = new THREE.Mesh(terrain.object3D.geometry,
+
+    let mesh = new THREE.Mesh(terrain.object3D.children[0].geometry,
         new THREE.MeshLambertMaterial({
             color: 0xbbbbbb,
             map: textureSnow,
@@ -144,15 +132,14 @@ terrain.on('ready', () => {
     scene.add(mesh);
 });
 
-
 // christmasTree
 let s = 0.05;
-let christmasTree = new JSONModelObject(0, './models/christmasTree.json');
+let christmasTree =  ModelLoader.load('./models/christmasTree.json');
 christmasTree.on('ready', () => {
-    christmasTree.object3D.material.materials[0].alphaTest = 0.35;
-    christmasTree.object3D.material.materials[0].transparent = false;
-    christmasTree.object3D.material.materials[0].side = THREE.DoubleSide;
-    christmasTree.object3D.material.materials[0].clipShadows = true;
+    christmasTree.object3D.children[0].material.materials[0].alphaTest = 0.35;
+    christmasTree.object3D.children[0].material.materials[0].transparent = false;
+    christmasTree.object3D.children[0].material.materials[0].side = THREE.DoubleSide;
+    christmasTree.object3D.children[0].material.materials[0].clipShadows = true;
 
     christmasTree.object3D.scale.set(s, s, s);
     christmasTree.object3D.position.x = 0.5;
@@ -165,7 +152,7 @@ christmasTree.on('ready', () => {
 });
 
 // random tree
-let tree = new JSONModelObject(0, './models/tree.json');
+let tree =  ModelLoader.load('./models/tree.json');
 tree.on('ready', () => {
     for (let i = 0; i < 25; i++) {
         let s = Math.randomFloatIn(0.05, 0.15);
@@ -183,7 +170,6 @@ tree.on('ready', () => {
         scene.add(t);
     }
 });
-
 
 // christmasTree toys
 let toyURLS = [
@@ -342,26 +328,26 @@ let toyReady = function () {
 let colors = [0x0d2a70, 0x690000, 0xd2d2d2];
 for (let i = 0; i < 10; i++) {
     let url = toyURLS[Math.randomIntIn(0, 5)];
-    let toy = new JSONModelObject(i, url);
+    let toy = ModelLoader.load(url);
 
     toy.on('ready', toyReady);
     toy.on('ready', () => {
-            toy.object3D.geometry.computeVertexNormals();
+            toy.object3D.children[0].geometry.computeVertexNormals();
 
-            toy.object3D.material.materials[0].reflectivity = 1;
-            toy.object3D.material.materials[0].hue = 1;
+            toy.object3D.children[0].material.materials[0].reflectivity = 1;
+            toy.object3D.children[0].material.materials[0].hue = 1;
             if (url !== toyURLS[1]) {
-                toy.object3D.material.materials[0].color = new THREE.Color(colors[Math.randomIntIn(0, colors.length - 1)]);
+                toy.object3D.children[0].material.materials[0].color = new THREE.Color(colors[Math.randomIntIn(0, colors.length - 1)]);
             }
         }
     )
 }
 
-let toy = new JSONModelObject(10, toyURLS[6]);
+let toy = ModelLoader.load(toyURLS[6]);
 toy.on('ready', toyReady);
 toy.on('ready', () => {
-    toy.object3D.geometry.center();
-    let toyGeo = toy.object3D.geometry.clone();
+    toy.object3D.children[0].geometry.center();
+    let toyGeo = toy.object3D.children[0].geometry.clone();
     let glowMat = new THREE.MeshStandardMaterial({
         map: new THREE.TextureLoader().load("./models/star.png"),
         lights: true,
@@ -373,7 +359,6 @@ toy.on('ready', () => {
     toyGlow.scale.multiplyScalar(1.5);
     toyGlow.geometry.center();
     toy.object3D.add(toyGlow);
-    console.log(toyGlow);
 });
 
 function controllerKeyDown(keyCode) {
@@ -457,8 +442,7 @@ function mouseControllerUpdate() {
                     item.initMousePos = {x: this.axes[0], y: this.axes[1]};
                     let initParent = item.parent;
                     changeParent(item, camera);
-                    let deltaRotationQuaternion = new THREE.Quaternion()
-                        .setFromEuler(
+                    let deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
                             new THREE.Euler(-shift.y * Math.PI, shift.x * Math.PI, 0, 'XYZ')
                         );
 

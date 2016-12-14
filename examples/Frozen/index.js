@@ -15,7 +15,6 @@ let renderer = scene.renderer;
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
-
 let snowContainer = new THREE.Object3D();
 
 // Add a skybox.
