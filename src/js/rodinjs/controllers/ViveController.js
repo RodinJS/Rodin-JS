@@ -32,9 +32,6 @@ export class ViveController extends GamePad {
         this.add(targetLine);
         this.reycastingLine = targetLine;
 
-        if(false){
-            this.disable();
-        }
     }
 
     /**
@@ -54,7 +51,8 @@ export class ViveController extends GamePad {
      * @param intersect
      */
     gamepadHover(intersect){
-        this.reycastingLine.geometry.vertices[1].z = -intersect.distance;
+        console.log(intersect);
+        this.reycastingLine.geometry.vertices[1].z = -intersect[0].distance;
         this.reycastingLine.geometry.verticesNeedUpdate = true;
     }
 
