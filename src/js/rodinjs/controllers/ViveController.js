@@ -6,16 +6,12 @@ let leftHandControllerCreated = false;
 let rightHandControllerCreated = false;
 /**
  * A controller class for describing HTC Vive controllers event handlers.
- * Class ViveController
+ * @param {string} hand Required - "left" or "right".
+ * @param {THREE.Scene} scene Required - the scene where the controller will be used.
+ * @param {THREE.PerspectiveCamera} camera Required - the camera where the controller will be used.
+ * @param {number} raycastLayers - the number of objects that can be reycasted by the same ray.
  */
 export class ViveController extends GamePad {
-    /**
-     * Constructor.
-     * @param {string} hand Required - "left" or "right".
-     * @param {THREE.Scene} scene Required - the scene where the controller will be used.
-     * @param {THREE.PerspectiveCamera} camera Required - the camera where the controller will be used.
-     * @param {number} raycastLayers - the number of objects that can be reycasted by the same ray.
-     */
     constructor(hand, scene = null, camera = null, raycastLayers = 1) {
         if (!hand || !scene || !camera) {
             throw new ErrorNoValueProvided();

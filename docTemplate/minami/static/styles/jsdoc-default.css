@@ -24,9 +24,8 @@ body {
 
 ::-webkit-scrollbar-track
 {
-  -webkit-box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
   border-radius: 0px;
-  background-color: #333333;
+  background-color: #282828;
 }
 
 ::-webkit-scrollbar
@@ -37,8 +36,12 @@ body {
 
 ::-webkit-scrollbar-thumb
 {
-  border-radius: 5px;
-  -webkit-box-shadow: inset 0 0 8px rgba(0,0,0,.3);
+  border: 1px solid #555;
+  background-color: #444;
+}
+::-webkit-scrollbar-thumb:hover
+{
+  border: 1px solid #666;
   background-color: #555;
 }
 
@@ -190,7 +193,7 @@ nav ul {
 nav ul a,
 nav ul a:active {
   font-family: 'Montserrat', sans-serif;
-  line-height: 18px;
+  /*line-height: 18px;*/
   padding: 0;
   display: block;
   font-size: 12px;

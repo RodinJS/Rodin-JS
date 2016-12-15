@@ -4,12 +4,10 @@ import {EVENT_NAMES} from '../constants/constants.js';
 
 /**
  * Class Animation
+ * @param {string} name
+ * @param {Object} params
  */
 export class Animation {
-    /**
-     * @param {string} name
-     * @param {Object} params
-     */
     constructor (name, params) {
         this._loop  = false;
         this.sculpt = {};
@@ -122,9 +120,9 @@ export class Animation {
     }
 
     /**
-     * reset all initial props
-     * when animation start, it will save all properties that he change.
-     * this function returns values before animation start
+     * <p>reset all initial props</p>
+     * <p>when animation start, it will save all properties that he change.</p>
+     * <p>this function returns values before animation start</p>
      */
     reset () {
         for (let i in this.initialProps) {
@@ -142,7 +140,7 @@ export class Animation {
 
     /**
      * Set loop
-     * Set value if parameter given, otherwise returns current value
+     * <p>Set value if parameter given, otherwise returns current value</p>
      * @param loop
      * @returns {Animation}
      */
@@ -157,8 +155,8 @@ export class Animation {
 
     /**
      * Set duration
-     * Set value if parameter given, otherwise returns current value
-     * @param duration
+     * <p>Set value if parameter given, otherwise returns current value</p>
+     * @param {number} duration
      * @returns {Animation}
      */
     duration (duration = null) {
@@ -171,8 +169,8 @@ export class Animation {
     }
 
     /**
-     * Set delay
-     * Set value if parameter given, otherwise returns current value
+     * Set delay.
+     * <p>Set value if parameter given, otherwise returns current value.</p>
      * @param delay
      * @returns {Animation}
      */
@@ -186,8 +184,8 @@ export class Animation {
     }
 
     /**
-     * Set easing
-     * Set value if parameter given, otherwise returns current value
+     * Set easing.
+     * <p>Set value if parameter given, otherwise returns current value.</p>
      * @param easing
      * @returns {Animation}
      */
@@ -214,7 +212,7 @@ export class Animation {
 
     /**
      * Converts animation parameters to normalized
-     * parameters containing {from: , to: }
+     * <p>parameters containing {from: , to: }</p>
      * @param {Object} params
      * @param {Sculpt} obj
      * @returns {Object} normalized params

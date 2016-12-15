@@ -5,6 +5,7 @@ import {Set} from '../utils/Set.js';
 /**
  * Class Animator
  * Each Sculpt object have its own animator.
+ * @param {Sculpt} - Sculpt object
  */
 export class Animator {
     constructor (sculpt) {
