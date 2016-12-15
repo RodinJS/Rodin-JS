@@ -45,6 +45,13 @@ body {
   background-color: #555;
 }
 
+.class-method {
+  background-color: rgba(0,0,0,0);
+}
+.class-method:nth-of-type(odd) {
+  background-color: rgba(255,255,255,0.1);
+}
+
 a,
 a:active {
   color: #ff9a2b;
