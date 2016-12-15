@@ -4,11 +4,12 @@
   "description": "Build system for Rodin.js framework, based on Gulp.js",
   "main": "gulpfile.babel.js",
   "scripts": {
+    "docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RodinJS/Rodin-JS.git"
+    "url": "git+https://github.com/grigorkh/Rodin-JS.git"
   },
   "keywords": [
     "Rodin",
@@ -18,12 +19,12 @@
     "vr",
     "ar"
   ],
-  "author": "RodinVR",
+  "author": "Grigor Khachatryan <g@yvn.io>",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/RodinJS/Rodin-JS/issues"
+    "url": "https://github.com/grigorkh/Rodin-JS/issues"
   },
-  "homepage": "https://github.com/RodinJS/Rodin-JS#readme",
+  "homepage": "https://github.com/grigorkh/Rodin-JS#readme",
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.19.0",
     "babel-plugin-transform-es2015-modules-systemjs": "^6.19.0",
@@ -33,25 +34,28 @@
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
-    "gulp-clean-css": "^2.2.2",
+    "gulp-clean-css": "^2.0.13",
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^5.0.0",
+    "gulp-jsdoc3": "^1.0.1",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.0.0",
+    "gulp-sass": "^2.3.2",
     "gulp-size": "^2.1.0",
     "gulp-sourcemaps": "^2.2.1",
     "gulp-uglify": "^2.0.0",
     "gulp-watch": "^4.3.11",
+    "minami": "^1.1.1",
     "run-sequence": "^1.2.2"
   },
   "dependencies": {
     "cannon": "^0.6.2",
     "dat-gui": "^0.5.0",
     "es6-promise": "^4.0.0",
-    "socket.io-client": "^1.7.2",
-    "three": "^0.82",
+    "jsdoc": "^3.4.3",
+    "socket.io-client": "^1.6.0",
+    "three": "^0.81.2",
     "tween.js": "^16.3.5",
     "webvr-boilerplate": "^0.4.9"
   }
