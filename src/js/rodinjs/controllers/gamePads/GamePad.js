@@ -18,16 +18,14 @@ const containsIntersect = function (interArray, inter) {
 };
 /**
  * General GamePad class, custom controllers extend this class.
+ * @param {string} navigatorGamePadId Required
+ * @param {string} hand
+ * @param {THREE.Scene} scene
+ * @param {THREE.PerspectiveCamera} camera
+ * @param {number} raycastLayers
  */
 export class GamePad extends THREE.Object3D {
 
-    /**
-     * @param {string} navigatorGamePadId Required
-     * @param {string, null} hand
-     * @param {THREE.Scene} scene
-     * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
-     * @param {number} raycastLayers
-     */
     constructor (navigatorGamePadId = "", hand = null, scene = null, camera = null, raycastLayers = 1) {
 
         super();
@@ -110,7 +108,7 @@ export class GamePad extends THREE.Object3D {
 
         /**
          * An array of gamepad key names/ids.
-         * @type {[string]}
+         * @type {string[]}
          */
         this.buttons = [
             KEY_CODES.KEY1,
@@ -123,17 +121,17 @@ export class GamePad extends THREE.Object3D {
 
         /**
          * An array, showing the Pressed state of the button.
-         * @type {[boolean]}
+         * @type {boolean[]}
          */
         this.buttonsPressed = new Array(this.buttons.length).fill(false);
         /**
          * An array, showing the Touched state of the button.
-         * @type {[boolean]}
+         * @type {boolean[]}
          */
         this.buttonsTouched = new Array(this.buttons.length).fill(false);
         /**
          * An array, showing the Value state of the button.
-         * @type {[number]}
+         * @type {number[]}
          */
         this.buttonsValues = new Array(this.buttons.length).fill(0);
 
@@ -164,7 +162,7 @@ export class GamePad extends THREE.Object3D {
     /**
      * get controller from navigator
      * @param {string} id
-     * @param {string, null} hand
+     * @param {string} hand
      * @returns {Object} controller or null
      */
     static getControllerFromNavigator (id, hand = null) {
@@ -210,7 +208,7 @@ export class GamePad extends THREE.Object3D {
     /**
      * Set camera for raycaster
      *
-     * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera
+     * @param {THREE.PerspectiveCamera} camera
      */
     setRaycasterCamera (camera) {
         this.camera = camera;

@@ -144,7 +144,7 @@ export class Animation {
      * Set loop
      * Set value if parameter given, otherwise returns current value
      * @param loop
-     * @returns {boolean, Animation}
+     * @returns {Animation}
      */
     loop (loop = null) {
         if (loop === null) {
@@ -159,7 +159,7 @@ export class Animation {
      * Set duration
      * Set value if parameter given, otherwise returns current value
      * @param duration
-     * @returns {boolean, Animation}
+     * @returns {Animation}
      */
     duration (duration = null) {
         if (duration === null) {
@@ -174,7 +174,7 @@ export class Animation {
      * Set delay
      * Set value if parameter given, otherwise returns current value
      * @param delay
-     * @returns {boolean, Animation}
+     * @returns {Animation}
      */
     delay (delay = null) {
         if (delay === null) {
@@ -189,7 +189,7 @@ export class Animation {
      * Set easing
      * Set value if parameter given, otherwise returns current value
      * @param easing
-     * @returns {boolean, Animation}
+     * @returns {Animation}
      */
     easing (easing = null) {
         if (easing === null) {
@@ -217,7 +217,7 @@ export class Animation {
      * parameters containing {from: , to: }
      * @param {Object} params
      * @param {Sculpt} obj
-     * @return {Object} normalized params
+     * @returns {Object} normalized params
      */
     static normalizeParams (params, obj) {
         let _params = Object.joinParams(params, ['from', 'to']);

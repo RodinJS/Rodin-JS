@@ -13,7 +13,7 @@ export class ViveController extends GamePad {
      * Constructor.
      * @param {string} hand Required - "left" or "right".
      * @param {THREE.Scene} scene Required - the scene where the controller will be used.
-     * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera Required - the camera where the controller will be used.
+     * @param {THREE.PerspectiveCamera} camera Required - the camera where the controller will be used.
      * @param {number} raycastLayers - the number of objects that can be reycasted by the same ray.
      */
     constructor(hand, scene = null, camera = null, raycastLayers = 1) {
@@ -48,7 +48,7 @@ export class ViveController extends GamePad {
 
         /**
          * the raycasting ray Line object of controller (red by default).
-         * @type {THREE.Line} Line object.
+         * @type {THREE.Line}.
          */
         this.reycastingLine = targetLine;
 

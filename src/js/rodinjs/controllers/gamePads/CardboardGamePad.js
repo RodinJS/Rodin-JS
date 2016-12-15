@@ -14,8 +14,8 @@ export class CardboardGamePad {
             throw new ErrorSingletonClass();
         }
         /**
-         * bulk coordinates in the document.
-         * @type {[number, number]}
+         * Bulk XY coordinates in the document.
+         * @type {number[]}
          */
         this.axes = [0, 0];
         /**

@@ -13,7 +13,7 @@ export class CardboardController extends GamePad {
     /**
      * Constructor
      * @param {THREE.Scene} scene Required - the scene where the controller will be used.
-     * @param {THREE.PerspectiveCamera, THREE.OrthographicCamera} camera Required - the camera where the controller will be used.
+     * @param {THREE.PerspectiveCamera} camera Required - the camera where the controller will be used.
      */
     constructor(scene = null, camera = null) {
         if (controllerCreated) {

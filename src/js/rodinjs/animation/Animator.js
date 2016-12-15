@@ -75,7 +75,7 @@ export class Animator {
 
     /**
      * Start animation by name or id
-     * @param getter {string, number}
+     * @param getter {string|number}
      * @param forceStart {boolean}
      * @returns {boolean}
      */
@@ -91,7 +91,7 @@ export class Animator {
 
     /**
      * Stop animation by name or id
-     * @param getter {string, number}
+     * @param getter {string|number}
      * @returns {boolean}
      */
     stop (getter) {

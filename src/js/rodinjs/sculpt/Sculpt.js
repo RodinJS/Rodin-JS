@@ -67,9 +67,9 @@ export class Sculpt {
 
     /**
      * add listener to Event Alias
-     * @param evts {[string], string}
-     * @param callback {function}
-     * @param enforce {function}
+     * @param {string[]|string} evts
+     * @param {function} callback
+     * @param {function} enforce
      */
     on (evts, callback, enforce = null) {
         let events = enforce === Enforce ? this.getNativeEvents(enforce) : this.getEvents();
@@ -310,7 +310,7 @@ export class Sculpt {
 
     /**
      * get Objects forward vector
-     * @returns {Vector3}
+     * @returns {THREE.Vector3}
      */
     get forward () {
         return (new THREE.Vector3(0, 0, 1)).applyQuaternion(this.object3D.quaternion);

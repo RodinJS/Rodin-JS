@@ -16,8 +16,8 @@ export class MouseGamePad {
             throw new ErrorSingletonClass();
         }
         /**
-         * Mouse coordinates in the document.
-         * @type {[number, number]}
+         * Mouse XY coordinates in the document.
+         * @type {number[]}
          */
         this.axes = [-1, -1];
 
