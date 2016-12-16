@@ -2,21 +2,40 @@ import {TWEEN} from '../Tween.js';
 import {Event} from '../Event.js';
 import {EVENT_NAMES} from '../constants/constants.js';
 
+//TODO: Gor jan, mi hat nkaragri inch parametra astanum u inchi hamar
+
 /**
- * Class Animation
+ * Animation Class, used to create animations on Sculpt objects
  * @param {string} name
  * @param {Object} params
  */
 export class Animation {
     constructor (name, params) {
         this._loop  = false;
+        /**
+         * The host Sculpt object.
+         * @type {Sculpt}
+         */
         this.sculpt = {};
+        /**
+         * Animation parameters. TODO: Gor mi hat nkaragri
+         * @type {Object}
+         */
         this.params = Object.clone(params);
+
+        /**
+         * Animation name. TODO: Gor es inchi hamara ?
+         * @type {string}
+         */
         this.name = name;
         this._duration = 2000;
         this._delay = 0;
         this._easing = TWEEN.Easing.Linear.None;
 
+        /**
+         * Shows the current state of animation.
+         * @type {boolean}
+         */
         this.playing = false;
     }
 
@@ -32,8 +51,8 @@ export class Animation {
 
     /**
      * Start animation
-     * @param {boolean} forceStart - kills this animation (if currently playing) and starts again, Default - false
-     * @returns {boolean}
+     * @param {boolean} forceStart - kills this animation (if currently playing) and starts again
+     * @returns {boolean} TODO: Gor incha veradarcnum, es inch booleana
      */
     start (forceStart = false) {
         if (!this.sculpt.isSculpt) {
@@ -90,8 +109,8 @@ export class Animation {
 
     /**
      * Play animation
-     * @param {boolean} forceStart
-     * @returns {boolean}
+     * @param {boolean} forceStart - stop this animation if it is currently running, and restart
+     * @returns {boolean} TODO: Gor incha veradarcnum, es inch booleana
      */
     play (forceStart = false) {
         return this.start(forceStart);
@@ -99,6 +118,8 @@ export class Animation {
 
     /**
      * Stop animation
+     * @param {boolean} reset - run reset() method after stopping the animation.
+     * @returns {boolean} - success
      */
     stop (reset = true) {
         if (this.isPlaying()) {
@@ -120,9 +141,8 @@ export class Animation {
     }
 
     /**
-     * <p>reset all initial props</p>
-     * <p>when animation start, it will save all properties that he change.</p>
-     * <p>this function returns values before animation start</p>
+     * Reset all to initial values.
+     * <p>This function reverts all affected values to "before animation" state</p>
      */
     reset () {
         for (let i in this.initialProps) {
@@ -141,6 +161,7 @@ export class Animation {
     /**
      * Set loop
      * <p>Set value if parameter given, otherwise returns current value</p>
+     * TODO: Gor es incha ?
      * @param loop
      * @returns {Animation}
      */
@@ -156,6 +177,7 @@ export class Animation {
     /**
      * Set duration
      * <p>Set value if parameter given, otherwise returns current value</p>
+     * TODO: Gor es incha ?
      * @param {number} duration
      * @returns {Animation}
      */
@@ -171,6 +193,7 @@ export class Animation {
     /**
      * Set delay.
      * <p>Set value if parameter given, otherwise returns current value.</p>
+     * TODO: Gor es incha ?
      * @param delay
      * @returns {Animation}
      */
@@ -186,6 +209,7 @@ export class Animation {
     /**
      * Set easing.
      * <p>Set value if parameter given, otherwise returns current value.</p>
+     * TODO: Gor es incha ?
      * @param easing
      * @returns {Animation}
      */
@@ -200,7 +224,7 @@ export class Animation {
 
 
     /**
-     * Set sculpt
+     * Set sculpt object for this animation to play on.
      * @param sculpt {Sculpt}
      * @returns {Animation}
      */
@@ -213,7 +237,7 @@ export class Animation {
     /**
      * Converts animation parameters to normalized
      * <p>parameters containing {from: , to: }</p>
-     * @param {Object} params
+     * @param {Object} params TODO: Gor es kmanramasnes ?
      * @param {Sculpt} obj
      * @returns {Object} normalized params
      */

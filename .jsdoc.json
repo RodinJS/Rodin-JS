@@ -24,3 +24,5 @@
         "template": "./docTemplate/minami"
     }
 }
+
+//node_modules\.bin\jsdoc --configure .jsdoc.json --verbose
