@@ -3,13 +3,21 @@ import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
-import {JDModelObject} from '../../_build/js/rodinjs/sculpt/JDModelObject.js';
+import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
 
 let scene = SceneManager.get();
+scene.scene.background = new THREE.Color(0xb5b5b5);
+
 let controls = scene.controls;
+
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
+let floor = new RODIN.THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(25, 25, 50, 50), new THREE.MeshLambertMaterial({color: 0x869295, wireframe:true})));
+floor.on('ready', (e) => {
+    scene.add(e.target.object3D);
+    e.target.object3D.rotation.x = Math.PI/2;
+});
 
 let light1 = new THREE.DirectionalLight(0xffffff);
 light1.position.set(1, 1, 1);
