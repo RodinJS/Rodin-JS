@@ -56,3 +56,4 @@ examples/**/*.webm
 
 src/js/vendor
 /docs/
+_build
