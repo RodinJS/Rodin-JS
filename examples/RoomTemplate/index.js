@@ -16,7 +16,7 @@ import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import {EVENT_NAMES, CONTROLLER_HANDS} from '../../_build/js/rodinjs/constants/constants.js';
 
-import './ViveControllers_c.js';
+//import './ViveControllers_c.js';
 
 let scene = SceneManager.get();
 let camera = scene.camera;
