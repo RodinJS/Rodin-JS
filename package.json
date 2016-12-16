@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/grigorkh/Rodin-JS.git"
+    "url": "git+https://github.com/RodinJS/Rodin-JS.git"
   },
   "keywords": [
     "Rodin",
@@ -19,12 +19,12 @@
     "vr",
     "ar"
   ],
-  "author": "Grigor Khachatryan <g@yvn.io>",
+  "author": "RodinVR",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/grigorkh/Rodin-JS/issues"
+    "url": "https://github.com/RodinJS/Rodin-JS/issues"
   },
-  "homepage": "https://github.com/grigorkh/Rodin-JS#readme",
+  "homepage": "https://github.com/RodinJS/Rodin-JS#readme",
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.19.0",
     "babel-plugin-transform-es2015-modules-systemjs": "^6.19.0",
