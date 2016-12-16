@@ -13,7 +13,6 @@ import {MouseController} from '../../_build/js/rodinjs/controllers/MouseControll
 import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
 
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
-import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import {EVENT_NAMES} from '../../_build/js/rodinjs/constants/constants.js'
 import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';

@@ -23,7 +23,7 @@ export class ModelLoader {
         const urlSplitted = url.split('.');
         const type = urlSplitted[urlSplitted.length - 1].toLowerCase();
 
-        if(Object.keys(supportedTypes).indexOf(type) !== -1) {
+        if (Object.keys(supportedTypes).indexOf(type) !== -1) {
             return new supportedTypes[type](url);
         } else {
             throw new ErrorUnsupportedModelType(type);
