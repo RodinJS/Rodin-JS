@@ -1,7 +1,10 @@
 import {TWEEN} from '../Tween.js';
 import {Event} from '../Event.js';
 import {EVENT_NAMES} from '../constants/constants.js';
+import {ErrorProtectedMethodCall} from '../error/CustomErrors.js';
 
+function enforce () {
+}
 //TODO: Gor jan, mi hat nkaragri inch parametra astanum u inchi hamar
 
 /**
@@ -11,7 +14,7 @@ import {EVENT_NAMES} from '../constants/constants.js';
  */
 export class Animation {
     constructor (name, params) {
-        this._loop  = false;
+        this._loop = false;
         /**
          * The host Sculpt object.
          * @type {Sculpt}
@@ -92,7 +95,7 @@ export class Animation {
             .easing(this._easing)
             .start()
             .onComplete(function () {
-                if (_this._loop ) {
+                if (_this._loop) {
                     _this.playing = false;
                     _this.reset();
                     _this.start();
@@ -159,25 +162,23 @@ export class Animation {
     }
 
     /**
-     * Set loop
-     * <p>Set value if parameter given, otherwise returns current value</p>
-     * TODO: Gor es incha ?
+     * set/get loop
+     * <p>Sets loop value if provided as param, otherwise returns current loop value</p>
      * @param loop
      * @returns {Animation}
      */
     loop (loop = null) {
         if (loop === null) {
-            return this._loop ;
+            return this._loop;
         }
 
-        this._loop  = loop;
+        this._loop = loop;
         return this;
     }
 
     /**
-     * Set duration
-     * <p>Set value if parameter given, otherwise returns current value</p>
-     * TODO: Gor es incha ?
+     * set/get duration
+     * <p>Sets duration value if provided as param, otherwise returns current duration value</p>
      * @param {number} duration
      * @returns {Animation}
      */
@@ -191,9 +192,8 @@ export class Animation {
     }
 
     /**
-     * Set delay.
-     * <p>Set value if parameter given, otherwise returns current value.</p>
-     * TODO: Gor es incha ?
+     * set/get delay.
+     * <p>Sets delay value if provided as param, otherwise returns current delay value</p>
      * @param delay
      * @returns {Animation}
      */
@@ -207,9 +207,8 @@ export class Animation {
     }
 
     /**
-     * Set easing.
-     * <p>Set value if parameter given, otherwise returns current value.</p>
-     * TODO: Gor es incha ?
+     * set/get easing.
+     * <p>Sets easing value if provided as param, otherwise returns current easing value</p>
      * @param easing
      * @returns {Animation}
      */
@@ -234,14 +233,19 @@ export class Animation {
         return this;
     }
 
-    /**
-     * Converts animation parameters to normalized
-     * <p>parameters containing {from: , to: }</p>
-     * @param {Object} params TODO: Gor es kmanramasnes ?
-     * @param {Sculpt} obj
-     * @returns {Object} normalized params
-     */
-    static normalizeParams (params, obj) {
+    // /**
+    //  * Converts animation parameters to normalized
+    //  * <p>parameters containing {from: , to: }</p>
+    //  * @param {Function} e enforce
+    //  * @param {Object} params
+    //  * @param {Sculpt} obj
+    //  * @returns {Object} normalized params
+    //  */
+    static normalizeParams (e, params, obj) {
+        if (e !== enforce) {
+            throw new ErrorProtectedMethodCall('normalizeParams');
+        }
+
         let _params = Object.joinParams(params, ['from', 'to']);
         let res = { from: {}, to: {} };
         for (let i in _params) {

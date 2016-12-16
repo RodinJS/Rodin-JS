@@ -25,4 +25,8 @@
     }
 }
 
-//node_modules\.bin\jsdoc --configure .jsdoc.json --verbose
+// special for windows users
+// node_modules\.bin\jsdoc --configure .jsdoc.json --verbose
+
+// for non windows users
+// node_modules/.bin/jsdoc --configure .jsdoc.json --verbose
