@@ -118,3 +118,16 @@ export class ErrorParameterTypeDontMatch extends CustomError {
         super(`Parameter ${paramName} must be in type ${type}`);
     }
 }
+
+export class ErrorInstantiationFailed extends CustomError {
+    constructor (classname) {
+        super(`Instantiation failed for class ${classname}. Use static functions instead of new`);
+    }
+}
+
+export class ErrorUnsupportedModelType extends CustomError {
+    constructor (typename) {
+        super(`Unsupported model type ${typename}.`);
+    }
+}
+

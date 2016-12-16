@@ -5,11 +5,12 @@ import {CubeMapFromModel} from '../../_build/js/rodinjs/sculpt/CubeMapFromModel.
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 
 let scene = SceneManager.get();
+
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
 let boxSize = 15;
-let skybox = new CubeMapFromModel(0, boxSize, 'img/map2.png');
+let skybox = new CubeMapFromModel(boxSize, 'img/map2.png');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
     scene.add(evt.target.object3D);
     evt.target.object3D.position.y = scene.controls.userHeight;

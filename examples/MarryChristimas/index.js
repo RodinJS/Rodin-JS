@@ -4,16 +4,18 @@ import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
 
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
+
 import {Snow} from '../../_build/js/rodinjs/sculpt/Snow.js';
-import {JDModelObject} from '../../_build/js/rodinjs/sculpt/JDModelObject.js';
-import {JSONModelObject} from '../../_build/js/rodinjs/sculpt/JSONModelObject.js';
-import {OBJModelObject} from '../../_build/js/rodinjs/sculpt/OBJModelObject.js';
+import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
+import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
+
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
+
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
-import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import {EVENT_NAMES} from '../../_build/js/rodinjs/constants/constants.js'
+import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
 
 
 let scene = SceneManager.get();
@@ -22,25 +24,27 @@ let controls = scene.controls;
 let renderer = scene.renderer;
 let threeScene = scene.scene;
 
-
 renderer.setPixelRatio(window.devicePixelRatio);
-
 renderer.shadowMap.enabled = false;
-
 
 scene.setCameraProperty("far", 200);
 
-//threeScene.fog = new THREE.Fog(0x7a8695, 0, 23);
+let skybox = new CubeObject(25, 'img/horizontalSkyBox_mobile.jpg');
+skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
+    scene.add(evt.target.object3D);
+    evt.target.object3D.position.y = scene.controls.userHeight;
+});
 
 /// mouse controller
-
 let mouseController = new MouseController();
 mouseController.onControllerUpdate = mouseControllerUpdate;
 SceneManager.addController(mouseController);
 
+let stats = new Stats();
+document.body.appendChild( stats.dom );
+scene.preRender(stats.update.bind(stats));
 
 /// vive controllers
-
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, threeScene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
@@ -79,7 +83,6 @@ SceneManager.addController(controllerR);
  controllerR.add(object.clone());
  });*/
 
-
 /// Add light
 //let light1 = new THREE.DirectionalLight(0xbbbbbb);
 //light1.position.set(0, 3, 1);
@@ -91,64 +94,90 @@ SceneManager.addController(controllerR);
 //light1.shadow.mapSize.set(2048, 2048);
 //scene.add(light1);
 
+/*color — Numeric value of the RGB component of the color.
+ intensity — Numeric value of the light's strength/intensity.
+ distance -- Maximum distance from origin where light will shine whose intensity is attenuated linearly based on distance from origin.
+ angle -- Maximum angle of light dispersion from its direction whose upper bound is Math.PI/2.
+ penumbra -- Percent of the spotlight cone that is attenuated due to penumbra. Takes values between zero and 1. Default is zero.
+ decay -- The amount the light dims along the distance of the light.
+ */
+
+let spotLight = new RODIN.THREEObject(new THREE.SpotLight(0xff983c, 2, 15, 1, 0.5, 1));
+spotLight.on('ready', (evt) => {
+
+    spotLight.object3D.position.set(0.2, 0.7, -5);
+
+    //spotLight.object3D.castShadow = true;
+    //spotLight.object3D.shadow.mapSize.width = 1024;
+    //spotLight.object3D.shadow.mapSize.height = 1024;
+    //spotLight.object3D.shadow.camera.near = 5;
+    //spotLight.object3D.shadow.camera.far = 40;
+    //spotLight.object3D.shadow.camera.fov = 0.5;
+    spotLight.object3D.target.position.set(0, 0, 5);
+
+    scene.add(spotLight.object3D);
+    scene.add(spotLight.object3D.target);
+});
+
 scene.add(new THREE.AmbientLight(0xaaaaaa, 0.5));
 
-
-let boxSize = 30;
-let snowBoxSize = 18;
-
-// Add a skybox.
-/*let skybox = new THREE.Mesh(new THREE.BoxGeometry(boxSize * 2, boxSize * 2, boxSize * 2), new THREE.MeshBasicMaterial({color: 0x000000}));
- skybox.position.y = controls.userHeight;
- skybox.scale.set(1, 1, -1);
- scene.add(skybox);*/
-
-boxSize = 21;
-
-// Add a snowContainer.
-/*let snowContainer = new THREE.Object3D();
- snowContainer.rotation.y = -Math.PI / 2;
- snowContainer.position.y = -boxSize / 2 + snowBoxSize / 2;
- scene.add(snowContainer);*/
+let snowBoxSize = 15;
 
 /// Add snow
-/*
- let snow = new Snow(0,
- 'img/particle_snow2.png',
- snowBoxSize,
- 0.03,
- 3,
- 0.2,
- 1
- );
+let snow1 = new Snow(0,
+    'img/particle_snow2.png',
+    snowBoxSize,
+    0.02,
+    2,
+    0.2,
+    1
+);
 
- snow.on("ready", (evt) => {
- evt.target.object3D.renderOrder = 1;
- snowContainer.add(evt.target.object3D);
- });*/
+snow1.on("ready", (evt) => {
+    evt.target.object3D.renderOrder = 1;
+    snow1.object3D.scale.z = 0.1;
+    snow1.object3D.position.set(0, 0, 9);
+    scene.add(snow1.object3D);
+});
+
+/// Add snow
+let snow2 = new Snow(0,
+    'img/particle_snow2.png',
+    snowBoxSize,
+    0.02,
+    2,
+    0.2,
+    1
+);
+
+snow2.on("ready", (evt) => {
+    evt.target.object3D.renderOrder = 1;
+    snow2.object3D.scale.x = 0.1;
+    snow2.object3D.position.set(-4, 0, 0);
+    scene.add(snow2.object3D);
+});
+
 
 // christmasRoom
 let s = 0.026;
-let christmasRoom = new JDModelObject(0, './models/ChristmasRoom.JD');
+let christmasRoom = ModelLoader.load('./models/ChristmasRoom.JD');
 christmasRoom.on('ready', () => {
     christmasRoom.object3D.children[0].material.materials[0].alphaTest = 0.35;
     christmasRoom.object3D.children[0].material.materials[0].transparent = false;
     christmasRoom.object3D.children[0].material.materials[0].side = THREE.DoubleSide;
-    christmasRoom.object3D.children[0].material.materials[0].clipShadows = true;
+    //christmasRoom.object3D.children[0].material.materials[0].clipShadows = true;
 
     christmasRoom.object3D.scale.set(s, s, s);
-    christmasRoom.object3D.position.z = 5;
+    //christmasRoom.object3D.position.z = 5;
 
-    christmasRoom.object3D.castShadow = true;
-    christmasRoom.object3D.receiveShadow = true;
+    //christmasRoom.object3D.castShadow = true;
+    //christmasRoom.object3D.receiveShadow = true;
     scene.add(christmasRoom.object3D);
 });
 
-let christmasFire = new JDModelObject(1, './models/fire.JD');
-//let christmasRoom = new JSONModelObject(0, './models/ChristmasRoom.js');
+let christmasFire = ModelLoader.load('./models/fire.JD');
 
 christmasFire.on('ready', () => {
-
     let txt = new THREE.TextureLoader();
     txt.load(
         'models/fire.jpg',
@@ -157,26 +186,25 @@ christmasFire.on('ready', () => {
                 map: texture,
                 skinning: true
             });
-            console.log(christmasFire.object3D.children[0].material.materials[0]);
         },
     );
 
     christmasFire.object3D.scale.set(s, s, s);
-    christmasFire.object3D.position.z = 5;
+    //christmasFire.object3D.position.z = 5;
 
-    christmasFire.object3D.castShadow = false;
-    christmasFire.object3D.receiveShadow = false;
+    //christmasFire.object3D.castShadow = false;
+    //christmasFire.object3D.receiveShadow = false;
     scene.add(christmasFire.object3D);
 });
 
 let fireLight1 = new RODIN.THREEObject(new THREE.PointLight(0xff983c, 5, 1));
 fireLight1.on('ready', (evt) => {
     fireLight1.object3D.position.set(0.2, 0.7, -5);
-//fireLight1.add(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10)));
     scene.add(fireLight1.object3D);
+    //fireLight1.object3D.add(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10)));
 });
 
-let animations = [
+let animationsFire = [
     new Animation('light1', {
         intensity: 5
     }),
@@ -194,15 +222,85 @@ let animations = [
     })
 ];
 
-for(let i = 0; i < animations.length; i ++) {
-    animations[i].duration(200);
-    fireLight1.animator.add(animations[i]);
+let animationsSpotLight = [
+    new Animation('light1', {
+        intensity: 2
+    }),
+    new Animation('light2', {
+        intensity: 1.6
+    }),
+    new Animation('light3', {
+        intensity: 1.2
+    }),
+    new Animation('light4', {
+        intensity: 2.4
+    }),
+    new Animation('light5', {
+        intensity: 1.8
+    })
+];
+
+for (let i = 0; i < animationsFire.length; i++) {
+    animationsFire[i].duration(200);
+    animationsSpotLight[i].duration(200);
+    fireLight1.animator.add(animationsFire[i]);
+    spotLight.animator.add(animationsSpotLight[i]);
 }
 
 fireLight1.animator.start('light1');
+spotLight.animator.start('light1');
 fireLight1.on(EVENT_NAMES.ANIMATION_COMPLETE, (evt) => {
-    let play = animations[Math.randomIntIn(0, animations.length - 1)].name;
+    let play = animationsFire[Math.randomIntIn(0, animationsFire.length - 1)].name;
     fireLight1.animator.start(play);
+    spotLight.animator.start(play);
+});
+
+let candleLight1 = new RODIN.THREEObject(new THREE.PointLight(0xff7836, 2, 0.5));
+candleLight1.on('ready', (evt) => {
+    let map = [/*{
+     x: -0.36,
+     y: 1.8,
+     z: -4.1,
+     ints: 1.8
+     },{
+     x: 0.7,
+     y: 1.8,
+     z: -4.1,
+     ints: 1.8
+     },*/{
+        x: 1.4,
+        y: 0.9,
+        z: -3.6,
+        ints: 5
+    },{
+        x: 1.7,
+        y: 0.8,
+        z: 3.7,
+        ints: 3.5
+    },{
+        x: -2.25,
+        y: 1.85,
+        z: 3.7,
+        ints: 3.5
+    },{
+        x: 0.7,
+        y: 1.2,
+        z: 5,
+        ints: 4
+    }];
+
+    for (let i = 0, ln = map.length; i < ln; i++) {
+        let pos = map[i];
+        let obj = candleLight1.object3D.clone();
+
+        obj.intensity = pos.ints;
+        obj.position.set(pos.x, pos.y, pos.z);
+        //obj.add(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10)));
+        scene.add(obj);
+
+        window.ob = obj;
+    }
+
 });
 
 /*/// Add terrain

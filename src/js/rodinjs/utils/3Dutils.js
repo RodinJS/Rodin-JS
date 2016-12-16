@@ -139,7 +139,7 @@ export function measureTextOnCanvas(text, font = "Arial", fontSize = 12, canvas)
     return {x: textContext.measureText(text).width, y: fontSize};
 }
 
-export function drawImageOnCanvas({image, width = canvas.width, height = canvas.height, x=0, y=0, opacity = 1, canvas}) {
+export function drawImageOnCanvas({image, canvas, width = canvas.width, height = canvas.height, x=0, y=0, opacity = 1}) {
     let context = canvas.getContext('2d');
     context.globalAlpha = opacity;
     context.drawImage(image, x, y, width, height);
