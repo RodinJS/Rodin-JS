@@ -13,6 +13,12 @@ let controls = scene.controls;
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
+let floor = new RODIN.THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(25, 25, 50, 50), new THREE.MeshLambertMaterial({color: 0x869295, wireframe:true})));
+floor.on('ready', (e) => {
+    scene.add(e.target.object3D);
+    e.target.object3D.rotation.x = Math.PI/2;
+});
+
 /// Add light
 let light1 = new THREE.DirectionalLight(0xcccccc);
 light1.position.set(2, 3, 2);
@@ -24,11 +30,6 @@ let light2 = new THREE.DirectionalLight(0xb5b5b5);
 light2.position.set(-3, -3, -3);
 scene.add(light2);
 
-let skybox = new CubeObject(15, 'img/boxW.jpg');
-skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
-    scene.add(evt.target.object3D);
-    evt.target.object3D.position.y = scene.controls.userHeight;
-});
 
 let obj = ModelLoader.load('./model/Serg.js');
 obj.on('ready', () => {

@@ -19,25 +19,18 @@ floor.on('ready', (e) => {
     e.target.object3D.rotation.x = Math.PI/2;
 });
 
-let light1 = new THREE.DirectionalLight(0xffffff);
-light1.position.set(1, 1, 1);
+/// Add light
+let light1 = new THREE.DirectionalLight(0xcccccc);
+light1.position.set(2, 3, 2);
 scene.add(light1);
 
-let light2 = new THREE.DirectionalLight(0xcccccc);
-light2.position.set(-1, -1, -1);
+scene.add(new THREE.AmbientLight(0xaaaaaa));
+
+let light2 = new THREE.DirectionalLight(0xb5b5b5);
+light2.position.set(-3, -3, -3);
 scene.add(light2);
 
-let amlight = new THREE.AmbientLight(0x3e3e3e);
-scene.add(amlight);
-
-let skybox = new CubeObject(15, 'img/boxW.jpg');
-skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
-    scene.add(evt.target.object3D);
-    evt.target.object3D.position.y = scene.controls.userHeight;
-});
-
-
-let obj = new JDModelObject(0, './model/man.jd');
+let obj = ModelLoader.load('./model/man.jd');
 
 obj.on('ready', () => {
     let s = 0.009;
