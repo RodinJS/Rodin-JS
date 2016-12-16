@@ -98,7 +98,6 @@ export class CubeObject extends Sculpt {
         canvas.width = tileSize;
         canvas.height = tileSize;
 
-
         canvas.style.position = "absolute";
         canvas.style.left = "-150%";
         canvas.style.top = "-150%";

@@ -27,9 +27,7 @@ export class Scene extends Sculpt {
         this.effect = new THREE.VREffect(this.renderer);
 
         WebVRConfig.TOUCH_PANNER_DISABLED = false;
-        //WebVRConfig.PREDICTION_TIME_S = 0;
-        //WebVRConfig.BUFFER_SCALE = 2;
-        this.webVRmanager = new WebVRManager(this.renderer, this.effect, { hideButton: false, isUndistorted: false, predistorted: true });
+        this.webVRmanager = new WebVRManager(this.renderer, this.effect, { hideButton: false, isUndistorted: false });
 
         this.preRenderFunctions = new Set();
         this.postRenderFunctions = new Set();
@@ -50,7 +48,6 @@ export class Scene extends Sculpt {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setPixelRatio(window.devicePixelRatio);
-        console.log(WebVRConfig);
     }
 
     // todo: tanel esi scenemanager

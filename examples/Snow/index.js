@@ -8,9 +8,7 @@ import {Snow} from '../../_build/js/rodinjs/sculpt/Snow.js';
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 
 let scene = SceneManager.get();
-let camera = scene.camera;
 let controls = scene.controls;
-let renderer = scene.renderer;
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
@@ -26,13 +24,11 @@ let amlight = new THREE.AmbientLight(0x222222);
 scene.add(amlight);
 
 let boxSize = 15;
-let skybox = new CubeObject(boxSize, 'img/boxW.jpg');
+let skybox = new CubeObject(70, 'img/boxW.jpg');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
     scene.add(evt.target.object3D);
-    evt.target.object3D.position.y = boxSize / 2 - scene.controls.userHeight;
+    evt.target.object3D.position.y = controls.userHeight;
 });
-
-
 
 let snowObject = new THREE.Object3D();
 let snow = new Snow(0,
@@ -49,27 +45,8 @@ snow.on("ready", (evt) => {
     scene.add(snowObject);
 });
 
-/*
- console.log("gravity = " + snow.getGravity());
- console.log("wind  = " + snow.getWindSpeed());
- timeout(() => {
- snow.setGravity(2);
- snow.setWindSpeed(1);
- console.log("gravity = " + snow.getGravity());
- console.log("wind  = " + snow.getWindSpeed());
- }, 3000);
- */
 
-/*
- timeout(() => {
- snow.setGravity(20);
- snow.setWindSpeed(10);
- console.log("gravity = " + snow.getGravity());
- console.log("wind  = " + snow.getWindSpeed());
- }, 8000);
- */
-
-var sloMoSno = new Interval(() => {
+let sloMoSno = new Interval(() => {
     snow.changeSpeed(0.05, 0.05);
     timeout(() => {
         snow.changeSpeed(1, 1);

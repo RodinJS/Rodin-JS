@@ -59,9 +59,9 @@ scene.setCameraProperty("far", 200);
  }*/
 
 /*
-let n = navigator.userAgent;
-if (n.match(/Android/i) || n.match(/webOS/i) || n.match(/iPhone/i) || n.match(/iPad/i) || n.match(/iPod/i) || n.match(/BlackBerry/i) || n.match(/Windows Phone/i)){ isMobile = true;  antialias = false; document.getElementById("MaxNumber").value = 200; }
-*/
+ let n = navigator.userAgent;
+ if (n.match(/Android/i) || n.match(/webOS/i) || n.match(/iPhone/i) || n.match(/iPad/i) || n.match(/iPod/i) || n.match(/BlackBerry/i) || n.match(/Windows Phone/i)){ isMobile = true;  antialias = false; document.getElementById("MaxNumber").value = 200; }
+ */
 
 let skybox = new CubeObject(25, 'img/horizontalSkyBox_mobile.jpg');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
@@ -291,16 +291,16 @@ fireLight1.on(EVENT_NAMES.ANIMATION_COMPLETE, (evt) => {
 let candleLight1 = new RODIN.THREEObject(new THREE.PointLight(0xff7836, 2, 0.5));
 candleLight1.on('ready', (evt) => {
     let map = [/*{
-        x: -0.36,
-        y: 1.8,
-        z: -4.1,
-        ints: 1.8
-    },{
-        x: 0.7,
-        y: 1.8,
-        z: -4.1,
-        ints: 1.8
-    },*/{
+     x: -0.36,
+     y: 1.8,
+     z: -4.1,
+     ints: 1.8
+     },{
+     x: 0.7,
+     y: 1.8,
+     z: -4.1,
+     ints: 1.8
+     },*/{
         x: 1.4,
         y: 0.9,
         z: -3.6,

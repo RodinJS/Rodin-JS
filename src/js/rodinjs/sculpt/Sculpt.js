@@ -1,10 +1,8 @@
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import {WTF} from '../logger/Logger.js';
-import {Objects} from '../objects.js';
+import {Objects, Raycastables} from '../objects.js';
 import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
 import {Animator} from '../animation/Animator.js';
-import {EVENT_NAMES} from '../constants/constants.js';
 import {ErrorAbstractClassInstance, ErrorProtectedMethodCall} from '../error/CustomErrors';
 
 /**
@@ -300,6 +298,14 @@ export class Sculpt {
             .easing(easing)
             .start()
             .onComplete(next);
+    }
+
+    set raycastable(value) {
+        if(value) {
+            Raycastables.push(this.object3D);
+        } else {
+            Raycastables.remove(this.object3D);
+        }
     }
 
     /**
