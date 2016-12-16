@@ -4,12 +4,14 @@ import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
 
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
+
 import {Snow} from '../../_build/js/rodinjs/sculpt/Snow.js';
-import {JDModelObject} from '../../_build/js/rodinjs/sculpt/JDModelObject.js';
-import {JSONModelObject} from '../../_build/js/rodinjs/sculpt/JSONModelObject.js';
-import {OBJModelObject} from '../../_build/js/rodinjs/sculpt/OBJModelObject.js';
+import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
+import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
+
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
+
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
@@ -23,45 +25,10 @@ let controls = scene.controls;
 let renderer = scene.renderer;
 let threeScene = scene.scene;
 
-window.camera = camera;
-
-renderer.setPixelRatio(window.devicePixelRatio > 2 ? 2 : window.devicePixelRatio);
-
+renderer.setPixelRatio(window.devicePixelRatio);
 renderer.shadowMap.enabled = false;
 
 scene.setCameraProperty("far", 200);
-
-/*
- var n = navigator.userAgent;
- if (n.match(/Android/i) || n.match(/webOS/i) || n.match(/iPhone/i) || n.match(/iPad/i) || n.match(/iPod/i) || n.match(/BlackBerry/i) || n.match(/Windows Phone/i)){ isMobile = true;  antialias = false; document.getElementById("MaxNumber").value = 200; }
-
- var materialType = 'MeshBasicMaterial';
-
- if(!isMobile){
- scene.add( new THREE.AmbientLight( 0x3D4143 ) );
- light = new THREE.DirectionalLight( 0xffffff , 1.4);
- light.position.set( 300, 1000, 500 );
- light.target.position.set( 0, 0, 0 );
- light.castShadow = true;
- light.shadowCameraNear = 500;
- light.shadowCameraFar = 1600;
- light.shadowCameraFov = 70;
- light.shadowBias = 0.0001;
- light.shadowDarkness = 0.7;
- //light.shadowCameraVisible = true;
- light.shadowMapWidth = light.shadowMapHeight = 1024;
- scene.add( light );
-
- materialType = 'MeshPhongMaterial';
-
- renderer.shadowMap.enabled = true;
- renderer.shadowMap.type = THREE.PCFShadowMap;//THREE.BasicShadowMap;
- }*/
-
-/*
- let n = navigator.userAgent;
- if (n.match(/Android/i) || n.match(/webOS/i) || n.match(/iPhone/i) || n.match(/iPad/i) || n.match(/iPod/i) || n.match(/BlackBerry/i) || n.match(/Windows Phone/i)){ isMobile = true;  antialias = false; document.getElementById("MaxNumber").value = 200; }
- */
 
 let skybox = new CubeObject(25, 'img/horizontalSkyBox_mobile.jpg');
 skybox.on(RODIN.CONSTANTS.EVENT_NAMES.READY, (evt) => {
@@ -193,8 +160,8 @@ snow2.on("ready", (evt) => {
 
 
 // christmasRoom
-let s = 0.024;
-let christmasRoom = new JDModelObject(0, './models/ChristmasRoom.JD');
+let s = 0.026;
+let christmasRoom = ModelLoader.load('./models/ChristmasRoom.JD');
 christmasRoom.on('ready', () => {
     christmasRoom.object3D.children[0].material.materials[0].alphaTest = 0.35;
     christmasRoom.object3D.children[0].material.materials[0].transparent = false;
@@ -202,28 +169,29 @@ christmasRoom.on('ready', () => {
     //christmasRoom.object3D.children[0].material.materials[0].clipShadows = true;
 
     christmasRoom.object3D.scale.set(s, s, s);
+    //christmasRoom.object3D.position.z = 5;
 
     //christmasRoom.object3D.castShadow = true;
     //christmasRoom.object3D.receiveShadow = true;
     scene.add(christmasRoom.object3D);
 });
 
-let christmasFire = new JDModelObject(1, './models/fire.JD');
-christmasFire.on('ready', () => {
+let christmasFire = ModelLoader.load('./models/fire.JD');
 
+christmasFire.on('ready', () => {
     let txt = new THREE.TextureLoader();
     txt.load(
-        'models/fire_mobile.jpg',
+        'models/fire.jpg',
         function (texture) {
             christmasFire.object3D.children[0].material.materials[0] = new THREE.MeshBasicMaterial({
                 map: texture,
                 skinning: true
             });
-            console.log(christmasFire.object3D.children[0].material.materials[0]);
-        }
+        },
     );
 
     christmasFire.object3D.scale.set(s, s, s);
+    //christmasFire.object3D.position.z = 5;
 
     //christmasFire.object3D.castShadow = false;
     //christmasFire.object3D.receiveShadow = false;
