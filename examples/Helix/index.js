@@ -95,25 +95,26 @@ function initThumbs(thumbsUrls) {
 	});
 	
 	let radius = 1;
-	let phiStep = 2 * Math.PI/thumbsUrls.length;
+	let phiStep = 2 * Math.PI/6;
 	let phi = Math.PI * 0.5;
 	let y = 1.5;
 	
 	let id = setInterval(()=> {
 		let prevTheta = phi;
 		if (allThumbsReady) {
-			container.children.forEach((thumb, index) => {
+			container.children.forEach((thumb, index) => {				
+				if (phi >= 2 * Math.PI + phiStep) {
+					phi = Math.PI * 0.5;
+					y -= 0.5;
+				}				
 				thumb.position.x = radius * Math.cos(phi);
 				thumb.position.y = y;
-				thumb.position.z = -radius * Math.sin(phi); 
-
-				//console.log(thumb.position);				
-				//let theta = Math.atan2(thumb.position.z, thumb.position.x);				
-				//thumb.rotation.y += theta;
-				
+				thumb.position.z = -radius * Math.sin(phi);			
+				thumb.rotation.y = Math.PI * 0.5 - Math.atan2(thumb.position.z, thumb.position.x);				
 				phi += phiStep;
-				
+				y -= 0.05;
 			});	
+			
 			scene.add(container);
 			clearInterval(id);
 		}		
@@ -129,11 +130,11 @@ initThumbs([
 	"./img/thumb5.jpg",
 	"./img/thumb6.jpg",
 	"./img/thumb7.jpg",
-	"./img/thumb8.jpg"
-	// "./img/thumb9.jpg",
-	// "./img/thumb10.jpg",
-	// "./img/thumb11.jpg",
-	// "./img/thumb12.jpg"
+	"./img/thumb8.jpg",
+	"./img/thumb9.jpg",
+	"./img/thumb10.jpg",
+	"./img/thumb11.jpg",
+	"./img/thumb12.jpg"
 ]);
 
 
