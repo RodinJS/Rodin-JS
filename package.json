@@ -41,7 +41,7 @@
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.3.2",
+    "gulp-sass": "^3.0.0",
     "gulp-size": "^2.1.0",
     "gulp-sourcemaps": "^2.2.1",
     "gulp-uglify": "^2.0.0",
@@ -55,7 +55,7 @@
     "es6-promise": "^4.0.0",
     "jsdoc": "^3.4.3",
     "socket.io-client": "^1.6.0",
-    "three": "^0.81.2",
+    "three": "^0.83.0",
     "tween.js": "^16.3.5",
     "webvr-boilerplate": "^0.4.9"
   }
