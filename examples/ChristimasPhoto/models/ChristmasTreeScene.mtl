@@ -1,41 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 19.12.2016 19:08:11
-
-newmtl Material__14
-	Ns 58.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.3137 0.0000 0.0000
-	Kd 0.3137 0.0000 0.0000
-	Ks 0.6390 0.6390 0.6390
-	Ke 0.0000 0.0000 0.0000
-
-newmtl Material__15
-	Ns 33.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.0000 0.0510 0.1922
-	Kd 0.0000 0.0510 0.1922
-	Ks 0.6570 0.6570 0.6570
-	Ke 0.0000 0.0000 0.0000
-
-newmtl Material__16
-	Ns 37.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.0000 0.1569 0.0902
-	Kd 0.0000 0.1569 0.0902
-	Ks 0.5412 0.5412 0.5412
-	Ke 0.0000 0.0000 0.0000
+# File Created: 20.12.2016 17:40:50
 
 newmtl Material__17
 	Ns 0.0000
@@ -61,27 +25,15 @@ newmtl Material__18
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 
-newmtl Material__19
-	Ns 46.0000
+newmtl Material__14
+	Ns 0.0000
 	Ni 1.5000
 	d 1.0000
 	Tr 0.0000
 	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.5333 0.5333 0.5333
-	Kd 0.5333 0.5333 0.5333
-	Ks 0.7470 0.7470 0.7470
-	Ke 0.0000 0.0000 0.0000
-
-newmtl Material__13
-	Ns 37.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.8039 0.9412 0.9608
-	Kd 0.8039 0.9412 0.9608
+	Ka 0.3137 0.0000 0.0000
+	Kd 0.3137 0.0000 0.0000
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 
@@ -96,8 +48,8 @@ newmtl Material__27
 	Kd 1.0000 1.0000 1.0000
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka textures\6.png
-	map_Kd textures\6.png
+	map_Ka textures\6.jpg
+	map_Kd textures\6.jpg
 
 newmtl Material__26
 	Ns 10.0000
@@ -110,8 +62,8 @@ newmtl Material__26
 	Kd 1.0000 1.0000 1.0000
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka textures\5.png
-	map_Kd textures\5.png
+	map_Ka textures\5.jpg
+	map_Kd textures\5.jpg
 
 newmtl Material__25
 	Ns 10.0000
@@ -124,8 +76,8 @@ newmtl Material__25
 	Kd 1.0000 1.0000 1.0000
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka textures\2.png
-	map_Kd textures\2.png
+	map_Ka textures\2.jpg
+	map_Kd textures\2.jpg
 
 newmtl Material__24
 	Ns 10.0000
@@ -155,6 +107,42 @@ newmtl Material__28
 	map_Ka textures\8.jpg
 	map_Kd textures\8.jpg
 
+newmtl Material__13
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.7647 0.7843 0.7882
+	Kd 0.7647 0.7843 0.7882
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Material__15
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0667 0.1176 0.2706
+	Kd 0.0667 0.1176 0.2706
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Material__19
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.6902 0.6902 0.6902
+	Kd 0.6902 0.6902 0.6902
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+
 newmtl Material__3
 	Ns 70.0000
 	Ni 1.5000
@@ -165,4 +153,16 @@ newmtl Material__3
 	Ka 0.0000 0.0000 0.0000
 	Kd 0.8706 0.8392 0.0000
 	Ks 0.1765 0.1765 0.1765
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Material__16
+	Ns 0.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.1569 0.0902
+	Kd 0.0000 0.1569 0.0902
+	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000

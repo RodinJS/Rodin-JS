@@ -146,9 +146,9 @@ TV.on('ready', () => {
 });
 
 function createRaycastablesObjects(model) {
-    let raycastablesObjectsLenght = model.object3D.children.length;
+    let raycastablesObjectsLength = model.object3D.children.length;
 
-    for (let i = 0; i < raycastablesObjectsLenght; i++) {
+    for (let i = 0; i < raycastablesObjectsLength; i++) {
         let mesh = model.object3D.children[i];
         if (mesh instanceof THREE.Mesh) {
 
