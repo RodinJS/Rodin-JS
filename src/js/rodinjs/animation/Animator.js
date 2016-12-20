@@ -5,7 +5,7 @@ import {Set} from '../utils/Set.js';
 /**
  * Class Animator
  * Each Sculpt object have its own animator.
- * @param {Sculpt} - Sculpt object
+ * @param {!Sculpt} sculpt - Sculpt object
  */
 export class Animator {
     constructor (sculpt) {
@@ -17,16 +17,16 @@ export class Animator {
         this.sculpt = sculpt;
 
         /**
-         * Set of clips(animations) to be played.
-         * @type {Set}
+         * Set of clips (animations) to be played.
+         * @type {Set.<Animation>}
          */
         this.clips = new Set();
     }
 
     /**
      * Get clip by name or index
-     * @param key
-     * @returns {*}
+     * @param {!*} key
+     * @returns {Animation}
      */
     getClip (key) {
         if (Number.isInteger(key)) {
@@ -44,6 +44,7 @@ export class Animator {
 
     /**
      * Add new animation clip to animator
+     * @param {...Animation}
      * @returns {Animation}
      */
     add () {
@@ -59,7 +60,7 @@ export class Animator {
 
     /**
      * Get all current clips
-     * @returns {Set}
+     * @returns {Set.<Animation>}
      */
     getClips () {
         return this.clips;
@@ -67,7 +68,7 @@ export class Animator {
 
     /**
      * Check if animator is busy
-     * @param key -  check the state for a specific animation/clip
+     * @param {*} [key] -  check the state for a specific animation/clip
      * @returns {boolean}
      */
     isPlaying (key = null) {
@@ -86,8 +87,8 @@ export class Animator {
 
     /**
      * Start animation by name or id
-     * @param key {string|number}
-     * @param forceStart {boolean} - kills this animation (if currently playing) and starts again
+     * @param {!*} key - Animation name or id
+     * @param {boolean} [forceStart] - kills this animation (if currently playing) and starts again
      * @returns {boolean}
      */
     start (key, forceStart = false) {
@@ -102,8 +103,8 @@ export class Animator {
 
     /**
      * Stop animation by name or id
-     * @param key {string|number}
-     * @param {boolean} reset - run animation.reset() method after stopping the animation.
+     * @param {!*} key - Animation name or id
+     * @param {boolean} [reset] - run animation.reset() method after stopping the animation.
      * @returns {boolean} - success
      */
     stop (key, reset = true) {

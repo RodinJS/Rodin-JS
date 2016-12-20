@@ -7,8 +7,8 @@ let controllerCreated = false;
 
 /**
  * A controller class for describing event handlers for cardboard use.
- * @param {THREE.Scene} scene Required - the scene where the controller will be used.
- * @param {THREE.PerspectiveCamera} camera Required - the camera where the controller will be used.
+ * @param {THREE.Scene} scene - the scene where the controller will be used.
+ * @param {THREE.PerspectiveCamera} camera - the camera where the controller will be used.
  */
 export class CardboardController extends GamePad {
     constructor(scene = null, camera = null) {
@@ -32,7 +32,7 @@ export class CardboardController extends GamePad {
 
     /**
      * Get raycasted objects ({distance, point, face, faceIndex, indices, object}) that are in camera's center.
-     * @returns [Object]
+     * @returns {Object[]}
      */
     getIntersections() {
         this.raycaster.set(this.camera.getWorldPosition(), this.camera.getWorldDirection());
@@ -67,7 +67,7 @@ export class CardboardController extends GamePad {
 
     /**
      * Start propagation for event.
-     * @param eventName {string}
+     * @param {string} eventName
      */
     startPropagation(eventName) {
         this.setPropagation(eventName, true);
@@ -75,7 +75,7 @@ export class CardboardController extends GamePad {
 
     /**
      * Stop propagation for event.
-     * @param eventName {string}
+     * @param {string} eventName
      */
     stopPropagation(eventName) {
         this.setPropagation(eventName, false);
@@ -83,7 +83,7 @@ export class CardboardController extends GamePad {
 
     /**
      * Key down (cardboard button press) event handler.
-     * @param keyCode {number}
+     * @param {number} keyCode
      */
     onKeyDown(keyCode) {
 
@@ -101,7 +101,7 @@ export class CardboardController extends GamePad {
 
     /**
      * Key up (cardboard button up) event handler.
-     * @param keyCode {number}
+     * @param {Number} keyCode
      */
     onKeyUp(keyCode) {
         this.engaged = false;

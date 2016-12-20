@@ -4,11 +4,11 @@ const enforce = function () {
 };
 
 let instance = null;
-
+/**
+ * Custom (virtual) gamepad class, for CardboardController.
+ */
 export class CardboardGamePad {
-    /**
-     * Custom (virtual) gamepad class, for CardboardController.
-     */
+
     constructor(e) {
         if (e !== enforce) {
             throw new ErrorSingletonClass();
@@ -20,7 +20,7 @@ export class CardboardGamePad {
         this.axes = [0, 0];
         /**
          * Cardboard button state.
-         * @type {Object}
+         * @type {Object[]}
          */
         this.buttons = [
             {

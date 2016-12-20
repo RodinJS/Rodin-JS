@@ -9,7 +9,7 @@ function enforce () {
 
 /**
  * Animation Class, used to create animations on Sculpt objects
- * @param {string} name
+ * @param {!String} name
  * @param {Object} params
  */
 export class Animation {
@@ -54,7 +54,7 @@ export class Animation {
 
     /**
      * Start animation
-     * @param {boolean} forceStart - kills this animation (if currently playing) and starts again
+     * @param {boolean} [forceStart] - stops this animation (if currently playing) and starts again
      * @returns {boolean} TODO: Gor incha veradarcnum, es inch booleana
      */
     start (forceStart = false) {
@@ -112,7 +112,7 @@ export class Animation {
 
     /**
      * Play animation
-     * @param {boolean} forceStart - stop this animation if it is currently running, and restart
+     * @param {boolean} [forceStart] - stops this animation (if currently playing) and starts again
      * @returns {boolean} TODO: Gor incha veradarcnum, es inch booleana
      */
     play (forceStart = false) {
@@ -121,7 +121,7 @@ export class Animation {
 
     /**
      * Stop animation
-     * @param {boolean} reset - run reset() method after stopping the animation.
+     * @param {boolean} [reset] - run reset() method after stopping the animation.
      * @returns {boolean} - success
      */
     stop (reset = true) {
@@ -162,9 +162,10 @@ export class Animation {
     }
 
     /**
+     *  TODO: Gor es incha
      * set/get loop
      * <p>Sets loop value if provided as param, otherwise returns current loop value</p>
-     * @param loop
+     * @param [loop]
      * @returns {Animation}
      */
     loop (loop = null) {
@@ -179,7 +180,7 @@ export class Animation {
     /**
      * set/get duration
      * <p>Sets duration value if provided as param, otherwise returns current duration value</p>
-     * @param {number} duration
+     * @param {number} [duration]
      * @returns {Animation}
      */
     duration (duration = null) {
@@ -194,14 +195,13 @@ export class Animation {
     /**
      * set/get delay.
      * <p>Sets delay value if provided as param, otherwise returns current delay value</p>
-     * @param delay
+     * @param {number} [delay]
      * @returns {Animation}
      */
     delay (delay = null) {
         if (delay === null) {
             return this._delay;
         }
-
         this._delay = delay;
         return this;
     }
@@ -209,7 +209,7 @@ export class Animation {
     /**
      * set/get easing.
      * <p>Sets easing value if provided as param, otherwise returns current easing value</p>
-     * @param easing
+     * @param {TWEEN.Easing} [easing]
      * @returns {Animation}
      */
     easing (easing = null) {
@@ -224,7 +224,7 @@ export class Animation {
 
     /**
      * Set sculpt object for this animation to play on.
-     * @param sculpt {Sculpt}
+     * @param {!Sculpt}  sculpt
      * @returns {Animation}
      */
     setSculpt (sculpt) {
