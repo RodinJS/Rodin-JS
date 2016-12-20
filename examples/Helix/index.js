@@ -6,6 +6,7 @@ import {MouseGamePad} from '../../_build/js/rodinjs/controllers/gamePads/MouseGa
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import {Element} from '../../_build/js/rodinjs/sculpt/elements/Element.js';
 import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
+import {ANIMATION_TYPES} from '../../_build/js/rodinjs/constants/constants.js';
 //import {Animation} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
 
 let scene = SceneManager.get();
@@ -14,7 +15,7 @@ let controls = scene.controls;
 let renderer = scene.renderer;
 let mouseController = new MouseController();
 let thumbsParentObject = new THREE.Object3D();
-let visibleThumbsCount = 7;
+let visibleThumbsCountOnSide = 3;
 
 SceneManager.addController(mouseController);
 scene.add(thumbsParentObject);
@@ -35,8 +36,8 @@ scene.add(thumbsParentObject);
 
 function loadThumbs(thumbsUrls) {
     let loadingState = { allThumbsReady : false };
-
     let thumbLoadingIndex = 0;
+
     thumbsUrls.forEach((thumbUrl) => {
         let params = {};
         params.name = "name_";
@@ -56,23 +57,57 @@ function loadThumbs(thumbsUrls) {
             position: {h: 50, v: 50}
         };
         let thumb = new Element(params);
-
         thumb.on('ready', (evt) => {
             let object = evt.target.object3D;
             object.castShadow = true;
             object.receiveShadow = true;
-            object.setPosition = function(x, opacity) {
-                let y = 1.5;
-                this.position.set(x, y, -Math.sqrt(x));
-                this.rotation.y = Math.sqrt(x);
+            thumb.setPosition = function(x) {
+                let rootX = Math.sqrt(Math.abs(x));
+                let z =  rootX / 2;
+                //console.log(z);
+                // if (Math.abs(x) > visibleThumbsCountOnSide) {
+                //     object.material.opacity = 0;
+                // } else {
+                object.material.opacity = 1 - z;
+                // }
+                x /= 1.5;
+                let angle = Math.sqrt(Math.abs(x) / 5);
+                this.object3D.position.set(x, 0, -z);
+                this.object3D.rotation.y = x > 0 ? -angle : angle;
             };
 
             thumbsParentObject.add(object);
             RODIN.Raycastables.push(object);
 
             evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY, (evt) => {
-                //console.log(evt);
+                let targetObject3D = evt.target.object3D;
+                if (targetObject3D.position.x === 0 || targetObject3D.material.opacity === 0) {
+                    return;
+                }
+                thumbsParentObject.children.forEach((thumbb, index) => {
+                    let updateCallback = function() {
+                        thumbb.Sculpt.setPosition(this.x);
+                    };
+                    let elem = {
+                        x: thumbb.position.x * 1.5
+                    };
+                    let endval = 0;
+                    if (targetObject3D.position.x > 0)
+                        endval = (thumbb.position.x - 2/3) * 1.5;
+                    else if (targetObject3D.position.x < 0)
+                        endval = (thumbb.position.x + 2/3) * 1.5;
+
+                    new TWEEN.Tween(elem)
+                        .to({x: endval}, 500)
+                        .delay(0)
+                        .onUpdate(updateCallback)
+                        .easing(TWEEN.Easing.Cubic.Out)
+                        .start()
+                        .onComplete(function () {
+                        });
+                });
             });
+
             evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
                 evt.target.animate(
                     {
@@ -92,7 +127,6 @@ function loadThumbs(thumbsUrls) {
             loadingState.allThumbsReady = thumbLoadingIndex++ == thumbsUrls.length - 1;
             createThumbs(loadingState);
         });
-
     });
     return loadingState;
 }
@@ -113,39 +147,9 @@ function createHelixThumbs(loadingState) {
         phi += phiStep;
         y -= 0.12;
     });
+
     scene.add(thumbsParentObject);
 }
-
-/*
-function createSqrtThumbs(loadingState) {
-    if (!loadingState.allThumbsReady) return;
-    let angle = 0;
-    let angleStep = 0.5;
-    let x = 1; let y = 1.5;
-    let xStep = 0.8;
-    let getZ = (x) => {
-        return Math.sqrt(x);
-    };
-    for (let i = 0; i < 3; ++i) {
-        let thumb = thumbsParentObject.children[i];
-        thumb.position.set(x, y, -getZ(x));
-        thumb.rotation.y = angle;
-        x += xStep;
-        angle -= angleStep;
-    }
-    x = 1;
-    angle = 0;
-    for (let i = 3; i < 3 + 3; ++i) {
-        let thumb = thumbsParentObject.children[i];
-        thumb.position.set(-x, y, -getZ(x));
-        thumb.rotation.y = -angle;
-        x += xStep;
-        angle -= angleStep;
-    }
-    let centerThumb = thumbsParentObject.children[6];
-    centerThumb.position.set(0, y, -0.7);
-}
-*/
 
 let loadingState = loadThumbs([
     "./img/thumb1.jpg",
@@ -164,15 +168,12 @@ let loadingState = loadThumbs([
 
 function createThumbs(loadingState) {
     if (!loadingState.allThumbsReady) return;
-
-    let x = 1;
-    let xStep = 0.8;
-
-    for (let i = 0; i < Math.floor(visibleThumbsCount/2); ++i) {
+    for (let i = 0, length = thumbsParentObject.children.length; i < length; ++i) {
         let thumb = thumbsParentObject.children[i];
-        thumb.setPosition(x);
-        x += xStep;
+        let x = i - Math.floor(length/2);
+        thumb.Sculpt.setPosition(x);
     }
+    thumbsParentObject.position.set(0, 1.5, -1);
 }
 
 createThumbs(loadingState);
