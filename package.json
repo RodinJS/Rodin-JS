@@ -47,6 +47,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-watch": "^4.3.11",
     "minami": "^1.1.1",
+    "esdoc": "^0.4.8",
     "run-sequence": "^1.2.2"
   },
   "dependencies": {
@@ -54,6 +55,7 @@
     "dat-gui": "^0.5.0",
     "es6-promise": "^4.0.0",
     "jsdoc": "^3.4.3",
+    "esdoc-es7-plugin": "0.0.3",
     "socket.io-client": "^1.6.0",
     "three": "^0.83.0",
     "tween.js": "^16.3.5",

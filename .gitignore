@@ -48,7 +48,7 @@ Temporary Items
 
 node_modules
 .idea
-_build
+docs/
 
 examples/**/*_c.js
 examples/**/*.mp4
@@ -56,3 +56,4 @@ examples/**/*.webm
 
 src/js/vendor
 /docs/
+_build
