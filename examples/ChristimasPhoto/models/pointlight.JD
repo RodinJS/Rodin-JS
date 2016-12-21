@@ -11,6 +11,125 @@
             "specular": [0,0,0],
             "glossiness": 0,
             "opacity": 1
+        },
+        {
+            "name": "Material__14",
+            "diffuse": [0.313726,0,0],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1,
+            "twoSided": true
+        },
+        {
+            "name": "Material__15",
+            "diffuse": [0.0666667,0.117647,0.270588],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1,
+            "twoSided": true
+        },
+        {
+            "name": "Material__16",
+            "diffuse": [0,0.156863,0.0901961],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1
+        },
+        {
+            "name": "Material__17",
+            "diffuse": [0.0196078,0.34902,0.0392157],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1
+        },
+        {
+            "name": "Material__18",
+            "diffuse": [0.192157,0.0627451,0.027451],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1
+        },
+        {
+            "name": "Material__19",
+            "diffuse": [0.690196,0.690196,0.690196],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1
+        },
+        {
+            "name": "Material__24",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__0",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "1.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Material__25",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__1",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "2.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Material__26",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__2",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "5.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Material__27",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__3",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "6.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Material__28",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__4",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "8.jpg"
+                }
+            ]
         }
     ],
     "model": 
