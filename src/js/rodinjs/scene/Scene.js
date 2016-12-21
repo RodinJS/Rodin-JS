@@ -47,6 +47,7 @@ export class Scene extends Sculpt {
         this.effect.setSize(window.innerWidth, window.innerHeight);
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
+        this.renderer.setPixelRatio(window.devicePixelRatio > 2 ? 2 : 1);
     }
 
     // todo: tanel esi scenemanager

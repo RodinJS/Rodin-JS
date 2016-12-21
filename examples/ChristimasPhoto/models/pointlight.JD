@@ -1,0 +1,789 @@
+{
+    "meta": 
+    {
+        "version": 1.2,
+        "generator": "cgdev json exporter"
+    },
+    "materials": [
+        {
+            "name": "Material__13",
+            "diffuse": [0.764706,0.784314,0.788235],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1
+        },
+        {
+            "name": "Material__14",
+            "diffuse": [0.313726,0,0],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1,
+            "twoSided": true
+        },
+        {
+            "name": "Material__15",
+            "diffuse": [0.0666667,0.117647,0.270588],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1,
+            "twoSided": true
+        },
+        {
+            "name": "Material__16",
+            "diffuse": [0,0.156863,0.0901961],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1
+        },
+        {
+            "name": "Material__17",
+            "diffuse": [0.0196078,0.34902,0.0392157],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1
+        },
+        {
+            "name": "Material__18",
+            "diffuse": [0.192157,0.0627451,0.027451],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1
+        },
+        {
+            "name": "Material__19",
+            "diffuse": [0.690196,0.690196,0.690196],
+            "specular": [0,0,0],
+            "glossiness": 0,
+            "opacity": 1
+        },
+        {
+            "name": "Material__24",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__0",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "1.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Material__25",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__1",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "2.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Material__26",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__2",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "5.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Material__27",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__3",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "6.jpg"
+                }
+            ]
+        },
+        {
+            "name": "Material__28",
+            "diffuse": [1,1,1],
+            "specular": [0,0,0],
+            "glossiness": 10,
+            "opacity": 1,
+            "maps": [
+                {
+                    "name": "Map__4",
+                    "type": "diffuse",
+                    "uvsIndex": 0,
+                    "file": "8.jpg"
+                }
+            ]
+        }
+    ],
+    "model": 
+    {
+        "meshes": [
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere019",
+                "node": 2,
+                "verts": [-0.423053,-2.1844,-0.796629,-0.388504,-2.1844,-0.796629,-0.405778,-2.1844,-0.829487],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere023",
+                "node": 3,
+                "verts": [-0.0861183,-2.19887,-0.913691,-0.0515691,-2.19887,-0.913691,-0.0688437,-2.19887,-0.946549],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere026",
+                "node": 4,
+                "verts": [0.235397,-2.2648,-1.0518,0.269946,-2.2648,-1.0518,0.252672,-2.2648,-1.08466],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere027",
+                "node": 5,
+                "verts": [0.620131,-2.64655,-1.20012,0.65468,-2.64655,-1.20012,0.637406,-2.64655,-1.23298],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere032",
+                "node": 6,
+                "verts": [0.417292,-2.7838,-1.60119,0.451842,-2.7838,-1.60119,0.434567,-2.7838,-1.63405],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere033",
+                "node": 7,
+                "verts": [0.0570212,-2.46749,-1.46819,0.0915703,-2.46749,-1.46819,0.0742958,-2.46749,-1.50104],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere037",
+                "node": 8,
+                "verts": [-0.272288,-2.42257,-1.33855,-0.237739,-2.42257,-1.33855,-0.255014,-2.42257,-1.37141],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere039",
+                "node": 9,
+                "verts": [-0.608438,-2.47966,-1.23929,-0.573889,-2.47966,-1.23929,-0.591164,-2.47966,-1.27215],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere042",
+                "node": 10,
+                "verts": [-1.04904,-2.82532,-1.18037,-1.01449,-2.82532,-1.18037,-1.03176,-2.82532,-1.21323],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere047",
+                "node": 11,
+                "verts": [-0.765061,-2.94462,-1.63633,-0.730512,-2.94462,-1.63633,-0.747786,-2.94462,-1.66919],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere050",
+                "node": 12,
+                "verts": [-0.437735,-2.68063,-1.70304,-0.403186,-2.68063,-1.70304,-0.420461,-2.68063,-1.7359],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere052",
+                "node": 13,
+                "verts": [-0.123648,-2.60842,-1.81637,-0.0890992,-2.60842,-1.81637,-0.106374,-2.60842,-1.84922],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere055",
+                "node": 14,
+                "verts": [0.222723,-2.85692,-1.98641,0.257272,-2.85692,-1.98641,0.239997,-2.85692,-2.01926],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere058",
+                "node": 15,
+                "verts": [-0.059815,-2.97479,-2.27167,-0.0252658,-2.97479,-2.27167,-0.0425404,-2.97479,-2.30452],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere062",
+                "node": 16,
+                "verts": [-0.373902,-2.94954,-2.16403,-0.339353,-2.94954,-2.16403,-0.356627,-2.94954,-2.19689],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere064",
+                "node": 17,
+                "verts": [-0.201115,-3.17484,-2.72263,-0.166566,-3.17484,-2.72263,-0.18384,-3.17484,-2.75549],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere067",
+                "node": 18,
+                "verts": [-0.780465,-2.29225,-0.714325,-0.745915,-2.29225,-0.714325,-0.76319,-2.29225,-0.747183],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            },
+            {
+                "meta": 
+                {
+                    "vertNum": 3,
+                    "faceNum": 1,
+                    "vertElementNum": 3
+                },
+                "name": "Sphere070",
+                "node": 19,
+                "verts": [-1.17908,-2.55721,-0.670501,-1.14453,-2.55721,-0.670501,-1.16181,-2.55721,-0.703359],
+                "vertElement": 
+                {
+                    "vertIndices": [0,1,2],
+                    "normals": [0,1,0,0,1,0,0,1,0],
+                    "uvs": [[0.4,0.8,0.6,0.8,0.5,0.8]]
+                },
+                "face": 
+                {
+                    "vertElementIndices": [0,1,2],
+                    "groups": [
+                        {
+                            "start": 0,
+                            "count": 3,
+                            "materialIndex": 1
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "hierarchy": 
+    {
+        "nodes": [
+            {
+                "name": "SceneRoot",
+                "parent": -1,
+                "pos": [0,0,0],
+                "scl": [1,1,1],
+                "rot": [0,0,0,1]
+            },
+            {
+                "name": "Group001",
+                "parent": 0,
+                "pos": [-0.266684,1.62168,-2.63517],
+                "scl": [1,1,1],
+                "rot": [0,0,0,1]
+            },
+            {
+                "name": "Sphere019",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere023",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere026",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere027",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere032",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere033",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere037",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere039",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere042",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere047",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere050",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere052",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere055",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere058",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere062",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere064",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere067",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            },
+            {
+                "name": "Sphere070",
+                "parent": 1,
+                "pos": [0.266684,-1.62168,2.63517],
+                "scl": [1,1,1],
+                "rot": [0.707107,0,0,0.707107]
+            }
+        ]
+    }
+}
