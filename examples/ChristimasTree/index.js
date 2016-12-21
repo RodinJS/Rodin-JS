@@ -110,6 +110,7 @@ snow.on("ready", (evt) => {
     snowContainer.add(evt.target.object3D);
 });
 
+
 /// Add terrain
 let terrain = ModelLoader.load("./models/terrain.json");
 terrain.on('ready', () => {
@@ -443,8 +444,8 @@ function mouseControllerUpdate() {
                     let initParent = item.parent;
                     changeParent(item, camera);
                     let deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
-                        new THREE.Euler(-shift.y * Math.PI, shift.x * Math.PI, 0, 'XYZ')
-                    );
+                            new THREE.Euler(-shift.y * Math.PI, shift.x * Math.PI, 0, 'XYZ')
+                        );
 
                     item.quaternion.multiplyQuaternions(deltaRotationQuaternion, item.quaternion);
 
