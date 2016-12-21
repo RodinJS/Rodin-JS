@@ -7,8 +7,15 @@ import {Set} from '../utils/Set.js';
 
 let controllerCreated = false;
 let keys = new Set();
-
+/**
+ * A controller class for describing event handlers for keys.
+ * Class KeyboardController
+ */
+    // TODO: cleanup and write comments
 export class KeyboardController extends GamePad {
+/**
+ * Constructor
+ */
     constructor () {
         if (controllerCreated) {
             throw new ErrorKeyboardControllerAlreadyExists();
@@ -29,39 +36,39 @@ export class KeyboardController extends GamePad {
     }
 
     /**
-     * Just keep Interface
+     * Just keep Interface.
      */
     setRaycasterScene () {
     }
 
     /**
-     * Just keep Interface
+     * Just keep Interface.
      */
     setRaycasterCamera () {
     }
 
     /**
-     * Just keep Interface
+     * Just keep Interface.
      */
     update () {
     }
 
     /**
-     * Just keep Interface
+     * Just keep Interface.
      */
     updateObject () {
     }
 
     /**
-     * Just keep Interface
+     * Just keep Interface.
      */
     intersectObjects () {
     }
 
     /**
-     * Emit global event for all objects
+     * Emit global event for all objects.
      * @param {string} eventName
-     * @param {*} DOMEvent
+     * @param {DOMEvent} DOMEvent
      * @param {number} keyCode
      * @param {GamePad} controller
      */
@@ -74,13 +81,13 @@ export class KeyboardController extends GamePad {
     }
 
     /**
-     * Just keep Interface
+     * Just keep Interface.
      */
     get axes () {
     }
 
     /**
-     * getKey function
+     * GetKey function
      * @param keyCode
      * @returns {boolean} true if key pressed, false otherwise
      */

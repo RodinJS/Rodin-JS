@@ -6,9 +6,9 @@ import {RodinPhysics} from './RodinPhysics.js';
 export class RigidBody {
     /**
      *
-     * @param {object, null} object
-     * @param {number, 0} mass
-     * @param {string, undefined} typeOfCollisionShape
+     * @param {object} [object] - object
+     * @param {number} [mass] - mass
+     * @param {string} [typeOfCollisionShape] - typeOfCollisionShape
      */
     constructor(object = null, mass = 0, typeOfCollisionShape = undefined) {
 
@@ -60,7 +60,7 @@ export class RigidBody {
 
     /**
      *
-     * @param {string, undefined} typeOfCollisionShape
+     * @param {string} [typeOfCollisionShape] - typeOfCollisionShape
      */
     createObjectCollision(typeOfCollisionShape = undefined) {
         let shape;
