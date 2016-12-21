@@ -178,14 +178,15 @@ export class RodinPhysics {
                         PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()),
                         //todo parent scale
                         this.rigidBodies[i].owner.scale);
-
-                    let inverseParentMatrix = new THREE.Matrix4();
+                console.log(this);
+                    /*let inverseParentMatrix = new THREE.Matrix4();
                     inverseParentMatrix.getInverse(this.rigidBodies[i].owner.parent.matrixWorld);
                     newGlobalMatrix.multiplyMatrices(inverseParentMatrix, newGlobalMatrix);
 
                     this.rigidBodies[i].owner.matrixAutoUpdate = false;
                     //this.rigidBodies[i].owner.matrixWorldNeedsUpdate = false;
-                    this.rigidBodies[i].owner.matrix = newGlobalMatrix;
+                    this.rigidBodies[i].owner.matrix = newGlobalMatrix;*/
+                this.rigidBodies[i].owner.setGlobalMatrix(newGlobalMatrix);
                 //}
             }
         //}

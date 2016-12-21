@@ -58,10 +58,10 @@ scene.add(light);
 // objects raycasting
 let raycaster;
 
-let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
+let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, camera, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
-let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
+let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, camera, 3);
 controllerR.standingMatrix = controls.getStandingMatrix();
 
 //SceneManager.addController(controllerL);
