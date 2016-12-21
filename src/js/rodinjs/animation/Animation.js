@@ -72,7 +72,7 @@ export class Animation {
             }
         }
 
-        let normalizedParams = Animation.normalizeParams(this.params, this.sculpt.object3D);
+        let normalizedParams = Animation.normalizeParams(enforce, this.params, this.sculpt.object3D);
         let startValues = normalizedParams.from;
         let endValues = normalizedParams.to;
 

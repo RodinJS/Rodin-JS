@@ -10,7 +10,6 @@ import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import {EVENT_NAMES} from '../../_build/js/rodinjs/constants/constants.js'
 
-
 let scene = SceneManager.get();
 let controls = scene.controls;
 let renderer = scene.renderer;
@@ -20,26 +19,25 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 scene.setCameraProperty("far", 150);
 
-threeScene.fog = new THREE.Fog(0x7a8695, 0, 18);
+threeScene.fog = new THREE.Fog(0xd4dbe5, 0, 46);
 
 /// Add light
-let light1 = new THREE.DirectionalLight(0xcccccc, 1);
+let light1 = new THREE.DirectionalLight(0xcccccc, 0.8);
 light1.position.set(4, 5, 4);
 scene.add(light1);
 
-scene.add(new THREE.AmbientLight(0xaaaaaa));
+scene.add(new THREE.AmbientLight(0xaaaaaa, 1.2));
 
-
-let boxSize = 30;
+let boxSize = 21;
 let snowBoxSize = 18;
 
-// Add a skybox.
-let skybox = new THREE.Mesh(new THREE.BoxGeometry(boxSize * 2, boxSize * 2, boxSize * 2), new THREE.MeshBasicMaterial({color: 0x000000}));
-skybox.position.y = controls.userHeight;
-skybox.scale.set(1, 1, -1);
+let skybox = new THREE.Mesh(
+    new THREE.SphereGeometry(boxSize * 2, boxSize * 2, boxSize * 2),
+    new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load( "img/pimgpsh_fullsize_distr.jpg" ),
+        side: THREE.DoubleSide
+    }));
 scene.add(skybox);
-
-boxSize = 21;
 
 // Add a snowContainer.
 let snowContainer = new THREE.Object3D();
