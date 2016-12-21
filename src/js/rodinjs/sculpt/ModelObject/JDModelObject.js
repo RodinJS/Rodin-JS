@@ -1,10 +1,10 @@
 'use strict';
 
-import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import '../vendor/JDLoader.min.js';
-import {Event} from '../Event.js';
-import {Sculpt} from './Sculpt.js';
-import {Time} from './../time/Time.js';
+import {THREE} from '../../../vendor/three/THREE.GLOBAL.js';
+import '../../vendor/JDLoader.min.js';
+import {Event} from '../../Event.js';
+import {Time} from '../../time/Time.js';
+import {ModelObject} from './ModelObject.js';
 
 /**
  * You can export JD file from 3ds max
@@ -12,12 +12,12 @@ import {Time} from './../time/Time.js';
  */
 
 const time = Time.getInstance();
-export class JDModelObject extends Sculpt {
+export class JDModelObject extends ModelObject {
     /**
      * JDModelObject constructor.
      * @param {string} [URL = '']
      */
-    constructor(URL = '') {
+    constructor (URL = '') {
 
         super();
 
@@ -31,8 +31,6 @@ export class JDModelObject extends Sculpt {
         let onError = function (xhr) {
         };
 
-        let mixers = [];
-
         new THREE.JDLoader().load(URL, (data) => { // data: { materials, geometries, boundingSphere }
             let multiMaterial = new THREE.MultiMaterial(data.materials);
             let meshes = new THREE.Group();
@@ -43,14 +41,7 @@ export class JDModelObject extends Sculpt {
                 mesh.updateMatrix();
 
                 meshes.add(mesh);
-
-                if (mesh.geometry.animations) {
-                    let mixer = new THREE.AnimationMixer(mesh);
-                    mixers.push(mixer);
-                    mixer.clipAction(mesh.geometry.animations[0], mesh)
-                        .setDuration(1)
-                        .play();
-                }
+                this.resolveMeshAnimations(mesh);
             }
 
             this.init(meshes);
@@ -60,14 +51,7 @@ export class JDModelObject extends Sculpt {
         }, onProgress, onError);
 
         this.on("update", () => {
-            if (mixers) {
-                if (mixers.length > 0) {
-                    for (let i = 0; i < mixers.length; i++) {
-                        mixers[i].update(time.deltaTime() / 1000);
-                    }
-                }
-            }
+            this._mixers.map(mixer => mixer.update(time.deltaTime() / 1000));
         });
     }
 }
-

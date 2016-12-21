@@ -18,6 +18,7 @@ let controls = scene.controls;
 let renderer = scene.renderer;
 renderer.setPixelRatio(window.devicePixelRatio);
 
+
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 

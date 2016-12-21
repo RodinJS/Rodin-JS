@@ -1,21 +1,21 @@
 'use strict';
-import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import {Event} from '../Event.js';
-import {Sculpt} from './Sculpt.js';
-import {WTF} from '../logger/Logger.js';
-import {Time} from './../time/Time.js';
+import {THREE} from '../../../vendor/three/THREE.GLOBAL.js';
+import {Event} from '../../Event.js';
+import {WTF} from '../../logger/Logger.js';
+import {Time} from '../../time/Time.js';
+import {ModelObject} from './ModelObject.js';
 
-import '../../vendor/three/examples/js/loaders/collada/AnimationHandler.js';
-import '../../vendor/three/examples/js/loaders/collada/KeyFrameAnimation.js';
-import '../../vendor/three/examples/js/loaders/collada/Animation.js';
-import '../../vendor/three/examples/js/loaders/ColladaLoader.js';
+import '../../../vendor/three/examples/js/loaders/collada/AnimationHandler.js';
+import '../../../vendor/three/examples/js/loaders/collada/KeyFrameAnimation.js';
+import '../../../vendor/three/examples/js/loaders/collada/Animation.js';
+import '../../../vendor/three/examples/js/loaders/ColladaLoader.js';
 
 /**
  * For better experience you can export collada file from blender.
  * Select 'include Material Texture' option.
  */
 const time = Time.getInstance();
-export class ColladaModelObject extends Sculpt {
+export class ColladaModelObject extends ModelObject {
 
     /**
      * ColladaModelObject constructor.
@@ -39,7 +39,10 @@ export class ColladaModelObject extends Sculpt {
             mesh.scene.traverse((child) => {
                 if (child instanceof THREE.SkinnedMesh) {
                     let animation = new THREE.Animation(child, child.geometry.animation);
-                    animation.play();
+                    animation.isPlaying = animation.isRunning;
+                    animation.name = animation.name || 'unnamed';
+                    console.log(animation);
+                    this.animator.add(animation);
                 }
             });
 
@@ -51,7 +54,6 @@ export class ColladaModelObject extends Sculpt {
 
         this.on("update", (evt) => {
            THREE.AnimationHandler.update(time.deltaTime() / 1000);
-
         });
     }
 }
