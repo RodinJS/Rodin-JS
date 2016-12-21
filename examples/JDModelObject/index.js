@@ -31,6 +31,7 @@ light2.position.set(-3, -3, -3);
 scene.add(light2);
 
 let obj = ModelLoader.load('./model/man.jd');
+
 obj.on('ready', () => {
     let s = 0.009;
     obj.object3D.scale.set(s, s, s);

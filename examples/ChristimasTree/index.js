@@ -110,6 +110,7 @@ snow.on("ready", (evt) => {
     snowContainer.add(evt.target.object3D);
 });
 
+
 /// Add terrain
 let terrain = ModelLoader.load("./models/terrain.json");
 terrain.on('ready', () => {
