@@ -18,15 +18,13 @@ let alpha = 0;
 });
 
 let scene = SceneManager.get();
-let mouseController = new MouseController();
-SceneManager.addController(mouseController);
+SceneManager.addController(new MouseController());
 
 let floor = new RODIN.THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(25, 25, 50, 50), new THREE.MeshLambertMaterial({color: 0x869295, wireframe:true})));
 floor.on('ready', (e) => {
     scene.add(e.target.object3D);
     e.target.object3D.rotation.x = Math.PI/2;
 });
-
 
 let light1 = new THREE.DirectionalLight(0xffffff);
 light1.position.set(1, 1, 1);
