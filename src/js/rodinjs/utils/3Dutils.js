@@ -4,8 +4,7 @@ import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 
 /**
  *
- * @param { THREE.Object3D } object
- * @param { THREE.Object3D } targetParent
+ * @param { THREE.Shape } shape
  */
 export function createGeometryFromShape(shape) {
 

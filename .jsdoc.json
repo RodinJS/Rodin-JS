@@ -21,6 +21,12 @@
         "encoding": "utf8",
         "private": true,
         "recurse": true,
-        "template": "./node_modules/minami"
+        "template": "./docTemplate/minami"
     }
 }
+
+// special for windows users
+// node_modules\.bin\jsdoc --configure .jsdoc.json --verbose
+
+// for non windows users
+// node_modules/.bin/jsdoc --configure .jsdoc.json --verbose

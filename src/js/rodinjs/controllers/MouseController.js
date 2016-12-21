@@ -6,9 +6,15 @@ import {ErrorInvalidEventType} from '../error/CustomErrors';
 let controllerCreated = false;
 
 /**
+ * A controller class for describing mouse event handlers .
  * Class MouseController
  */
 export class MouseController extends GamePad {
+    /**
+     * Constructor
+     * @param {THREE.Scene} scene Required - the scene where the controller will be used.
+     * @param {THREE.PerspectiveCamera} camera Required - the camera where the controller will be used.
+     */
     constructor(scene = null, camera = null) {
         if (controllerCreated) {
             throw new ErrorMouseControllerAlreadyExists();
@@ -23,23 +29,28 @@ export class MouseController extends GamePad {
 
 
     /**
-     * getIntersections override
-     * @param controller {MouseController}
-     * @returns [Sculpt]
+     * Get raycasted objects ({distance, point, face, faceIndex, indices, object}) that are under mouse pointer.
+     * @param {MouseController} controller
+     * @returns [Object]
      */
     getIntersections(controller) {
         this.raycaster.setFromCamera(new THREE.Vector2(controller.axes[0], controller.axes[1]), this.camera);
         return this.raycaster.raycast();
     }
-
+    /**
+     * Custom function to be triggered when mouse pointer hovers any raycastable element.
+     * @param {Object} intersect - intersected object ({distance, point, face, faceIndex, indices, object}) at the time of event.
+     */
     gamepadHover(intersect) {
     }
-
+    /**
+     * Custom function to be triggered when mouse pointer hovers out of any raycastable element.
+     */
     gamepadHoverOut() {
     }
 
     /**
-     * Get Gamepad from navigator
+     * Get Gamepad from navigator.
      * @returns {MouseGamePad}
      */
     static getGamepad() {
@@ -47,9 +58,9 @@ export class MouseController extends GamePad {
     }
 
     /**
-     * Set propagation for event
-     * @param eventName {string}
-     * @param value {boolean}
+     * Set propagation value for standard events, recommended, when using custom handlers on mousedown/mouseup/mousemove/scroll.
+     * @param {string} eventName - 'mousedown', 'mouseup', mousemove', 'mousewheel'.
+     * @param {boolean} value - true, false
      */
     setPropagation(eventName, value) {
         let gamePad = MouseController.getGamepad();
@@ -77,7 +88,7 @@ export class MouseController extends GamePad {
     }
 
     /**
-     * start propagation for event
+     * Start propagation for event.
      * @param eventName
      */
     startPropagation(eventName) {
@@ -85,7 +96,7 @@ export class MouseController extends GamePad {
     }
 
     /**
-     * stop propagation for event
+     * Stop propagation for event.
      * @param eventName
      */
     stopPropagation(eventName) {
@@ -93,7 +104,7 @@ export class MouseController extends GamePad {
     }
 
     /**
-     * Get Axes
+     * Get the mouse coordinates.
      * @returns {Array}
      */
     get axes() {
@@ -101,8 +112,8 @@ export class MouseController extends GamePad {
     }
 
     /**
-     * onKeyDown function
-     * @param keyCode {number}
+     * Mouse down event handler.
+     * @param {number} keyCode
      */
     onKeyDown(keyCode) {
         if (keyCode === KEY_CODES.KEY2) return;
@@ -118,8 +129,8 @@ export class MouseController extends GamePad {
     }
 
     /**
-     * onKeyUp function
-     * @param keyCode {number}
+     * Mouse up event handler.
+     * @param {number} keyCode
      */
     onKeyUp(keyCode) {
         if (keyCode === KEY_CODES.KEY2) return;
