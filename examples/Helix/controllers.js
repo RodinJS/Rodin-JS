@@ -11,14 +11,14 @@ export function initControllers() {
 
     let controls = scene.controls;
 
-    let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, scene.camera, 2);
+    let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, scene.camera, 1);
     controllerL.standingMatrix = controls.getStandingMatrix();
 
 
     SceneManager.addController(controllerL);
     scene.add(controllerL);
 
-    let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, scene.camera, 3);
+    let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, scene.camera, 1);
     controllerR.standingMatrix = controls.getStandingMatrix();
 
 

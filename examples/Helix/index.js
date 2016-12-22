@@ -22,7 +22,6 @@ const animations = {
 animations.hover.duration(200);
 animations.hoverOut.duration(200);
 
-
 let scene = SceneManager.get();
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
@@ -47,6 +46,10 @@ helix.concentrate = function (center) {
         thumb.alpha = (i - center) / k;
     }
 };
+helix.addThumb = function (thumb) {
+    this.thumbs.push(thumb);
+    this.concentrate(this.center);
+};
 
 helix.on('ready', () => {
     helix.object3D.position.z = -1;
@@ -70,33 +73,43 @@ class HelixThumb extends Element {
         super(params);
 
         this.on('ready', () => {
+            this.forceHover = true;
             this.object3D.position.y = scene.controls.userHeight;
             this.raycastable = true;
             helix.object3D.add(this.object3D);
             this.animator.add(animations.hover);
             this.animator.add(animations.hoverOut);
+            this.uv = { x: .5, y: .5 };
         });
 
         this.on('update', () => {
             if (!this.hasOwnProperty('alpha')) return;
             let currentAlpha = this.currentAlpha || 0;
-            currentAlpha = currentAlpha + (this.alpha - currentAlpha) / (RODIN.Time.deltaTime());
+            currentAlpha = currentAlpha + (this.alpha - currentAlpha) / RODIN.Time.deltaTime();
             const alpha = Math.max(-1, Math.min(currentAlpha, 1));
             this.object3D.material.opacity = 1 - Math.abs(alpha);
             this.object3D.position.x = 2 * alpha;
             this.object3D.position.z = -Math.abs(alpha);
             this.object3D.rotation.y = -Math.PI / 2 * alpha;
+            this.object3D.rotation.x = 0;
             this.currentAlpha = currentAlpha;
+
+            if (this.uv) {
+                let currentUV = this.currentUV || { x: 0, y: 0 };
+                currentUV.x = currentUV.x + (this.uv.x - currentUV.x) / RODIN.Time.deltaTime();
+                currentUV.y = currentUV.y + (this.uv.y - currentUV.y) / RODIN.Time.deltaTime();
+                this.object3D.rotation.y += (currentUV.x - 0.5) / 4;
+                this.object3D.rotation.x += (0.5 - currentUV.y) / 2;
+                this.currentUV = currentUV;
+            }
         });
 
-        this.on(EVENT_NAMES.CONTROLLER_HOVER, () => {
-            this.animator.stop('hoverOut', false);
-            this.animator.start('hover');
+        this.on(EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
+            this.uv = evt.uv;
         });
 
         this.on(EVENT_NAMES.CONTROLLER_HOVER_OUT, () => {
-            this.animator.stop('hover', false);
-            this.animator.start('hoverOut');
+            this.uv = { x: .5, y: .5 }
         });
 
         this.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
@@ -130,10 +143,9 @@ let projects = [
 ];
 
 for (let i = 0; i < projects.length; i++) {
-    helix.thumbs.push(new HelixThumb({
+    helix.addThumb(new HelixThumb({
         image: projects[i]
     }));
-    helix.concentrate(helix.center);
 }
 
 initControllers();
