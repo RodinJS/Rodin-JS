@@ -7,7 +7,7 @@ import {Element} from '../../_build/js/rodinjs/sculpt/elements/Element.js';
 import {ANIMATION_TYPES} from '../../_build/js/rodinjs/constants/constants.js';
 import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 import {EVENT_NAMES} from '../../_build/js/rodinjs/constants/constants.js';
-import './controllers_c.js';
+import {initControllers} from './controllers_c.js';
 
 let buttons = MouseGamePad.getInstance().buttons;
 
@@ -135,3 +135,5 @@ for (let i = 0; i < projects.length; i++) {
     }));
     helix.concentrate(helix.center);
 }
+
+initControllers();
