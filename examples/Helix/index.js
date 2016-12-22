@@ -21,26 +21,32 @@ SceneManager.addController(mouseController);
 scene.add(thumbsParentObject);
 let buttons = MouseGamePad.getInstance().buttons;
 
+let animationState = {maxEndval: -thumbsParentObject.children.length, minEndval: thumbsParentObject.children.length};
+
 mouseController.onValueChange = function(keyCode) {
     let direction = buttons[keyCode-1].value;
+    stopThumbs(direction);
 
-    stopThumbs();
     animateThumbs(direction);
+
     buttons[keyCode-1].value = 0;
 };
 
-function stopThumbs() {
+function stopThumbs(direction) {
     thumbsParentObject.children.forEach((thumb) => {
         if (thumb.anim) {
             thumb.anim.stop();
-            //console.log("stop");
-            //thumb.position.x = thumb.endval;
-            thumb.xPos = thumb.endval;
+            if (direction < 0 && thumb.endval < thumb.xPos || direction > 0 && thumb.endval > thumb.xPos ) {
+                thumb.position.x = thumb.endval;
+                thumb.xPos = thumb.endval;
+                //console.log("stop");
+            }
         }
     });
 }
 
 function animateThumbs(direction) {
+
     if (direction === 0) return;
     thumbsParentObject.children.forEach((thumb) => {
         let elem = {
@@ -48,11 +54,12 @@ function animateThumbs(direction) {
         };
         let endval = 0;
         if (direction > 0) {
-            endval = (thumb.xPos - 1) ;
+            endval = (thumb.xPos - 1) ; //  to the left
         } else if (direction < 0) {
             endval = (thumb.xPos + 1) ;
         }
         thumb.endval = endval;
+
         thumb.anim = new TWEEN.Tween(elem)
             .to({x: endval}, Math.abs(endval - elem.x)*500)
             .delay(0)
@@ -63,7 +70,9 @@ function animateThumbs(direction) {
             .start()
             .onComplete(function() {
                 thumb.xPos = thumb.position.x;
-                //console.log(thumb.xPos);
+                //console.log(endval);
+                // animationState.maxEndval = Math.max(endval, animationState.maxEndval);
+                // animationState.minEndval = Math.min(endval, animationState.minEndval);
             });
     });
 }
@@ -112,7 +121,7 @@ function loadThumbs(thumbsUrls) {
                 if (targetObject3D.position.x === 0 || targetObject3D.material.opacity === 0) {
                     return;
                 }
-                stopThumbs();
+                stopThumbs(targetObject3D.position.x);
                 animateThumbs(targetObject3D.position.x);
             });
             evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
@@ -168,34 +177,34 @@ let loadingState = loadThumbs([
     "./img/thumb6.jpg",
     "./img/thumb7.jpg",
     "./img/thumb8.jpg",
-    "./img/thumb9.jpg",
-    "./img/thumb10.jpg",
-    "./img/thumb11.jpg",
-    "./img/thumb12.jpg",
-    "./img/thumb1.jpg",
-    "./img/thumb2.jpg",
-    "./img/thumb3.jpg",
-    "./img/thumb4.jpg",
-    "./img/thumb5.jpg",
-    "./img/thumb6.jpg",
-    "./img/thumb7.jpg",
-    "./img/thumb8.jpg",
-    "./img/thumb9.jpg",
-    "./img/thumb10.jpg",
-    "./img/thumb11.jpg",
-    "./img/thumb12.jpg",
-    "./img/thumb1.jpg",
-    "./img/thumb2.jpg",
-    "./img/thumb3.jpg",
-    "./img/thumb4.jpg",
-    "./img/thumb5.jpg",
-    "./img/thumb6.jpg",
-    "./img/thumb7.jpg",
-    "./img/thumb8.jpg",
-    "./img/thumb9.jpg",
-    "./img/thumb10.jpg",
-    "./img/thumb11.jpg",
-    "./img/thumb12.jpg"
+    // "./img/thumb9.jpg",
+    // "./img/thumb10.jpg",
+    // "./img/thumb11.jpg",
+    // "./img/thumb12.jpg",
+    // "./img/thumb1.jpg",
+    // "./img/thumb2.jpg",
+    // "./img/thumb3.jpg",
+    // "./img/thumb4.jpg",
+    // "./img/thumb5.jpg",
+    // "./img/thumb6.jpg",
+    // "./img/thumb7.jpg",
+    // "./img/thumb8.jpg",
+    // "./img/thumb9.jpg",
+    // "./img/thumb10.jpg",
+    // "./img/thumb11.jpg",
+    // "./img/thumb12.jpg",
+    // "./img/thumb1.jpg",
+    // "./img/thumb2.jpg",
+    // "./img/thumb3.jpg",
+    // "./img/thumb4.jpg",
+    // "./img/thumb5.jpg",
+    // "./img/thumb6.jpg",
+    // "./img/thumb7.jpg",
+    // "./img/thumb8.jpg",
+    // "./img/thumb9.jpg",
+    // "./img/thumb10.jpg",
+    // "./img/thumb11.jpg",
+    // "./img/thumb12.jpg"
 ]);
 
 function createThumbs(loadingState) {
