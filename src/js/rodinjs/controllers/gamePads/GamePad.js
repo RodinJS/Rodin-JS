@@ -482,7 +482,7 @@ export class GamePad extends THREE.Object3D {
         }
     }
 
-    set touchDown (value) {
+    set touchUp (value) {
         throw new ErrorProtectedFieldChange('touchUp');
     }
 

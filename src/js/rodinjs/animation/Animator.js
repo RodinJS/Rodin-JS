@@ -1,3 +1,4 @@
+import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import {Animation} from './Animation.js';
 import {ErrorParameterTypeDontMatch} from '../error/CustomErrors.js';
 import {Set} from '../utils/Set.js';
@@ -50,11 +51,16 @@ export class Animator {
     add () {
         for (let i = 0; i < arguments.length; i++) {
             let animation = arguments[i];
-            if (!( animation instanceof Animation)) {
-                throw new ErrorParameterTypeDontMatch('animation', 'Animation');
-            }
+            // todo: mardavari lucel es harc@
+            // if (!( animation instanceof Animation) && animation.constructor !== THREE.AnimationAction) {
+            //     throw new ErrorParameterTypeDontMatch('animation', 'Animation or THREE.AnimationAction');
+            // }
 
-            this.clips.push(animation.copy().setSculpt(this.sculpt));
+            if(animation instanceof Animation) {
+                this.clips.push(animation.copy().setSculpt(this.sculpt));
+            } else {
+                this.clips.push(animation);
+            }
         }
     }
 
@@ -98,7 +104,8 @@ export class Animator {
             return false;
         }
 
-        return clip.start(forceStart);
+        console.log(clip);
+        clip.play(0);
     }
 
     /**

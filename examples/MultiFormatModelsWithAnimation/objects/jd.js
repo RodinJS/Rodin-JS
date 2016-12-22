@@ -6,7 +6,6 @@ import {EVENT_NAMES} from '../../../_build/js/rodinjs/constants/constants.js';
 import {Time} from '../../../_build/js/rodinjs/time/Time.js';
 import {Text} from '../../../_build/js/rodinjs/sculpt/elements/Text.js';
 
-const time = Time.getInstance();
 let scene = SceneManager.get();
 
 // export jd group
@@ -17,17 +16,33 @@ jdObject.on(EVENT_NAMES.READY, () => {
     jdObject.object3D.rotation.y = 3 * Math.PI / 5;
     jdGroup.object3D.add(jdObject.object3D);
     jdObject.object3D.scale.set(.5, .5, .5);
+
+    const animations = jdObject.animator.getClips();
+
+    for (let i = 0; i < animations.length; i++) {
+        const animation = animations[i];
+        const button = new Text({ text: `${animation.name}`, fontSize: .4, color: 0xffffff });
+        button.on(EVENT_NAMES.READY, () => {
+            button.object3D.rotation.y = Math.PI / 4 + Math.PI / 2;
+            button.object3D.position.y = 5 - i * .5;
+            jdGroup.object3D.add(button.object3D);
+            button.raycastable = true;
+        });
+
+        button.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+            if (!jdObject.animator.isPlaying()) {
+                jdObject.animator.start(animation.name);
+            } else if(jdObject.animator.isPlaying(animation.name)) {
+                jdObject.animator.stop(animation.name);
+            }
+        });
+    }
 });
 
-jdObject.on(EVENT_NAMES.UPDATE, () => {
-    // jdObject.object3D.rotation.y += time.deltaTime() * 0.0001;
-});
-
-const text = new Text({text: 'jd', fontSize: 1, color: 0xffffff});
-
+const text = new Text({ text: 'jd', fontSize: 1, color: 0xffffff });
 text.on(EVENT_NAMES.READY, () => {
     text.object3D.rotation.y = Math.PI / 4 + Math.PI / 2;
-    text.object3D.position.y = 4;
+    text.object3D.position.y = 6;
     jdGroup.object3D.add(text.object3D);
 });
 
