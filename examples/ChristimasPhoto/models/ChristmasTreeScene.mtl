@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 21.12.2016 14:44:40
+# File Created: 22.12.2016 11:19:13
 
 newmtl Material__17
 	Ns 0.0000
@@ -37,7 +37,7 @@ newmtl Material__14
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 
-newmtl Material__27
+newmtl PhotoMaterial_04
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -51,7 +51,7 @@ newmtl Material__27
 	map_Ka textures\6.jpg
 	map_Kd textures\6.jpg
 
-newmtl Material__26
+newmtl PhotoMaterial_03
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -65,7 +65,7 @@ newmtl Material__26
 	map_Ka textures\5.jpg
 	map_Kd textures\5.jpg
 
-newmtl Material__25
+newmtl PhotoMaterial_02
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -79,7 +79,7 @@ newmtl Material__25
 	map_Ka textures\2.jpg
 	map_Kd textures\2.jpg
 
-newmtl Material__24
+newmtl PhotoMaterial_01
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -93,7 +93,7 @@ newmtl Material__24
 	map_Ka textures\1.jpg
 	map_Kd textures\1.jpg
 
-newmtl Material__28
+newmtl PhotoMaterial_05
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -166,3 +166,17 @@ newmtl Material__16
 	Kd 0.0000 0.1569 0.0902
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
+
+newmtl PhotoMaterial_06
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 1.0000 1.0000 1.0000
+	Kd 1.0000 1.0000 1.0000
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka textures\10.jpg
+	map_Kd textures\10.jpg
