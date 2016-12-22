@@ -174,7 +174,7 @@ export class Sculpt {
         let inverseParentMatrix = new THREE.Matrix4();
         let newGlobalMatrix = matrix.clone();
 
-        inverseParentMatrix.getInverse(this.object3D.matrixWorld);
+        inverseParentMatrix.getInverse(this.object3D.parent.matrixWorld);
         newGlobalMatrix.multiplyMatrices(inverseParentMatrix, newGlobalMatrix);
 
         this.object3D.matrixAutoUpdate = false;

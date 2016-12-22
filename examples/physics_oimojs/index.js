@@ -107,20 +107,24 @@ let material = new THREE.MeshStandardMaterial({
     transparent: true,
     side: THREE.DoubleSide
 });
-let ground = new THREE.Mesh(geometry, material);
-ground.rotation.x = -Math.PI / 2;
-ground.position.set(0, 0, 5);
-ground.receiveShadow = true;
 
-scene.add(ground);
-// add physic
-let groundRigitBody = new RigidBody({
-    owner: ground,
-    mass: 0,
-    type: "plane",
-    move: false
+let ground = new THREEObject(new THREE.Mesh(geometry, material));
+ground.on('ready', () => {
+    ground.object3D.rotation.x = -Math.PI / 2;
+    ground.object3D.position.set(0, 0, 5);
+    ground.object3D.receiveShadow = true;
+    scene.add(ground.object3D);
+
+    // add physic
+    let groundRigitBody = new RigidBody({
+        owner: ground.object3D,
+        mass: 0,
+        type: "plane",
+        move: false
+    });
+    groundRigitBody.name = "ground";
 });
-groundRigitBody.name = "ground";
+
 
 /// axis object XYZ ///
 /*let geometryX = new THREE.BoxGeometry(2, 0.01, 0.01);
@@ -177,7 +181,7 @@ let startPhysics = false;
 setTimeout(()=>{startPhysics = true}, 5000);
 
 // add raycastable objects to scene
-for (let i = 0; i < 500; i++) {
+for (let i = 0; i < 10; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -203,7 +207,6 @@ for (let i = 0; i < 500; i++) {
         group.add(obj.object3D);
         RODIN.Raycastables.push(obj.object3D);
         obj.object3D.initialParent = obj.object3D.parent;
-
         // add physic
         let objectRigitBody = new RigidBody({
             owner: obj.object3D,
