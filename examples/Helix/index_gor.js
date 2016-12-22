@@ -22,6 +22,7 @@ animations.hover.duration(200);
 animations.hoverOut.duration(200);
 
 let scene = SceneManager.get();
+scene.setCameraProperty('fov', 70);
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
@@ -47,7 +48,7 @@ helix.concentrate = function (center) {
 };
 
 helix.on('ready', () => {
-    helix.object3D.position.z = -1;
+    helix.object3D.position.z = -2;
     scene.add(helix.object3D);
     helix.concentrate(0);
 });
@@ -68,6 +69,7 @@ class HelixThumb extends Element {
         super(params);
 
         this.on('ready', () => {
+            this.forceHover = true;
             this.object3D.position.y = scene.controls.userHeight;
             this.raycastable = true;
             helix.object3D.add(this.object3D);
@@ -84,17 +86,21 @@ class HelixThumb extends Element {
             this.object3D.position.x = 2 * alpha;
             this.object3D.position.z = -Math.abs(alpha);
             this.object3D.rotation.y = -Math.PI / 2 * alpha;
+            this.object3D.rotation.x = 0;
             this.currentAlpha = currentAlpha;
+
+            if (this.uv) {
+                this.object3D.rotation.y += (this.uv.x - 0.5) / 2;
+                this.object3D.rotation.x += 0.5 - this.uv.y;
+            }
         });
 
-        this.on(EVENT_NAMES.CONTROLLER_HOVER, () => {
-            this.animator.stop('hoverOut', false);
-            this.animator.start('hover');
+        this.on(EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
+            this.uv = evt.uv;
         });
 
         this.on(EVENT_NAMES.CONTROLLER_HOVER_OUT, () => {
-            this.animator.stop('hover', false);
-            this.animator.start('hoverOut');
+            delete this.uv;
         });
 
         this.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
