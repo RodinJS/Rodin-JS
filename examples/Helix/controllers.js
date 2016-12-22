@@ -5,33 +5,37 @@ import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
 import {OculusController} from '../../_build/js/rodinjs/controllers/OculusController.js';
 
-let scene = SceneManager.get();
-SceneManager.addController(new OculusController());
+export function initControllers() {
+    let scene = SceneManager.get();
+    SceneManager.addController(new OculusController());
 
-let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, scene.camera, 2);
-//controllerL.standingMatrix = controls.getStandingMatrix();
+    let controls = scene.controls;
 
-
-SceneManager.addController(controllerL);
-scene.add(controllerL);
-
-let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, scene.camera, 3);
-//controllerR.standingMatrix = controls.getStandingMatrix();
+    let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, scene.camera, 2);
+    controllerL.standingMatrix = controls.getStandingMatrix();
 
 
-SceneManager.addController(controllerR);
-scene.add(controllerR);
+    SceneManager.addController(controllerL);
+    scene.add(controllerL);
 
-let loader = new THREE.OBJLoader();
-loader.setPath('./models/');
-loader.load('vr_controller_vive_1_5.obj', function (object) {
+    let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, scene.camera, 3);
+    controllerR.standingMatrix = controls.getStandingMatrix();
 
-    let loader = new THREE.TextureLoader();
+
+    SceneManager.addController(controllerR);
+    scene.add(controllerR);
+
+    let loader = new THREE.OBJLoader();
     loader.setPath('./models/');
+    loader.load('vr_controller_vive_1_5.obj', function (object) {
 
-    object.children[0].material.map = loader.load('./onepointfive_texture.png');
-    object.children[0].material.specularMap = loader.load('./onepointfive_spec.png');
+        let loader = new THREE.TextureLoader();
+        loader.setPath('./models/');
 
-    controllerL.add(object.clone());
-    controllerR.add(object.clone());
-});
+        object.children[0].material.map = loader.load('./onepointfive_texture.png');
+        object.children[0].material.specularMap = loader.load('./onepointfive_spec.png');
+
+        controllerL.add(object.clone());
+        controllerR.add(object.clone());
+    });
+}
