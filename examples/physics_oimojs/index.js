@@ -53,8 +53,8 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
 raycaster = new RODIN.Raycaster(scene);
 
 /////////// physics ////////////////////
-scene.physics = RodinPhysics.getInstance("oimo");
-//scene.physics = RodinPhysics.getInstance("cannon");
+//scene.physics = RodinPhysics.getInstance("oimo");
+scene.physics = RodinPhysics.getInstance("cannon");
 
 //Setting up world
 scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
@@ -94,13 +94,13 @@ ground.on('ready', () => {
 let mass = 0.2;
 
 let group = new THREE.Group();
-group.position.set(0, 3, -5);
-group.rotation.x = Math.PI/3;
+group.position.set(0, 5, 0);
+//group.rotation.x = Math.PI/3;
 scene.add(group);
 
 let geometries = [
     new THREE.BoxGeometry(0.2, 0.5, 0.2),
-    new THREE.SphereGeometry(0.2, 64),
+    //new THREE.SphereGeometry(0.2, 64),
     //new THREE.ConeGeometry(0.2, 0.2, 64),
     //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
     //new THREE.IcosahedronGeometry(0.2, 1),
@@ -109,7 +109,7 @@ let geometries = [
 ];
 
 // add raycastable objects to scene
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 1; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -118,12 +118,18 @@ for (let i = 0; i < 50; i++) {
     });
 
     let object = new THREE.Mesh(geometry, material);
-    object.position.x = (Math.random() - 0.5) * 4;
-    object.position.y = (Math.random() - 0.5) * 3;
-    object.position.z = (Math.random() - 0.5) * 4;
-    object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
-    object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
-    object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
+    object.position.x = 0;
+    object.position.y = 0;
+    object.position.z = -5;
+    object.rotation.x = Math.PI;
+    object.rotation.y = Math.PI;
+    object.rotation.z = Math.PI;
+    // object.position.x = (Math.random() - 0.5) * 4;
+    // object.position.y = (Math.random() - 0.5) * 3+3;
+    // object.position.z = (Math.random() - 0.5) * 4;
+    // object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
+    // object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
+    // object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
     object.scale.set(1, 1, 1);
 
     object.castShadow = true;
@@ -303,5 +309,5 @@ for (let i = 0; i < 50; i++) {
  */
 scene.preRender( () => {
     // Update scene's objects physics.
-    scene.physics.updateWorldPhysics(RODIN.Time.deltaTime());
+    scene.physics.updateWorldPhysics(/*RODIN.Time.deltaTime()*/);
 });

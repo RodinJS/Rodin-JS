@@ -109,9 +109,9 @@ export class RodinPhysics {
         }
 
         if (this.physicsEngine === 'oimo') {
-
             rigidBody.body = this.world.add(rigidBody.body);
         }
+
         this.rigidBodies.push(rigidBody);
     }
 
@@ -152,41 +152,42 @@ export class RodinPhysics {
             this.world.step(this.fixedTimeStep, dt, this.maxSubSteps);
         }
         let i = this.rigidBodies.length;
-        /*if (this.physicsEngine === 'cannon') {
-         //if (this.world.numObjects() > 0) {
-         while (i--) {
-         this.rigidBodies[i].owner.position.set(
-         this.rigidBodies[i].body.position.x,
-         this.rigidBodies[i].body.position.y,
-         this.rigidBodies[i].body.position.z
-         );
-         let newRotation = new CANNON.Quaternion();
-         this.rigidBodies[i].body.quaternion.mult(RigidBody.threeToCannonAxis.inverse(), newRotation);
-         this.rigidBodies[i].owner.quaternion.set(
-         newRotation.x,
-         newRotation.y,
-         newRotation.z,
-         newRotation.w
-         );
-         }
-         //}
-         }*/
-        //if (this.physicsEngine === 'oimo') {
-        while (i--) {
-            //if (!this.rigidBodies[i].sleeping) {
+        if (this.physicsEngine === 'cannon') {
 
-            let newGlobalMatrix = new THREE.Matrix4();
-            newGlobalMatrix.compose(
-                PhysicsUtils.oimoToThree(this.rigidBodies[i].body.position),
-                PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()),
-                //rot,
-                //todo parent scale
-                this.rigidBodies[i].owner.scale);
-
-
-            this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
+            //if (this.world.numObjects() > 0) {
+            while (i--) {
+                this.rigidBodies[i].owner.position.set(
+                    this.rigidBodies[i].body.position.x,
+                    this.rigidBodies[i].body.position.y,
+                    this.rigidBodies[i].body.position.z
+                );
+                let newRotation = new CANNON.Quaternion();
+                this.rigidBodies[i].body.quaternion.mult(RigidBody.threeToCannonAxis.inverse(), newRotation);
+                this.rigidBodies[i].owner.quaternion.set(
+                    newRotation.x,
+                    newRotation.y,
+                    newRotation.z,
+                    newRotation.w
+                );
+            //}
+            }
         }
-        //}
+        if (this.physicsEngine === 'oimo') {
+            while (i--) {
+                //if (!this.rigidBodies[i].sleeping) {
+
+                let newGlobalMatrix = new THREE.Matrix4();
+                newGlobalMatrix.compose(
+                    PhysicsUtils.oimoToThree(this.rigidBodies[i].body.position),
+                    PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()),
+                    //rot,
+                    //todo parent scale
+                    this.rigidBodies[i].owner.scale);
+
+
+                this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
+            }
+        }
         this.lastTime = timestamp;
     }
 }
