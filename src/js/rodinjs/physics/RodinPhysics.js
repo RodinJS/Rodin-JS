@@ -183,6 +183,7 @@ export class RodinPhysics {
                 //todo parent scale
                 this.rigidBodies[i].owner.scale);
 
+
             this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
         }
         //}

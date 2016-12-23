@@ -6,54 +6,23 @@ import {THREEObject} from '../../_build/js/rodinjs/sculpt/THREEObject.js';
 import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
 import {RigidBody} from '../../_build/js/rodinjs/physics/RigidBody.js';
 import {RodinPhysics} from '../../_build/js/rodinjs/physics/RodinPhysics.js';
-import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
 let scene = SceneManager.get();
+scene.scene.background = new THREE.Color(0xb5b5b5);
+
 let camera = scene.camera;
 let controls = scene.controls;
-let renderer = scene.renderer;
-let originalScene = scene.scene;
 
-scene.scene.background = new THREE.Color(0x808080);
+/// Add light
+let light1 = new THREE.DirectionalLight(0xcccccc, 0.7);
+light1.position.set(2, 3, 2);
+scene.add(light1);
 
-/*
- var n = navigator.userAgent;
- if (n.match(/Android/i) || n.match(/webOS/i) || n.match(/iPhone/i) || n.match(/iPad/i) || n.match(/iPod/i) || n.match(/BlackBerry/i) || n.match(/Windows Phone/i)){ isMobile = true;  antialias = false; document.getElementById("MaxNumber").value = 200; }
+scene.add(new THREE.AmbientLight(0xaaaaaa));
 
- var materialType = 'MeshBasicMaterial';
-
- if(!isMobile){
- scene.add( new THREE.AmbientLight( 0x3D4143 ) );
- light = new THREE.DirectionalLight( 0xffffff , 1.4);
- light.position.set( 300, 1000, 500 );
- light.target.position.set( 0, 0, 0 );
- light.castShadow = true;
- light.shadowCameraNear = 500;
- light.shadowCameraFar = 1600;
- light.shadowCameraFov = 70;
- light.shadowBias = 0.0001;
- light.shadowDarkness = 0.7;
- //light.shadowCameraVisible = true;
- light.shadowMapWidth = light.shadowMapHeight = 1024;
- scene.add( light );
-
- materialType = 'MeshPhongMaterial';
-
- renderer.shadowMap.enabled = true;
- renderer.shadowMap.type = THREE.PCFShadowMap;//THREE.BasicShadowMap;
- }*/
-
-scene.add(new THREE.HemisphereLight(0x808080, 0x606060));
-
-let light = new THREE.DirectionalLight(0xffffff);
-light.position.set(0, 6, 0);
-light.castShadow = true;
-light.shadow.camera.top = 10;
-light.shadow.camera.bottom = -10;
-light.shadow.camera.right = 4;
-light.shadow.camera.left = -4;
-light.shadow.mapSize.set(4096, 4096);
-scene.add(light);
+let light2 = new THREE.DirectionalLight(0xb5b5b5, 0.7);
+light2.position.set(-3, -3, -3);
+scene.add(light2);
 
 // objects raycasting
 let raycaster;
@@ -84,7 +53,6 @@ loader.load('vr_controller_vive_1_5.obj', function (object) {
 raycaster = new RODIN.Raycaster(scene);
 
 /////////// physics ////////////////////
-//RodinPhysics.PhysicsEngine ='oimo';
 scene.physics = RodinPhysics.getInstance("oimo");
 //scene.physics = RodinPhysics.getInstance("cannon");
 
@@ -93,12 +61,10 @@ scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo che
 
 ///////////////// creating floor ///////////////////////
 let floorWidth = 4;
-let floorHeight = 0.1;
 let floorDepth = 4;
 
 // todo distinguish ground from plane
 let geometry = new THREE.PlaneGeometry(floorWidth, floorDepth);
-//let geometry = new THREE.BoxGeometry(floorWidth, floorHeight, floorDepth);
 let material = new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
     roughness: 1.0,
@@ -124,40 +90,6 @@ ground.on('ready', () => {
     groundRigitBody.name = "ground";
 });
 
-/// axis object XYZ ///
-/*let geometryX = new THREE.BoxGeometry(2, 0.01, 0.01);
- let materialX = new THREE.MeshStandardMaterial({
- color: 0x110000,
- roughness: 1.0,
- metalness: 0.2
- });
- let x = new THREE.Mesh(geometryX, materialX);
- x.position.set(-6, 0, 0);
- x.receiveShadow = true;
- scene.add(x);
-
- let geometryY = new THREE.BoxGeometry(0.01, 2, 0.01);
- let materialY = new THREE.MeshStandardMaterial({
- color: 0x001100,
- roughness: 1.0,
- metalness: 0.2
- });
- let y = new THREE.Mesh(geometryY, materialY);
- y.position.set(-7, 1, 0);
- y.receiveShadow = true;
- scene.add(y);
-
- let geometryZ = new THREE.BoxGeometry(0.01, 0.01, 2);
- let materialZ = new THREE.MeshStandardMaterial({
- color: 0x000011,
- roughness: 1.0,
- metalness: 0.2
- });
- let z = new THREE.Mesh(geometryZ, materialZ);
- z.position.set(-7, 0, -1);
- z.receiveShadow = true;
- scene.add(z);*/
-
 ///////////////// creating object ///////////////////////
 let mass = 0.2;
 
@@ -176,9 +108,8 @@ let geometries = [
     //new THREE.TorusKnotGeometry(0.2, 0.05, 30, 16)
 ];
 
-
 // add raycastable objects to scene
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 50; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -187,9 +118,9 @@ for (let i = 0; i < 20; i++) {
     });
 
     let object = new THREE.Mesh(geometry, material);
-    object.position.x = (Math.random() - 0.5) * 3;
+    object.position.x = (Math.random() - 0.5) * 4;
     object.position.y = (Math.random() - 0.5) * 3;
-    object.position.z = (Math.random() - 0.5) * 3;
+    object.position.z = (Math.random() - 0.5) * 4;
     object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
     object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
     object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;

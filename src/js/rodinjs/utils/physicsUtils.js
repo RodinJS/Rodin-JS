@@ -12,15 +12,16 @@ export function oimoToThree(a) {
     switch (a.constructor) {
         case (new OIMO.Vec3()).constructor:
             return new THREE.Vector3(a.x, a.y, a.z);
-
         case (new Float32Array).constructor:
             let res;
+
             if (a.length === 16)
                 res = new THREE.Matrix4();
             else if (a.length === 9)
                 res = new THREE.Matrix3();
             else
                 return undefined;
+
             res.fromArray(a);
             return res;
 
