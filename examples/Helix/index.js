@@ -8,8 +8,11 @@ import {ANIMATION_TYPES} from '../../_build/js/rodinjs/constants/constants.js';
 import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 import {EVENT_NAMES} from '../../_build/js/rodinjs/constants/constants.js';
 import {initControllers} from './controllers_c.js';
+import {TIME} from '../../_build/js/rodinjs/time/Time.js';
 
+//let timeInstance = Time.getInstance();
 let buttons = MouseGamePad.getInstance().buttons;
+let timeState = {now: 0};
 
 const animations = {
     hover: new Animation('hover', {
@@ -19,12 +22,16 @@ const animations = {
         scale: { x: 1, y: 1, z: 1 }
     })
 };
+
 animations.hover.duration(200);
 animations.hoverOut.duration(200);
 
 let scene = SceneManager.get();
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
+
+let mouseStart = new THREE.Vector2();
+let mouseDiff = new THREE.Vector2();
 
 mouseController.onValueChange = function (keyCode) {
     const value = buttons[keyCode - 1].value;
@@ -57,6 +64,7 @@ helix.on('ready', () => {
     helix.concentrate(0);
 });
 
+
 class HelixThumb extends Element {
     constructor (thumbParams) {
         let params = {
@@ -84,6 +92,13 @@ class HelixThumb extends Element {
 
         this.on('update', () => {
             if (!this.hasOwnProperty('alpha')) return;
+
+            if (timeState.now) {
+                timeState.time = RODIN.Time.now() - timeState.now;
+            }
+
+            mouseDiff.set(mouseController.axes[0] - mouseStart.x, mouseController.axes[1] - mouseStart.y);
+
             let currentAlpha = this.currentAlpha || 0;
             currentAlpha = currentAlpha + (this.alpha - currentAlpha) / RODIN.Time.deltaTime();
             const alpha = Math.max(-1, Math.min(currentAlpha, 1));
@@ -103,7 +118,6 @@ class HelixThumb extends Element {
                 this.currentUV = currentUV;
             }
         });
-
         this.on(EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
             this.uv = evt.uv;
         });
@@ -113,8 +127,10 @@ class HelixThumb extends Element {
         });
 
         this.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+            mouseStart.set(mouseController.axes[0], mouseController.axes[1]);
             this.hasOwnProperty("index") && helix.concentrate(this.index);
-        })
+            timeState.now = RODIN.Time.now();
+        });
     }
 }
 
