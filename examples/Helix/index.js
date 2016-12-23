@@ -15,6 +15,7 @@ let mouseStart = new THREE.Vector2();
 let mouseDiff = new THREE.Vector2();
 let timeState = {now: 0};
 
+
 const animations = {
     hover: new Animation('hover', {
         scale: { x: 1.1, y: 1.1, z: 1.1 }
@@ -23,6 +24,7 @@ const animations = {
         scale: { x: 1, y: 1, z: 1 }
     })
 };
+
 animations.hover.duration(200);
 animations.hoverOut.duration(200);
 
