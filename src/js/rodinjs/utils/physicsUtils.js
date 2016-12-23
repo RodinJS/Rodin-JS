@@ -8,28 +8,25 @@ import '../../vendor/cannon/cannon.js';
  * @return { THREE.Vector3, THREE.Quaternion }
  **/
 export function oimoToThree(a) {
+    //console.log("a", a);
     switch (a.constructor) {
         case (new OIMO.Vec3()).constructor:
             return new THREE.Vector3(a.x, a.y, a.z);
-        //case (new OIMO.Mat44()).constructor:
-        //    return new THREE.Vector4(a.x, a.y, a.z, a.w);
-        //case (new Array()).constructor:
+
         case (new Float32Array).constructor:
             let res;
-
             if (a.length === 16)
                 res = new THREE.Matrix4();
             else if (a.length === 9)
                 res = new THREE.Matrix3();
             else
                 return undefined;
-
             res.fromArray(a);
             return res;
 
-        case (new OIMO.Mat33()).constructor:
-
+        case (new OIMO.Euler()).constructor:
             return new THREE.Vector3(a.x, a.y, a.z);
+
         case (new OIMO.Quaternion()).constructor:
             return new THREE.Quaternion(a.x, a.y, a.z, a.w);
     }

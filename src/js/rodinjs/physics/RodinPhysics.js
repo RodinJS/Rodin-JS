@@ -5,7 +5,8 @@ import '../../vendor/oimo/oimo.js';
 import {RigidBody} from './RigidBody.js';
 import * as PhysicsUtils from '../utils/physicsUtils.js';
 
-// todo make singleton
+// todo: make singleton
+// todo: check rigidBody initial rotation
 
 export class RodinPhysics {
 
@@ -112,7 +113,6 @@ export class RodinPhysics {
             rigidBody.body = this.world.add(rigidBody.body);
         }
         this.rigidBodies.push(rigidBody);
-        //console.log(this.rigidBodies[0].body.getQuaternion());
     }
 
     /**
@@ -182,14 +182,6 @@ export class RodinPhysics {
                 //rot,
                 //todo parent scale
                 this.rigidBodies[i].owner.scale);
-
-             /*let inverseParentMatrix = new THREE.Matrix4();
-             inverseParentMatrix.getInverse(this.rigidBodies[i].owner.parent.matrixWorld);
-             newGlobalMatrix.multiplyMatrices(inverseParentMatrix, newGlobalMatrix);
-
-             this.rigidBodies[i].owner.matrixAutoUpdate = false;
-             //this.rigidBodies[i].owner.matrixWorldNeedsUpdate = false;
-             this.rigidBodies[i].owner.matrix = newGlobalMatrix;*/
 
             this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
         }
