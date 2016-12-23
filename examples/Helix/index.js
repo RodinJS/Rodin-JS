@@ -24,6 +24,7 @@ animations.hover.duration(200);
 animations.hoverOut.duration(200);
 
 let scene = SceneManager.get();
+scene.setCameraProperty('fov', 70);
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
@@ -54,7 +55,7 @@ helix.addThumb = function (thumb) {
 };
 
 helix.on('ready', () => {
-    helix.object3D.position.z = -1;
+    helix.object3D.position.z = -2;
     helix.object3D.position.y = scene.controls.userHeight;
     scene.add(helix.object3D);
     helix.concentrate(0);
@@ -124,7 +125,7 @@ class HelixThumb extends THREEObject {
             currentAlpha = currentAlpha + (this.alpha - currentAlpha) / RODIN.Time.deltaTime();
             const alpha = Math.max(-1, Math.min(currentAlpha, 1));
             this.object3D.position.x = 2.5 * alpha; //Math.sign(alpha) * Math.pow(Math.abs(alpha), 0.9);
-            this.object3D.position.z = - 1.2 * Math.abs(alpha);
+            this.object3D.position.z = - 1.3 * Math.abs(alpha);
             this.object3D.rotation.y = -Math.PI / 2 * alpha;
             this.object3D.rotation.x = 0;
             this.currentAlpha = currentAlpha;
