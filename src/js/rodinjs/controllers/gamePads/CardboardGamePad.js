@@ -35,12 +35,12 @@ export class CardboardGamePad {
          */
         this.connected = true;
         /**
-         * A bulk id, not used at the moment.
+         * Bulk id, not used at the moment.
          * @type {number}
          */
         this.displayId = 0;
         /**
-         *Hhand (left/right), not used at the moment.
+         * Hand (left/right), not used at the moment.
          * @type {string}
          */
         this.hand = "";

@@ -18,11 +18,11 @@ const containsIntersect = function (interArray, inter) {
 };
 /**
  * General GamePad class, custom controllers extend this class.
- * @param {string} navigatorGamePadId Required
- * @param {string} hand
- * @param {THREE.Scene} scene
- * @param {THREE.PerspectiveCamera} camera
- * @param {number} raycastLayers
+ * @param {string} [navigatorGamePadId] - custom ID for the gamepad instance.
+ * @param {string} [hand] - gamepad holding hand (left/right).
+ * @param {THREE.Scene} [scene] - the scene where the gamepad will be used.
+ * @param {THREE.PerspectiveCamera} [camera] - current camera... what else ?
+ * @param {number} [raycastLayers] - number of objects to be simultaneously raycasted by the ray.
  */
 export class GamePad extends THREE.Object3D {
 
