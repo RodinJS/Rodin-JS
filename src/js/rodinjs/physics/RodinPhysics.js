@@ -110,9 +110,9 @@ export class RodinPhysics {
         if (this.physicsEngine === 'oimo') {
 
             rigidBody.body = this.world.add(rigidBody.body);
-            console.log(rigidBody.body);
         }
         this.rigidBodies.push(rigidBody);
+        //console.log(this.rigidBodies[0].body.getQuaternion());
     }
 
     /**
@@ -174,14 +174,16 @@ export class RodinPhysics {
         //if (this.physicsEngine === 'oimo') {
         while (i--) {
             //if (!this.rigidBodies[i].sleeping) {
+
             let newGlobalMatrix = new THREE.Matrix4();
             newGlobalMatrix.compose(
                 PhysicsUtils.oimoToThree(this.rigidBodies[i].body.position),
                 PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()),
+                //rot,
                 //todo parent scale
                 this.rigidBodies[i].owner.scale);
 
-            /*let inverseParentMatrix = new THREE.Matrix4();
+             /*let inverseParentMatrix = new THREE.Matrix4();
              inverseParentMatrix.getInverse(this.rigidBodies[i].owner.parent.matrixWorld);
              newGlobalMatrix.multiplyMatrices(inverseParentMatrix, newGlobalMatrix);
 
@@ -190,7 +192,6 @@ export class RodinPhysics {
              this.rigidBodies[i].owner.matrix = newGlobalMatrix;*/
 
             this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
-            //}
         }
         //}
         this.lastTime = timestamp;

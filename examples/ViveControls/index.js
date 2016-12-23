@@ -12,6 +12,8 @@ import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 let scene = SceneManager.get();
 scene.scene.background = new THREE.Color(0xb5b5b5);
 scene.setCameraProperty("far", 10000);
+let camera = scene.camera;
+
 
 let controls = scene.controls;
 
@@ -19,7 +21,7 @@ let renderer = scene.renderer;
 renderer.setPixelRatio(window.devicePixelRatio);
 
 
-let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
+let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, camera, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
 controllerL.onKeyDown = controllerKeyDown;
@@ -30,7 +32,7 @@ controllerL.onTouchDown = controllerTouchDown;
 SceneManager.addController(controllerL);
 scene.add(controllerL);
 
-let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
+let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, camera, 3);
 controllerR.standingMatrix = controls.getStandingMatrix();
 
 controllerR.onKeyDown = controllerKeyDown;

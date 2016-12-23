@@ -100,7 +100,8 @@ let floorDepth = 4;
 let geometry = new THREE.PlaneGeometry(floorWidth, floorDepth);
 //let geometry = new THREE.BoxGeometry(floorWidth, floorHeight, floorDepth);
 let material = new THREE.MeshStandardMaterial({
-    color: 0xeeeeee,
+    //color: 0xeeeeee,
+    map: new THREE.TextureLoader().load( "object/arrow.jpg" ),
     roughness: 1.0,
     metalness: 0.0,
     opacity: 0.8,
@@ -111,9 +112,12 @@ let material = new THREE.MeshStandardMaterial({
 let ground = new THREEObject(new THREE.Mesh(geometry, material));
 ground.on('ready', () => {
     ground.object3D.rotation.x = -Math.PI / 2;
-    ground.object3D.position.set(0, 0, 5);
+    ground.object3D.rotation.y = -Math.PI / 3;
+    ground.object3D.rotation.z = -Math.PI / 4;
+    ground.object3D.position.set(0, 0, -5);
     ground.object3D.receiveShadow = true;
     scene.add(ground.object3D);
+    console.log(ground.object3D.getWorldQuaternion());
 
     // add physic
     let groundRigitBody = new RigidBody({
@@ -164,39 +168,49 @@ ground.on('ready', () => {
 let mass = 0.2;
 
 let group = new THREE.Group();
-group.position.set(0, 3, 5);
-group.rotation.x = Math.PI/3;
+group.position.set(0, 3, -5);
+//group.rotation.x = Math.PI/3;
 scene.add(group);
 
 let geometries = [
     new THREE.BoxGeometry(0.2, 0.5, 0.2),
-    new THREE.SphereGeometry(0.2, 64),
+    //new THREE.SphereGeometry(0.2, 64),
     //new THREE.ConeGeometry(0.2, 0.2, 64),
     //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
     //new THREE.IcosahedronGeometry(0.2, 1),
     //new THREE.TorusGeometry(0.2, 0.08, 12, 12),
     //new THREE.TorusKnotGeometry(0.2, 0.05, 30, 16)
 ];
-let startPhysics = false;
-setTimeout(()=>{startPhysics = true}, 5000);
+let enablePhysics = false;
+setTimeout(()=>{enablePhysics = true;}, 2000);
+//setTimeout(()=>{console.log(ground.object3D.getWorldQuaternion());}, 2200);
 
 // add raycastable objects to scene
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 0; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
-        color: Math.random() * 0xffffff,
+        map: new THREE.TextureLoader().load( "object/arrow.jpg" ),
+        //color: Math.random() * 0xffffff,
         roughness: 0.7,
         metalness: 0.0
     });
 
     let object = new THREE.Mesh(geometry, material);
-    object.position.x = (Math.random() - 0.5) * 3;
+    /*object.position.x = (Math.random() - 0.5) * 3;
     object.position.y = (Math.random() - 0.5) * 3;
-    object.position.z = (Math.random() - 0.5) * 3;
-    //object.position.set(0, 5, 0);
-    object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
+    object.position.z = (Math.random() - 0.5) * 3;*/
+    object.position.set(0, 3, -5);
+    object.rotation.x = Math.PI/2;
+    object.rotation.y = Math.PI/3;
+    object.rotation.z = Math.PI/3;
+
+
+    setTimeout(()=>{
+        //console.log("__",object.getWorldRotation());
+    }, 2600);
+    /*object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
     object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
-    object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
+    object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;*/
     object.scale.set(1, 1, 1);
 
     object.castShadow = true;
@@ -204,9 +218,10 @@ for (let i = 0; i < 10; i++) {
 
     let obj = new THREEObject(object);
     obj.on('ready', () => {
-        group.add(obj.object3D);
+        scene.add(obj.object3D);
         RODIN.Raycastables.push(obj.object3D);
         obj.object3D.initialParent = obj.object3D.parent;
+
         // add physic
         let objectRigitBody = new RigidBody({
             owner: obj.object3D,
@@ -375,5 +390,5 @@ for (let i = 0; i < 10; i++) {
  */
 scene.preRender( () => {
     // Update scene's objects physics.
-    if(startPhysics) scene.physics.updateWorldPhysics(RODIN.Time.deltaTime());
+    if(enablePhysics) scene.physics.updateWorldPhysics(RODIN.Time.deltaTime());
 });

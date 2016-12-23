@@ -2,6 +2,7 @@ import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 
 import '../../vendor/cannon/cannon.js';
 import '../../vendor/oimo/oimo.js';
+import * as PhysicsUtils from '../utils/physicsUtils.js';
 
 import {RodinPhysics} from './RodinPhysics.js';
 
@@ -57,12 +58,14 @@ export class RigidBody {
             this.body = {
                 type: this.createObjectCollision(this.type),
                 size: this.createObjectCollision.size,
-                pos: [this.owner.getWorldPosition().x * 100,
-                      this.owner.getWorldPosition().y * 100,
-                      this.owner.getWorldPosition().z * 100],
-                rot: [this.owner.getWorldRotation().x * (180 / Math.PI),
-                      this.owner.getWorldRotation().y * (180 / Math.PI),
-                      this.owner.getWorldRotation().z * (180 / Math.PI)],
+                pos: [
+                    this.owner.getWorldPosition().x * 100,
+                    this.owner.getWorldPosition().y * 100,
+                    this.owner.getWorldPosition().z * 100],
+                rot: [
+                    this.owner.getWorldRotation().x * (180 / Math.PI),
+                    this.owner.getWorldRotation().y * (180 / Math.PI),
+                    this.owner.getWorldRotation().z * (180 / Math.PI),],
                 move: this.move,
                 mass: this.mass,
                 world: RodinPhysics.world,
@@ -80,7 +83,7 @@ export class RigidBody {
      */
     createObjectCollision(type) {
         if (type == undefined) {
-            type = "";
+            type = '';
         }
 
         let shape;
@@ -203,6 +206,7 @@ export class RigidBody {
     get name() {
         return this.object.name || "";
     }
+
     set name(n) {
         this.object.name = n;
     }
@@ -211,6 +215,7 @@ export class RigidBody {
         // todo if owner is null
         return this.object.owner;
     }
+
     set owner(o) {
         this.object.owner = o;
     }
@@ -218,6 +223,7 @@ export class RigidBody {
     get type() {
         return this.object.type || this.owner.geometry.type || "";
     }
+
     set type(t) {
         this.object.type = t;
     }
@@ -225,6 +231,7 @@ export class RigidBody {
     get move() {
         return this.object.move;
     }
+
     set move(m) {
         this.object.move = m;
     }
@@ -232,6 +239,7 @@ export class RigidBody {
     get mass() {
         return this.object.mass || 0;
     }
+
     set mass(m) {
         this.object.mass = m;
     }
