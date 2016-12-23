@@ -4,14 +4,15 @@ import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 import {MouseGamePad} from '../../_build/js/rodinjs/controllers/gamePads/MouseGamePad.js';
 import {Element} from '../../_build/js/rodinjs/sculpt/elements/Element.js';
+import {THREEObject} from '../../_build/js/rodinjs/sculpt/THREEObject.js';
 import {ANIMATION_TYPES} from '../../_build/js/rodinjs/constants/constants.js';
 import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 import {EVENT_NAMES} from '../../_build/js/rodinjs/constants/constants.js';
 import {initControllers} from './controllers_c.js';
-import {TIME} from '../../_build/js/rodinjs/time/Time.js';
 
-//let timeInstance = Time.getInstance();
 let buttons = MouseGamePad.getInstance().buttons;
+let mouseStart = new THREE.Vector2();
+let mouseDiff = new THREE.Vector2();
 let timeState = {now: 0};
 
 const animations = {
@@ -22,7 +23,6 @@ const animations = {
         scale: { x: 1, y: 1, z: 1 }
     })
 };
-
 animations.hover.duration(200);
 animations.hoverOut.duration(200);
 
@@ -30,8 +30,9 @@ let scene = SceneManager.get();
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
 
-let mouseStart = new THREE.Vector2();
-let mouseDiff = new THREE.Vector2();
+let dirlight = new THREE.DirectionalLight(0xffffff, 3);
+scene.add(dirlight);
+dirlight.position.set(0, 0, -0.2);
 
 mouseController.onValueChange = function (keyCode) {
     const value = buttons[keyCode - 1].value;
@@ -60,12 +61,12 @@ helix.addThumb = function (thumb) {
 
 helix.on('ready', () => {
     helix.object3D.position.z = -1;
+    helix.object3D.position.y = scene.controls.userHeight;
     scene.add(helix.object3D);
     helix.concentrate(0);
 });
 
-
-class HelixThumb extends Element {
+class HelixThumb extends THREEObject {
     constructor (thumbParams) {
         let params = {
             width: 0.9,
@@ -78,12 +79,51 @@ class HelixThumb extends Element {
                 position: { h: 50, v: 50 }
             }
         };
-        super(params);
+
+        super(new THREE.Object3D());
+
+        this.thumb = new Element(params);
+        this.thumb.on('ready', () => {
+            this.object3D.add(this.thumb.object3D);
+            this.thumb.raycastable = true;
+            this.thumb.forceHover = true;
+        });
+
+        this.thumb.on('update', () => {
+            // timeState.delta = RODIN.Time.now() - timeState.lastTime;
+            // mouseDiff.set(mouseController.axes[0] - mouseStart.x, mouseController.axes[1] - mouseStart.y);
+
+            let currentAlpha = this.currentAlpha || 0;
+            currentAlpha = currentAlpha + (this.alpha - currentAlpha) / RODIN.Time.deltaTime();
+            const alpha = Math.max(-1, Math.min(currentAlpha, 1));
+            this.thumb.object3D.material.opacity = 1 - Math.abs(alpha);
+
+            if (this.uv) {
+                let currentUV = this.currentUV || { x: 0, y: 0 };
+                currentUV.x = currentUV.x + (this.uv.x - currentUV.x) / RODIN.Time.deltaTime();
+                currentUV.y = currentUV.y + (this.uv.y - currentUV.y) / RODIN.Time.deltaTime();
+                this.thumb.object3D.rotation.y = (currentUV.x - 0.5) / 4;
+                this.thumb.object3D.rotation.x = (0.5 - currentUV.y) / 2;
+                this.currentUV = currentUV;
+            }
+        });
+
+        this.thumb.on(EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
+            this.uv = evt.uv;
+        });
+
+        this.thumb.on(EVENT_NAMES.CONTROLLER_HOVER_OUT, () => {
+            this.uv = { x: .5, y: .5 }
+        });
+
+        this.thumb.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+            // mouseStart.set(mouseController.axes[0], mouseController.axes[1]);
+            // timeState.lastTime = RODIN.Time.now();
+
+            this.hasOwnProperty("index") && helix.concentrate(this.index);
+        });
 
         this.on('ready', () => {
-            this.forceHover = true;
-            this.object3D.position.y = scene.controls.userHeight;
-            this.raycastable = true;
             helix.object3D.add(this.object3D);
             this.animator.add(animations.hover);
             this.animator.add(animations.hoverOut);
@@ -92,44 +132,14 @@ class HelixThumb extends Element {
 
         this.on('update', () => {
             if (!this.hasOwnProperty('alpha')) return;
-
-            if (timeState.now) {
-                timeState.time = RODIN.Time.now() - timeState.now;
-            }
-
-            mouseDiff.set(mouseController.axes[0] - mouseStart.x, mouseController.axes[1] - mouseStart.y);
-
             let currentAlpha = this.currentAlpha || 0;
             currentAlpha = currentAlpha + (this.alpha - currentAlpha) / RODIN.Time.deltaTime();
             const alpha = Math.max(-1, Math.min(currentAlpha, 1));
-            this.object3D.material.opacity = 1 - Math.abs(alpha);
             this.object3D.position.x = 2 * alpha;
             this.object3D.position.z = -Math.abs(alpha);
             this.object3D.rotation.y = -Math.PI / 2 * alpha;
             this.object3D.rotation.x = 0;
             this.currentAlpha = currentAlpha;
-
-            if (this.uv) {
-                let currentUV = this.currentUV || { x: 0, y: 0 };
-                currentUV.x = currentUV.x + (this.uv.x - currentUV.x) / RODIN.Time.deltaTime();
-                currentUV.y = currentUV.y + (this.uv.y - currentUV.y) / RODIN.Time.deltaTime();
-                this.object3D.rotation.y += (currentUV.x - 0.5) / 4;
-                this.object3D.rotation.x += (0.5 - currentUV.y) / 2;
-                this.currentUV = currentUV;
-            }
-        });
-        this.on(EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
-            this.uv = evt.uv;
-        });
-
-        this.on(EVENT_NAMES.CONTROLLER_HOVER_OUT, () => {
-            this.uv = { x: .5, y: .5 }
-        });
-
-        this.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
-            mouseStart.set(mouseController.axes[0], mouseController.axes[1]);
-            this.hasOwnProperty("index") && helix.concentrate(this.index);
-            timeState.now = RODIN.Time.now();
         });
     }
 }
