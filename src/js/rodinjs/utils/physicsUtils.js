@@ -48,4 +48,20 @@ export function ThreeToOimo(a) {
     }
 }
 
+/**
+ * Converts oimo datatypes to three datatypes
+ * @param { OIMO.Vec3, OIMO.Quaternion } a
+ * @return { THREE.Vector3, THREE.Quaternion }
+ **/
+export function cannonToThree(a) {
+    //console.log("a", a);
+    switch (a.constructor) {
+        case (new CANNON.Vec3()).constructor:
+            return new THREE.Vector3(a.x, a.y, a.z);
+
+        case (new CANNON.Quaternion()).constructor:
+            return new THREE.Quaternion(a.x, a.y, a.z, a.w);
+    }
+}
+
 export const IdentityScaleVector = new THREE.Vector3(1, 1, 1);

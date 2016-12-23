@@ -35,10 +35,10 @@ export class RigidBody {
 
             // calculate new quaternion for Z-up axis
             let qOBJ = new CANNON.Quaternion(
-                this.owner.quaternion.x,
-                this.owner.quaternion.y,
-                this.owner.quaternion.z,
-                this.owner.quaternion.w);
+                this.owner.getWorldQuaternion().x,
+                this.owner.getWorldQuaternion().y,
+                this.owner.getWorldQuaternion().z,
+                this.owner.getWorldQuaternion().w);
             let qObjXY = new CANNON.Quaternion();
             qOBJ.mult(RigidBody.threeToCannonAxis, qObjXY);
 
@@ -51,9 +51,6 @@ export class RigidBody {
                     this.owner.getWorldPosition().z), // m
                 quaternion: qObjXY // radian
             });
-
-            console.log(this.owner.getWorldPosition());
-            console.log(this.body.position);
 
             this.body.updateMassProperties();
             this.body.addShape(this.createObjectCollision(this.type));

@@ -14,13 +14,13 @@ let camera = scene.camera;
 let controls = scene.controls;
 
 /// Add light
-let light1 = new THREE.DirectionalLight(0xcccccc, 0.7);
+let light1 = new THREE.DirectionalLight(0xcccccc, 0.8);
 light1.position.set(2, 3, 2);
 scene.add(light1);
 
-scene.add(new THREE.AmbientLight(0xaaaaaa));
+scene.add(new THREE.AmbientLight(0xaaaaaa, 0.8));
 
-let light2 = new THREE.DirectionalLight(0xb5b5b5, 0.7);
+let light2 = new THREE.DirectionalLight(0xb5b5b5, 0.8);
 light2.position.set(-3, -3, -3);
 scene.add(light2);
 
@@ -94,22 +94,18 @@ ground.on('ready', () => {
 let mass = 0.2;
 
 let group = new THREE.Group();
-group.position.set(0, 5, 0);
-//group.rotation.x = Math.PI/3;
+group.position.set(0, 3, -5);
+group.rotation.x = Math.PI/2;
+group.rotation.y = Math.PI/4;
 scene.add(group);
 
 let geometries = [
     new THREE.BoxGeometry(0.2, 0.5, 0.2),
-    //new THREE.SphereGeometry(0.2, 64),
-    //new THREE.ConeGeometry(0.2, 0.2, 64),
-    //new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
-    //new THREE.IcosahedronGeometry(0.2, 1),
-    //new THREE.TorusGeometry(0.2, 0.08, 12, 12),
-    //new THREE.TorusKnotGeometry(0.2, 0.05, 30, 16)
+    new THREE.SphereGeometry(0.2, 64),
 ];
 
 // add raycastable objects to scene
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 10; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -118,18 +114,12 @@ for (let i = 0; i < 1; i++) {
     });
 
     let object = new THREE.Mesh(geometry, material);
-    object.position.x = 0;
-    object.position.y = 0;
-    object.position.z = -5;
-    object.rotation.x = Math.PI;
-    object.rotation.y = Math.PI;
-    object.rotation.z = Math.PI;
-    // object.position.x = (Math.random() - 0.5) * 4;
-    // object.position.y = (Math.random() - 0.5) * 3+3;
-    // object.position.z = (Math.random() - 0.5) * 4;
-    // object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
-    // object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
-    // object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
+    object.position.x = (Math.random() - 0.5) * 4;
+    object.position.y = (Math.random() - 0.5) * 3;
+    object.position.z = (Math.random() - 0.5) * 4;
+    object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
+    object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
+    object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
     object.scale.set(1, 1, 1);
 
     object.castShadow = true;
