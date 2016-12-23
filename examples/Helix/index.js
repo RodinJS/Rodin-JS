@@ -11,6 +11,10 @@ import {EVENT_NAMES} from '../../_build/js/rodinjs/constants/constants.js';
 import {initControllers} from './controllers_c.js';
 
 let buttons = MouseGamePad.getInstance().buttons;
+let mouseStart = new THREE.Vector2();
+let mouseDiff = new THREE.Vector2();
+let timeState = {now: 0};
+
 
 const animations = {
     hover: new Animation('hover', {
@@ -20,6 +24,7 @@ const animations = {
         scale: { x: 1, y: 1, z: 1 }
     })
 };
+
 animations.hover.duration(200);
 animations.hoverOut.duration(200);
 
@@ -27,6 +32,10 @@ let scene = SceneManager.get();
 scene.setCameraProperty('fov', 70);
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
+
+let dirlight = new THREE.DirectionalLight(0xffffff, 3);
+scene.add(dirlight);
+dirlight.position.set(0, 0, -0.2);
 
 mouseController.onValueChange = function (keyCode) {
     const value = buttons[keyCode - 1].value;
@@ -85,6 +94,9 @@ class HelixThumb extends THREEObject {
         });
 
         this.thumb.on('update', () => {
+            // timeState.delta = RODIN.Time.now() - timeState.lastTime;
+            // mouseDiff.set(mouseController.axes[0] - mouseStart.x, mouseController.axes[1] - mouseStart.y);
+
             let currentAlpha = this.currentAlpha || 0;
             currentAlpha = currentAlpha + (this.alpha - currentAlpha) / RODIN.Time.deltaTime();
             const alpha = Math.max(-1, Math.min(currentAlpha, 1));
@@ -109,6 +121,9 @@ class HelixThumb extends THREEObject {
         });
 
         this.thumb.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt) => {
+            // mouseStart.set(mouseController.axes[0], mouseController.axes[1]);
+            // timeState.lastTime = RODIN.Time.now();
+
             this.hasOwnProperty("index") && helix.concentrate(this.index);
         });
 
