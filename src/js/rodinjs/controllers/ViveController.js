@@ -32,7 +32,7 @@ export class ViveController extends GamePad {
         );
 
         /**
-         * the length of raycasting ray of controller, the value must be < 0 to maintain correct direction.
+         * The length of raycasting ray of controller, the value must be < 0 to maintain correct direction.
          * @type {number}
          */
         this.targetLineDistance = -50;
@@ -43,8 +43,8 @@ export class ViveController extends GamePad {
         this.add(targetLine);
 
         /**
-         * the raycasting ray Line object of controller (red by default).
-         * @type {THREE.Line}.
+         * The raycasting ray Line object of controller (red by default).
+         * @type {THREE.Line}
          */
         this.reycastingLine = targetLine;
 
@@ -61,7 +61,7 @@ export class ViveController extends GamePad {
     }
 
     /**
-     * custom function to be triggered when controller's pointer ray hovers any raycastable element.
+     * Custom function to be triggered when controller's pointer ray hovers any raycastable element.
      * By default, this function shortens the pointer ray to the length of controller to element distance.
      * @param {Object} intersect - intersected object ({distance, point, face, faceIndex, indices, object}) at the time of event.
      */
@@ -72,7 +72,7 @@ export class ViveController extends GamePad {
     }
 
     /**
-     * custom function to be triggered when controller's pointer ray hovers out of any raycastable element.
+     * Custom function to be triggered when controller's pointer ray hovers out of any raycastable element.
      * By default, this function resets the pointer ray length.
      */
     gamepadHoverOut(){
