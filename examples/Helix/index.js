@@ -54,6 +54,7 @@ helix.concentrate = function (center) {
         thumb.alpha = (i - center) / k;
     }
 };
+
 helix.addThumb = function (thumb) {
     this.thumbs.push(thumb);
     this.concentrate(this.center);
@@ -102,8 +103,8 @@ class HelixThumb extends THREEObject {
                 let currentUV = this.currentUV || { x: 0, y: 0 };
                 currentUV.x = currentUV.x + (this.uv.x - currentUV.x) / RODIN.Time.deltaTime();
                 currentUV.y = currentUV.y + (this.uv.y - currentUV.y) / RODIN.Time.deltaTime();
-                this.thumb.object3D.rotation.y = (currentUV.x - 0.5) / 4;
-                this.thumb.object3D.rotation.x = (0.5 - currentUV.y) / 2;
+                this.thumb.object3D.rotation.y = (currentUV.x - 0.5) / 12;
+                this.thumb.object3D.rotation.x = (0.5 - currentUV.y) / 6;
                 this.currentUV = currentUV;
             }
         });
@@ -135,8 +136,8 @@ class HelixThumb extends THREEObject {
             let currentAlpha = this.currentAlpha || 0;
             currentAlpha = currentAlpha + (this.alpha - currentAlpha) / RODIN.Time.deltaTime();
             const alpha = Math.max(-1, Math.min(currentAlpha, 1));
-            this.object3D.position.x = 2 * alpha;
-            this.object3D.position.z = -Math.abs(alpha);
+            this.object3D.position.x = 2.5 * alpha; //Math.sign(alpha) * Math.pow(Math.abs(alpha), 0.9);
+            this.object3D.position.z = - 1.2 * Math.abs(alpha);
             this.object3D.rotation.y = -Math.PI / 2 * alpha;
             this.object3D.rotation.x = 0;
             this.currentAlpha = currentAlpha;
