@@ -9,7 +9,7 @@ import {MouseController} from '../../_build/js/rodinjs/controllers/MouseControll
 import {RigidBody} from '../../_build/js/rodinjs/physics/RigidBody.js';
 import {RodinPhysics} from '../../_build/js/rodinjs/physics/RodinPhysics.js';
 
-
+let mode = 'oimo';
 let scene = SceneManager.get();
 scene.scene.background = new THREE.Color(0xb5b5b5);
 
@@ -28,7 +28,105 @@ scene.add(new THREE.AmbientLight(0xaaaaaa, 0.8));
 /////////// physics ////////////////////
 let physicsEngines = ["oimo", "cannon"];
 
-scene.physics = RodinPhysics.getInstance(physicsEngines[0]);
+let buttons = [];
+/////
+for (let i = 0; i < physicsEngines.length; i++) {
+    let physicEngineChangeBtn = {};
+    physicEngineChangeBtn.name = physicsEngines[i];
+    physicEngineChangeBtn.width = 0.35;
+    physicEngineChangeBtn.height = 0.35;
+    physicEngineChangeBtn.background = {
+        color: 0x1e1e20,
+        opacity: 0.6
+    };
+    physicEngineChangeBtn.border = {
+        width: 0.01,
+        color: 0xff8800,
+        opacity: 1,
+        radius: 0.4
+    };
+
+    physicEngineChangeBtn.label = {
+        text: physicsEngines[i],
+        fontFamily: "Arial",
+        fontSize: 0.08,
+        color: 0xfbfbfb,
+        opacity: 1,
+        position: {h: 50, v: 50}
+    };
+
+    buttons.push(new Element(physicEngineChangeBtn));
+    buttons[i].on('ready', (evt) => {
+        let object = evt.target.object3D;
+        object.position.set(-0.75 + i * 1.5, 2, -1);
+        object.material.opacity = 0.5;
+
+        evt.target.active = false;
+
+        scene.add(object);
+        RODIN.Raycastables.push(object);
+        evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
+            evt.target.animate({
+                property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
+                to: new THREE.Vector3(1.1, 1.1, 1.1)
+            });
+        });
+        evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt) => {
+            evt.target.animate({
+                property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
+                to: new THREE.Vector3(1, 1, 1)
+            });
+        });
+    });
+}
+
+buttons[0].on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY, () => {
+    if (mode != 'oimo') {
+        location.search = '?mode=' + physicsEngines[0];
+    }
+});
+
+buttons[1].on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY, () => {
+    if (mode != 'cannon') {
+        location.search = '?mode=' + physicsEngines[1];
+    }
+});
+
+function getPhysicsModeFromURL() {
+    let pairs = window.location.search.substring(1).split("&"),
+        obj = {},
+        pair,
+        i;
+
+    for (i in pairs) {
+        if (pairs[i] === "") continue;
+
+        pair = pairs[i].split("=");
+        obj[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+    }
+
+    return obj.mode/*.toLocaleLowerCase()*/;
+}
+
+if (!getPhysicsModeFromURL())
+    window.history.pushState('page2', document.title, window.location.pathname + '?mode=oimo');
+
+mode = getPhysicsModeFromURL();
+
+setTimeout(() => {
+    if (mode === 'oimo') {
+        buttons[0].active = true;
+        buttons[1].active = false;
+        buttons[0].object3D.material.opacity = 1;
+    } else {
+        buttons[1].active = true;
+        buttons[0].active = false;
+        buttons[1].object3D.material.opacity = 1;
+    }
+}, 50);
+
+scene.physics = RodinPhysics.getInstance(getPhysicsModeFromURL());
+
 
 //Setting up world
 scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
@@ -113,87 +211,3 @@ scene.preRender(() => {
     // Update scene's objects physics.
     scene.physics.updateWorldPhysics(RODIN.Time.deltaTime());
 });
-
-let buttons = [];
-/////
-for (let i = 0; i < physicsEngines.length; i++) {
-    let physicEngineChangeBtn = {};
-    physicEngineChangeBtn.name = physicsEngines[i];
-    physicEngineChangeBtn.width = 0.35;
-    physicEngineChangeBtn.height = 0.35;
-    physicEngineChangeBtn.background = {
-        color: 0x1e1e20,
-        opacity: 0.5
-    };
-    physicEngineChangeBtn.border = {
-        width: 0.01,
-        color: 0xff8800,
-        opacity: 1,
-        radius: 0.4
-    };
-
-    physicEngineChangeBtn.label = {
-        text: physicsEngines[i],
-        fontFamily: "Arial",
-        fontSize: 0.08,
-        color: 0xfbfbfb,
-        opacity: 1,
-        position: {h: 50, v: 50}
-    };
-
-    buttons.push(new Element(physicEngineChangeBtn));
-    buttons[i].on('ready', (evt) => {
-        let object = evt.target.object3D;
-        object.position.set(-0.75 + i * 1.5, 2, -1);
-
-        evt.target.active = false;
-
-        scene.add(object);
-        RODIN.Raycastables.push(object);
-        evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
-            evt.target.animate({
-                property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
-                to: new THREE.Vector3(1.1, 1.1, 1.1)
-            });
-        });
-        evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt) => {
-            evt.target.animate({
-                property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
-                to: new THREE.Vector3(1, 1, 1)
-            });
-        });
-    });
-}
-buttons[0].active = true;
-buttons[0].on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY, () => {
-    if (!buttons[0].active) {
-        buttons[0].active = true;
-        buttons[1].active = false;
-        scene.physics = RodinPhysics.getInstance(physicsEngines[0]);
-    }
-});
-buttons[1].on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY, () => {
-    if (!buttons[1].active) {
-        buttons[1].active = true;
-        buttons[0].active = false;
-        scene.physics = RodinPhysics.getInstance(physicsEngines[1]);
-    }
-});
-
-function searchToObject() {
-    let pairs = window.location.search.substring(1).split("&"),
-        obj = {},
-        pair,
-        i;
-
-    for (i in pairs) {
-        if (pairs[i] === "") continue;
-
-        pair = pairs[i].split("=");
-        obj[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
-    }
-
-    return obj.mode;
-}
-//?mode=canon
-//location.search =
