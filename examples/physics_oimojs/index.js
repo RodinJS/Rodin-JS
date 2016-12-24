@@ -1,70 +1,42 @@
-import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
-import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
+import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
+
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {THREEObject} from '../../_build/js/rodinjs/sculpt/THREEObject.js';
-import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
+import {Element} from '../../_build/js/rodinjs/sculpt/elements/Element.js';
+import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
+
 import {RigidBody} from '../../_build/js/rodinjs/physics/RigidBody.js';
 import {RodinPhysics} from '../../_build/js/rodinjs/physics/RodinPhysics.js';
+
 
 let scene = SceneManager.get();
 scene.scene.background = new THREE.Color(0xb5b5b5);
 
-let camera = scene.camera;
-let controls = scene.controls;
+let mouseController = new MouseController();
+SceneManager.addController(mouseController);
 
 /// Add light
 let light1 = new THREE.DirectionalLight(0xcccccc, 0.8);
 light1.position.set(2, 3, 2);
 scene.add(light1);
-
-scene.add(new THREE.AmbientLight(0xaaaaaa, 0.8));
-
 let light2 = new THREE.DirectionalLight(0xb5b5b5, 0.8);
 light2.position.set(-3, -3, -3);
 scene.add(light2);
-
-// objects raycasting
-let raycaster;
-
-let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, camera, 2);
-controllerL.standingMatrix = controls.getStandingMatrix();
-
-let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, camera, 3);
-controllerR.standingMatrix = controls.getStandingMatrix();
-
-//SceneManager.addController(controllerL);
-//SceneManager.addController(controllerR);
-
-let loader = new THREE.OBJLoader();
-loader.setPath('./object/');
-loader.load('vr_controller_vive_1_5.obj', function (object) {
-
-    let loader = new THREE.TextureLoader();
-    loader.setPath('./img/');
-
-    object.children[0].material.map = loader.load('onepointfive_texture.png');
-    object.children[0].material.specularMap = loader.load('onepointfive_spec.png');
-
-    controllerL.add(object.clone());
-    controllerR.add(object.clone());
-});
-
-raycaster = new RODIN.Raycaster(scene);
+scene.add(new THREE.AmbientLight(0xaaaaaa, 0.8));
 
 /////////// physics ////////////////////
-//scene.physics = RodinPhysics.getInstance("oimo");
-scene.physics = RodinPhysics.getInstance("cannon");
+let physicsEngines = ["oimo", "cannon"];
+
+scene.physics = RodinPhysics.getInstance(physicsEngines[0]);
 
 //Setting up world
 scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32); // todo check 32-8 difference
 
+let shiftFromCenterByZ = -5;
 ///////////////// creating floor ///////////////////////
-let floorWidth = 4;
-let floorDepth = 4;
-
 // todo distinguish ground from plane
-let geometry = new THREE.PlaneGeometry(floorWidth, floorDepth);
+let geometry = new THREE.PlaneGeometry(8, 4);
 let material = new THREE.MeshStandardMaterial({
     color: 0xeeeeee,
     roughness: 1.0,
@@ -76,8 +48,7 @@ let material = new THREE.MeshStandardMaterial({
 let ground = new THREEObject(new THREE.Mesh(geometry, material));
 ground.on('ready', () => {
     ground.object3D.rotation.x = -Math.PI / 2;
-    ground.object3D.position.set(0, 0, -5);
-    ground.object3D.receiveShadow = true;
+    ground.object3D.position.set(0, -1, shiftFromCenterByZ);
     scene.add(ground.object3D);
 
     // add physic
@@ -94,9 +65,9 @@ ground.on('ready', () => {
 let mass = 0.2;
 
 let group = new THREE.Group();
-group.position.set(0, 3, -5);
-group.rotation.x = Math.PI/2;
-group.rotation.y = Math.PI/4;
+group.position.set(0, 3, shiftFromCenterByZ);
+group.rotation.x = Math.PI / 2;
+group.rotation.y = Math.PI / 4;
 scene.add(group);
 
 let geometries = [
@@ -105,7 +76,7 @@ let geometries = [
 ];
 
 // add raycastable objects to scene
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 50; i++) {
     let geometry = geometries[Math.floor(Math.random() * geometries.length)];
     let material = new THREE.MeshStandardMaterial({
         color: Math.random() * 0xffffff,
@@ -114,16 +85,13 @@ for (let i = 0; i < 10; i++) {
     });
 
     let object = new THREE.Mesh(geometry, material);
-    object.position.x = (Math.random() - 0.5) * 4;
+    object.position.x = (Math.random() - 0.5) * 6;
     object.position.y = (Math.random() - 0.5) * 3;
     object.position.z = (Math.random() - 0.5) * 4;
     object.rotation.x = (Math.random() - 0.5) * 2 * Math.PI;
     object.rotation.y = (Math.random() - 0.5) * 2 * Math.PI;
     object.rotation.z = (Math.random() - 0.5) * 2 * Math.PI;
     object.scale.set(1, 1, 1);
-
-    object.castShadow = true;
-    object.receiveShadow = true;
 
     let obj = new THREEObject(object);
     obj.on('ready', () => {
@@ -139,165 +107,93 @@ for (let i = 0; i < 10; i++) {
         });
         objectRigitBody.name = obj.object3D.geometry.type;
     });
-
-    // hover
-    /*obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt, controller) => {
-        if (!obj.hoveringObjects) {
-            obj.hoveringObjects = [];
-        }
-        if (obj.hoveringObjects.indexOf(controller) > -1) return;
-        obj.object3D.material.emissive.r = 1;
-        obj.hoveringObjects.push(controller);
-    });
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (controller) => {
-        if (obj.hoveringObjects.indexOf(controller) > -1) {
-            obj.hoveringObjects.splice(obj.hoveringObjects.indexOf(controller));
-        }
-        if (obj.hoveringObjects.length !== 0 || obj.object3D.parent !== obj.object3D.initialParent) {
-            return;
-        }
-        obj.object3D.material.emissive.r = 0;
-    });
-
-    // CONTROLLER_KEY
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, (evt, controller) => {
-        obj.object3D.scale.set(1.1, 1.1, 1.1);
-    });
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, (evt, controller) => {
-        obj.object3D.scale.set(1, 1, 1);
-
-    });
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_CLICK, (evt, controller) => {
-        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY1) {
-        }
-        if (evt.keyCode === RODIN.CONSTANTS.KEY_CODES.KEY2) {
-        }
-    });
-
-    // Controller touch
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, (evt, controller) => {
-    });
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, (evt, controller) => {
-    });
-
-    obj.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TAP, (evt, controller) => {
-    });*/
 }
-/*
- controllerL.onKeyDown = controllerKeyDown;
- controllerL.onKeyUp = controllerKeyUp;
 
- controllerR.onKeyDown = controllerKeyDown;
- controllerR.onKeyUp = controllerKeyUp;
-
- function controllerKeyDown(keyCode) {
- if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
- this.engaged = true;
- if (!this.pickedItems) {
- this.pickedItems = [];
- }
-
- if (this.intersected && this.intersected.length > 0) {
- this.intersected.map(intersect => {
- if (intersect.object3D.parent != intersect.object3D.initialParent) {
- return;
- }
-
- changeParent(intersect.object3D, this.reycastingLine);
- //let targetParent = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.04, 12, 12));
- let targetParent = new THREE.Object3D();
- this.reycastingLine.add(targetParent);
- targetParent.position.copy(intersect.object3D.position);
- changeParent(intersect.object3D, targetParent);
-
- this.pickedItems.push(intersect.object3D);
- if (intersect.initialRotX) {
- intersect.initialRotX = 0;
- intersect.initialRotY = 0;
- }
- });
- }
-
- this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_DOWN, null, keyCode, this);
- }
-
- function controllerKeyUp(keyCode) {
- if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
- this.engaged = false;
- if (this.pickedItems && this.pickedItems.length > 0) {
- this.pickedItems.map(item => {
- let targetParent = item.parent;
- changeParent(item, item.initialParent);
- this.reycastingLine.remove(targetParent);
- });
- this.pickedItems = [];
- }
- this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY_UP, null, keyCode, this);
- }
-
- controllerL.onTouchUp = controllerTouchUp;
- controllerL.onTouchDown = controllerTouchDown;
-
- controllerR.onTouchUp = controllerTouchUp;
- controllerR.onTouchDown = controllerTouchDown;
-
- function controllerTouchDown(keyCode, gamepad) {
-
- if (!this.engaged || keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY1) return;
-
- if (this.intersected && this.intersected.length > 0) {
- this.intersected.map(intersect => {
- if (!gamepad.initialTouchX && gamepad.initialTouchX != 0) {
- gamepad.initialTouchX = -gamepad.axes[1];
- gamepad.initialTouchY = -gamepad.axes[0];
- }
-
- if (!intersect.initialRotX && intersect.initialRotX != 0) {
-
- intersect.initialRotX = +intersect.object3D.parent.rotation.x;
- intersect.initialRotY = +intersect.object3D.parent.rotation.y;
- }
- let x = (intersect.initialRotX + ((-gamepad.axes[1]) - gamepad.initialTouchX));
- let y = (intersect.initialRotY + ((-gamepad.axes[0]) - gamepad.initialTouchY));
-
- let directionY = new THREE.Vector3(0, 1, 0).normalize();
- let quaternionY = new THREE.Quaternion();
- quaternionY.setFromAxisAngle(directionY, -y);
-
- let directionX = new THREE.Vector3(1, 0, 0).normalize();
- let quaternionX = new THREE.Quaternion();
- quaternionX.setFromAxisAngle(directionX, x);
-
- intersect.object3D.parent.updateMatrixWorld();
- intersect.object3D.parent.quaternion.copy(new THREE.Quaternion().multiplyQuaternions(quaternionX, quaternionY));
- });
- }
- this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_START, null, keyCode, this);
- }
-
- function controllerTouchUp(keyCode, gamepad) {
- if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY1) return;
- if (this.intersected && this.intersected.length > 0) {
- this.intersected.map(intersect => {
- gamepad.initialTouchX = null;
- gamepad.initialTouchZ = null;
- intersect.initialRotX = 0;
- intersect.initialRotY = 0;
-
- let holderObj = intersect.object3D.parent;
- changeParent(intersect.object3D, intersect.object3D.initialParent);
- holderObj.rotation.set(0, 0, 0);
- changeParent(intersect.object3D, holderObj);
- });
- }
- this.raycastAndEmitEvent(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_TOUCH_END, null, keyCode, this);
- }
- */
-scene.preRender( () => {
+scene.preRender(() => {
     // Update scene's objects physics.
-    scene.physics.updateWorldPhysics(/*RODIN.Time.deltaTime()*/);
+    scene.physics.updateWorldPhysics(RODIN.Time.deltaTime());
 });
+
+let buttons = [];
+/////
+for (let i = 0; i < physicsEngines.length; i++) {
+    let physicEngineChangeBtn = {};
+    physicEngineChangeBtn.name = physicsEngines[i];
+    physicEngineChangeBtn.width = 0.35;
+    physicEngineChangeBtn.height = 0.35;
+    physicEngineChangeBtn.background = {
+        color: 0x1e1e20,
+        opacity: 0.5
+    };
+    physicEngineChangeBtn.border = {
+        width: 0.01,
+        color: 0xff8800,
+        opacity: 1,
+        radius: 0.4
+    };
+
+    physicEngineChangeBtn.label = {
+        text: physicsEngines[i],
+        fontFamily: "Arial",
+        fontSize: 0.08,
+        color: 0xfbfbfb,
+        opacity: 1,
+        position: {h: 50, v: 50}
+    };
+
+    buttons.push(new Element(physicEngineChangeBtn));
+    buttons[i].on('ready', (evt) => {
+        let object = evt.target.object3D;
+        object.position.set(-0.75 + i * 1.5, 2, -1);
+
+        evt.target.active = false;
+
+        scene.add(object);
+        RODIN.Raycastables.push(object);
+        evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER, (evt) => {
+            evt.target.animate({
+                property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
+                to: new THREE.Vector3(1.1, 1.1, 1.1)
+            });
+        });
+        evt.target.on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_HOVER_OUT, (evt) => {
+            evt.target.animate({
+                property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
+                to: new THREE.Vector3(1, 1, 1)
+            });
+        });
+    });
+}
+buttons[0].active = true;
+buttons[0].on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY, () => {
+    if (!buttons[0].active) {
+        buttons[0].active = true;
+        buttons[1].active = false;
+        scene.physics = RodinPhysics.getInstance(physicsEngines[0]);
+    }
+});
+buttons[1].on(RODIN.CONSTANTS.EVENT_NAMES.CONTROLLER_KEY, () => {
+    if (!buttons[1].active) {
+        buttons[1].active = true;
+        buttons[0].active = false;
+        scene.physics = RodinPhysics.getInstance(physicsEngines[1]);
+    }
+});
+
+function searchToObject() {
+    let pairs = window.location.search.substring(1).split("&"),
+        obj = {},
+        pair,
+        i;
+
+    for (i in pairs) {
+        if (pairs[i] === "") continue;
+
+        pair = pairs[i].split("=");
+        obj[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+    }
+
+    return obj.mode;
+}
+//?mode=canon
+//location.search =

@@ -121,16 +121,12 @@ export class RodinPhysics {
      */
     updateWorldPhysics(timestamp = 0) {
         if (!this.world) return;
-
-        if (this.lastTime !== undefined) {
-            let dt = (timestamp - this.lastTime) / 1000;
-            this.world.step(this.fixedTimeStep, dt, this.maxSubSteps);
-        }
+        timestamp /= 1000;
+        this.world.step(this.fixedTimeStep, timestamp, this.maxSubSteps);
         let i = this.rigidBodies.length;
         if (this.physicsEngine === 'cannon') {
 
             while (i--) {
-
                 let newRotation = new CANNON.Quaternion();
                 this.rigidBodies[i].body.quaternion.mult(RigidBody.threeToCannonAxis.inverse(), newRotation);
 
@@ -146,7 +142,6 @@ export class RodinPhysics {
         }
         if (this.physicsEngine === 'oimo') {
             while (i--) {
-
                 let newGlobalMatrix = new THREE.Matrix4();
                 newGlobalMatrix.compose(
                     PhysicsUtils.oimoToThree(this.rigidBodies[i].body.position),
@@ -158,6 +153,5 @@ export class RodinPhysics {
                 this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
             }
         }
-        this.lastTime = timestamp;
     }
 }

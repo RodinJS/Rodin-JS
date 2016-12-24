@@ -62,15 +62,14 @@ export class RigidBody {
                 pos: [
                     this.owner.getWorldPosition().x * 100,
                     this.owner.getWorldPosition().y * 100,
-                    this.owner.getWorldPosition().z * 100],
+                    this.owner.getWorldPosition().z * 100], // m
                 rot: [
                     this.owner.getWorldRotation().x * (180 / Math.PI),
                     this.owner.getWorldRotation().y * (180 / Math.PI),
-                    this.owner.getWorldRotation().z * (180 / Math.PI),],
+                    this.owner.getWorldRotation().z * (180 / Math.PI),], // angle
                 move: this.move,
                 mass: this.mass,
-                world: RodinPhysics.world,
-                //flat: true,
+                world: RodinPhysics.world
             };
         }
         RodinPhysics.getInstance(this.physicsEngine).addRigidBodyToWorld(this);
@@ -98,7 +97,6 @@ export class RigidBody {
                 if (this.physicsEngine === 'cannon') {
                     //
                     // todo 0.00001 find a better solution
-                    // todo hight esim inch
                     shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, 0.00001, param.height / 2));
                     //shape = new CANNON.Plane();
                     //this.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
