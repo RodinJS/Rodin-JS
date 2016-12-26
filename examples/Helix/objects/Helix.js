@@ -3,7 +3,7 @@ import * as RODIN from '../../../_build/js/rodinjs/RODIN.js';
 import {Element} from '../../../_build/js/rodinjs/sculpt/elements/Element.js';
 
 export class Helix extends RODIN.THREEObject {
-    constructor () {
+    constructor() {
         super(new THREE.Object3D());
         this.thumbs = [];
         this.center = 0;
@@ -13,25 +13,29 @@ export class Helix extends RODIN.THREEObject {
 
             this.frame = new Element(
                 {
-                    width: 1.34,
-                    height: 1,
+                    width: 1.39,
+                    height: 1.1,
                     background: {
                         color: 0x00bcff
                     },
                     border: {
-                        radius:  0.03
+                        radius: 0.03
                     },
                 }
             );
 
             this.frame.on('ready', () => {
-                // this.object3D.position.z = - 0.01;
+                this.frame.object3D.position.z = -0.08;
+                this.frame.object3D.position.y = -0.08;
                 this.object3D.add(this.frame.object3D);
             });
+
+            this.frame.name = null;
         })
     }
 
-    concentrate (center = 0) {
+    concentrate(center = 0) {
+        this.closeFrame();
         if (center < 0 || center > this.thumbs.length - 1) return;
         this.center = center;
         let k = 4;
@@ -42,9 +46,31 @@ export class Helix extends RODIN.THREEObject {
         }
     }
 
-    addThumb (thumb) {
+    addThumb(thumb) {
         thumb.helix = this;
         this.thumbs.push(thumb);
         this.concentrate(this.center);
+    }
+
+    closeFrame() {
+        if (!this.frame) return;
+        if (this.frameOpened) {
+            this.frame.object3D.remove(this.frame.name.object3D);
+            this.frame.name = null;
+        }
+
+        this.frameOpened = false;
+        this.frame.object3D.scale.y = 0;
+    }
+
+    openFrame() {
+        if (!this.frame) return;
+        this.frameOpened = true;
+        this.frame.object3D.scale.y = 1;
+
+        this.frame.name = this.thumbs[this.center].name;
+        this.frame.name.object3D.position.z = .01;
+        this.frame.name.object3D.position.y = - 0.45;
+        this.frame.object3D.add(this.frame.name.object3D);
     }
 }

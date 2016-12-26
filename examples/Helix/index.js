@@ -59,6 +59,7 @@ let projects = [
 
 for (let i = 0; i < projects.length; i++) {
     helix.addThumb(new HelixThumb({
-        image: projects[i]
+        image: projects[i],
+        name: projects[i]
     }));
 }
