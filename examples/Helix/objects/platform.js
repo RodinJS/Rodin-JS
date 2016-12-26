@@ -3,7 +3,7 @@ import {ModelLoader} from '../../../_build/js/rodinjs/sculpt/ModelLoader.js';
 
 const scene = SceneManager.get();
 
-export const platform = ModelLoader.load('./models/platform/mountain.JD');
+export const platform = ModelLoader.load('./models/platform/landscape.obj');
 
 platform.on('ready', () => {
     console.log('ready');

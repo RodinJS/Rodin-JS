@@ -3,8 +3,8 @@ import {SceneManager} from '../../../_build/js/rodinjs/scene/SceneManager.js';
 
 const scene = SceneManager.get();
 
-export const ambientLight = new THREE.AmbientLight();
-export const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+export const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
+export const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
 
 scene.add(ambientLight);
 scene.add(directionalLight);

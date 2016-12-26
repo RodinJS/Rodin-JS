@@ -10,11 +10,13 @@ import './objects/platform_c.js';
 import './objects/lights_c.js';
 import {Helix} from './objects/Helix_c.js';
 import {HelixThumb} from './objects/HelixThumb_c.js';
+import {Popup} from './objects/Popup_c.js';
+import * as icons from './objects/icons_c.js';
 
 const helix = new Helix();
 helix.on('ready', (evt) => {
     scene.add(evt.target.object3D);
-    evt.target.object3D.position.z = -2;
+    evt.target.object3D.position.z = -2.5;
     evt.target.object3D.position.y = scene.controls.userHeight;
 });
 
@@ -22,7 +24,7 @@ let buttons = MouseGamePad.getInstance().buttons;
 
 let scene = SceneManager.get();
 scene.setCameraProperty('fov', 70);
-scene.scene.background = new THREE.Color(0x333333);
+scene.scene.background = new THREE.Color(0xc8c8c8);
 
 controllers.mouse.onValueChange = function (keyCode) {
     const value = buttons[keyCode - 1].value;

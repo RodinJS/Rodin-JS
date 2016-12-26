@@ -14,12 +14,12 @@ export class HelixThumb extends THREEObject {
         super(new THREE.Object3D());
 
         let params = {
-            width: 0.9,
-            height: 0.6,
+            width: 1.3,
+            height: 0.867,
             image: {
                 url: thumbParams.image,
-                width: 0.9,
-                height: 0.6,
+                width: 1.3,
+                height: 0.867,
                 opacity: 1,
                 position: { h: 50, v: 50 }
             },
