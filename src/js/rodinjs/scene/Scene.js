@@ -15,7 +15,7 @@ const time = Time.getInstance();
  * <p>3D Scene (Three.js THREE.Scene) wrapper class, used in Rodin lib.</p>
  */
 export class Scene extends Sculpt {
-    constructor (params = {}) {
+    constructor(params = {}) {
         super();
         /**
          * The main scene object.
@@ -60,7 +60,7 @@ export class Scene extends Sculpt {
          * The webVRmanager (WebVR Boilerplate by Boris Smus)
          * @type {WebVRManager}
          */
-        this.webVRmanager = new WebVRManager(this.renderer, this.effect, { hideButton: false, isUndistorted: false });
+        this.webVRmanager = new WebVRManager(this.renderer, this.effect, {hideButton: false, isUndistorted: false});
 
         /**
          * A set of functions to be called BEFORE main rendering action on each animation frame.
@@ -86,24 +86,33 @@ export class Scene extends Sculpt {
 
         window.addEventListener('resize', this.onResize.bind(this), true);
         window.addEventListener('vrdisplaypresentchange', this.onResize.bind(this), true);
-        requestAnimationFrame(this.render.bind(this));
+        this.start();
     }
 
     /**
      * Called on each window resize event.
      * <p>Resets the required rendering parameters for the new window size.</p>
      */
-    onResize () {
+    onResize() {
         this.effect.setSize(window.innerWidth, window.innerHeight);
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setPixelRatio(window.devicePixelRatio > 2 ? 2 : 1);
     }
 
+    start() {
+        this._render = true;
+        requestAnimationFrame(this.render.bind(this));
+    }
+
+    stop() {
+        this._render = false;
+    }
+
     // TODO: tanel esi scenemanager
-    get render () {
+    get render() {
         return (timestamp) => {
-            if(this.camera.projectionMatrixNeedsUpdate){
+            if (this.camera.projectionMatrixNeedsUpdate) {
                 this.camera.updateProjectionMatrix();
                 this.camera.projectionMatrixNeedsUpdate = false;
             }
@@ -124,9 +133,13 @@ export class Scene extends Sculpt {
 
             // check! if HMD is connected and active,
             // rendering is passed to HMD's animation frame loop, instead of the browser window's.
-            if(this.webVRmanager.hmd && this.webVRmanager.hmd.isPresenting){
+            if(!this._render) {
+                return;
+            }
+
+            if (this.webVRmanager.hmd && this.webVRmanager.hmd.isPresenting) {
                 this.webVRmanager.hmd.requestAnimationFrame(this.render.bind(this));
-            }else {
+            } else {
                 requestAnimationFrame(this.render.bind(this));
             }
 
@@ -138,7 +151,7 @@ export class Scene extends Sculpt {
      * @param {string} property
      * @param {*} value
      */
-    setCameraProperty(property, value){
+    setCameraProperty(property, value) {
         Object.setProperty(this.camera, property, value);
         this.camera.projectionMatrixNeedsUpdate = true;
     }
@@ -147,7 +160,7 @@ export class Scene extends Sculpt {
      * Add function to pre render Set
      * @param {function} fn
      */
-    preRender (fn) {
+    preRender(fn) {
         this.preRenderFunctions.push(fn);
     }
 
@@ -155,7 +168,7 @@ export class Scene extends Sculpt {
      * Add function to post render Set
      * @param {function} fn
      */
-    postRender (fn) {
+    postRender(fn) {
         this.postRenderFunctions.push(fn);
     }
 
@@ -163,7 +176,7 @@ export class Scene extends Sculpt {
      * Add object to the scene
      * @param {Object3D} obj
      */
-    add (obj) {
+    add(obj) {
         this.scene.add(obj);
     }
 
@@ -171,7 +184,7 @@ export class Scene extends Sculpt {
      * Add controller to thee scene
      * @param {GamePad} controller
      */
-    addController (controller) {
+    addController(controller) {
         controller.setRaycasterScene(this.scene);
         controller.setRaycasterCamera(this.camera);
     }
@@ -180,7 +193,7 @@ export class Scene extends Sculpt {
      * Enable scene:
      * <p>Adds the scene domElement to the document body.</p>
      */
-    enable () {
+    enable() {
         document.body.appendChild(this.renderer.domElement);
     }
 }
