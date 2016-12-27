@@ -13,6 +13,7 @@ export class Text extends Sculpt {
         color = 0x000000,
         fontFamily = "Arial",
         fontSize = 0.1,
+        fontStyle = '',
         transparent = true,
         ppm = 500
         }) {
@@ -22,6 +23,7 @@ export class Text extends Sculpt {
         this.color = color;
         this.fontFamily = fontFamily;
         this.fontSize = fontSize;
+        this.fontStyle = fontStyle;
         this.transparent = transparent;
         this.ppm = ppm;
         this.texture = null;
@@ -42,6 +44,7 @@ export class Text extends Sculpt {
         let textSize = utils3D.measureTextOnCanvas(
             this.text,
             this.fontFamily,
+            this.fontStyle,
             this.fontSize * this.ppm,
             this.canvas
         );
@@ -51,6 +54,7 @@ export class Text extends Sculpt {
             text: this.text,
             font: this.fontFamily,
             fontSize: this.fontSize * this.ppm,
+            fontStyle: this.fontStyle,
             x: 0,
             y: 0,
             color: this.color,

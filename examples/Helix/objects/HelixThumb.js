@@ -90,13 +90,11 @@ export class HelixThumb extends THREEObject {
         this.name = new Text(
             {
                 text: thumbParams.name,
-                fontSize: 0.05,
-                fontFamily: 'bold Arial'
+                fontSize: 0.06,
+                fontFamily: 'Arial',
+                fontStyle: 'bold',
+                color: 0x231f20
             }
         );
-
-        this.name.on('ready', () => {
-            this.name.object3D.material.depthWrite = false;
-        })
     }
 }
