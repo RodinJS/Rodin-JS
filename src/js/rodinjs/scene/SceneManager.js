@@ -46,7 +46,8 @@ class SceneManager extends Manager {
     }
 
     changeContainerDomElement(element){
-        for(let scene of this._items){
+        for(let i = 0; i < this._items.length; i++){
+            let scene = this._items[i];
             scene.renderer.domElement.parentNode.removeChild(scene.renderer.domElement);
             element.appendChild(scene.renderer.domElement);
         }
