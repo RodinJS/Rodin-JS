@@ -6,7 +6,7 @@ import {Sculpt} from './../Sculpt.js';
 import {timeout} from './../../utils/timeout.js';
 import {utils3D} from './../../utils/utils.js';
 /**
- * Text Class, used to create flat text objects, parameters have the following structure:
+ * DynamicText Class, used to create flat text objects, parameters have the following structure:
  * <p>{</p>
  * <p>&nbsp; &nbsp;      text: string,</p>
  * <p>&nbsp; &nbsp;      color : hex,</p>
@@ -19,24 +19,24 @@ import {utils3D} from './../../utils/utils.js';
  * ppm is the Pixel Per Meter resolution
  * @param {!Object}  - parameters
  */
-export class Text extends Sculpt {
+export class DynamicText extends Sculpt {
     constructor({
         background = {},
+        width = 1,
         text = "",
         color = 0x000000,
         fontFamily = "Arial",
         fontSize = 0.1,
-        fontStyle = '',
         transparent = true,
         ppm = 500
         }) {
         super(0);
         this.background = background;
+        this.width = width;
         this.text = text;
         this.color = color;
         this.fontFamily = fontFamily;
         this.fontSize = fontSize;
-        this.fontStyle = fontStyle;
         this.transparent = transparent;
         this.ppm = ppm;
         this.texture = null;
@@ -54,20 +54,18 @@ export class Text extends Sculpt {
         if (this.background.opacity === undefined && (this.background.color !== undefined || this.background.image !== undefined)) {
             this.background.opacity = 1;
         }
-        let textSize = utils3D.measureTextOnCanvas(
+/*        let textSize = utils3D.measureTextOnCanvas(
             this.text,
             this.fontFamily,
-            this.fontStyle,
             this.fontSize * this.ppm,
             this.canvas
-        );
-        this.canvas.width = textSize.x + 1;
-        this.canvas.height = textSize.y;
-        utils3D.drawTextOnCanvas({
+        );*/
+        this.canvas.width = this.ppm * this.width + 1;
+        this.canvas.height = this.ppm * this.width + 1;
+        this.canvas = utils3D.drawDynTextOnCanvas({
             text: this.text,
             font: this.fontFamily,
             fontSize: this.fontSize * this.ppm,
-            fontStyle: this.fontStyle,
             x: 0,
             y: 0,
             color: this.color,

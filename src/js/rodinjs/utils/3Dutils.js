@@ -156,6 +156,50 @@ export function drawTextOnCanvas({text, font = "Arial", fontStyle = '', fontSize
     return canvas;
 }
 
+
+export function drawDynTextOnCanvas({text, font = "Arial", fontSize = 12, x = 0, y = 0, color = 0x000000, opacity = 1, canvas}) {
+    let textContext = canvas.getContext('2d');
+    let rgb = hexToRgb(color);
+    textContext.font = fontSize + "px " + font;
+    textContext.globalAlpha = opacity;
+    textContext.fillStyle = "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")";
+    textContext.textBaseline = "bottom";
+    return wrapText({context: textContext, text: text, maxWidth: canvas.width, lineHeight: fontSize, canvas: canvas});;
+}
+export function wrapText({context, text, x = 0, y = 0, maxWidth, lineHeight, canvas}) {
+    var words = text.split(" ");
+    var line = "";
+    y += lineHeight;
+    for(var n = 0; n < words.length; n++) {
+        var testLine = line + words[n] + " ";
+        var metrics = context.measureText(testLine);
+        var testWidth = metrics.width;
+        if(testWidth+x > maxWidth) {
+            context.fillText(line, x, y);
+            line = words[n] + " ";
+            y += lineHeight;
+        }
+        else {
+            line = testLine;
+        }
+    }
+    context.fillText(line, x, y);
+    if(y > canvas.height){
+        let inMemCanvas = document.createElement('canvas');
+        let inMemContext = inMemCanvas.getContext('2d');
+        inMemCanvas.width = maxWidth;
+        inMemCanvas.height = y;
+        inMemContext.font = context.font;
+        inMemContext.globalAlpha = context.globalAlpha;
+        inMemContext.fillStyle = context.fillStyle;
+        inMemContext.textBaseline = context.textBaseline;
+        console.log("resizing canvas"+y);
+        return wrapText({context: inMemContext, text: text, maxWidth: maxWidth, lineHeight: lineHeight, canvas: inMemCanvas})
+    }
+    return canvas;
+}
+
+
 export function hexToRgb(hex) {
     return {
         r: (hex >> 16) & 0xFF,        // or `(i & 0xFF0000) >> 16`

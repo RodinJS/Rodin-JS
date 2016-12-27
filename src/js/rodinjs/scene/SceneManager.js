@@ -44,6 +44,13 @@ class SceneManager extends Manager {
         this.controllers.push(controller);
         this.get().addController(controller);
     }
+
+    changeContainerDomElement(element){
+        for(let scene of this._items){
+            scene.renderer.domElement.parentNode.removeChild(scene.renderer.domElement);
+            element.appendChild(scene.renderer.domElement);
+        }
+    }
 }
 
 const instance = new SceneManager();
