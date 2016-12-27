@@ -1,5 +1,5 @@
 import SocketInterface from './SocketInterface';
-import io from '../../vendor/socket.io/socket.io.js';
+import io from '../../vendor/socket.io/dist/socket.io.js';
 
 let _socket;
 
