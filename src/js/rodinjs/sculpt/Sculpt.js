@@ -275,45 +275,11 @@ export class Sculpt {
         return this;
     }
 
+
     /**
-     * rotate around center
-     * @param {Object} params
-     * @param next
+     * Make object raycastable or not
+     * @param {boolean} value
      */
-    rotateAroundNull (params, next) {
-        let duration = params.duration || 500;
-        let delay = params.delay || 0;
-        let easing = params.easing || TWEEN.Easing.Quadratic.InOut;
-        let cycles = params.cycles || 1;
-
-        if (this.rotateTween) {
-            this.rotateTween.stop()
-        }
-
-        let elem = {
-            t: 0
-        };
-
-        let r = Math.sqrt(Math.pow(this.object3D.position.x, 2) + Math.pow(this.object3D.position.y, 2));
-
-        let object = this.object3D;
-
-        function updateCallback () {
-            let t = this.t;
-
-            object.position.y = r * Math.cos(t);
-            object.position.x = r * Math.sin(t);
-        }
-
-        this.rotateTween = new TWEEN.Tween(elem)
-            .to({ t: 2 * cycles * Math.PI }, duration)
-            .delay(delay)
-            .onUpdate(updateCallback)
-            .easing(easing)
-            .start()
-            .onComplete(next);
-    }
-
     set raycastable(value) {
         if(value) {
             Raycastables.push(this.object3D);

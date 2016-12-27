@@ -8,19 +8,16 @@ import {Interval} from '../utils/interval.js';
 import {TWEEN} from '../Tween.js';
 /**
  * Snowing Effect class. Requires a snowflake image url.
+ * @param {int} [id = 0] - an ID for general purpose.
+ * @param {!string} textureURL - URL string for the snowflake texture.
+ * @param {number} [areaSize = 15] - size of the box snowing environment.
+ * @param {number} [particleSize = 0.02] - snow flake size in centimeters.
+ * @param {number} [density = 3] - number of snow flakes in a 1x1x1m box.
+ * @param {number} [windSpeed = 0.5] - speed of wind on X axis in meter/sec.
+ * @param {number} [gravity = 1] - gravity.
  */
-
 export class Snow extends Sculpt {
-    /**
-     * Snow constructor.
-     * @param {int} [id = 0] - an ID for general purpose.
-     * @param {string} [textureURL] - !!! required !!! URL string for the snowflake texture.
-     * @param {number} [areaSize = 15] - size of the box snowing environment.
-     * @param {number} [particleSize = 0.02] - snow flake size in centimeters.
-     * @param {number} [density = 3] - number of snow flakes in a 1x1x1m box.
-     * @param {number} [windSpeed = 0.5] - speed of wind on X axis in meter/sec.
-     * @param {number} [gravity = 1] - gravity.
-     */
+
     constructor(id = 0,
                 textureURL,
                 areaSize = 15.0,
@@ -53,7 +50,6 @@ export class Snow extends Sculpt {
             size: particleSize,
             map: flakeTexture,
             transparent: true,
-            // depthWrite: false,
             opacity: 0.7
         });
 

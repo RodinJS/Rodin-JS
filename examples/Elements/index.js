@@ -6,6 +6,7 @@ import {MouseController} from '../../_build/js/rodinjs/controllers/MouseControll
 
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import {Element} from '../../_build/js/rodinjs/sculpt/elements/Element.js';
+import {DynamicText} from '../../_build/js/rodinjs/sculpt/elements/DynamicText.js';
 
 let scene = SceneManager.get();
 let camera = scene.camera;
@@ -18,6 +19,28 @@ scene.scene.background = new THREE.Color(0x383838);
 let i = 50;
 while (i--) {
     let r = Math.randomIntIn(1, 3);
+
+    let titleParams = {
+        text: "test text1 text2 text3 text4 text5 text6 text7 text8 text1 text2 text3 text4 text5 text6 text7 text8 text1 text2 text3 text4 text5 text6 text7 text8",
+        width: 0.5,
+        color: 0xffffff,
+        fontFamily: "Arial",
+        fontSize: 0.1,
+        ppm: 1000
+    };
+    let titleButton = new DynamicText(titleParams);
+    titleButton.on('ready', (evt) => {
+        let object = evt.target.object3D;
+        //object.position.z = -1;
+        //object.position.y = 1.6;
+        object.position.x = Math.randomFloatIn(-5.3, 5.3);
+        object.position.y = Math.randomFloatIn(-5.3, 5.3);
+        object.position.z = Math.randomFloatIn(-5.3, 5.3);
+
+        scene.add(object);
+
+    });
+
     let params = {};
     params.name = "name_";
     params.width = 0.8;
