@@ -5,20 +5,20 @@ import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 import {Time} from './../time/Time.js';
 
-/**
- * If your model consists of several geometries
- * and the material ids do not map in correct order,
- * You can open the model in a 3d editing software,
- * attach all geometries to a single object and export again.
- */
-
 const time = Time.getInstance();
+/**
+ * Loads .js (JSON object) file to the scene.
+ * If your model consists of several geometries
+ * and the material IDs do not map in correct order,
+ * you can open the model in a 3D editing software,
+ * attach all geometries to a single object and export again.
+ * @param {!string} URL
+ */
 export class JSONModelObject extends Sculpt {
     /**
      * JSONModelObject constructor.
-     * @param {string} [URL = '']
      */
-    constructor(URL = '') {
+    constructor(URL) {
         super();
 
         let onProgress = function (xhr) {

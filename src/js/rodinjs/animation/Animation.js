@@ -2,6 +2,7 @@ import {TWEEN} from '../Tween.js';
 import {Event} from '../Event.js';
 import {EVENT_NAMES} from '../constants/constants.js';
 import {ErrorProtectedMethodCall} from '../error/CustomErrors.js';
+import {Sculpt} from '../sculpt/Sculpt.js';
 
 function enforce () {
 }
@@ -58,7 +59,7 @@ export class Animation {
      * @returns {boolean} TODO: Gor incha veradarcnum, es inch booleana
      */
     start (forceStart = false) {
-        if (!this.sculpt.isSculpt) {
+        if (!this.sculpt instanceof Sculpt) {
             return console.warn('animation cannot be played without adding in object');
         }
 
