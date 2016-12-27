@@ -1,3 +1,7 @@
+/**
+ * Custom Error class.
+ * @param {string} message - custom Error message.
+ */
 class CustomError extends Error {
     constructor (message) {
         super(message);
@@ -10,7 +14,6 @@ class CustomError extends Error {
         }
     }
 }
-
 export class ErrorAbstractClassInstance extends CustomError {
     constructor () {
         super("Cant make instance of abstract class");

@@ -3,11 +3,17 @@ import {Manager} from '../manager/Manager.js';
 import {Scene} from './Scene.js';
 import {Set} from '../utils/Set.js';
 import * as RODIN from '../RODIN.js';
-
+/**
+ * <p>A manager for Scenes, allows users to switch between active scenes, add controllers and handle Time instance</p>
+ */
 class SceneManager extends Manager {
     constructor () {
         super(Scene);
 
+        /**
+         * The set of controllers.
+         * @type {Set<Gamepad>}
+         */
         this.controllers = new Set();
 
         let scene = this.create();
@@ -15,8 +21,8 @@ class SceneManager extends Manager {
     }
 
     /**
-     * switch scene
-     * @param index
+     * Switch active scene.
+     * @param {*} index
      */
     go (index) {
         let scene = this.get(index);
@@ -31,8 +37,8 @@ class SceneManager extends Manager {
     }
 
     /**
-     * add controller to SceneManager
-     * @param controller {GamePad}
+     * Add controller to SceneManager
+     * @param {GamePad} controller
      */
     addController (controller) {
         this.controllers.push(controller);

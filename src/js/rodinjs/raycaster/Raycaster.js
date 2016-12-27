@@ -3,7 +3,8 @@ import { Raycastables } from '../objects.js';
 import { ErrorNoSceneProvided } from '../error/CustomErrors.js';
 
 /**
- * Class Raycaster
+ * Class Raycaster, just an easier way to use THREE.JS raycasting
+ * @param {!THREE.Scene} _scene - the scene where the raycasting happens
  */
 export class Raycaster extends THREE.Raycaster {
     constructor(_scene) {
@@ -15,7 +16,7 @@ export class Raycaster extends THREE.Raycaster {
 
     /**
      * Raycast
-     * @returns [Sculpt] all raycast objects that added to scene.
+     * @returns [Sculpt] all raycasted objects from the Raycastables array, that ar appended to the scene (directly or not).
      */
     raycast() {
         let scene = this.getScene();

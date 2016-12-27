@@ -8,23 +8,18 @@ import {WTF} from '../logger/Logger.js';
 
 import '../../vendor/three/examples/js/loaders/FBXLoader.js';
 
-/**
- * You can export FBX file from 3ds max
- * For export use ASCII format
- */
-/**
- * in oder to maintain correct positions to each other, all exported objects must have their pivots shifted to {0, 0, 0} position of the scene.
- * This is due to FBX format positioning all objects in {0,0,0} position.
- */
-
 const time = Time.getInstance();
+/**
+ * Loads .fbx file to the scene.
+ * <p>You can export FBX file from 3ds max.</p>
+ * <p>For export use ASCII format.</p>
+ * <p>In oder to maintain correct positions to each other, all exported objects must have their pivots shifted to {0, 0, 0} position of the scene.</p>
+ * <p>This is due to FBX format positioning all objects in {0,0,0} position.</p>
+ * @param {!string} URL
+ * @param {array} [TextureURL = []]
+ */
 export class FBXModelObject extends Sculpt {
-    /**
-     * FBXModelObject constructor.
-     * @param {string} [URL = '']
-     * @param {array} [TextureURL = []]
-     */
-    constructor (URL = '', TextureURL = []) {
+    constructor (URL, TextureURL = []) {
         super();
 
         if (!(TextureURL instanceof Array)) {

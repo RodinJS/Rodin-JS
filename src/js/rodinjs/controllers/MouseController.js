@@ -12,8 +12,8 @@ let controllerCreated = false;
 export class MouseController extends GamePad {
     /**
      * Constructor
-     * @param {THREE.Scene} scene Required - the scene where the controller will be used.
-     * @param {THREE.PerspectiveCamera} camera Required - the camera where the controller will be used.
+     * @param {THREE.Scene} scene  - the scene where the controller will be used.
+     * @param {THREE.PerspectiveCamera} camera  - the camera where the controller will be used.
      */
     constructor(scene = null, camera = null) {
         if (controllerCreated) {
@@ -60,9 +60,9 @@ export class MouseController extends GamePad {
     /**
      * Set propagation value for standard events, recommended, when using custom handlers on mousedown/mouseup/mousemove/scroll.
      * @param {string} eventName - 'mousedown', 'mouseup', mousemove', 'mousewheel'.
-     * @param {boolean} value - true, false
+     * @param {boolean} [value] - true, false
      */
-    setPropagation(eventName, value) {
+    setPropagation(eventName, value = true) {
         let gamePad = MouseController.getGamepad();
         value = !value;
 

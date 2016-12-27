@@ -1,7 +1,8 @@
 import {ErrorAbstractClassInstance, ErrorParameterTypeDontMatch} from '../error/CustomErrors.js';
 
 /**
- * Class Manager
+ * Abstract Manager Class
+ * @param {Class} COSTRUCTOR - the class of object you are going to manage in the inherited Manager class. (see SceneManager)
  */
 export class Manager {
     constructor(COSTRUCTOR) {
@@ -15,7 +16,7 @@ export class Manager {
     }
 
     /**
-     * Create new Instance
+     * Create new Instance of the managed Class
      * @returns {*} created instance
      */
     create() {
@@ -29,7 +30,7 @@ export class Manager {
     }
 
     /**
-     * Add new Instance
+     * Add new Instance of the managed Class to the manager
      * @param item {*} added instance
      */
     add(item) {
@@ -39,8 +40,9 @@ export class Manager {
     }
 
     /**
-     * get instance.
-     * @param index
+     * TODO: Gor mi hat nayi eli es indexy inch tip kara lini u incha inqy voobshe
+     * Get instance of the managed Class
+     * @param {*} index
      * @returns {*}
      */
     get(index = this._active) {

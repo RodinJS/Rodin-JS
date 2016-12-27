@@ -5,6 +5,7 @@
     },
     "source": {
         "include": ["src/js/rodinjs"],
+        "exclude": ["src/js/rodinjs/mobile"],
         "includePattern": ".js$",
         "excludePattern": "(node_modules/|docs)"
     },
