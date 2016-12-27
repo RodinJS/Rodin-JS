@@ -102,7 +102,6 @@ export class Scene extends Sculpt {
 
     start() {
         this._render = true;
-        requestAnimationFrame(this.render.bind(this));
     }
 
     stop() {
@@ -112,31 +111,30 @@ export class Scene extends Sculpt {
     // TODO: tanel esi scenemanager
     get render() {
         return (timestamp) => {
-            if (this.camera.projectionMatrixNeedsUpdate) {
-                this.camera.updateProjectionMatrix();
-                this.camera.projectionMatrixNeedsUpdate = false;
+            if (this._render) {
+
+                if (this.camera.projectionMatrixNeedsUpdate) {
+                    this.camera.updateProjectionMatrix();
+                    this.camera.projectionMatrixNeedsUpdate = false;
+                }
+                time.tick();
+                TWEEN.update();
+
+                // Update VR headset position and apply to camera.
+                this.controls.update();
+
+                // Render the scene through the webVRmanager.
+                Objects.map(i => i.emit('update', new Event(i)));
+                this.preRenderFunctions.map(i => i());
+                this.webVRmanager.render(this.scene, this.camera, timestamp);
+                this.postRenderFunctions.map(i => i());
+
+                // Update controllers
+                this.controllers.map(controller => controller.update());
+
             }
-            time.tick();
-            TWEEN.update();
-
-            // Update VR headset position and apply to camera.
-            this.controls.update();
-
-            // Render the scene through the webVRmanager.
-            Objects.map(i => i.emit('update', new Event(i)));
-            this.preRenderFunctions.map(i => i());
-            this.webVRmanager.render(this.scene, this.camera, timestamp);
-            this.postRenderFunctions.map(i => i());
-
-            // Update controllers
-            this.controllers.map(controller => controller.update());
-
             // check! if HMD is connected and active,
             // rendering is passed to HMD's animation frame loop, instead of the browser window's.
-            if(!this._render) {
-                return;
-            }
-
             if (this.webVRmanager.hmd && this.webVRmanager.hmd.isPresenting) {
                 this.webVRmanager.hmd.requestAnimationFrame(this.render.bind(this));
             } else {
