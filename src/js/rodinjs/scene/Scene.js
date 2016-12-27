@@ -24,6 +24,12 @@ export class Scene extends Sculpt {
         this.scene = new THREE.Scene();
 
         /**
+         * Trigger to stop or enable rendering.
+         * @type {Boolean}
+         */
+        this._render = true;
+
+        /**
          * The camera of the scene.
          * @type {THREE.PerspectiveCamera}
          */
@@ -86,7 +92,7 @@ export class Scene extends Sculpt {
 
         window.addEventListener('resize', this.onResize.bind(this), true);
         window.addEventListener('vrdisplaypresentchange', this.onResize.bind(this), true);
-        this.start();
+        this.render();
     }
 
     /**
