@@ -1,7 +1,7 @@
 import {Element} from "../../../_build/js/rodinjs/sculpt/elements/Element.js";
 import {SceneManager} from '../../../_build/js/rodinjs/scene/SceneManager.js';
 import {EVENT_NAMES} from '../../../_build/js/rodinjs/constants/constants.js';
-import * as RODIN from '../../../_build/js/rodinjs/RODIN.js';
+import {Animation} from '../../../_build/js/rodinjs/animation/Animation.js';
 
 import {HoverableElement} from './HoverableElement_c.js';
 
@@ -18,27 +18,54 @@ export class OpeningIcon extends HoverableElement {
 
             this.slider.on('ready', () => {
                 this.slider.object3D.scale.x = 0;
-                this.slider.object3D.position.z = - 0.01;
+                this.slider.object3D.position.z = -0.01;
                 this.object3D.add(this.slider.object3D);
 
                 let x;
-                if(this.side === 'left') {
-                    x = - arguments[2].width / 2 + arguments[2].height / 2;
+                if (this.side === 'left') {
+                    x = -arguments[2].width / 2 + arguments[2].height / 2 - .02;
                 } else {
-                    x = arguments[2].width / 2 - arguments[2].height / 2;
+                    x = arguments[2].width / 2 - arguments[2].height / 2 + .02;
                 }
 
-                this.slider.object3D.position.x = x;
+                const openAnimation = new Animation('open', { position: { x: x }, scale: { x: 1 } });
+                const closeAnimation = new Animation('close', { position: { x: 0 }, scale: { x: 0 } });
+                openAnimation.duration(150);
+                closeAnimation.duration(150);
+                this.slider.animator.add(openAnimation);
+                this.slider.animator.add(closeAnimation);
             });
 
-            this.on(EVENT_NAMES.CONTROLLER_HOVER, () => {
-                this.slider.object3D.scale.x = 1;
-            });
+            this.slider.open = () => {
+                if (this.slider.animator.isPlaying('close'))
+                    this.slider.animator.stop('close', false);
 
-            this.on(EVENT_NAMES.CONTROLLER_HOVER_OUT, () => {
-                this.slider.object3D.scale.x = 0;
-            });
+                this.slider.animator.start('open');
+            };
+
+            this.slider.close = () => {
+                if (this.slider.animator.isPlaying('open'))
+                    this.slider.animator.stop('open', false);
+
+                this.slider.animator.start('close');
+            }
         });
+
+        this.on(EVENT_NAMES.CONTROLLER_HOVER, () => {
+            this.slider && this.slider.open();
+        });
+
+        this.on(EVENT_NAMES.CONTROLLER_HOVER_OUT, () => {
+            this.slider && this.slider.close();
+        });
+    }
+
+    open () {
+        this.opened = true;
+    }
+
+    close () {
+        this.opened = false;
     }
 }
 
@@ -96,7 +123,7 @@ export const _public = new OpeningIcon(
 _public.on('ready', (evt) => {
     evt.target.object3D.position.z = -2.5;
     evt.target.object3D.position.y = scene.controls.userHeight + .65;
-    evt.target.object3D.position.x = - .15;
+    evt.target.object3D.position.x = -.15;
     scene.add(evt.target.object3D);
 });
 
@@ -144,7 +171,8 @@ export const _personal = new OpeningIcon(
             color: 0x231f20,
             position: { h: 50, v: 52 },
             fontSize: 0.06
-        }
+        },
+        ppm: 1000
     },
     'right'
 );
