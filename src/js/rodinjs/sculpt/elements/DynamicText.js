@@ -63,7 +63,7 @@ export class DynamicText extends Sculpt {
             this.canvas
         );*/
         this.canvas.width = this.ppm * this.width + 1;
-        this.canvas.height = this.ppm * this.width + 1;
+        this.canvas.height = this.ppm * this.lineHeight + 1;
         this.canvas = utils3D.drawDynTextOnCanvas({
             text: this.text,
             font: this.fontFamily,
