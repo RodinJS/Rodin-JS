@@ -157,14 +157,14 @@ export function drawTextOnCanvas({text, font = "Arial", fontStyle = '', fontSize
 }
 
 
-export function drawDynTextOnCanvas({text, font = "Arial", fontSize = 12, x = 0, y = 0, color = 0x000000, opacity = 1, canvas}) {
+export function drawDynTextOnCanvas({text, font = "Arial", fontSize = 12, lineHeight = fontSize, x = 0, y = 0, color = 0x000000, opacity = 1, canvas}) {
     let textContext = canvas.getContext('2d');
     let rgb = hexToRgb(color);
     textContext.font = fontSize + "px " + font;
     textContext.globalAlpha = opacity;
     textContext.fillStyle = "rgb(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ")";
     textContext.textBaseline = "bottom";
-    return wrapText({context: textContext, text: text, maxWidth: canvas.width, lineHeight: fontSize, canvas: canvas});;
+    return wrapText({context: textContext, text: text, maxWidth: canvas.width, lineHeight: lineHeight, canvas: canvas});
 }
 export function wrapText({context, text, x = 0, y = 0, maxWidth, lineHeight, canvas}) {
     var words = text.split(" ");

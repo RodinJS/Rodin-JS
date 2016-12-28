@@ -26,6 +26,7 @@ while (i--) {
         color: 0xffffff,
         fontFamily: "Arial",
         fontSize: 0.1,
+        lineHeight: 0.2,
         ppm: 1000
     };
     let titleButton = new DynamicText(titleParams);
