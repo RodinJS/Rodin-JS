@@ -12,6 +12,7 @@ import {utils3D} from './../../utils/utils.js';
  * <p>&nbsp; &nbsp;      color : hex,</p>
  * <p>&nbsp; &nbsp;      fontFamily : string,</p>
  * <p>&nbsp; &nbsp;      fontSize : number,</p>
+ * <p>&nbsp; &nbsp;      fontStyle : string,</p>
  * <p>&nbsp; &nbsp;      transparent : boolean,</p>
  * <p>&nbsp; &nbsp;      ppm : number</p>
  * <p>}</p>

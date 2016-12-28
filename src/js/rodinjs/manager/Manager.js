@@ -39,8 +39,8 @@ export class Manager {
         }
     }
 
+    //TODO: Gor mi hat nayi eli es indexy inch tip kara lini u incha inqy voobshe
     /**
-     * TODO: Gor mi hat nayi eli es indexy inch tip kara lini u incha inqy voobshe
      * Get instance of the managed Class
      * @param {*} index
      * @returns {*}

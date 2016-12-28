@@ -6,12 +6,14 @@ import {Sculpt} from './../Sculpt.js';
 import {timeout} from './../../utils/timeout.js';
 import {utils3D} from './../../utils/utils.js';
 /**
- * DynamicText Class, used to create flat text objects, parameters have the following structure:
+ * DynamicText Class, used to create flat text objects with wrapping capability, parameters have the following structure:
  * <p>{</p>
  * <p>&nbsp; &nbsp;      text: string,</p>
+ * <p>&nbsp; &nbsp;      width: number,</p>
  * <p>&nbsp; &nbsp;      color : hex,</p>
  * <p>&nbsp; &nbsp;      fontFamily : string,</p>
  * <p>&nbsp; &nbsp;      fontSize : number,</p>
+ * <p>&nbsp; &nbsp;      lineHeight : number,</p>
  * <p>&nbsp; &nbsp;      transparent : boolean,</p>
  * <p>&nbsp; &nbsp;      ppm : number</p>
  * <p>}</p>
