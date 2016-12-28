@@ -26,7 +26,7 @@ class SceneManager extends Manager {
      */
     go(index) {
         let scene = this.get(index);
-        if (!window.SCENE_MANAGER_AUTO_CREATE) {
+        if (window.SCENE_MANAGER_AUTO_CREATE || window.SCENE_MANAGER_AUTO_CREATE == null) {
             scene.enable();
         }
 
