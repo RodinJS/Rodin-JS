@@ -104,7 +104,6 @@ export class Animator {
             return false;
         }
 
-        console.log(clip);
         clip.play(0);
     }
 

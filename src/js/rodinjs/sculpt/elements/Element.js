@@ -146,6 +146,7 @@ export class Element extends Sculpt {
                 let textSize = utils3D.measureTextOnCanvas(
                     this.label.text,
                     this.label.fontFamily,
+                    this.label.fontStyle,
                     this.label.fontSize * this.ppm,
                     this.canvas
                 );
@@ -157,6 +158,7 @@ export class Element extends Sculpt {
                     textSize = utils3D.measureTextOnCanvas(
                         this.label.text,
                         this.label.fontFamily,
+                        this.label.fontStyle,
                         this.label.fontSize * this.ppm,
                         this.canvas
                     );
