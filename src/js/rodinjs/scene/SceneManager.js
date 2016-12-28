@@ -7,7 +7,7 @@ import * as RODIN from '../RODIN.js';
  * <p>A manager for Scenes, allows users to switch between active scenes, add controllers and handle Time instance</p>
  */
 class SceneManager extends Manager {
-    constructor () {
+    constructor() {
         super(Scene);
 
         /**
@@ -17,18 +17,19 @@ class SceneManager extends Manager {
         this.controllers = new Set();
 
         let scene = this.create();
-        // if(window.SCENE_MANAGER_AUTO_CREATE) {
-            this.go(scene);
-        // }
+        this.go(scene);
     }
 
     /**
      * Switch active scene.
      * @param {*} index
      */
-    go (index) {
+    go(index) {
         let scene = this.get(index);
-        scene.enable();
+        if (!window.SCENE_MANAGER_AUTO_CREATE) {
+            scene.enable();
+        }
+
         this._active = scene._MANAGER_INDEX;
 
         for (let i = 0; i < this.controllers.length; i++) {
@@ -42,12 +43,12 @@ class SceneManager extends Manager {
      * Add controller to SceneManager
      * @param {GamePad} controller
      */
-    addController (controller) {
+    addController(controller) {
         this.controllers.push(controller);
         this.get().addController(controller);
     }
 
-    changeContainerDomElement(element){
+    changeContainerDomElement(element) {
         let scene = this.get();
         scene.renderer.domElement.remove();
         element.appendChild(scene.renderer.domElement);
@@ -59,10 +60,10 @@ const instance = new SceneManager();
 
 RODIN.SceneManager = instance;
 Object.defineProperty(RODIN, 'Time', {
-    get: ()=> {
+    get: () => {
         return instance.get().time;
     },
-    set: ()=> {
+    set: () => {
         throw new ErrorProtectedFieldChange("Time");
     }
 });
