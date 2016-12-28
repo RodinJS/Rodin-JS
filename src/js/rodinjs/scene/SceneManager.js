@@ -17,9 +17,9 @@ class SceneManager extends Manager {
         this.controllers = new Set();
 
         let scene = this.create();
-        if(window.SCENE_MANAGER_AUTO_CREATE) {
+        // if(window.SCENE_MANAGER_AUTO_CREATE) {
             this.go(scene);
-        }
+        // }
     }
 
     /**
