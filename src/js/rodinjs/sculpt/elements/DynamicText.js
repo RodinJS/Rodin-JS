@@ -27,6 +27,7 @@ export class DynamicText extends Sculpt {
         color = 0x000000,
         fontFamily = "Arial",
         fontSize = 0.1,
+        lineHeight = fontSize,
         transparent = true,
         ppm = 500
         }) {
@@ -37,6 +38,7 @@ export class DynamicText extends Sculpt {
         this.color = color;
         this.fontFamily = fontFamily;
         this.fontSize = fontSize;
+        this.lineHeight = lineHeight;
         this.transparent = transparent;
         this.ppm = ppm;
         this.texture = null;
@@ -61,11 +63,12 @@ export class DynamicText extends Sculpt {
             this.canvas
         );*/
         this.canvas.width = this.ppm * this.width + 1;
-        this.canvas.height = this.ppm * this.width + 1;
+        this.canvas.height = this.ppm * this.lineHeight + 1;
         this.canvas = utils3D.drawDynTextOnCanvas({
             text: this.text,
             font: this.fontFamily,
             fontSize: this.fontSize * this.ppm,
+            lineHeight: this.lineHeight * this.ppm,
             x: 0,
             y: 0,
             color: this.color,
