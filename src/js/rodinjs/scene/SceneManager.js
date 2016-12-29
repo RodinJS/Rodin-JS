@@ -56,6 +56,28 @@ class SceneManager extends Manager {
     }
 }
 
+window.addEventListener('message', function (event) {
+
+    if (~event.origin.indexOf('rodinapp.com') || ~event.origin.indexOf('rodin.space') || ~event.origin.indexOf('localhost')) {
+
+        switch (event.data) {
+            case 'enterVR':
+                if (instance.get().webVRmanager.hmd && !instance.get().webVRmanager.hmd.isPresenting)
+                    instance.get().webVRmanager.enterVRMode_();
+                break;
+            case 'exitVR':
+                if (instance.get().webVRmanager.hmd && instance.get().webVRmanager.hmd.isPresenting)
+                    instance.get().webVRmanager.hmd.exitPresent();
+                break;
+        }
+
+        console.log(event.data);
+    } else {
+        return;
+    }
+});
+
+
 const instance = new SceneManager();
 
 RODIN.SceneManager = instance;
