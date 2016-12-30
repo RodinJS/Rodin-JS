@@ -239,6 +239,10 @@ export class GamePad extends THREE.Object3D {
             return;
         }
 
+        this.onControllerUpdate();
+        this.updateObject(controller);
+        this.intersectObjects(controller);
+
         for (let i = 0; i < controller.buttons.length; i++) {
 
             // Handle controller button pressed event
@@ -274,9 +278,6 @@ export class GamePad extends THREE.Object3D {
             }
         }
 
-        this.onControllerUpdate();
-        this.updateObject(controller);
-        this.intersectObjects(controller);
     }
 
     /**

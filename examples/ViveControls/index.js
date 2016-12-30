@@ -19,7 +19,7 @@ let renderer = scene.renderer;
 renderer.setPixelRatio(window.devicePixelRatio);
 
 
-let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, null, 2);
+let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, scene.camera, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
 controllerL.onKeyDown = controllerKeyDown;
@@ -30,7 +30,7 @@ controllerL.onTouchDown = controllerTouchDown;
 SceneManager.addController(controllerL);
 scene.add(controllerL);
 
-let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, null, 3);
+let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, scene.camera, 3);
 controllerR.standingMatrix = controls.getStandingMatrix();
 
 controllerR.onKeyDown = controllerKeyDown;

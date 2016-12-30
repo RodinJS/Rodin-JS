@@ -96,7 +96,7 @@ export class MouseGamePad {
         };
 
         let mouseDown = (event) => {
-            //console.log(event);
+            //alert(event.button);
             switch (event.button) {
                 case 0:
                     this.buttons[0].pressed = true;
@@ -154,6 +154,9 @@ export class MouseGamePad {
         }, false);
         document.body.addEventListener('touchstart', (evt)=> {
             evt.button = 0;
+            evt.clientX = evt.touches[0].clientX;
+            evt.clientY = evt.touches[0].clientY;
+            mouseMove(evt);
             mouseDown(evt);
         }, false);
         document.body.addEventListener('touchend', (evt)=> {
