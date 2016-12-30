@@ -38,7 +38,7 @@ export class Time {
         };
 
         /**
-         * @returns {number} time between last two teaks
+         * @returns {number} - time between last two teaks
          */
         this.deltaTime = () => {
             return delta;
@@ -51,14 +51,14 @@ export class Time {
     }
 
     /**
-     * @param value {number} new speed
+     * @param {number} value - new speed
      */
     set speed (value) {
         this.setSpeed(value);
     }
 
     /**
-     * @returns {number} current speed
+     * @returns {number} - current speed
      */
     get speed () {
         return this.getSpeed();
@@ -73,7 +73,7 @@ export class Time {
     }
 
     /**
-     * @returns {number} milliseconds with speeds
+     * @returns {number} - milliseconds with speeds
      */
     now () {
         return (Date.now() - this.lastSpeedChange) * this.speed + this.msBeforeLastSpeedChange;

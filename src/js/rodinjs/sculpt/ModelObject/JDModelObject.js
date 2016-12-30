@@ -7,7 +7,8 @@ import {Time} from '../../time/Time.js';
 import {ModelObject} from './ModelObject.js';
 
 /**
- * You can export JD file from 3ds max
+ * This class allows you to load JD exported files to the scene.
+ * <p>You can export JD file from 3ds max.</p>
  * For export use Json 3D Exporter for 3ds Max 2016 - http://www.cgdev.net/json/download.php
  */
 

@@ -11,7 +11,8 @@ import '../../../vendor/three/examples/js/loaders/collada/Animation.js';
 import '../../../vendor/three/examples/js/loaders/ColladaLoader.js';
 
 /**
- * For better experience you can export collada file from blender.
+ *  This class allows you to load JD exported files to the scene.
+ * <p>For better experience you can export collada file from blender.</p>
  * Select 'include Material Texture' option.
  */
 const time = Time.getInstance();

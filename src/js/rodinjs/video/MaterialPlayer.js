@@ -3,6 +3,13 @@ import {Time} from '../time/Time.js';
 
 const time = Time.getInstance();
 
+/**
+ * Video player (on Material) Class
+ * @param {string|object} url - the video file url or an object with urls and default url {0: "test1.mp4", 1: "test2.mp4", default: "0"}
+ * @param {boolean} [stereoscopic = false] - set true if video is Up&Down stereoscopic
+ * @param {string} [format = "mp4"] - the video file format
+ * @param {number} [fps = 25] - the desired playback frame rate
+ */
 export class MaterialPlayer {
     constructor (url, stereoscopic = false, format = "mp4", fps = 25) {
         if ((typeof url) === "string") {
@@ -53,10 +60,16 @@ export class MaterialPlayer {
             textureR.repeat.set(1, 0.5);
         }
 
+        /**
+         * A customizable function call on buffering start.
+         */
         this.onBufferStart = function () {
             console.log("buffering");
         };
-
+        /**
+         * switch video files.
+         * @param {*} key - the key of the video url to play
+         */
         this.switchTo = function (key) {
 
             this.pause();
@@ -72,46 +85,62 @@ export class MaterialPlayer {
             video.load();
             video.currentTime = timePoint;
         };
-
+        /**
+         * A customizable function call on buffering end.
+         */
         this.onBufferEnd = function () {
-            /*
-             let i = this.buffer.length;
-             while (i--) {
-             let x1 = this.buffer.start(i);
-             let x2 = this.buffer.end(i);
-             console.log(x1, x2);
-             }
-             */
             console.log("playing");
         };
+        /**
+         * Indicated if the video is playing.
+         */
         this.isPlaying = function () {
             return !video.paused;
         };
 
+        /**
+         * returns the Left eye (the main - if non stereoscopic) texture object
+         */
         this.getTextureL = () => {
             return textureL;
         };
 
+        /**
+         * returns the Left eye (if stereoscopic) texture object
+         */
         this.getTextureR = () => {
             return textureR;
         };
-
+        /**
+         * Indicated if the video is muted.
+         */
         this.isMute = () => {
             return video.muted;
         };
-
+        /**
+         * mute/unmute video.
+         * @param {boolean} [value = true]
+         */
         this.mute = (value = true) => {
             video.muted = value;
         };
-
+        /**
+         * play
+         */
         this.play = () => {
             video.play();
         };
 
+        /**
+         * pause
+         */
         this.pause = () => {
             video.pause();
         };
 
+        /**
+         * Play/Pause
+         */
         this.playPause = () => {
             if (this.isPlaying()) {
                 this.pause();

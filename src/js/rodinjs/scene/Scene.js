@@ -135,6 +135,7 @@ export class Scene extends Sculpt {
                 this.webVRmanager.render(this.scene, this.camera, timestamp);
                 this.postRenderFunctions.map(i => i());
 
+
                 // Update controllers
                 this.controllers.map(controller => controller.update());
 
