@@ -172,6 +172,20 @@ export class Sculpt {
     globalPosition () {
         return new THREE.Vector3().setFromMatrixPosition(this.object3D.matrixWorld);
     }
+    /**
+     * Sets the global matrix of the object
+     * @param {THREE.Matrix4} matrix
+     */
+    setGlobalMatrix(matrix){
+        let inverseParentMatrix = new THREE.Matrix4();
+        let newGlobalMatrix = matrix.clone();
+
+        inverseParentMatrix.getInverse(this.object3D.parent.matrixWorld);
+        newGlobalMatrix.multiplyMatrices(inverseParentMatrix, newGlobalMatrix);
+
+        this.object3D.matrixAutoUpdate = false;
+        this.object3D.matrix = newGlobalMatrix;
+    }
 
     /**
      * animate a parameter change

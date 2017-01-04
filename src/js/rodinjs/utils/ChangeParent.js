@@ -5,6 +5,8 @@ import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
  * @param { THREE.Object3D } targetParent
  */
 export default function changeParent(object = null, targetParent = null) {
+    // TODO change as rodinphysics update
+
     let currParent = object.parent;
     let initPos = object.getWorldPosition();
     let initQuat = object.getWorldQuaternion();

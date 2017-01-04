@@ -12,6 +12,8 @@ import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 let scene = SceneManager.get();
 scene.scene.background = new THREE.Color(0xb5b5b5);
 scene.setCameraProperty("far", 10000);
+let camera = scene.camera;
+
 
 let controls = scene.controls;
 
