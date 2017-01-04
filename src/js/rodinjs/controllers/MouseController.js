@@ -25,6 +25,12 @@ export class MouseController extends GamePad {
         this.setRaycasterScene(scene);
         this.setRaycasterCamera(camera);
 
+      window.addEventListener('vrdisplaypresentchange', (e) => {
+        let re = new RegExp('cardboard', 'gi');
+        if (e.detail && e.detail.display && re.test(e.detail.display.displayName)) {
+          e.detail.display.isPresenting ? this.disable() : this.enable();
+        }
+      }, true);
     }
 
 

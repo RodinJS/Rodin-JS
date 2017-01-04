@@ -66,7 +66,6 @@ export class ViveController extends GamePad {
      * @param {Object} intersect - intersected object ({distance, point, face, faceIndex, indices, object}) at the time of event.
      */
     gamepadHover(intersect){
-        console.log(intersect);
         this.reycastingLine.geometry.vertices[1].z = -intersect[0].distance;
         this.reycastingLine.geometry.verticesNeedUpdate = true;
     }

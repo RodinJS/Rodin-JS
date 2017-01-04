@@ -3,7 +3,7 @@ import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 import {ModelLoader} from './ModelLoader.js';
 
-
+//TODO: reafactor this and describe.
 export class CubeMapFromModel extends Sculpt {
     constructor (size, textureURL, material) {
         super();

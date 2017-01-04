@@ -5,7 +5,21 @@ import {Event} from '../../Event.js';
 import {Sculpt} from './../Sculpt.js';
 import {timeout} from './../../utils/timeout.js';
 import {utils3D} from './../../utils/utils.js';
-
+/**
+ * Text Class, used to create flat text objects, parameters have the following structure:
+ * <p>{</p>
+ * <p>&nbsp; &nbsp;      text: string,</p>
+ * <p>&nbsp; &nbsp;      color : hex,</p>
+ * <p>&nbsp; &nbsp;      fontFamily : string,</p>
+ * <p>&nbsp; &nbsp;      fontSize : number,</p>
+ * <p>&nbsp; &nbsp;      fontStyle : string,</p>
+ * <p>&nbsp; &nbsp;      transparent : boolean,</p>
+ * <p>&nbsp; &nbsp;      ppm : number</p>
+ * <p>}</p>
+ *
+ * ppm is the Pixel Per Meter resolution
+ * @param {!Object}  - parameters
+ */
 export class Text extends Sculpt {
     constructor({
         background = {},
@@ -13,6 +27,7 @@ export class Text extends Sculpt {
         color = 0x000000,
         fontFamily = "Arial",
         fontSize = 0.1,
+        fontStyle = '',
         transparent = true,
         ppm = 500
         }) {
@@ -22,6 +37,7 @@ export class Text extends Sculpt {
         this.color = color;
         this.fontFamily = fontFamily;
         this.fontSize = fontSize;
+        this.fontStyle = fontStyle;
         this.transparent = transparent;
         this.ppm = ppm;
         this.texture = null;
@@ -42,6 +58,7 @@ export class Text extends Sculpt {
         let textSize = utils3D.measureTextOnCanvas(
             this.text,
             this.fontFamily,
+            this.fontStyle,
             this.fontSize * this.ppm,
             this.canvas
         );
@@ -51,6 +68,7 @@ export class Text extends Sculpt {
             text: this.text,
             font: this.fontFamily,
             fontSize: this.fontSize * this.ppm,
+            fontStyle: this.fontStyle,
             x: 0,
             y: 0,
             color: this.color,

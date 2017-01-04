@@ -1,6 +1,8 @@
 import {Sculpt} from '../Sculpt.js';
 import {ErrorAbstractClassInstance} from '../../error/CustomErrors.js';
-
+/**
+ * This is an abstract class for loading Objects
+ */
 export class ModelObject extends Sculpt {
     constructor () {
         super();

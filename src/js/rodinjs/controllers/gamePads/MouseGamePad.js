@@ -146,7 +146,7 @@ export class MouseGamePad {
         document.body.addEventListener('mousedown', mouseDown, false);
         document.body.addEventListener('mouseup', mouseUp, false);
 
-        document.body.addEventListener('touchmove', (evt)=> {
+      document.body.addEventListener('touchmove', (evt)=> {
             // console.log("evt", evt);
             evt.clientX = evt.touches[0].clientX;
             evt.clientY = evt.touches[0].clientY;

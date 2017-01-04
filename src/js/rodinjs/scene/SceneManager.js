@@ -3,53 +3,105 @@ import {Manager} from '../manager/Manager.js';
 import {Scene} from './Scene.js';
 import {Set} from '../utils/Set.js';
 import * as RODIN from '../RODIN.js';
-
+/**
+ * <p>A manager for Scenes, allows users to switch between active scenes, add controllers and handle Time instance</p>
+ */
 class SceneManager extends Manager {
-    constructor () {
-        super(Scene);
-
-        this.controllers = new Set();
-
-        let scene = this.create();
-        this.go(scene);
-    }
+  constructor() {
+    super(Scene);
 
     /**
-     * switch scene
-     * @param index
+     * The set of controllers.
+     * @type {Set<Gamepad>}
      */
-    go (index) {
-        let scene = this.get(index);
-        scene.enable();
-        this._active = scene._MANAGER_INDEX;
+    this.controllers = new Set();
 
-        for (let i = 0; i < this.controllers.length; i++) {
-            scene.addController(this.controllers[i]);
-        }
+    let scene = this.create();
+    this.go(scene);
+  }
 
-        scene.controllers = this.controllers;
+  /**
+   * Switch active scene.
+   * @param {*} index
+   */
+  go(index) {
+    let scene = this.get(index);
+    if (window.SCENE_MANAGER_AUTO_CREATE || window.SCENE_MANAGER_AUTO_CREATE == null) {
+      scene.enable();
     }
 
-    /**
-     * add controller to SceneManager
-     * @param controller {GamePad}
-     */
-    addController (controller) {
-        this.controllers.push(controller);
-        this.get().addController(controller);
+    this._active = scene._MANAGER_INDEX;
+
+    for (let i = 0; i < this.controllers.length; i++) {
+      scene.addController(this.controllers[i]);
     }
+
+    scene.controllers = this.controllers;
+  }
+
+  /**
+   * Add controller to SceneManager
+   * @param {GamePad} controller
+   */
+  addController(controller) {
+    this.controllers.push(controller);
+    this.get().addController(controller);
+  }
+
+  changeContainerDomElement(element) {
+    let scene = this.get();
+    scene.renderer.domElement.remove();
+    element.appendChild(scene.renderer.domElement);
+    console.log("element", element);
+  }
 }
+
+window.addEventListener('message', function (event) {
+
+  if (~event.origin.indexOf('rodinapp.com') || ~event.origin.indexOf('rodin.io') || ~event.origin.indexOf('rodin.space') || ~event.origin.indexOf('localhost')) {
+
+    switch (event.data) {
+      case 'enterVR':
+        if (instance.get().webVRmanager.hmd && !instance.get().webVRmanager.hmd.isPresenting)
+          instance.get().webVRmanager.enterVRMode_();
+        break;
+      case 'exitVR':
+        if (instance.get().webVRmanager.hmd && instance.get().webVRmanager.hmd.isPresenting)
+          instance.get().webVRmanager.hmd.exitPresent();
+        break;
+    }
+  }
+});
+
 
 const instance = new SceneManager();
 
 RODIN.SceneManager = instance;
 Object.defineProperty(RODIN, 'Time', {
-    get: ()=> {
-        return instance.get().time;
-    },
-    set: ()=> {
-        throw new ErrorProtectedFieldChange("Time");
-    }
+  get: () => {
+    return instance.get().time;
+  },
+  set: () => {
+    throw new ErrorProtectedFieldChange("Time");
+  }
 });
+
+
+///check if hmd is ready push parent
+
+let maxCount = 0;
+let tim;
+function checkHmd() {
+  if (maxCount++ > 20) {
+    return;
+  }
+
+  if (instance.get().webVRmanager.hmd && window.parent && window.parent !== window) {
+    return window.parent.postMessage("readyToCast", "*");
+  }
+  clearTimeout(tim);
+  tim = setTimeout(checkHmd, 200);
+}
+checkHmd();
 
 export {instance as SceneManager};

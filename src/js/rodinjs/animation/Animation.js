@@ -2,6 +2,7 @@ import {TWEEN} from '../Tween.js';
 import {Event} from '../Event.js';
 import {EVENT_NAMES} from '../constants/constants.js';
 import {ErrorProtectedMethodCall} from '../error/CustomErrors.js';
+import {Sculpt} from '../sculpt/Sculpt.js';
 
 function enforce () {
 }
@@ -20,14 +21,15 @@ export class Animation {
          * @type {Sculpt}
          */
         this.sculpt = {};
+        //TODO: Gor mi hat nkaragri
         /**
-         * Animation parameters. TODO: Gor mi hat nkaragri
+         * Animation parameters.
          * @type {Object}
          */
         this.params = Object.clone(params);
-
+        //TODO: Gor es inchi hamara ?
         /**
-         * Animation name. TODO: Gor es inchi hamara ?
+         * Animation name.
          * @type {string}
          */
         this.name = name;
@@ -52,13 +54,14 @@ export class Animation {
         return newAnimation.duration(this.duration()).easing(this.easing()).delay(this.delay()).loop(this.loop());
     }
 
+    //TODO: Gor incha veradarcnum, es inch booleana
     /**
      * Start animation
      * @param {boolean} [forceStart] - stops this animation (if currently playing) and starts again
-     * @returns {boolean} TODO: Gor incha veradarcnum, es inch booleana
+     * @returns {boolean}
      */
     start (forceStart = false) {
-        if (!this.sculpt.isSculpt) {
+        if (!this.sculpt instanceof Sculpt) {
             return console.warn('animation cannot be played without adding in object');
         }
 
@@ -109,11 +112,11 @@ export class Animation {
                 _this.sculpt.emit(EVENT_NAMES.ANIMATION_COMPLETE, evt);
             });
     }
-
+    //TODO: Gor incha veradarcnum, es inch booleana
     /**
      * Play animation
      * @param {boolean} [forceStart] - stops this animation (if currently playing) and starts again
-     * @returns {boolean} TODO: Gor incha veradarcnum, es inch booleana
+     * @returns {boolean}
      */
     play (forceStart = false) {
         return this.start(forceStart);
@@ -160,9 +163,8 @@ export class Animation {
     isPlaying () {
         return this.playing;
     }
-
+    //TODO: Gor es incha
     /**
-     *  TODO: Gor es incha
      * set/get loop
      * <p>Sets loop value if provided as param, otherwise returns current loop value</p>
      * @param [loop]

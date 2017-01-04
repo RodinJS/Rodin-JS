@@ -6,22 +6,31 @@ import {Animator} from '../animation/Animator.js';
 import {ErrorAbstractClassInstance, ErrorProtectedMethodCall} from '../error/CustomErrors';
 
 /**
- * this function allows that only sculpt can add native event listeners
+ * This function is used for restricting native event listeners creation only to sculpt
  */
 function Enforce () {
 }
 
 /**
  * Abstract class Sculpt
+ * <p>Sculpt is a wrapper for 3d objects (THREE.Object3D, THREE.Mesh) used in Rodin library.</p>
+ * This wrapper allows adding event listeners to the 3d objects, animating, and adds other utilities.
  */
 export class Sculpt {
     constructor (id) {
         if (this.constructor == Sculpt) {
             throw new ErrorAbstractClassInstance();
         }
-
+        /**
+         * Just an id.
+         * @type {*}
+         */
         this.id = id;
         let events = {};
+        /**
+         * Get all events for the sculpt objects
+         * @return {Object<string, function[]>} - a map for event names and their listener function arrays
+         */
         this.getEvents = () => events;
 
         let nativeEvents = {};
@@ -32,32 +41,30 @@ export class Sculpt {
 
             return nativeEvents;
         };
-
+        /**
+         * Force hover event to be triggered on each animation frame, as long as the object is being hovered by a controller.
+         * <p>By default (false) the hover event is triggered once, every time a controller hovers the object</p>
+         * @type {boolean}
+         */
         this.forceHover = false;
-        this.locked = false;
-        this.isSculpt = true;
+
+        /**
+         * The THREE.Object3D object of this Sculpt object.
+         * @type {THREE.Object3D}
+         */
         this.object3D = null;
 
         /**
-         * this future is responsible for mouse and tap actions
-         * If true, then all mouse and tap actions called on object will called on parent too.
-         * If false, then event will stop here.
-         *
-         * NODE: Dont change value here, only change value for custom objects, derived from this class
-         *
-         *
+         * The animator of this object, responsible for animations management.
+         * @type {Animator}
          */
-        this.passActionToParent = true;
-
-        this.style = {
-            cursor: "default"
-        };
-
         this.animator = new Animator(this);
     }
 
     /**
-     * init
+     * Initialize the sculpt object by setting its THREE.Object3D variable, and linking it to this sculpt instance.
+     * We link 3d objects to their sculpt wrapper for cases when we have got the 3d element only (for example from raycaster) and need to find it's container sculpt object
+     * @param {THREE.Object3D} object3D
      */
     init (object3D) {
         this.object3D = object3D;
@@ -66,10 +73,9 @@ export class Sculpt {
     }
 
     /**
-     * add listener to Event Alias
-     * @param {string[]|string} evts
-     * @param {function} callback
-     * @param {function} enforce
+     * Add listener to Event.
+     * @param {string[]|string} evts - event name(s)
+     * @param {function} callback - callback function
      */
     on (evts, callback, enforce = null) {
         let events = enforce === Enforce ? this.getNativeEvents(enforce) : this.getEvents();
@@ -88,79 +94,79 @@ export class Sculpt {
 
 
     /**
-     * add listener to Event Alias
-     * @param evts
-     * @param callback
+     * Add listener to Event
+     * @param {string[]|string} evts - event name(s)
+     * @param {function} callback - callback function
      */
     addEventListener (evts, callback) {
         this.on(evts, callback);
     }
 
     /**
-     * remove specific listener from Event Alias
-     * @param evt
-     * @param callback
+     * Remove specific listener from Event
+     * @param {string} evt - event name
+     * @param {function} callback - callback function
      */
-    removeEventListener (evt, callback) {
+    removeEventListener (eventName, callback) {
         let events = this.getEvents();
-        let i = events[evt].indexOf(callback);
-        if (events[evt] && i !== -1) {
-            events[evt].splice(i, 1);
+        let i = events[eventName].indexOf(callback);
+        if (events[eventName] && i !== -1) {
+            events[eventName].splice(i, 1);
         }
     }
 
     /**
-     * emit Event Alias with params
-     * @param {String} evt
-     * @param {Event} customEvt
-     * @param {Array} args
+     * Emit Event with params
+     * @param {String} evtName
+     * @param {Event} customEvt - a custom Event object
+     * @param {Array} args - arguments to be passed to the event callback
      */
-    emit (evt, customEvt, ...args) {
-        customEvt.name = evt;
-        this.emitNative(evt, customEvt, Enforce);
+    emit (evtName, customEvt, ...args) {
+        customEvt.name = evtName;
+        this.emitNative(evtName, customEvt, Enforce);
 
         if (customEvt.propagation === false) {
             return;
         }
 
         let events = this.getEvents();
-        if (events[evt] && events[evt].length > 0) {
-            for (let f = 0; f < events[evt].length; f++) {
-                if (typeof events[evt][f] === "function") {
-                    events[evt][f].apply((customEvt && customEvt.target), [customEvt].concat(args));
+        if (events[evtName] && events[evtName].length > 0) {
+            for (let f = 0; f < events[evtName].length; f++) {
+                if (typeof events[evtName][f] === "function") {
+                    events[evtName][f].apply((customEvt && customEvt.target), [customEvt].concat(args));
                 }
             }
         }
     }
 
-    emitNative (evt, customEvt, enforce) {
+    emitNative (eventName, customEvt, enforce) {
         if (enforce !== Enforce) {
             throw  new ErrorProtectedMethodCall('emitNative')
         }
 
         let events = this.getNativeEvents(Enforce);
-        if (events[evt] && events[evt].length > 0) {
-            for (let f = 0; f < events[evt].length; f++) {
-                if (typeof events[evt][f] === "function") {
-                    events[evt][f].apply((customEvt && customEvt.target), [customEvt]);
+        if (events[eventName] && events[eventName].length > 0) {
+            for (let f = 0; f < events[eventName].length; f++) {
+                if (typeof events[eventName][f] === "function") {
+                    events[eventName][f].apply((customEvt && customEvt.target), [customEvt]);
                 }
             }
         }
     }
 
     /**
-     * remove all listeners from Event Alias
-     * @param {Event} evt
+     * Remove all listeners from Event
+     * @param {Event} eventName
      */
-    removeAllListeners (evt) {
+    removeAllListeners (eventName) {
         let events = this.getEvents();
-        if (events[evt]) {
-            delete events[evt];
+        if (events[eventName]) {
+            delete events[eventName];
         }
     }
 
     /**
-     * get global position of object
+     * Get global position of object
      * @returns {THREE.Vector3}
      */
     globalPosition () {
@@ -182,13 +188,21 @@ export class Sculpt {
     }
 
     /**
-     * animate
-     * @param {Object} params
-     * @param next
+     * animate a parameter change
+     * @param {Object} params - e.g.
+        {
+            property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
+            from: new THREE.Vector3(1, 1, 1),
+            to: new THREE.Vector3(1.1, 1.1, 1.1),
+            easing: TWEEN.Easing.Linear.None,
+            duration: 500,
+            delay: 20,
+        }
+     * @param {function} next - onComplete callback function
      */
     animate (params, next) {
         if (!params.to) {
-            throw new Error("Invalid end valus");
+            throw new Error("Invalid end values");
         }
 
         let easing = params.easing || TWEEN.Easing.Linear.None;
@@ -275,45 +289,11 @@ export class Sculpt {
         return this;
     }
 
+
     /**
-     * rotate around center
-     * @param {Object} params
-     * @param next
+     * Make object raycastable or not
+     * @param {boolean} value
      */
-    rotateAroundNull (params, next) {
-        let duration = params.duration || 500;
-        let delay = params.delay || 0;
-        let easing = params.easing || TWEEN.Easing.Quadratic.InOut;
-        let cycles = params.cycles || 1;
-
-        if (this.rotateTween) {
-            this.rotateTween.stop()
-        }
-
-        let elem = {
-            t: 0
-        };
-
-        let r = Math.sqrt(Math.pow(this.object3D.position.x, 2) + Math.pow(this.object3D.position.y, 2));
-
-        let object = this.object3D;
-
-        function updateCallback () {
-            let t = this.t;
-
-            object.position.y = r * Math.cos(t);
-            object.position.x = r * Math.sin(t);
-        }
-
-        this.rotateTween = new TWEEN.Tween(elem)
-            .to({ t: 2 * cycles * Math.PI }, duration)
-            .delay(delay)
-            .onUpdate(updateCallback)
-            .easing(easing)
-            .start()
-            .onComplete(next);
-    }
-
     set raycastable(value) {
         if(value) {
             Raycastables.push(this.object3D);

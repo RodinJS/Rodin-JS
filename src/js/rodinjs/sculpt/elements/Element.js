@@ -6,6 +6,44 @@ import {Sculpt} from './../Sculpt.js';
 import {timeout} from './../../utils/timeout.js';
 import {utils3D} from './../../utils/utils.js';
 
+/**
+ * Element Class, used to create flat objects, parameters have the following structure:
+ * <p>{</p>
+ * <p>      name: string,</p>
+ * <p>      width : meters,</p>
+ * <p>      height : meters,</p>
+ * <p>      background : {</p>
+ * <p>&nbsp;&nbsp;&nbsp; opacity: number,</p>
+ * <p>&nbsp;&nbsp;&nbsp; color: hex,</p>
+ * <p>&nbsp;&nbsp;&nbsp; image: {url:string}</p>
+ * <p>                  },</p>
+ * <p>      border : {</p>
+ * <p>&nbsp;&nbsp;&nbsp; radius: number,</p>
+ * <p>&nbsp;&nbsp;&nbsp; color: hex,</p>
+ * <p>&nbsp;&nbsp;&nbsp; width: number,</p>
+ * <p>&nbsp;&nbsp;&nbsp; opacity: number</p>
+ * <p>              },</p>
+ * <p>      label: {</p>
+ * <p>&nbsp;&nbsp;&nbsp; text: string,</p>
+ * <p>&nbsp;&nbsp;&nbsp; fontFamily: string,</p>
+ * <p>&nbsp;&nbsp;&nbsp; fontSize: number,</p>
+ * <p>&nbsp;&nbsp;&nbsp; opacity: number,</p>
+ * <p>&nbsp;&nbsp;&nbsp; color: Hex</p>
+ * <p>              },</p>
+ * <p>      image: {</p>
+ * <p>&nbsp;&nbsp;&nbsp; url: string,</p>
+ * <p>&nbsp;&nbsp;&nbsp; position: {v: number, h: number},</p>
+ * <p>&nbsp;&nbsp;&nbsp; width: number,</p>
+ * <p>&nbsp;&nbsp;&nbsp; height: number,</p>
+ * <p>&nbsp;&nbsp;&nbsp; opacity: number</p>
+ * <p>              },</p>
+ * <p>      transparent : boolean,</p>
+ * <p>      ppm : number</p>
+ * <p>}</p>
+ *
+ * ppm is the Pixel Per Meter resolution
+ * @param {!Object}  - parameters
+ */
 export class Element extends Sculpt {
     constructor({
         name = "button",
@@ -108,6 +146,7 @@ export class Element extends Sculpt {
                 let textSize = utils3D.measureTextOnCanvas(
                     this.label.text,
                     this.label.fontFamily,
+                    this.label.fontStyle,
                     this.label.fontSize * this.ppm,
                     this.canvas
                 );
@@ -119,6 +158,7 @@ export class Element extends Sculpt {
                     textSize = utils3D.measureTextOnCanvas(
                         this.label.text,
                         this.label.fontFamily,
+                        this.label.fontStyle,
                         this.label.fontSize * this.ppm,
                         this.canvas
                     );

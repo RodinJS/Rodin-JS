@@ -57,7 +57,7 @@ SceneManager.addController(mouseController);
 
 /// vive controllers
 
-let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, threeScene, null, 1);
+let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, threeScene, scene.camera, 1);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
 controllerL.onKeyDown = controllerKeyDown;
@@ -69,7 +69,7 @@ SceneManager.addController(controllerL);
 
 scene.add(controllerL);
 
-let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, threeScene, null, 1);
+let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, threeScene, scene.camera, 1);
 controllerR.standingMatrix = controls.getStandingMatrix();
 
 controllerR.onKeyDown = controllerKeyDown;
