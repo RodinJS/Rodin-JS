@@ -58,7 +58,7 @@ for (let i = 0; i < physicsEngines.length; i++) {
     buttons.push(new Element(physicEngineChangeBtn));
     buttons[i].on('ready', (evt) => {
         let object = evt.target.object3D;
-        object.position.set(-0.75 + i * 1.5, 2, -1);
+        object.position.set(-0.75 + i * 1.5, 2.2, -1);
         object.material.opacity = 0.5;
 
         evt.target.active = false;
