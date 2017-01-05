@@ -27,7 +27,7 @@ export class Sculpt {
         this.on('ready', () => {
             LoadingObjects.remove(this);
             if(LoadingObjects.length === 0) {
-                SceneManager.get().emit('loadingComplete');
+                SceneManager.loadingComplete();
             }
         });
 
