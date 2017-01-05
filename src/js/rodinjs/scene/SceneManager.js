@@ -18,6 +18,7 @@ class SceneManager extends Manager {
 
         let scene = this.create();
         this.go(scene);
+        initListeners();
     }
 
     /**
@@ -56,27 +57,40 @@ class SceneManager extends Manager {
     }
 
     loadingComplete () {
+        let maxCount = 0;
+        let tim;
+        function checkHmd () {
+            if (maxCount++ > 20) {
+                return;
+            }
 
+            if (instance.get().webVRmanager.hmd && window.parent && window.parent !== window) {
+                return window.parent.postMessage("readyToCast", "*");
+            }
+            clearTimeout(tim);
+            tim = setTimeout(checkHmd, 200);
+        }
+        checkHmd();
     }
 }
 
-window.addEventListener('message', function (event) {
+function initListeners () {
+    window.addEventListener('message', function (event) {
+        if (~event.origin.indexOf('rodinapp.com') || ~event.origin.indexOf('rodin.io') || ~event.origin.indexOf('rodin.space') || ~event.origin.indexOf('localhost')) {
 
-    if (~event.origin.indexOf('rodinapp.com') || ~event.origin.indexOf('rodin.io') || ~event.origin.indexOf('rodin.space') || ~event.origin.indexOf('localhost')) {
-
-        switch (event.data) {
-            case 'enterVR':
-                if (instance.get().webVRmanager.hmd && !instance.get().webVRmanager.hmd.isPresenting)
-                    instance.get().webVRmanager.enterVRMode_();
-                break;
-            case 'exitVR':
-                if (instance.get().webVRmanager.hmd && instance.get().webVRmanager.hmd.isPresenting)
-                    instance.get().webVRmanager.hmd.exitPresent();
-                break;
+            switch (event.data) {
+                case 'enterVR':
+                    if (instance.get().webVRmanager.hmd && !instance.get().webVRmanager.hmd.isPresenting)
+                        instance.get().webVRmanager.enterVRMode_();
+                    break;
+                case 'exitVR':
+                    if (instance.get().webVRmanager.hmd && instance.get().webVRmanager.hmd.isPresenting)
+                        instance.get().webVRmanager.hmd.exitPresent();
+                    break;
+            }
         }
-    }
-});
-
+    });
+}
 
 const instance = new SceneManager();
 
@@ -89,23 +103,5 @@ Object.defineProperty(RODIN, 'Time', {
         throw new ErrorProtectedFieldChange("Time");
     }
 });
-
-
-///check if hmd is ready push parent
-
-let maxCount = 0;
-let tim;
-function checkHmd () {
-    if (maxCount++ > 20) {
-        return;
-    }
-
-    if (instance.get().webVRmanager.hmd && window.parent && window.parent !== window) {
-        return window.parent.postMessage("readyToCast", "*");
-    }
-    clearTimeout(tim);
-    tim = setTimeout(checkHmd, 200);
-}
-checkHmd();
 
 export {instance as SceneManager};
