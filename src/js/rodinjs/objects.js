@@ -24,3 +24,9 @@ Raycastables.validate = (item) => {
 
     throw new Error(`Raycastables can contain only Sculpt or Object3D`);
 };
+
+/**
+ * All objects which are not ready
+ * @type {Set}
+ */
+export const LoadingObjects = new Set();
