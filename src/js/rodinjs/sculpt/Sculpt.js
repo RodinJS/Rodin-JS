@@ -1,9 +1,10 @@
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import {Objects, Raycastables} from '../objects.js';
+import {Objects, Raycastables, LoadingObjects} from '../objects.js';
 import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
 import {Animator} from '../animation/Animator.js';
-import {ErrorAbstractClassInstance, ErrorProtectedMethodCall} from '../error/CustomErrors';
+import {ErrorAbstractClassInstance, ErrorProtectedMethodCall} from '../error/CustomErrors.js';
+import {SceneManager} from '../scene/SceneManager.js';
 
 /**
  * This function is used for restricting native event listeners creation only to sculpt
@@ -21,6 +22,15 @@ export class Sculpt {
         if (this.constructor == Sculpt) {
             throw new ErrorAbstractClassInstance();
         }
+
+        LoadingObjects.push(this);
+        this.on('ready', () => {
+            LoadingObjects.remove(this);
+            if(LoadingObjects.length === 0) {
+                SceneManager.loadingComplete();
+            }
+        });
+
         /**
          * Just an id.
          * @type {*}
