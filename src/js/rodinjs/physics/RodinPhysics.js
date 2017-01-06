@@ -127,6 +127,7 @@ export class RodinPhysics {
         if (this.physicsEngine === 'cannon') {
 
             while (i--) {
+                if (!this.rigidBodies[i].enabled()) continue;
                 let newRotation = new CANNON.Quaternion();
                 this.rigidBodies[i].body.quaternion.mult(RigidBody.threeToCannonAxis.inverse(), newRotation);
 
@@ -142,6 +143,7 @@ export class RodinPhysics {
         }
         if (this.physicsEngine === 'oimo') {
             while (i--) {
+                if (!this.rigidBodies[i].enabled()) continue;
                 let newGlobalMatrix = new THREE.Matrix4();
                 newGlobalMatrix.compose(
                     PhysicsUtils.oimoToThree(this.rigidBodies[i].body.position),
@@ -150,6 +152,8 @@ export class RodinPhysics {
                     this.rigidBodies[i].owner.scale);
 
 
+                // todo if raycasted
+                // todo if there isn't geometry
                 this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
             }
         }

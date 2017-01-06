@@ -6,6 +6,10 @@ import * as PhysicsUtils from '../utils/physicsUtils.js';
 
 import {RodinPhysics} from './RodinPhysics.js';
 
+
+import {SceneManager} from '../../../../_build/js/rodinjs/scene/SceneManager.js';
+let scene = SceneManager.get();
+
 export class RigidBody {
 
     /**
@@ -20,6 +24,19 @@ export class RigidBody {
 
         if (!this.physicsEngine) return;
         if (!this.object) return;
+
+        let _enabled = true;
+        this.enable = () => {
+            _enabled = true;
+        };
+
+        this.disable = () => {
+            _enabled = false;
+        };
+
+        this.enabled = () => {
+            return _enabled;
+        };
 
         if (this.physicsEngine === 'cannon') {
             if (!RigidBody.threeToCannonAxis) {
@@ -87,7 +104,25 @@ export class RigidBody {
         }
 
         let shape;
-        let param = this.owner.geometry.parameters;
+        let param = {};
+
+        if (this.owner.geometry.parameters) {
+            param = this.owner.geometry.parameters;
+        }
+
+        if (this.owner) {
+            this.owner.geometry.computeBoundingBox();
+            let bBox = this.owner.geometry.boundingBox;
+            param.width  = Math.abs(bBox.max.x) + Math.abs(bBox.min.x);
+            param.height = Math.abs(bBox.max.y) + Math.abs(bBox.min.y);
+            param.depth  = Math.abs(bBox.max.z) + Math.abs(bBox.min.z);
+            let mesh = new THREE.Mesh(
+                new THREE.BoxGeometry(param.width, param.height, param.depth),
+                new THREE.MeshBasicMaterial( {color:0xaaaaaa, wireframe: true})
+            );
+            this.owner.add(mesh);
+        }
+
         this.createObjectCollision.size = [];
 
         switch (type) {

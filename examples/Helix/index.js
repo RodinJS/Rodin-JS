@@ -11,6 +11,9 @@ import './objects/lights_c.js';
 import {Helix} from './objects/Helix_c.js';
 import {HelixThumb} from './objects/HelixThumb_c.js';
 import {Popup} from './objects/Popup_c.js';
+
+console.log(Helix);
+
 import * as icons from './objects/icons_c.js';
 
 const helix = new Helix();

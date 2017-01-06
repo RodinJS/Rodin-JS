@@ -31,6 +31,7 @@ const controllerKeyDown = (evt) => {
             if (evt.keyCode === 3) {
                 let initParent = target.object3D.parent;
                 changeParent(target.object3D, camera);
+                //target.rigidBody.disable();
                 target.object3D.initRotation = target.object3D.rotation.clone();
                 target.object3D.initMousePos = {x: controller.axes[0], y: controller.axes[1]};
                 changeParent(target.object3D, initParent);
