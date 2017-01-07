@@ -1,6 +1,7 @@
 import {Sculpt} from "../sculpt/Sculpt.js";
 import {THREE} from "../../vendor/three/THREE.GLOBAL.js";
 import {Time} from "../time/Time.js";
+import {timeout} from '../utils/timeout.js';
 import {Set} from '../utils/Set.js';
 import {Objects} from '../objects.js';
 import {Event} from '../Event.js';
@@ -93,6 +94,10 @@ export class Scene extends Sculpt {
         window.addEventListener('resize', this.onResize.bind(this), true);
         window.addEventListener('vrdisplaypresentchange', this.onResize.bind(this), true);
         this.render();
+
+        timeout(() => {
+            this.emit("ready", new Event(this));
+        }, 0);
     }
 
     /**
