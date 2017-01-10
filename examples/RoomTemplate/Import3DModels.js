@@ -21,91 +21,96 @@ room.on('ready', () => {
     scene.add(room.object3D);
 
     // room collision
-    crateRoomCollision();
+    let roomCollision = ModelLoader.load('./models/RoomCollision.obj');
+    roomCollision.on('ready', () => {
+        scene.add(roomCollision.object3D);
+        createRaycastableRigidBody(roomCollision, 'box', 0, false);
+    });
 });
+
 // sofa_01
 export const sofa_01 = ModelLoader.load('./models/sofa_01.obj');
 sofa_01.on('ready', () => {
     scene.add(sofa_01.object3D);
-    createRaycastablesObjects(sofa_01);
+    createRaycastableRigidBody(sofa_01, 'box', 1, true, true);
 });
 
 // sofa_02
 export const sofa_02 = ModelLoader.load('./models/sofa_02.obj');
 sofa_02.on('ready', () => {
     scene.add(sofa_02.object3D);
-    createRaycastablesObjects(sofa_02);
+    createRaycastableRigidBody(sofa_02, 'box', 1, true, true);
 });
 
 // table
 export const table = ModelLoader.load('./models/table.obj');
 table.on('ready', () => {
     scene.add(table.object3D);
-    createRaycastablesObjects(table);
+    createRaycastableRigidBody(table, 'box', 0.1, true, true);
 });
 
 // books
 export const books = ModelLoader.load('./models/books.obj');
 books.on('ready', () => {
     scene.add(books.object3D);
-    createRaycastablesObjects(books);
+    createRaycastableRigidBody(books, 'box', 0.01, true, false);
 });
 
 // vases
 export const vases = ModelLoader.load('./models/vases.obj');
 vases.on('ready', () => {
     scene.add(vases.object3D);
-    createRaycastablesObjects(vases);
+    createRaycastableRigidBody(vases, 'box', 0.02, true, true);
 });
 
 // apples
 export const apples = ModelLoader.load('./models/apples.obj');
 apples.on('ready', () => {
     scene.add(apples.object3D);
-    createRaycastablesObjects(apples);
+    createRaycastableRigidBody(apples, 'sphere', 0.001, true, false);
 });
-
-/*// picture_wall
-let picture_wall = ModelLoader.load('./models/picture_wall.obj');
-picture_wall.on('ready', () => {
-    scene.add(picture_wall.object3D);
-    createRaycastablesObjects(picture_wall);
-});*/
 
 // firePlace
 export const fire_place = ModelLoader.load('./models/FirePlace.obj');
 fire_place.on('ready', () => {
     scene.add(fire_place.object3D);
-    createRaycastablesObjects(fire_place);
+    createRaycastableRigidBody(fire_place, 'box', 0, false);
 });
 
 // picture_table
 export const picture_table = ModelLoader.load('./models/picture_table.obj');
 picture_table.on('ready', () => {
     scene.add(picture_table.object3D);
-    createRaycastablesObjects(picture_table);
+    createRaycastableRigidBody(picture_table, 'box', 0.02, true, true);
 });
 
+function createRaycastableRigidBody(model, type, mass, move, groupRaycasting) {
 
-function createRaycastablesObjects(model) {
-
+    if (!model.object3D.children) return;
     let raycastablesObjectsLength = model.object3D.children.length;
 
     for (let i = 0; i < raycastablesObjectsLength; i++) {
         let mesh = model.object3D.children[i];
         if (mesh instanceof THREE.Mesh) {
+            let rodinObject = new RODIN.THREEObject(mesh);
 
+            // need calculate geometry's bounding sphere and get it's center
+            // for calculating real center of object,
+            // "obj" format get (0, 0, 0) coordinate as center of object
             let calcRealCenterOfObject = function () {
+                // get bounding sphere position
                 let boundingSpherePos = new THREE.Vector3(
                     mesh.geometry.boundingSphere.center.x,
                     mesh.geometry.boundingSphere.center.y,
                     mesh.geometry.boundingSphere.center.z
                 );
+                // shift mesh to bounding sphere position
                 mesh.position.set(
                     boundingSpherePos.x,
                     boundingSpherePos.y,
                     boundingSpherePos.z
                 );
+                // shift geometry to mesh position
                 mesh.geometry.applyMatrix(new THREE.Matrix4().makeTranslation(
                     -boundingSpherePos.x,
                     -boundingSpherePos.y,
@@ -113,154 +118,41 @@ function createRaycastablesObjects(model) {
                 ));
 
                 // add rigit body
-                let rigitBody = new RigidBody({
+                /*let rigitBody = new RigidBody({
                     owner: mesh,
-                    mass: 0.2,
-                    type: 'box',
-                    move: true
+                    mass: mass,
+                    type: type,
+                    move: move
                 });
                 rigitBody.name = mesh.name;
-                model.rigidBody = rigitBody;
+                mesh.rigidBody = rigitBody;*/
 
-                // remove calcRealCenterOfObject function
+                // after once render we need remove calcRealCenterOfObject function
                 scene.postRenderFunctions.splice(scene.postRenderFunctions.indexOf(calcRealCenterOfObject), 1);
             };
+
+            // for calculating bounding sphere we need render scene once
             scene.postRender(calcRealCenterOfObject);
 
-            let raycastableObj = new RODIN.THREEObject(mesh);
+            // todo if it's need make raycastable model not mesh
+            let raycastableObj;
+            if (!groupRaycasting) {
+                raycastableObj = new RODIN.THREEObject(mesh);
+                console.log(mesh);
+            } else {
+                //
+                raycastableObj = new RODIN.THREEObject(model.object3D);
+                console.log(model.object3D);
+            }
+
             raycastableObj.object3D.initialParent = raycastableObj.object3D.parent;
-            raycastableObj.raycastable = true;
-            raycastableObj.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, DragAndDrop.controllerKeyDown);
-            raycastableObj.on(EVENT_NAMES.CONTROLLER_VALUE_CHANGE, DragAndDrop.controllerValueChange);
+            // check if object movable make if raycastable
+            if (move) {
+                raycastableObj.raycastable = true;
+                raycastableObj.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, DragAndDrop.controllerKeyDown);
+                raycastableObj.on(EVENT_NAMES.CONTROLLER_VALUE_CHANGE, DragAndDrop.controllerValueChange);
+            }
         }
     }
 }
 
-function crateRoomCollision() {
-    let floor = new THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(7, 8)));
-    floor.on('ready', () => {
-        floor.object3D.rotation.x = Math.PI / 2;
-        floor.object3D.position.set(0, 0, 0);
-        scene.add(floor.object3D);
-
-        // add physic
-        let floorRigitBody = new RigidBody({
-            owner: floor.object3D,
-            mass: 0,
-            type: "plane",
-            move: false
-        });
-        floorRigitBody.name = "floor";
-    });
-
-    /*let wallFront = new THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(7, 3)));
-    wallFront.on('ready', () => {
-        floor.object3D.rotation.y = Math.PI;
-        wallFront.object3D.position.set(0, 1.5, -4);
-        scene.add(wallFront.object3D);
-
-        // add physic
-        let wallFrontRigitBody = new RigidBody({
-            owner: floor.object3D,
-            mass: 0,
-            type: "plane",
-            move: false
-        });
-        wallFrontRigitBody.name = "wallFront";
-    });
-    let wallBack = new THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(7, 3)));
-    wallBack.on('ready', () => {
-        wallBack.object3D.rotation.y = Math.PI;
-        wallBack.object3D.position.set(0, 1.5, 4);
-        scene.add(wallBack.object3D);
-
-        // add physic
-        let wallBackRigitBody = new RigidBody({
-            owner: floor.object3D,
-            mass: 0,
-            type: "plane",
-            move: false
-        });
-        wallBackRigitBody.name = "wallBack";
-    });
-    let wallBackSmall = new THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(1, 3)));
-    wallBackSmall.on('ready', () => {
-        wallBackSmall.object3D.rotation.y = Math.PI;
-        wallBackSmall.object3D.position.set(3, 1.5, 2.5);
-        scene.add(wallBackSmall.object3D);
-
-        // add physic
-        let wallBackSmallRigitBody = new RigidBody({
-            owner: floor.object3D,
-            mass: 0,
-            type: "plane",
-            move: false
-        });
-        wallBackSmallRigitBody.name = "wallBackSmall";
-    });
-
-    let wallRight = new THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(8, 3)));
-    wallRight.on('ready', () => {
-        wallRight.object3D.rotation.y = -Math.PI/2;
-        wallRight.object3D.position.set(3.5, 1.5, 0);
-        scene.add(wallRight.object3D);
-
-        // add physic
-        let wallRightRigitBody = new RigidBody({
-            owner: floor.object3D,
-            mass: 0,
-            type: "plane",
-            move: false
-        });
-        wallRightRigitBody.name = "wallRight";
-    });
-
-    let wallRightSmall = new THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(1.5, 3)));
-    wallRightSmall.on('ready', () => {
-        wallRightSmall.object3D.rotation.y = -Math.PI/2;
-        wallRightSmall.object3D.position.set(2.5, 1.5, 3.25);
-        scene.add(wallRightSmall.object3D);
-
-        // add physic
-        let wallRightSmallRigitBody = new RigidBody({
-            owner: floor.object3D,
-            mass: 0,
-            type: "plane",
-            move: false
-        });
-        wallRightSmallRigitBody.name = "wallRightSmall";
-    });
-
-    let wallLeft = new THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(8, 3)));
-    wallLeft.on('ready', () => {
-        wallLeft.object3D.rotation.y = Math.PI/2;
-        wallLeft.object3D.position.set(-3.5, 1.5, 0);
-        scene.add(wallLeft.object3D);
-
-        // add physic
-        let wallLeftRigitBody = new RigidBody({
-            owner: floor.object3D,
-            mass: 0,
-            type: "plane",
-            move: false
-        });
-        wallLeftRigitBody.name = "wallLeft";
-    });
-
-    //ceiling
-    let ceiling = new THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(7, 8)));
-    ceiling.on('ready', () => {
-        ceiling.object3D.position.set(0, 3, 0);
-        ceiling.object3D.rotation.x = Math.PI/2;
-        scene.add(ceiling.object3D);
-
-        // add physic
-        let ceilingRigitBody = new RigidBody({
-            owner: floor.object3D,
-            mass: 0,
-            type: "plane",
-            move: false
-        });
-        ceilingRigitBody.name = "ceiling";
-    });*/
-}

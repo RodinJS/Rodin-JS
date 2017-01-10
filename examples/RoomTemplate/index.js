@@ -19,7 +19,10 @@ import {RodinPhysics} from '../../_build/js/rodinjs/physics/RodinPhysics.js';
 import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import {EVENT_NAMES, CONTROLLER_HANDS} from '../../_build/js/rodinjs/constants/constants.js';
 
+///// loading lights /////
 import {Lights} from './Lights_c.js';
+
+///// loading 3D models /////
 import {Import3DModels} from './Import3DModels_c.js';
 
 //import './ViveControllers_c.js';
@@ -50,10 +53,6 @@ scene.physics = RodinPhysics.getInstance('oimo');
 
 //Setting up world
 scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32);
-
-///// loading 3D models /////
-
-
 
 scene.preRender(() => {
     // Update scene's objects physics.

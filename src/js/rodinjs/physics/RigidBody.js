@@ -6,7 +6,6 @@ import * as PhysicsUtils from '../utils/physicsUtils.js';
 
 import {RodinPhysics} from './RodinPhysics.js';
 
-
 import {SceneManager} from '../../../../_build/js/rodinjs/scene/SceneManager.js';
 let scene = SceneManager.get();
 
@@ -16,7 +15,6 @@ export class RigidBody {
      * Constructor get object, which has properties: name, owner, type, mass, move
      * @param {object} object
      */
-
     constructor(object) {
 
         this.physicsEngine = RodinPhysics.physicsEngine;
@@ -105,22 +103,11 @@ export class RigidBody {
 
         let shape;
         let param = {};
+        let isGeometry;
 
         if (this.owner.geometry.parameters) {
+            isGeometry = true;
             param = this.owner.geometry.parameters;
-        }
-
-        if (this.owner) {
-            this.owner.geometry.computeBoundingBox();
-            let bBox = this.owner.geometry.boundingBox;
-            param.width  = Math.abs(bBox.max.x) + Math.abs(bBox.min.x);
-            param.height = Math.abs(bBox.max.y) + Math.abs(bBox.min.y);
-            param.depth  = Math.abs(bBox.max.z) + Math.abs(bBox.min.z);
-            let mesh = new THREE.Mesh(
-                new THREE.BoxGeometry(param.width, param.height, param.depth),
-                new THREE.MeshBasicMaterial( {color:0xaaaaaa, wireframe: true})
-            );
-            this.owner.add(mesh);
         }
 
         this.createObjectCollision.size = [];
@@ -129,16 +116,31 @@ export class RigidBody {
             case 'PlaneBufferGeometry':
             case 'PlaneGeometry':
             case 'plane':
+                if (!isGeometry) {
+                    this.owner.geometry.computeBoundingBox();
+                    let bBox = this.owner.geometry.boundingBox;
+                    param.width = Math.abs(bBox.max.x) + Math.abs(bBox.min.x);
+                    param.height = Math.abs(bBox.max.y) + Math.abs(bBox.min.y);
+                    param.depth = 0.002;
+
+                    // delete this
+                    let mesh = new THREE.Mesh(
+                        new THREE.BoxGeometry(param.width, param.height, param.depth),
+                        new THREE.MeshBasicMaterial({color: 0xaaaaaa, wireframe: true})
+                    );
+                    this.owner.add(mesh);
+                }
+
                 if (this.physicsEngine === 'cannon') {
                     //
                     // todo 0.00001 find a better solution
-                    shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, 0.00001, param.height / 2));
+                    shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, param.depth, param.height / 2));
                     //shape = new CANNON.Plane();
                     //this.rigidBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
 
                 } else {
                     shape = '';
-                    this.createObjectCollision.size.push(...[param.width * 100, param.height * 100, 0.002]);
+                    this.createObjectCollision.size.push(...[param.width * 100, param.height * 100, param.depth]);
                 }
                 break;
 
@@ -146,6 +148,21 @@ export class RigidBody {
             case 'BoxGeometry':
             case 'box':
             case '':
+                if (!isGeometry) {
+                    this.owner.geometry.computeBoundingBox();
+                    let bBox = this.owner.geometry.boundingBox;
+                    param.width = Math.abs(bBox.max.x) + Math.abs(bBox.min.x);
+                    param.height = Math.abs(bBox.max.y) + Math.abs(bBox.min.y);
+                    param.depth = Math.abs(bBox.max.z) + Math.abs(bBox.min.z);
+
+                    // delete this
+                    let mesh = new THREE.Mesh(
+                        new THREE.BoxGeometry(param.width, param.height, param.depth),
+                        new THREE.MeshBasicMaterial({color: 0xaaaaaa, wireframe: true})
+                    );
+                    this.owner.add(mesh);
+                }
+
                 if (this.physicsEngine === 'cannon') {
                     //half extents
                     shape = new CANNON.Box(new CANNON.Vec3(param.width / 2, param.depth / 2, param.height / 2));
@@ -158,6 +175,19 @@ export class RigidBody {
             case 'SphereBufferGeometry':
             case 'SphereGeometry':
             case 'sphere':
+                if (!isGeometry) {
+                    this.owner.geometry.computeBoundingSphere();
+                    let bSphere = this.owner.geometry.boundingSphere;
+                    param.radius = bSphere.radius;
+
+                    // delete this
+                    let mesh = new THREE.Mesh(
+                        new THREE.SphereGeometry(param.radius, 10),
+                        new THREE.MeshBasicMaterial({color: 0xaaaaaa, wireframe: true})
+                    );
+                    this.owner.add(mesh);
+                }
+
                 if (this.physicsEngine === 'cannon') {
                     shape = new CANNON.Sphere(param.radius);
                 } else {

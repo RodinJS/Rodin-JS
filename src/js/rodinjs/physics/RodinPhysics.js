@@ -154,6 +154,7 @@ export class RodinPhysics {
 
                 // todo if raycasted
                 // todo if there isn't geometry
+                //console.log( this.rigidBodies[i].owner.Sculpt);
                 this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
             }
         }
