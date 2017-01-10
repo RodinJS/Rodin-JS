@@ -1,7 +1,7 @@
 let oldPush = Array.prototype.push;
 
 export class Set extends Array {
-    constructor () {
+    constructor() {
         super(...arguments);
 
         /**
@@ -10,8 +10,8 @@ export class Set extends Array {
          * @returns {Error}
          */
         this.push = function (item) {
-            if(this.indexOf(item) === -1) {
-                if(this.validate) {
+            if (this.indexOf(item) === -1) {
+                if (this.validate) {
                     item = this.validate(item);
                 }
                 oldPush.call(this, item);
@@ -19,21 +19,21 @@ export class Set extends Array {
                 return new Error('Item already exists');
             }
         }
-    }
 
-    /**
-     * remove element from set
-     * @param item
-     * @returns {boolean}
-     */
-    remove(item) {
-        let index = this.indexOf(item);
-        if(index !== -1) {
-            this.splice(index, 1);
-            return true;
+        /**
+         * remove element from set
+         * @param item
+         * @returns {boolean}
+         */
+        this.remove = function (item) {
+            let index = this.indexOf(item);
+            if (index !== -1) {
+                this.splice(index, 1);
+                return true;
+            }
+
+            return false;
         }
 
-        return false;
     }
 }
-

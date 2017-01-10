@@ -1,14 +1,16 @@
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import {Objects, Raycastables} from '../objects.js';
+import {Objects, Raycastables, LoadingObjects} from '../objects.js';
 import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
+import {Event} from '../Event.js';
 import {Animator} from '../animation/Animator.js';
-import {ErrorAbstractClassInstance, ErrorProtectedMethodCall} from '../error/CustomErrors';
+import {ErrorAbstractClassInstance, ErrorProtectedMethodCall} from '../error/CustomErrors.js';
+
 
 /**
  * This function is used for restricting native event listeners creation only to sculpt
  */
-function Enforce () {
+function Enforce() {
 }
 
 /**
@@ -17,10 +19,11 @@ function Enforce () {
  * This wrapper allows adding event listeners to the 3d objects, animating, and adds other utilities.
  */
 export class Sculpt {
-    constructor (id) {
+    constructor(id) {
         if (this.constructor == Sculpt) {
             throw new ErrorAbstractClassInstance();
         }
+
         /**
          * Just an id.
          * @type {*}
@@ -59,6 +62,21 @@ export class Sculpt {
          * @type {Animator}
          */
         this.animator = new Animator(this);
+
+
+        // console.log("push", this)
+        LoadingObjects.push(this);
+        this.on('ready', () => {
+            // console.log("remove", this, LoadingObjects.length)
+            LoadingObjects.remove(this);
+            if (LoadingObjects.length === 0) {
+                //// TODO: fix this grdon later
+
+                ///// loadingComplete event@ petqa emit arvi scenai kam scenmanageri vra esi chi ashxatum
+                this.emit("loadingComplete", new Event(this));
+            }
+        });
+
     }
 
     /**
@@ -66,7 +84,7 @@ export class Sculpt {
      * We link 3d objects to their sculpt wrapper for cases when we have got the 3d element only (for example from raycaster) and need to find it's container sculpt object
      * @param {THREE.Object3D} object3D
      */
-    init (object3D) {
+    init(object3D) {
         this.object3D = object3D;
         this.object3D.Sculpt = this;
         Objects.push(this);
@@ -77,7 +95,7 @@ export class Sculpt {
      * @param {string[]|string} evts - event name(s)
      * @param {function} callback - callback function
      */
-    on (evts, callback, enforce = null) {
+    on(evts, callback, enforce = null) {
         let events = enforce === Enforce ? this.getNativeEvents(enforce) : this.getEvents();
         if (!Array.isArray(evts)) {
             evts = [evts];
@@ -98,7 +116,7 @@ export class Sculpt {
      * @param {string[]|string} evts - event name(s)
      * @param {function} callback - callback function
      */
-    addEventListener (evts, callback) {
+    addEventListener(evts, callback) {
         this.on(evts, callback);
     }
 
@@ -107,7 +125,7 @@ export class Sculpt {
      * @param {string} evt - event name
      * @param {function} callback - callback function
      */
-    removeEventListener (eventName, callback) {
+    removeEventListener(eventName, callback) {
         let events = this.getEvents();
         let i = events[eventName].indexOf(callback);
         if (events[eventName] && i !== -1) {
@@ -121,7 +139,7 @@ export class Sculpt {
      * @param {Event} customEvt - a custom Event object
      * @param {Array} args - arguments to be passed to the event callback
      */
-    emit (evtName, customEvt, ...args) {
+    emit(evtName, customEvt, ...args) {
         customEvt.name = evtName;
         this.emitNative(evtName, customEvt, Enforce);
 
@@ -139,7 +157,7 @@ export class Sculpt {
         }
     }
 
-    emitNative (eventName, customEvt, enforce) {
+    emitNative(eventName, customEvt, enforce) {
         if (enforce !== Enforce) {
             throw  new ErrorProtectedMethodCall('emitNative')
         }
@@ -158,7 +176,7 @@ export class Sculpt {
      * Remove all listeners from Event
      * @param {Event} eventName
      */
-    removeAllListeners (eventName) {
+    removeAllListeners(eventName) {
         let events = this.getEvents();
         if (events[eventName]) {
             delete events[eventName];
@@ -169,7 +187,7 @@ export class Sculpt {
      * Get global position of object
      * @returns {THREE.Vector3}
      */
-    globalPosition () {
+    globalPosition() {
         return new THREE.Vector3().setFromMatrixPosition(this.object3D.matrixWorld);
     }
     /**
@@ -190,17 +208,17 @@ export class Sculpt {
     /**
      * animate a parameter change
      * @param {Object} params - e.g.
-        {
-            property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
-            from: new THREE.Vector3(1, 1, 1),
-            to: new THREE.Vector3(1.1, 1.1, 1.1),
-            easing: TWEEN.Easing.Linear.None,
-            duration: 500,
-            delay: 20,
-        }
+     {
+         property: RODIN.CONSTANTS.ANIMATION_TYPES.SCALE,
+         from: new THREE.Vector3(1, 1, 1),
+         to: new THREE.Vector3(1.1, 1.1, 1.1),
+         easing: TWEEN.Easing.Linear.None,
+         duration: 500,
+         delay: 20,
+     }
      * @param {function} next - onComplete callback function
      */
-    animate (params, next) {
+    animate(params, next) {
         if (!params.to) {
             throw new Error("Invalid end values");
         }
@@ -295,7 +313,7 @@ export class Sculpt {
      * @param {boolean} value
      */
     set raycastable(value) {
-        if(value) {
+        if (value) {
             Raycastables.push(this.object3D);
         } else {
             Raycastables.remove(this.object3D);
@@ -306,7 +324,7 @@ export class Sculpt {
      * get Objects forward vector
      * @returns {THREE.Vector3}
      */
-    get forward () {
+    get forward() {
         return (new THREE.Vector3(0, 0, 1)).applyQuaternion(this.object3D.quaternion);
     }
 }
