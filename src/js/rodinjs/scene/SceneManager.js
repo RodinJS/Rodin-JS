@@ -20,7 +20,7 @@ class SceneManager extends Manager {
         this.go(scene);
         initListeners();
 //// TODO: fix this grdon later
-        scene.on("loadingComplete", this.loadingComplete.bind(this));
+        window.onLoadingComplete = this.loadingComplete.bind(this);
     }
 
     /**
@@ -58,7 +58,8 @@ class SceneManager extends Manager {
         console.log("element", element);
     }
 
-    loadingComplete() {
+    loadingComplete(e) {
+        // console.log("eeee", e);
         let maxCount = 0;
         let tim;
 

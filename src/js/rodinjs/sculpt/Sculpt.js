@@ -64,16 +64,14 @@ export class Sculpt {
         this.animator = new Animator(this);
 
 
-        // console.log("push", this)
         LoadingObjects.push(this);
         this.on('ready', () => {
-            // console.log("remove", this, LoadingObjects.length)
             LoadingObjects.remove(this);
             if (LoadingObjects.length === 0) {
                 //// TODO: fix this grdon later
 
                 ///// loadingComplete event@ petqa emit arvi scenai kam scenmanageri vra esi chi ashxatum
-                this.emit("loadingComplete", new Event(this));
+                window.onLoadingComplete && window.onLoadingComplete(new Event(this));
             }
         });
 
