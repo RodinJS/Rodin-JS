@@ -141,6 +141,12 @@ export class GamePad extends THREE.Object3D {
          */
         this.enabled = true;
 
+        /**
+         * Gaze Point
+         * @type {GazePoint}
+         */
+        this.gazePoint = null;
+
 
 		window.addEventListener('vrdisplaypresentchange', (e) => {
 			let re = new RegExp(this.navigatorGamePadId, 'gi');
@@ -156,6 +162,9 @@ export class GamePad extends THREE.Object3D {
     enable () {
         this.enabled = true;
         this.onEnable();
+        if(this.gazePoint && this.camera) {
+            this.camera.add(this.gazePoint.Sculpt.object3D);
+        }
     }
 
 
@@ -165,6 +174,9 @@ export class GamePad extends THREE.Object3D {
     disable () {
         this.enabled = false;
         this.onDisable();
+        if(this.gazePoint && this.gazePoint.Sculpt.object3D.parent) {
+            this.gazePoint.Sculpt.object3D.parent.remove(this.gazePoint.Sculpt.object3D);
+        }
     }
 
     /**
@@ -220,6 +232,13 @@ export class GamePad extends THREE.Object3D {
      */
     setRaycasterCamera (camera) {
         this.camera = camera;
+        if(this.gazePoint) {
+            if(this.gazePoint.Sculpt.object3D.parent) {
+                this.gazePoint.Sculpt.object3D.parent.remove(this.gazePoint.Sculpt.object3D);
+            }
+
+            this.camera.add(this.gazePoint.Sculpt.object3D);
+        }
     }
 
     /**

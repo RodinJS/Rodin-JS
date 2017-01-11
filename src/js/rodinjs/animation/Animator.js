@@ -65,6 +65,21 @@ export class Animator {
     }
 
     /**
+     * Remove animations from animator
+     * @params {...string}
+     */
+    remove () {
+        for(let i = 0; i < arguments.length; i ++) {
+            const animation = this.getClip(arguments[i]);
+            if(!animation) {
+                throw new Error(`Animation with name ${arguments[i]} does not exist`);
+            }
+
+            this.clips.splice(this.clips.indexOf(animation), 1);
+        }
+    }
+
+    /**
      * Get all current clips
      * @returns {Set.<Animation>}
      */

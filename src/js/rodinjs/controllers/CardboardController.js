@@ -1,4 +1,5 @@
 import {GamePad} from "./gamePads/GamePad.js";
+import {GazePoint} from '../sculpt/GazePoint.js';
 import {ErrorCardboardControllerAlreadyExists} from '../error/CustomErrors.js';
 import {EVENT_NAMES, KEY_CODES} from '../constants/constants.js';
 import {ErrorInvalidEventType} from '../error/CustomErrors';
@@ -20,6 +21,7 @@ export class CardboardController extends GamePad {
 
         this.setRaycasterScene(scene);
         this.setRaycasterCamera(camera);
+        this.setGazePoint(new GazePoint());
 		this.disable();
     }
 
@@ -111,5 +113,17 @@ export class CardboardController extends GamePad {
      */
     static getGamepad() {
         return navigator.cardboardGamePad;
+    }
+
+    /**
+     * Set GazePoint
+     * @param {GazePoint} gazePoint object to add
+     */
+    setGazePoint(gazePoint) {
+        gazePoint.controller = this;
+        this.gazePoint = gazePoint;
+        if(this.camera) {
+            this.camera.add(this.gazePoint.Sculpt.object3D);
+        }
     }
 }
