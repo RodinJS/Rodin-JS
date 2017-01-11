@@ -140,6 +140,14 @@ export class GamePad extends THREE.Object3D {
          * @type {boolean}
          */
         this.enabled = true;
+
+
+		window.addEventListener('vrdisplaypresentchange', (e) => {
+			let re = new RegExp(this.navigatorGamePadId, 'gi');
+			if (e.display && re.test(e.display.displayName)) {
+				e.display.isPresenting ? this.enable() : this.disable();
+			}
+		}, true);
     }
 
     /**
@@ -277,7 +285,6 @@ export class GamePad extends THREE.Object3D {
                 this.onTouchDown(this.buttons[i], controller);
             }
         }
-
     }
 
     /**

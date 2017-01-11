@@ -19,6 +19,7 @@ export class OculusController extends GamePad {
 
         controllerCreated = true;
         super('oculus', null, scene, camera);
+		this.disable();
     }
 
     /**
