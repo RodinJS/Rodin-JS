@@ -150,8 +150,9 @@ export class GamePad extends THREE.Object3D {
 
 		window.addEventListener('vrdisplaypresentchange', (e) => {
 			let re = new RegExp(this.navigatorGamePadId, 'gi');
-			if (e.display && re.test(e.display.displayName)) {
-				e.display.isPresenting ? this.enable() : this.disable();
+			const display = e.display || e.detail.display;
+			if (display && re.test(display.displayName)) {
+			    display.isPresenting ? this.enable() : this.disable();
 			}
 		}, true);
     }

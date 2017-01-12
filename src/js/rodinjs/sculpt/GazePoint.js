@@ -12,9 +12,13 @@ export class GazePoint {
             });
 
             sculpt = new THREEObject(new THREE.Mesh(geometry, material));
+            sculpt.on('ready', () => {
+                sculpt.object3D.renderOrder = 10000;
+            });
         }
 
         this.Sculpt = sculpt;
+		sculpt.object3D.renderOrder = 10000;
 
         this.Sculpt.on('update', (evt) => {
             if (!this.controller) return;

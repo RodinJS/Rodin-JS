@@ -1,4 +1,5 @@
 import {GamePad} from './gamePads/GamePad.js';
+import {GazePoint} from '../sculpt/GazePoint.js';
 import {ErrorOculusControllerAlreadyExists} from '../error/CustomErrors.js';
 
 let controllerCreated = false;
@@ -19,6 +20,7 @@ export class OculusController extends GamePad {
 
         controllerCreated = true;
         super('oculus', null, scene, camera);
+		this.setGazePoint(new GazePoint());
 		this.disable();
     }
 
@@ -30,4 +32,16 @@ export class OculusController extends GamePad {
         this.raycaster.set(this.camera.getWorldPosition(), this.camera.getWorldDirection());
         return this.raycaster.raycast();
     }
+
+	/**
+	 * Set GazePoint
+	 * @param {GazePoint} gazePoint object to add
+	 */
+	setGazePoint(gazePoint) {
+		gazePoint.controller = this;
+		this.gazePoint = gazePoint;
+		if(this.camera) {
+			this.camera.add(this.gazePoint.Sculpt.object3D);
+		}
+	}
 }

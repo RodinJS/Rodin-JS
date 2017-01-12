@@ -11,19 +11,6 @@ SceneManager.addController(cardboardController);
 
 scene.scene.background = new THREE.Color(0x808080);
 let camera = scene.camera;
-let target = new THREE.Mesh(new THREE.SphereGeometry(0.01, 4, 4), new THREE.MeshBasicMaterial({color: 0xff0000, depthTest: false}));
-target.position.z = -1;
-target.visible = false;
-camera.add(target);
-
-cardboardController.onDisable = function () {
-    target.visible = false;
-};
-
-cardboardController.onEnable = function () {
-    target.visible = true;
-};
-
 
 let geometry = new THREE.PlaneGeometry(4, 4);
 let material = new THREE.MeshStandardMaterial({
