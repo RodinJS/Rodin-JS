@@ -47,7 +47,7 @@ export class ViveController extends GamePad {
          * @type {THREE.Line}
          */
         this.reycastingLine = targetLine;
-
+		this.disable();
     }
     /**
      * Get raycasted objects ({distance, point, face, faceIndex, indices, object})of the controller's pointer ray.
