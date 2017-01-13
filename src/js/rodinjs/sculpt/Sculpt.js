@@ -64,17 +64,18 @@ export class Sculpt {
         this.animator = new Animator(this);
 
 
+        this.ready = false;
+        this.on('ready', () => {
+            this.ready = true;
+        });
+
         LoadingObjects.push(this);
         this.on('ready', () => {
             LoadingObjects.remove(this);
             if (LoadingObjects.length === 0) {
-                //// TODO: fix this grdon later
-
-                ///// loadingComplete event@ petqa emit arvi scenai kam scenmanageri vra esi chi ashxatum
                 window.onLoadingComplete && window.onLoadingComplete(new Event(this));
             }
         });
-
     }
 
     /**

@@ -21,6 +21,7 @@ export class OculusController extends GamePad {
         controllerCreated = true;
         super('oculus', null, scene, camera);
 		this.setGazePoint(new GazePoint());
+		this.vrOnly = true;
 		this.disable();
     }
 
