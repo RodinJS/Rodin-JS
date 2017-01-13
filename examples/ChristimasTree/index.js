@@ -263,10 +263,10 @@ let toyReady = function () {
             if (target.object3D.parent != target.object3D.initialParent) {
                 return;
             }
-            changeParent(target.object3D, controller.reycastingLine);
+            changeParent(target.object3D, controller.raycastingLine.object3D);
             //let targetParent = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.04, 12, 12));
             let targetParent = new THREE.Object3D();
-            controller.reycastingLine.add(targetParent);
+            controller.raycastingLine.object3D.add(targetParent);
             targetParent.position.copy(target.object3D.position);
             changeParent(target.object3D, targetParent);
 
@@ -286,7 +286,7 @@ let toyReady = function () {
         else if (controller instanceof ViveController) {
             let targetParent = target.object3D.parent;
             changeParent(target.object3D, target.object3D.initialParent);
-            controller.reycastingLine.remove(targetParent);
+            controller.raycastingLine.object3D.remove(targetParent);
         }
     });
 

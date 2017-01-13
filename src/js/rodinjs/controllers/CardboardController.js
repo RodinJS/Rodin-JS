@@ -22,6 +22,7 @@ export class CardboardController extends GamePad {
         this.setRaycasterScene(scene);
         this.setRaycasterCamera(camera);
         this.setGazePoint(new GazePoint());
+        this.vrOnly = true;
 		this.disable();
     }
 

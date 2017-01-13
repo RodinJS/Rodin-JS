@@ -22,6 +22,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, scene.camera, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 controllerL.initControllerModel();
+controllerL.initRaycastingLine();
 
 controllerL.onKeyDown = controllerKeyDown;
 controllerL.onKeyUp = controllerKeyUp;
@@ -33,6 +34,8 @@ scene.add(controllerL);
 
 let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, scene.camera, 3);
 controllerR.standingMatrix = controls.getStandingMatrix();
+controllerR.initControllerModel();
+controllerR.initRaycastingLine();
 
 controllerR.onKeyDown = controllerKeyDown;
 controllerR.onKeyUp = controllerKeyUp;
@@ -41,20 +44,6 @@ controllerR.onTouchDown = controllerTouchDown;
 
 SceneManager.addController(controllerR);
 scene.add(controllerR);
-
-// let loader = new THREE.OBJLoader();
-// loader.setPath('./object/');
-// loader.load('vr_controller_vive_1_5.obj', function (object) {
-//
-//     let loader = new THREE.TextureLoader();
-//     loader.setPath('./img/');
-//
-//     object.children[0].material.map = loader.load('onepointfive_texture.png');
-//     object.children[0].material.specularMap = loader.load('onepointfive_spec.png');
-//
-//     controllerL.add(object.clone());
-//     controllerR.add(object.clone());
-// });
 
 let geometry = new THREE.PlaneGeometry(4, 4);
 let material = new THREE.MeshStandardMaterial({
@@ -186,9 +175,9 @@ function controllerKeyDown(keyCode) {
                 return;
             }
 
-            changeParent(intersect.object, this.reycastingLine);
+            changeParent(intersect.object, this.raycastingLine.object3D);
             let targetParent = new THREE.Object3D();
-            this.reycastingLine.add(targetParent);
+            this.raycastingLine.object3D.add(targetParent);
             targetParent.position.copy(intersect.object.position);
             changeParent(intersect.object, targetParent);
 
@@ -208,7 +197,7 @@ function controllerKeyUp(keyCode) {
         this.pickedItems.map(item => {
             let targetParent = item.parent;
             changeParent(item, item.initialParent);
-            this.reycastingLine.remove(targetParent);
+            this.raycastingLine.object3D.remove(targetParent);
         });
         this.pickedItems = [];
     }
