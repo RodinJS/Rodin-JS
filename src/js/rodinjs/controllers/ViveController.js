@@ -1,6 +1,7 @@
 import {GamePad} from "./gamePads/GamePad.js";
 import {ErrorNoValueProvided, ErrorViveControllerAlreadyExists} from "../error/CustomErrors.js";
 import {CONTROLLER_HANDS} from '../constants/constants.js';
+import {ModelLoader} from '../sculpt/ModelLoader.js';
 
 let leftHandControllerCreated = false;
 let rightHandControllerCreated = false;
@@ -77,6 +78,18 @@ export class ViveController extends GamePad {
     gamepadHoverOut(){
         this.reycastingLine.geometry.vertices[1].z = this.targetLineDistance;
         this.reycastingLine.geometry.verticesNeedUpdate = true;
+    }
+
+    initControllerModel(model) {
+        if(!model) {
+            model = ModelLoader.load('/resources/models/ViveController/vr_controller_vive_1_5.obj');
+        }
+
+        console.log(model);
+        return;
+        this.remove(this.controllerModel.object3D);
+        this.controllerModel = model;
+        this.add(this.controllerModel.object3D);
     }
 }
 

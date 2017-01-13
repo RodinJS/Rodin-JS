@@ -21,6 +21,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, scene.camera, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
+controllerL.initControllerModel();
 
 controllerL.onKeyDown = controllerKeyDown;
 controllerL.onKeyUp = controllerKeyUp;
@@ -41,19 +42,19 @@ controllerR.onTouchDown = controllerTouchDown;
 SceneManager.addController(controllerR);
 scene.add(controllerR);
 
-let loader = new THREE.OBJLoader();
-loader.setPath('./object/');
-loader.load('vr_controller_vive_1_5.obj', function (object) {
-
-    let loader = new THREE.TextureLoader();
-    loader.setPath('./img/');
-
-    object.children[0].material.map = loader.load('onepointfive_texture.png');
-    object.children[0].material.specularMap = loader.load('onepointfive_spec.png');
-
-    controllerL.add(object.clone());
-    controllerR.add(object.clone());
-});
+// let loader = new THREE.OBJLoader();
+// loader.setPath('./object/');
+// loader.load('vr_controller_vive_1_5.obj', function (object) {
+//
+//     let loader = new THREE.TextureLoader();
+//     loader.setPath('./img/');
+//
+//     object.children[0].material.map = loader.load('onepointfive_texture.png');
+//     object.children[0].material.specularMap = loader.load('onepointfive_spec.png');
+//
+//     controllerL.add(object.clone());
+//     controllerR.add(object.clone());
+// });
 
 let geometry = new THREE.PlaneGeometry(4, 4);
 let material = new THREE.MeshStandardMaterial({
