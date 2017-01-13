@@ -52,7 +52,7 @@ skybox.on('ready', () => {
 scene.physics = RodinPhysics.getInstance('oimo');
 
 //Setting up world
-scene.physics.setupWorldGeneralParameters(0, -2.82, 0, 8, true, 32);
+scene.physics.setupWorldGeneralParameters(0, -9.8, 0, 8, true, 32);
 
 scene.preRender(() => {
     // Update scene's objects physics.

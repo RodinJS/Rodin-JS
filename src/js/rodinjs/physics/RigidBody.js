@@ -108,6 +108,13 @@ export class RigidBody {
         if (this.owner.geometry.parameters) {
             isGeometry = true;
             param = this.owner.geometry.parameters;
+
+            // delete this, visible gizmo
+            /*let mesh = new THREE.Mesh(
+                new THREE.BoxGeometry(param.width, param.height, param.depth),
+                new THREE.MeshBasicMaterial({color: 0xaaaaaa, wireframe: true})
+            );
+            this.owner.add(mesh);*/
         }
 
         this.createObjectCollision.size = [];
@@ -119,16 +126,9 @@ export class RigidBody {
                 if (!isGeometry) {
                     this.owner.geometry.computeBoundingBox();
                     let bBox = this.owner.geometry.boundingBox;
-                    param.width = Math.abs(bBox.max.x) + Math.abs(bBox.min.x);
-                    param.height = Math.abs(bBox.max.y) + Math.abs(bBox.min.y);
+                    param.width = Math.abs(bBox.max.x) + Math.abs(bBox.min.x) + 0.01;
+                    param.height = Math.abs(bBox.max.y) + Math.abs(bBox.min.y) + 0.01;
                     param.depth = 0.002;
-
-                    // delete this
-                    let mesh = new THREE.Mesh(
-                        new THREE.BoxGeometry(param.width, param.height, param.depth),
-                        new THREE.MeshBasicMaterial({color: 0xaaaaaa, wireframe: true})
-                    );
-                    this.owner.add(mesh);
                 }
 
                 if (this.physicsEngine === 'cannon') {
@@ -151,16 +151,9 @@ export class RigidBody {
                 if (!isGeometry) {
                     this.owner.geometry.computeBoundingBox();
                     let bBox = this.owner.geometry.boundingBox;
-                    param.width = Math.abs(bBox.max.x) + Math.abs(bBox.min.x);
-                    param.height = Math.abs(bBox.max.y) + Math.abs(bBox.min.y);
-                    param.depth = Math.abs(bBox.max.z) + Math.abs(bBox.min.z);
-
-                    // delete this
-                    let mesh = new THREE.Mesh(
-                        new THREE.BoxGeometry(param.width, param.height, param.depth),
-                        new THREE.MeshBasicMaterial({color: 0xaaaaaa, wireframe: true})
-                    );
-                    this.owner.add(mesh);
+                    param.width = Math.abs(bBox.max.x) + Math.abs(bBox.min.x) + 0.01;
+                    param.height = Math.abs(bBox.max.y) + Math.abs(bBox.min.y) + 0.01;
+                    param.depth = Math.abs(bBox.max.z) + Math.abs(bBox.min.z) + 0.01;
                 }
 
                 if (this.physicsEngine === 'cannon') {
@@ -178,14 +171,7 @@ export class RigidBody {
                 if (!isGeometry) {
                     this.owner.geometry.computeBoundingSphere();
                     let bSphere = this.owner.geometry.boundingSphere;
-                    param.radius = bSphere.radius;
-
-                    // delete this
-                    let mesh = new THREE.Mesh(
-                        new THREE.SphereGeometry(param.radius, 10),
-                        new THREE.MeshBasicMaterial({color: 0xaaaaaa, wireframe: true})
-                    );
-                    this.owner.add(mesh);
+                    param.radius = bSphere.radius + 0.005;
                 }
 
                 if (this.physicsEngine === 'cannon') {

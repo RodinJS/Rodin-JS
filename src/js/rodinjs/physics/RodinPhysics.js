@@ -50,7 +50,6 @@ export class RodinPhysics {
 
             // create oimo world contains all rigidBodys and joint.
             this.world = new OIMO.World(this.fixedTimeStep, boardphase);
-            //populate(1);
         }
     }
 
@@ -143,19 +142,35 @@ export class RodinPhysics {
         }
         if (this.physicsEngine === 'oimo') {
             while (i--) {
-                if (!this.rigidBodies[i].enabled()) continue;
-                let newGlobalMatrix = new THREE.Matrix4();
-                newGlobalMatrix.compose(
-                    PhysicsUtils.oimoToThree(this.rigidBodies[i].body.position),
-                    PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()),
-                    //todo parent scale
-                    this.rigidBodies[i].owner.scale);
+
+                //console.log(this.rigidBodies[i].body.position);
+                //this.rigidBodies[i].body.setPosition(new OIMO.Vec3(200,200,200));
+                //console.log(this.rigidBodies[i].body.position);
+
+                if (!this.rigidBodies[i].sleeping) {
+                    if (!this.rigidBodies[i].enabled()) {
+                        //console.log(this.rigidBodies[i].body.position.y, this.rigidBodies[i].object.owner);
+                        /*this.rigidBodies[i].body.position.x = this.rigidBodies[i].object.owner.getWorldPosition().x;
+                        this.rigidBodies[i].body.position.y = this.rigidBodies[i].object.owner.getWorldPosition().y;
+                        this.rigidBodies[i].body.position.z = this.rigidBodies[i].object.owner.getWorldPosition().z;*/
+                        //this.rigidBodies[i].body.position.copy(this.rigidBodies[i].object.owner.position);
+                        //console.log(this.rigidBodies[i].body.position.y);
+                        continue;
+                    }
+
+                    let newGlobalMatrix = new THREE.Matrix4();
+                    newGlobalMatrix.compose(
+                        PhysicsUtils.oimoToThree(this.rigidBodies[i].body.position),
+                        PhysicsUtils.oimoToThree(this.rigidBodies[i].body.getQuaternion()),
+                        //todo parent scale
+                        this.rigidBodies[i].owner.scale);
 
 
-                // todo if raycasted
-                // todo if there isn't geometry
-                //console.log( this.rigidBodies[i].owner.Sculpt);
-                this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
+                    // todo if raycasted
+                    // todo if there is no geometry
+                    //console.log( this.rigidBodies[i].owner.Sculpt);
+                    this.rigidBodies[i].owner.Sculpt.setGlobalMatrix(newGlobalMatrix);
+                }
             }
         }
     }
