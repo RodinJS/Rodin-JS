@@ -10,9 +10,6 @@ let scene = SceneManager.get();
 scene.scene.background = new THREE.Color(0xb5b5b5);
 
 let camera = scene.camera;
-let target = new THREE.Mesh(new THREE.SphereGeometry(0.01, 5, 5), new THREE.MeshBasicMaterial({color: 0x336699, wireframe: true}));
-target.position.z = -1;
-camera.add(target);
 
 let oculusController = new OculusController();
 

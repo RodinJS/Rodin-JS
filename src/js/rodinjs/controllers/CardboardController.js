@@ -1,4 +1,5 @@
 import {GamePad} from "./gamePads/GamePad.js";
+import {GazePoint} from '../sculpt/GazePoint.js';
 import {ErrorCardboardControllerAlreadyExists} from '../error/CustomErrors.js';
 import {EVENT_NAMES, KEY_CODES} from '../constants/constants.js';
 import {ErrorInvalidEventType} from '../error/CustomErrors';
@@ -20,14 +21,8 @@ export class CardboardController extends GamePad {
 
         this.setRaycasterScene(scene);
         this.setRaycasterCamera(camera);
-        this.disable();
-
-        window.addEventListener('vrdisplaypresentchange', (e) => {
-            let re = new RegExp('cardboard', 'gi');
-            if (e.detail && e.detail.display && re.test(e.detail.display.displayName)) {
-                e.detail.display.isPresenting ? this.enable() : this.disable();
-            }
-        }, true);
+        this.setGazePoint(new GazePoint());
+		this.disable();
     }
 
     /**
@@ -118,5 +113,17 @@ export class CardboardController extends GamePad {
      */
     static getGamepad() {
         return navigator.cardboardGamePad;
+    }
+
+    /**
+     * Set GazePoint
+     * @param {GazePoint} gazePoint object to add
+     */
+    setGazePoint(gazePoint) {
+        gazePoint.controller = this;
+        this.gazePoint = gazePoint;
+        if(this.camera) {
+            this.camera.add(this.gazePoint.Sculpt.object3D);
+        }
     }
 }
