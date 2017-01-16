@@ -27,6 +27,7 @@ import {Import3DModels} from './Import3DModels_c.js';
 
 import {controllerL, controllerR} from './ViveControllers_c.js';
 import {oculusController} from './OculusController_c.js';
+import {cardboardController} from './CardboardController_c.js';
 
 let scene = SceneManager.get();
 let camera = scene.camera;

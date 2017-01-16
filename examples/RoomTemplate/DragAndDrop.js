@@ -3,6 +3,7 @@ import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
 import {OculusController} from '../../_build/js/rodinjs/controllers/OculusController.js';
+import {CardboardController} from '../../_build/js/rodinjs/controllers/CardboardController.js';
 
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 import * as PhysicsUtils from '../../_build/js/rodinjs/utils/physicsUtils.js';
@@ -58,6 +59,21 @@ const controllerKeyDown = (evt) => {
         camera.objectHolder = holder;
         changeParent(target.object3D, initParent);
     }
+    if (evt.controller instanceof CardboardController) {
+        let controller = evt.controller;
+        let target = evt.target;
+
+        controller.pickedItems.push(target.object3D);
+
+        let initParent = target.object3D.parent;
+        changeParent(target.object3D, camera);
+        let holder  = new THREE.Object3D();
+        // let holder  = new THREE.Mesh(new THREE.BoxGeometry(0.1,0.1,0.1));
+        holder.position.copy(target.object3D.position);
+        camera.add(holder);
+        camera.objectHolder = holder;
+        changeParent(target.object3D, initParent);
+    }
 };
 
 
@@ -69,6 +85,10 @@ const controllerKeyUp = (evt) => {
 
     }
     if (evt.controller instanceof OculusController) {
+        camera.remove(camera.objectHolder);
+        camera.objectHolder = null;
+    }
+    if (evt.controller instanceof CardboardController) {
         camera.remove(camera.objectHolder);
         camera.objectHolder = null;
     }
@@ -207,6 +227,21 @@ const controllerUpdate = function () {
 
         }
     }
+        if (this instanceof CardboardController) {
+            if (this.pickedItems && this.pickedItems.length > 0) {
+                this.pickedItems.map(item => {
+                    if (item.rigidBody.body && item.rigidBody.body instanceof OIMO.RigidBody) {
+                        item.rigidBody.body.sleeping = false;
+                        //console.log(this.raycastingLine.object3D.children[0]);
+                        let targetPos = camera.objectHolder.getWorldPosition();
+                        // console.log(targetPos);
+                        let vec = new OIMO.Vec3(targetPos.x*100, targetPos.y*100, targetPos.z*100);
+                        item.rigidBody.body.setPosition(vec);
+                    }
+                });
+
+            }
+        }
 };
 
 function ViveControllerKeyDown(keyCode) {
@@ -284,11 +319,12 @@ function ViveControllerKeyUp(keyCode) {
     }
 }
 
-export const DragAndDrop = {
-    controllerKeyDown,
-    controllerValueChange,
-    controllerUpdate,
-    controllerKeyUp,
-    ViveControllerKeyUp,
-    ViveControllerKeyDown
-}
+
+    export const DragAndDrop = {
+        controllerKeyDown,
+        controllerValueChange,
+        controllerUpdate,
+        controllerKeyUp,
+        ViveControllerKeyUp,
+        ViveControllerKeyDown
+    }
