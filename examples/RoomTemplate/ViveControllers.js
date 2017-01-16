@@ -14,7 +14,7 @@ controllerL.initControllerModel();
 controllerL.initRaycastingLine();
 
 controllerL.onKeyDown = DragAndDrop.ViveControllerKeyDown;
-controllerL.onKeyUp = DragAndDrop.ViveControllerKeyUp;
+controllerL.onKeyUp   = DragAndDrop.ViveControllerKeyUp;
 
 SceneManager.addController(controllerL);
 scene.add(controllerL);
@@ -25,13 +25,13 @@ controllerR.initControllerModel();
 controllerR.initRaycastingLine();
 
 controllerR.onKeyDown = DragAndDrop.ViveControllerKeyDown;
-controllerR.onKeyUp = DragAndDrop.ViveControllerKeyUp;
+controllerR.onKeyUp   = DragAndDrop.ViveControllerKeyUp;
 
 SceneManager.addController(controllerR);
 scene.add(controllerR);
 
-controllerL.onControllerUpdate = DragAndDrop.controllerUpdate;
-controllerR.onControllerUpdate = DragAndDrop.controllerUpdate;
+controllerL.onControllerUpdate = DragAndDrop.objectUpdate;
+controllerR.onControllerUpdate = DragAndDrop.objectUpdate;
 export {
     controllerL,
     controllerR

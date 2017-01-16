@@ -296,9 +296,9 @@ function createRaycastableRigidBody(model, type, mass, move) {
             // check if object movable make if raycastable
             if (move) {
                 raycastableObj.raycastable = true;
-                raycastableObj.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, DragAndDrop.controllerKeyDown);
-                raycastableObj.on(EVENT_NAMES.CONTROLLER_KEY_UP, DragAndDrop.controllerKeyUp);
-                raycastableObj.on(EVENT_NAMES.CONTROLLER_VALUE_CHANGE, DragAndDrop.controllerValueChange);
+                raycastableObj.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, DragAndDrop.objectKeyDown);
+                raycastableObj.on(EVENT_NAMES.CONTROLLER_KEY_UP, DragAndDrop.objectKeyUp);
+                raycastableObj.on(EVENT_NAMES.CONTROLLER_VALUE_CHANGE, DragAndDrop.objectValueChange);
             }
         }
     }
