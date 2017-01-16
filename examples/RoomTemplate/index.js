@@ -24,7 +24,6 @@ import {Lights} from './Lights_c.js';
 
 ///// loading 3D models /////
 import {Import3DModels} from './Import3DModels_c.js';
-
 import {controllerL, controllerR} from './ViveControllers_c.js';
 import {oculusController} from './OculusController_c.js';
 import {cardboardController} from './CardboardController_c.js';
@@ -40,7 +39,7 @@ scene.setCameraProperty('far', 100);
 /// mouse controller
 let mouseController = new MouseController();
 SceneManager.addController(mouseController);
-mouseController.onControllerUpdate = DragAndDrop.controllerUpdate;
+mouseController.onControllerUpdate = DragAndDrop.objectUpdate;
 
 // add skybox
 let skybox = new CubeObject(50, 'models/textures/skybox.jpg');

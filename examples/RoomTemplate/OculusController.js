@@ -8,19 +8,13 @@ import {DragAndDrop} from './DragAndDrop_c.js';
 
 let oculusController = new OculusController();
 
-oculusController.onKeyDown = function () {
-    this.engaged = true;
-    if (!this.pickedItems) {
-        this.pickedItems = [];
-    }
-};
+oculusController.onKeyDown = DragAndDrop.OculusControllerKeyDown;
 
-oculusController.onKeyUp = function () {
-    this.engaged = false;
-    this.pickedItems = [];
-};
+oculusController.onKeyUp = DragAndDrop.OculusControllerKeyUp;
 
-oculusController.onControllerUpdate = DragAndDrop.controllerUpdate;
+oculusController.onControllerUpdate = DragAndDrop.objectUpdate;
 
 SceneManager.addController(oculusController);
-export {oculusController}
+export {
+    oculusController
+}

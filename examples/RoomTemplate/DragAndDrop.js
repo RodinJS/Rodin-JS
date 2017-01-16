@@ -12,7 +12,7 @@ import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 let scene = SceneManager.get();
 let camera = scene.camera;
 let originalScene = scene.scene;
-const controllerKeyDown = (evt) => {
+const objectKeyDown = (evt) => {
     if (evt.controller instanceof MouseController) {
         let controller = evt.controller;
         let target = evt.target;
@@ -77,12 +77,27 @@ const controllerKeyDown = (evt) => {
 };
 
 
-const controllerKeyUp = (evt) => {
+const objectKeyUp = (evt) => {
     if (evt.controller instanceof MouseController) {
 
     }
     if (evt.controller instanceof ViveController) {
-
+        if (evt.keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
+        this.engaged = false;
+        if (this.pickedItems && this.pickedItems.length > 0) {
+            this.pickedItems.map(item => {
+                let targetParent = item.parent;
+                changeParent(item, item.initialParent);
+                this.raycastingLine.object3D.remove(targetParent);
+            });
+            if (this.raycastingLine.object3D.children.length > 0) {
+                this.raycastingLine.object3D.children.map(item => {
+                    this.raycastingLine.object3D.remove(item);
+                });
+            }
+            this.raycastingLine.object3D.children = [];
+            this.pickedItems = [];
+        }
     }
     if (evt.controller instanceof OculusController) {
         camera.remove(camera.objectHolder);
@@ -94,7 +109,7 @@ const controllerKeyUp = (evt) => {
     }
 };
 
-const controllerValueChange = (evt) => {
+const objectValueChange = (evt) => {
     if (evt.controller instanceof MouseController) {
         let gamePad = MouseController.getGamepad();
         let target = evt.target;
@@ -142,7 +157,7 @@ const controllerValueChange = (evt) => {
     }
 };
 
-const controllerUpdate = function () {
+const objectUpdate = function () {
     if (this instanceof MouseController) {
         this.raycaster.setFromCamera({x: this.axes[0], y: this.axes[1]}, camera);
 
@@ -245,7 +260,6 @@ const controllerUpdate = function () {
 };
 
 function ViveControllerKeyDown(keyCode) {
-    if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
     this.engaged = true;
     if (!this.pickedItems) {
         this.pickedItems = [];
@@ -301,30 +315,30 @@ function ViveControllerKeyDown(keyCode) {
 }
 
 function ViveControllerKeyUp(keyCode) {
-    if (keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
-    this.engaged = false;
-    if (this.pickedItems && this.pickedItems.length > 0) {
-        this.pickedItems.map(item => {
-            let targetParent = item.parent;
-            changeParent(item, item.initialParent);
-            this.raycastingLine.object3D.remove(targetParent);
-        });
-        if (this.raycastingLine.object3D.children.length > 0) {
-            this.raycastingLine.object3D.children.map(item => {
-                this.raycastingLine.object3D.remove(item);
-            });
-        }
-        this.raycastingLine.object3D.children = [];
-        this.pickedItems = [];
-    }
+    objectKeyDown();
 }
 
-
-    export const DragAndDrop = {
-        controllerKeyDown,
-        controllerValueChange,
-        controllerUpdate,
-        controllerKeyUp,
-        ViveControllerKeyUp,
-        ViveControllerKeyDown
+function OculusControllerKeyDown(keyCode) {
+    this.engaged = true;
+    if (!this.pickedItems) {
+        this.pickedItems = [];
     }
+    objectKeyDown();
+}
+
+function OculusControllerKeyUp(keyCode) {
+    this.engaged = false;
+    this.pickedItems = [];
+    objectKeyDown();
+}
+
+export const DragAndDrop = {
+    objectKeyDown,
+    objectValueChange,
+    objectUpdate,
+    objectKeyUp,
+    ViveControllerKeyUp,
+    ViveControllerKeyDown,
+    OculusControllerKeyDown,
+    OculusControllerKeyUp
+};
