@@ -1,19 +1,20 @@
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
-import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
+import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 
+import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
-import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 import {THREEObject} from '../../_build/js/rodinjs/sculpt/THREEObject.js';
 
-import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
-import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
 import {DragAndDrop} from './DragAndDrop_c.js';
-import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
+import {controllerL, controllerR} from './DnDVive_c.js';
+import {cardboardController}      from './DnDCardboard_c.js';
+import {oculusController}         from './DnDOculus_c.js';
+import {mouseController}          from './DnDMouse_c.js';
 
 import {RigidBody} from '../../_build/js/rodinjs/physics/RigidBody.js';
 import {RodinPhysics} from '../../_build/js/rodinjs/physics/RodinPhysics.js';
 
-import {EVENT_NAMES, CONTROLLER_HANDS} from '../../_build/js/rodinjs/constants/constants.js';
+import {EVENT_NAMES} from '../../_build/js/rodinjs/constants/constants.js';
 
 let scene = SceneManager.get();
 

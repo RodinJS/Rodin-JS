@@ -1,116 +1,192 @@
+import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 
-import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
-import {ViveController} from '../../_build/js/rodinjs/controllers/ViveController.js';
-import {OculusController} from '../../_build/js/rodinjs/controllers/OculusController.js';
+import {MouseController}     from '../../_build/js/rodinjs/controllers/MouseController.js';
+import {ViveController}      from '../../_build/js/rodinjs/controllers/ViveController.js';
+import {OculusController}    from '../../_build/js/rodinjs/controllers/OculusController.js';
 import {CardboardController} from '../../_build/js/rodinjs/controllers/CardboardController.js';
 
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 import * as PhysicsUtils from '../../_build/js/rodinjs/utils/physicsUtils.js';
-import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 
 let scene = SceneManager.get();
 let camera = scene.camera;
 let originalScene = scene.scene;
+
 const objectKeyDown = (evt) => {
-    if (evt.controller instanceof MouseController) {
-        let controller = evt.controller;
-        let target = evt.target;
-        controller.pickedItems.push(target.object3D);
+    let controller = evt.controller;
+    let target = evt.target;
+    let item = target.object3D;
 
-        let initParent = target.object3D.parent;
-        changeParent(target.object3D, originalScene);
+    if (!item.initialParent){
+        item.initialParent = item.parent;
+    }
+    let initialParent = item.initialParent;
 
-        target.object3D.raycastCameraPlane = new THREE.Plane();
-        target.object3D.offset = new THREE.Vector3();
-        target.object3D.intersection = new THREE.Vector3();
+    if (controller instanceof MouseController) {
 
-        target.object3D.raycastCameraPlane.setFromNormalAndCoplanarPoint(
-            camera.getWorldDirection(target.object3D.raycastCameraPlane.normal),
-            target.object3D.position
+        changeParent(item, originalScene);
+
+        item.raycastCameraPlane = new THREE.Plane();
+        item.intersection = new THREE.Vector3();
+        item.offset = new THREE.Vector3();
+
+        item.raycastCameraPlane.setFromNormalAndCoplanarPoint(
+            camera.getWorldDirection(item.raycastCameraPlane.normal),
+            item.position
         );
 
-        if (controller.raycaster.ray.intersectPlane(target.object3D.raycastCameraPlane, target.object3D.intersection)) {
-            target.object3D.offset.copy(target.object3D.intersection).sub(target.object3D.position);
+        if (controller.raycaster.ray.intersectPlane(item.raycastCameraPlane, item.intersection)) {
+            item.offset.copy(item.intersection).sub(item.position);
             if (evt.keyCode === 3) {
-                let initParent = target.object3D.parent;
-                changeParent(target.object3D, camera);
-                target.object3D.initRotation = target.object3D.rotation.clone();
-                target.object3D.initMousePos = {x: controller.axes[0], y: controller.axes[1]};
-                changeParent(target.object3D, initParent);
+                let initParent = item.parent;
+                changeParent(item, camera);
+                item.initRotation = item.rotation.clone();
+                item.initMousePos = {x: controller.axes[0], y: controller.axes[1]};
+                changeParent(item, initParent);
             }
         }
-        changeParent(target.object3D, initParent);
+        changeParent(item, initialParent);
     }
-    if (evt.controller instanceof ViveController) {
+    if (controller instanceof ViveController) {
+        if (controller.intersected && controller.intersected.length > 0) {
+            controller.intersected.map(intersect => {
+                if(item !== intersect.object) {
+                    return;
+                }
+                /*if (item.parent != item.initialParent) {
+                    return;
+                }*/
+                changeParent(item, controller.raycastingLine.object3D);
+                let holder = new THREE.Object3D();
+                holder.position.copy(item.position);
+                holder.name = 'holder';
+                controller.raycastingLine.object3D.add(holder);
+
+                if (item.rigidBody) {
+                    changeParent(item, initialParent);
+                } else {
+                    changeParent(item, holder);
+                }
+            });
+        }
     }
-    if (evt.controller instanceof OculusController) {
-        let controller = evt.controller;
-        let target = evt.target;
+    if (controller instanceof OculusController) {
+        if (controller.intersected && controller.intersected.length > 0) {
+            controller.intersected.map(intersect => {
+                if(item !== intersect.object) {
+                    return;
+                }
+                changeParent(item, camera);
 
-        controller.pickedItems.push(target.object3D);
+                let holder = new THREE.Object3D();
+                holder.position.copy(item.position);
+                holder.name = 'holder';
 
-        let initParent = target.object3D.parent;
-        changeParent(target.object3D, camera);
-        let holder  = new THREE.Object3D();
-        // let holder  = new THREE.Mesh(new THREE.BoxGeometry(0.1,0.1,0.1));
-        holder.position.copy(target.object3D.position);
-        camera.add(holder);
-        camera.objectHolder = holder;
-        changeParent(target.object3D, initParent);
+                camera.add(holder);
+                item.objectHolder = holder;
+
+                if (item.rigidBody) {
+                    changeParent(item, initialParent);
+                } else {
+                    changeParent(item, holder);
+                }
+            })
+        }
     }
-    if (evt.controller instanceof CardboardController) {
-        let controller = evt.controller;
-        let target = evt.target;
+    if (controller instanceof CardboardController) {
+        if (controller.intersected && controller.intersected.length > 0) {
+            controller.intersected.map(intersect => {
+                if(item !== intersect.object) {
+                    return;
+                }
+                changeParent(item, camera);
 
-        controller.pickedItems.push(target.object3D);
+                let holder = new THREE.Object3D();
+                holder.position.copy(item.position);
+                holder.name = 'holder';
 
-        let initParent = target.object3D.parent;
-        changeParent(target.object3D, camera);
-        let holder  = new THREE.Object3D();
-        // let holder  = new THREE.Mesh(new THREE.BoxGeometry(0.1,0.1,0.1));
-        holder.position.copy(target.object3D.position);
-        camera.add(holder);
-        camera.objectHolder = holder;
-        changeParent(target.object3D, initParent);
+                camera.add(holder);
+                item.objectHolder = holder;
+
+                if (item.rigidBody) {
+                    changeParent(item, initialParent);
+                } else {
+                    changeParent(item, holder);
+                }
+            })
+        }
     }
+
+    controller.pickedItems.push(item);
 };
 
-
 const objectKeyUp = (evt) => {
-    if (evt.controller instanceof MouseController) {
-
+    let controller = evt.controller;
+    let target = evt.target;
+    let item = target.object3D;
+    if (!item.initialParent){
+        item.initialParent = item.parent;
     }
-    if (evt.controller instanceof ViveController) {
-        if (evt.keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY2) return;
-        this.engaged = false;
-        if (this.pickedItems && this.pickedItems.length > 0) {
-            this.pickedItems.map(item => {
-                let targetParent = item.parent;
-                changeParent(item, item.initialParent);
-                this.raycastingLine.object3D.remove(targetParent);
+    let initialParent = item.initialParent;
+
+    if (controller instanceof MouseController) {
+    }
+    if (controller instanceof ViveController) {
+        if (controller.pickedItems && controller.pickedItems.length > 0) {
+            controller.pickedItems.map(item => {
+                let holder = item.parent;
+                changeParent(item, initialParent);
+                controller.raycastingLine.object3D.remove(holder);
             });
-            if (this.raycastingLine.object3D.children.length > 0) {
-                this.raycastingLine.object3D.children.map(item => {
-                    this.raycastingLine.object3D.remove(item);
+            if (controller.raycastingLine.object3D.children.length > 0) {
+                controller.raycastingLine.object3D.children.map(item => {
+                    controller.raycastingLine.object3D.remove(item);
                 });
             }
-            this.raycastingLine.object3D.children = [];
-            this.pickedItems = [];
+            controller.raycastingLine.object3D.children = [];
         }
     }
-    if (evt.controller instanceof OculusController) {
-        camera.remove(camera.objectHolder);
-        camera.objectHolder = null;
+    if (controller instanceof OculusController) {
+        if (controller.pickedItems && controller.pickedItems.length > 0) {
+            controller.pickedItems.map(item => {
+                changeParent(item, initialParent);
+                item.objectHolder = null;
+
+                if (camera.children.length > 0) {
+                    camera.children.map(item => {
+                        if (item.name === "holder") {
+                            camera.remove(item);
+                        }
+                    });
+                }
+            });
+        }
     }
-    if (evt.controller instanceof CardboardController) {
-        camera.remove(camera.objectHolder);
-        camera.objectHolder = null;
+    if (controller instanceof CardboardController) {
+        if (controller.pickedItems && controller.pickedItems.length > 0) {
+            controller.pickedItems.map(item => {
+                changeParent(item, initialParent);
+                item.objectHolder = null;
+
+                if (camera.children.length > 0) {
+                    camera.children.map(item => {
+                        if (item.name === "holder") {
+                            camera.remove(item);
+                        }
+                    });
+                }
+            });
+        }
     }
+
+    controller.pickedItems = [];
 };
 
 const objectValueChange = (evt) => {
-    if (evt.controller instanceof MouseController) {
+    let controller = evt.controller;
+
+    if (controller instanceof MouseController) {
         let gamePad = MouseController.getGamepad();
         let target = evt.target;
         if (evt.keyCode === 2) {
@@ -200,7 +276,6 @@ const objectUpdate = function () {
                                 pointerShift.w);
 
                             item.rigidBody.body.setQuaternion(quat);
-
                         } else {
                             item.quaternion.multiplyQuaternions(deltaRotationQuaternion, item.quaternion);
                         }
@@ -214,49 +289,45 @@ const objectUpdate = function () {
     if (this instanceof ViveController) {
         if (this.pickedItems && this.pickedItems.length > 0) {
             this.pickedItems.map(item => {
-                if (item instanceof OIMO.RigidBody) {
-
-                    item.sleeping = false;
-                    //console.log(this.raycastingLine.object3D.children[0]);
-                    let targetPos = this.raycastingLine.object3D.children[0].getWorldPosition();
-                    // console.log(targetPos);
-                    let vec = new OIMO.Vec3(targetPos.x*100, targetPos.y*100, targetPos.z*100);
-                    item.setPosition(vec);
+                if (item.rigidBody) {
+                    if (item.rigidBody.body instanceof OIMO.RigidBody) {
+                        item.rigidBody.body.sleeping = false;
+                        let targetPos = this.raycastingLine.object3D.children[0].getWorldPosition();
+                        let vec = new OIMO.Vec3(targetPos.x * 100, targetPos.y * 100, targetPos.z * 100);
+                        item.rigidBody.body.setPosition(vec);
+                    }
                 }
             });
-
         }
     }
     if (this instanceof OculusController) {
         if (this.pickedItems && this.pickedItems.length > 0) {
             this.pickedItems.map(item => {
-                if (item.rigidBody.body && item.rigidBody.body instanceof OIMO.RigidBody) {
-                    item.rigidBody.body.sleeping = false;
-                    //console.log(this.raycastingLine.object3D.children[0]);
-                    let targetPos = camera.objectHolder.getWorldPosition();
-                    // console.log(targetPos);
-                    let vec = new OIMO.Vec3(targetPos.x*100, targetPos.y*100, targetPos.z*100);
-                    item.rigidBody.body.setPosition(vec);
-                }
-            });
-
-        }
-    }
-        if (this instanceof CardboardController) {
-            if (this.pickedItems && this.pickedItems.length > 0) {
-                this.pickedItems.map(item => {
-                    if (item.rigidBody.body && item.rigidBody.body instanceof OIMO.RigidBody) {
+                if (item.rigidBody) {
+                    if (item.rigidBody.body instanceof OIMO.RigidBody) {
                         item.rigidBody.body.sleeping = false;
-                        //console.log(this.raycastingLine.object3D.children[0]);
-                        let targetPos = camera.objectHolder.getWorldPosition();
-                        // console.log(targetPos);
-                        let vec = new OIMO.Vec3(targetPos.x*100, targetPos.y*100, targetPos.z*100);
+                        let targetPos = item.objectHolder.getWorldPosition();
+                        let vec = new OIMO.Vec3(targetPos.x * 100, targetPos.y * 100, targetPos.z * 100);
                         item.rigidBody.body.setPosition(vec);
                     }
-                });
-
-            }
+                }
+            });
         }
+    }
+    if (this instanceof CardboardController) {
+        if (this.pickedItems && this.pickedItems.length > 0) {
+            this.pickedItems.map(item => {
+                if (item.rigidBody) {
+                    if (item.rigidBody.body instanceof OIMO.RigidBody) {
+                        item.rigidBody.body.sleeping = false;
+                        let targetPos = item.objectHolder.getWorldPosition();
+                        let vec = new OIMO.Vec3(targetPos.x * 100, targetPos.y * 100, targetPos.z * 100);
+                        item.rigidBody.body.setPosition(vec);
+                    }
+                }
+            });
+        }
+    }
 };
 
 function ViveControllerKeyDown(keyCode) {
@@ -264,58 +335,9 @@ function ViveControllerKeyDown(keyCode) {
     if (!this.pickedItems) {
         this.pickedItems = [];
     }
-
-    if (this.intersected && this.intersected.length > 0) {
-        this.intersected.map(intersect => {
-            if (intersect.object.parent != intersect.object.initialParent) {
-                return;
-            }
-            let item;
-            if (intersect.object.rigidBody) {
-                item = intersect.object.rigidBody.body;
-
-                let initialParent = intersect.object.parent;
-                changeParent(intersect.object, this.raycastingLine.object3D);
-                let target = new THREE.Object3D();
-                // let target = new THREE.Mesh(new THREE.BoxGeometry(0.02,0.02,0.02));
-                this.raycastingLine.object3D.add(target);
-                target.name = "d";
-                let pos = intersect.object.position;
-                target.position.set(
-                    pos.x,
-                    pos.y,
-                    pos.z);
-
-                changeParent(intersect.object, initialParent);
-
-                this.pickedItems.push(item);
-                /*if (intersect.initialRotX) {
-                 intersect.initialRotX = 0;
-                 intersect.initialRotY = 0;
-                 }*/
-            } else {
-                item = intersect.object;
-
-                changeParent(item, this.raycastingLine.object3D);
-                let targetParent = new THREE.Object3D();
-                this.raycastingLine.object3D.add(targetParent);
-                targetParent.position.copy(item.position);
-                changeParent(item, targetParent);
-
-                this.pickedItems.push(item);
-                if (intersect.initialRotX) {
-                    intersect.initialRotX = 0;
-                    intersect.initialRotY = 0;
-                }
-            }
-
-
-        });
-    }
 }
-
 function ViveControllerKeyUp(keyCode) {
-    objectKeyDown();
+    this.engaged = false;
 }
 
 function OculusControllerKeyDown(keyCode) {
@@ -323,13 +345,24 @@ function OculusControllerKeyDown(keyCode) {
     if (!this.pickedItems) {
         this.pickedItems = [];
     }
-    objectKeyDown();
 }
-
 function OculusControllerKeyUp(keyCode) {
     this.engaged = false;
-    this.pickedItems = [];
-    objectKeyDown();
+}
+
+function CardboardControllerKeyDown(keyCode) {
+    this.engaged = true;
+    if (!this.pickedItems) {
+        this.pickedItems = [];
+    }
+}
+function CardboardControllerKeyUp(keyCode) {
+    this.engaged = false;
+}
+
+function MouseControllerKeyDown(keyCode) {
+}
+function MouseControllerKeyUp(keyCode) {
 }
 
 export const DragAndDrop = {
@@ -340,5 +373,9 @@ export const DragAndDrop = {
     ViveControllerKeyUp,
     ViveControllerKeyDown,
     OculusControllerKeyDown,
-    OculusControllerKeyUp
+    OculusControllerKeyUp,
+    CardboardControllerKeyDown,
+    CardboardControllerKeyUp,
+    MouseControllerKeyDown,
+    MouseControllerKeyUp
 };

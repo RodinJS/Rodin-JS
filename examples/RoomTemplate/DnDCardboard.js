@@ -1,4 +1,3 @@
-import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
 
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
@@ -8,19 +7,12 @@ import {DragAndDrop} from './DragAndDrop_c.js';
 
 let cardboardController = new CardboardController();
 
-cardboardController.onKeyDown = function () {
-    this.engaged = true;
-    if (!this.pickedItems) {
-        this.pickedItems = [];
-    }
-};
+cardboardController.onKeyDown = DragAndDrop.CardboardControllerKeyDown;
+cardboardController.onKeyUp = DragAndDrop.CardboardControllerKeyUp;
 
-cardboardController.onKeyUp = function () {
-    this.engaged = false;
-    this.pickedItems = [];
-};
-
-cardboardController.onControllerUpdate = DragAndDrop.controllerUpdate;
+cardboardController.onControllerUpdate = DragAndDrop.objectUpdate;
 
 SceneManager.addController(cardboardController);
-export {cardboardController}
+export {
+    cardboardController
+}

@@ -1,45 +1,21 @@
+import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 
-import '../../_build/js/vendor/three/examples/js/loaders/OBJLoader.js';
-
-import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
-
-import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
-import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
+import {RodinPhysics} from '../../_build/js/rodinjs/physics/RodinPhysics.js';
+import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
 import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
-import {THREEObject} from '../../_build/js/rodinjs/sculpt/THREEObject.js';
 
-import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
+import {Lights} from './Lights_c.js';
+import {Import3DModels} from './Import3DModels_c.js';
 import {DragAndDrop} from './DragAndDrop_c.js';
 
-import {RigidBody} from '../../_build/js/rodinjs/physics/RigidBody.js';
-import {RodinPhysics} from '../../_build/js/rodinjs/physics/RodinPhysics.js';
-
-import {TWEEN} from '../../_build/js/rodinjs/Tween.js';
-import {EVENT_NAMES, CONTROLLER_HANDS} from '../../_build/js/rodinjs/constants/constants.js';
-
-///// loading lights /////
-import {Lights} from './Lights_c.js';
-
-///// loading 3D models /////
-import {Import3DModels} from './Import3DModels_c.js';
-import {controllerL, controllerR} from './ViveControllers_c.js';
-import {oculusController} from './OculusController_c.js';
-import {cardboardController} from './CardboardController_c.js';
-
 let scene = SceneManager.get();
-let camera = scene.camera;
 let controls = scene.controls;
 let renderer = scene.renderer;
 
 renderer.setPixelRatio(window.devicePixelRatio);
 scene.setCameraProperty('far', 100);
-
-/// mouse controller
-let mouseController = new MouseController();
-SceneManager.addController(mouseController);
-mouseController.onControllerUpdate = DragAndDrop.objectUpdate;
 
 // add skybox
 let skybox = new CubeObject(50, 'models/textures/skybox.jpg');
