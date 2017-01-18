@@ -25,19 +25,28 @@ const objectKeyDown = (evt) => {
 
     if (controller instanceof MouseController) {
 
+        console.log('objectKeyDown',item);
+        console.log('item',item.getWorldPosition().x,item.getWorldPosition().y,item.getWorldPosition().z);
+        console.log('item',item.position.x,item.position.y,item.position.z);
         changeParent(item, originalScene);
 
+        console.log('item',item.getWorldPosition().x,item.getWorldPosition().y,item.getWorldPosition().z);
+        console.log('item',item.position.x,item.position.y,item.position.z);
         item.raycastCameraPlane = new THREE.Plane();
         item.intersection = new THREE.Vector3();
         item.offset = new THREE.Vector3();
 
+        // console.log('item.getWorldPosition()', item.getWorldPosition());
         item.raycastCameraPlane.setFromNormalAndCoplanarPoint(
             camera.getWorldDirection(item.raycastCameraPlane.normal),
-            item.position
+            item.getWorldPosition()
         );
 
+
         if (controller.raycaster.ray.intersectPlane(item.raycastCameraPlane, item.intersection)) {
-            item.offset.copy(item.intersection).sub(item.position);
+            item.offset.copy(item.intersection).sub(item.getWorldPosition());
+            console.log('item.intersection', item.intersection);
+            console.log('offset', item.offset);
             if (evt.keyCode === 3) {
                 let initParent = item.parent;
                 changeParent(item, camera);
@@ -60,6 +69,7 @@ const objectKeyDown = (evt) => {
                 changeParent(item, controller.raycastingLine.object3D);
                 let holder = new THREE.Object3D();
                 holder.position.copy(item.position);
+                holder.quaternion.copy(item.quaternion);
                 holder.name = 'holder';
                 controller.raycastingLine.object3D.add(holder);
 
@@ -240,9 +250,14 @@ const objectUpdate = function () {
         if (this.pickedItems && this.pickedItems.length > 0) {
             this.pickedItems.map(item => {
                 if (this.raycaster.ray.intersectPlane(item.raycastCameraPlane, item.intersection)) {
+
+
                     if (this.keyCode === 1) {
                         let initParent = item.parent;
+
+                        console.log('objectUpdate',item.getWorldPosition());
                         changeParent(item, originalScene);
+                        console.log('objectUpdate1',item.getWorldPosition());
                         if (item.rigidBody) {
                             let pointerShift = item.intersection.sub(item.offset).multiplyScalar(100);
                             let vec = new OIMO.Vec3(pointerShift.x, pointerShift.y, pointerShift.z);
@@ -253,6 +268,7 @@ const objectUpdate = function () {
                         }
 
                         changeParent(item, initParent);
+                        console.log('_____________________');
                     } else if (this.keyCode === 3) {
                         let shift = {x: this.axes[0] - item.initMousePos.x, y: this.axes[1] - item.initMousePos.y};
                         item.initMousePos = {x: this.axes[0], y: this.axes[1]};
@@ -292,9 +308,13 @@ const objectUpdate = function () {
                 if (item.rigidBody) {
                     if (item.rigidBody.body instanceof OIMO.RigidBody) {
                         item.rigidBody.body.sleeping = false;
-                        let targetPos = this.raycastingLine.object3D.children[0].getWorldPosition();
-                        let vec = new OIMO.Vec3(targetPos.x * 100, targetPos.y * 100, targetPos.z * 100);
-                        item.rigidBody.body.setPosition(vec);
+                        let holderPos = this.raycastingLine.object3D.children[0].getWorldPosition();
+                        let vecPos = new OIMO.Vec3(holderPos.x * 100, holderPos.y * 100, holderPos.z * 100);
+                        item.rigidBody.body.setPosition(vecPos);
+
+                        let holderQuat = this.raycastingLine.object3D.children[0].getWorldQuaternion();
+                        let vecQuat = new OIMO.Quaternion(holderQuat.x * 100, holderQuat.y * 100, holderQuat.z * 100, holderQuat.w * 100);
+                        item.rigidBody.body.setQuaternion(vecQuat);
                     }
                 }
             });

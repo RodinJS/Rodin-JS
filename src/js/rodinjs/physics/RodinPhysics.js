@@ -142,7 +142,6 @@ export class RodinPhysics {
         }
         if (this.physicsEngine === 'oimo') {
             while (i--) {
-
                 //console.log(this.rigidBodies[i].body.position);
                 //this.rigidBodies[i].body.setPosition(new OIMO.Vec3(200,200,200));
                 //console.log(this.rigidBodies[i].body.position);

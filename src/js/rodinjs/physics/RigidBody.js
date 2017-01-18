@@ -86,6 +86,8 @@ export class RigidBody {
                 mass: this.mass,
                 world: RodinPhysics.world
             };
+            console.log('name',this.owner.name);
+            console.log('objectUpdate',this.owner.getWorldPosition());
         }
         RodinPhysics.getInstance(this.physicsEngine).addRigidBodyToWorld(this);
     }
