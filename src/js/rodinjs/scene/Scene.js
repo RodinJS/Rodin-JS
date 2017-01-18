@@ -43,6 +43,7 @@ export class Scene extends Sculpt {
         this.renderer = new THREE.WebGLRenderer({
             antialias: window.devicePixelRatio < 2
         });
+
         this.scene.add(this.camera);
         /**
          * The VR controls of the scene.
@@ -91,9 +92,14 @@ export class Scene extends Sculpt {
          */
         this.time = Time.getInstance();
 
-        window.addEventListener('resize', this.onResize.bind(this), true);
-        window.addEventListener('vrdisplaypresentchange', this.onResize.bind(this), true);
+        window.addEventListener('resize', this.onResize.bind(this), false);
+        window.addEventListener('vrdisplaypresentchange', this.onResize.bind(this), false);
         this.render();
+
+        if(window.parent !== window && navigator.userAgent.match(/(iPod|iPhone|iPad)/) && navigator.userAgent.match(/AppleWebKit/)) {
+            this.renderer.domElement.style.position = 'fixed';
+            this.onResize();
+        }
 
         timeout(() => {
             this.emit("ready", new Event(this));
