@@ -1,39 +1,28 @@
 import SocketInterface from './SocketInterface';
-import io from 'socket.io-client';
-import Cookie from '../utils/Cookie.js';
+import io from '../../vendor/socket.io/dist/socket.io.js';
 
-let params = {query: "fake-access-token=" + Cookie.getCookie("token")};
-//localStorage.debug = '*';
+let _socket;
+/**
+ * A socket connection class, see socket example.
+ */
+export class Socket extends SocketInterface {
+    constructor(url = "//ws.rodin.space/", params = {
+        transports: ['websocket', 'polling']
+    }) {
+        super();
 
-const socket = io.connect('', params);
-
-class Socket extends SocketInterface{
-    constructor(channel = "", room = "") {
-        super(channel, room);
-
-        this.emit("subscribe", {
-            channel: this.channel,
-            room: this.room
-        });
+        if (!_socket) {
+            _socket = io.connect(url, params);
+        }
     }
 
-    on(eventName, callback) {
-        socket.on(eventName, function () {
-            if (callback) {
-                callback.apply(socket, arguments);
-            }
-        });
+    on() {
+        _socket.on(...arguments);
     };
 
-    emit(eventName, data, callback) {
-        socket.emit(eventName, data, ()=> {
-            if (callback) {
-                callback.apply(socket, arguments);
-            }
-        })
+    emit() {
+        _socket.emit(...arguments);
     };
 
 
 }
-
-export default Socket;

@@ -3,10 +3,77 @@
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
-
+/**
+ * Class for creating cubeMap skybox objects.
+ * @param {number} size - the size of the skybox side in meters
+ * @param {string} textureURL - the url of the skybox cubemap image file
+ */
 export class CubeObject extends Sculpt {
     constructor(size, textureURL) {
         super();
+
+        /**
+         * Skybox side names map.
+         * @type {Object<string, string>}
+         */
+        this.SIDENAMES = {
+            FRONT: 'F',
+            BACK: 'B',
+            UP: 'U',
+            DOWN: 'D',
+            LEFT: 'L',
+            RIGHT: 'R'
+        };
+
+        /**
+         * The params of the sides, to be mapped with the cubemap image.
+         * @type {Object}
+         */
+        this.Sides = {
+            order: [
+                this.SIDENAMES.FRONT,
+                this.SIDENAMES.BACK,
+                this.SIDENAMES.UP,
+                this.SIDENAMES.DOWN,
+                this.SIDENAMES.LEFT,
+                this.SIDENAMES.RIGHT
+            ],
+
+            configs: {
+                F: {
+                    rotate: 0,
+                    translate: [0, 0],
+                    position: [0, 1]
+                },
+                B: {
+                    rotate: 0,
+                    translate: [0, 0],
+                    position: [2, 1]
+                },
+                U: {
+                    rotate: Math.PI,
+                    translate: [-1, -1],
+                    position: [1, 0]
+                },
+                D: {
+                    rotate: Math.PI,
+                    translate: [-1, -1],
+                    position: [1, 2]
+                },
+                L: {
+                    rotate: 0,
+                    translate: [0, 0],
+                    position: [3, 1]
+                },
+                R: {
+                    rotate: 0,
+                    translate: [0, 0],
+                    position: [1, 1]
+                }
+            }
+        };
+
+
         let textures = [];
         for (let i = 0; i < 6; i++) {
             textures.push(new THREE.Texture());
@@ -17,10 +84,10 @@ export class CubeObject extends Sculpt {
         let imageObj = new Image();
         imageObj.onload = () => {
 
-            for (let i = 0; i < CubeObject.Sides.order.length; i++) {
-                let side = CubeObject.Sides.order[i];
+            for (let i = 0; i < this.Sides.order.length; i++) {
+                let side = this.Sides.order[i];
                 materials.push(new THREE.MeshBasicMaterial({
-                    map: this.createMaterial(CubeObject.Sides.configs[side], imageObj)
+                    map: this.createMaterial(this.Sides.configs[side], imageObj)
                 }));
             }
 
@@ -33,61 +100,15 @@ export class CubeObject extends Sculpt {
         };
 
         imageObj.src = textureURL;
+
     }
 
-    static SIDENAMES = {
-        FRONT: 'F',
-        BACK: 'B',
-        UP: 'U',
-        DOWN: 'D',
-        LEFT: 'L',
-        RIGHT: 'R'
-    };
 
-    static Sides = {
-        order: [
-            CubeObject.SIDENAMES.FRONT,
-            CubeObject.SIDENAMES.BACK,
-            CubeObject.SIDENAMES.UP,
-            CubeObject.SIDENAMES.DOWN,
-            CubeObject.SIDENAMES.LEFT,
-            CubeObject.SIDENAMES.RIGHT
-        ],
-
-        configs: {
-            F: {
-                rotate: 0,
-                translate: [0, 0],
-                position: [0, 1]
-            },
-            B: {
-                rotate: 0,
-                translate: [0, 0],
-                position: [2, 1]
-            },
-            U: {
-                rotate: Math.PI,
-                translate: [-1, -1],
-                position: [1, 0]
-            },
-            D: {
-                rotate: Math.PI,
-                translate: [-1, -1],
-                position: [1, 2]
-            },
-            L: {
-                rotate: 0,
-                translate: [0, 0],
-                position: [3, 1]
-            },
-            R: {
-                rotate: 0,
-                translate: [0, 0],
-                position: [1, 1]
-            }
-        }
-    };
-
+    /**
+     * Creates a Material based on the current mapping parameters.
+     * @param {object} configs - the mapping parameters
+     * @param {object} imageObj - the image object of the cubemap
+     */
     createMaterial(configs, imageObj) {
         let tileSize = imageObj.height / 3;
         let left = configs.position[0] * tileSize + 1;

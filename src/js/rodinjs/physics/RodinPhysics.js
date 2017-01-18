@@ -10,7 +10,7 @@ export class RodinPhysics {
 
     /**
      *
-     * @param {string, ""} id Required
+     * @param {string} [id=] - id Required
      */
     constructor(id = "") {
 

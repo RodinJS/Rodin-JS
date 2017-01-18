@@ -13,21 +13,18 @@ import '../../vendor/three/examples/js/loaders/MTLLoader.js';
 import {Event} from '../Event.js';
 import {Sculpt} from './Sculpt.js';
 
-/**
- * If You want to use OBJ file, for avoid path problem
- * please export your file and material in the same folder.
- * And keep object and material name the same.
- * Obj format doesn't support animation.
- */
 
 THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
 
+/**
+ * Loads .obj file to the scene.
+ * <p>If You want to use OBJ file, then in order to avoid path problems,
+ * please export your file and material in the same folder and make sure object and material names are the same.</p>
+ * Obj format doesn't support animation.
+ * @param {string} URL - file url
+ */
 export class OBJModelObject extends Sculpt {
-    /**
-     * OBJModelObject constructor.
-     * @param {string} [URL = '']
-     */
-    constructor(URL = '') {
+    constructor(URL) {
 
         super();
 

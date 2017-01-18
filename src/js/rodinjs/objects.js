@@ -1,4 +1,5 @@
 import {Set} from './utils/Set';
+import {Sculpt} from './sculpt/Sculpt.js';
 
 /**
  * All active objects
@@ -13,7 +14,7 @@ export const Objects = new Set();
 export const Raycastables = new Set();
 
 Raycastables.validate = (item) => {
-    if(item.isSculpt) {
+    if(item instanceof Sculpt) {
         return item.object3D;
     }
 
@@ -23,3 +24,9 @@ Raycastables.validate = (item) => {
 
     throw new Error(`Raycastables can contain only Sculpt or Object3D`);
 };
+
+/**
+ * All objects which are not ready
+ * @type {Set}
+ */
+export const LoadingObjects = new Set();

@@ -186,7 +186,7 @@ christmasFire.on('ready', () => {
                 map: texture,
                 skinning: true
             });
-        },
+        }
     );
 
     christmasFire.object3D.scale.set(s, s, s);

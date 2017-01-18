@@ -110,6 +110,7 @@ snow.on("ready", (evt) => {
     snowContainer.add(evt.target.object3D);
 });
 
+
 /// Add terrain
 let terrain = ModelLoader.load("./models/terrain.json");
 terrain.on('ready', () => {
@@ -262,10 +263,10 @@ let toyReady = function () {
             if (target.object3D.parent != target.object3D.initialParent) {
                 return;
             }
-            changeParent(target.object3D, controller.reycastingLine);
+            changeParent(target.object3D, controller.raycastingLine.object3D);
             //let targetParent = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.04, 12, 12));
             let targetParent = new THREE.Object3D();
-            controller.reycastingLine.add(targetParent);
+            controller.raycastingLine.object3D.add(targetParent);
             targetParent.position.copy(target.object3D.position);
             changeParent(target.object3D, targetParent);
 
@@ -285,7 +286,7 @@ let toyReady = function () {
         else if (controller instanceof ViveController) {
             let targetParent = target.object3D.parent;
             changeParent(target.object3D, target.object3D.initialParent);
-            controller.reycastingLine.remove(targetParent);
+            controller.raycastingLine.object3D.remove(targetParent);
         }
     });
 
@@ -443,8 +444,8 @@ function mouseControllerUpdate() {
                     let initParent = item.parent;
                     changeParent(item, camera);
                     let deltaRotationQuaternion = new THREE.Quaternion().setFromEuler(
-                        new THREE.Euler(-shift.y * Math.PI, shift.x * Math.PI, 0, 'XYZ')
-                    );
+                            new THREE.Euler(-shift.y * Math.PI, shift.x * Math.PI, 0, 'XYZ')
+                        );
 
                     item.quaternion.multiplyQuaternions(deltaRotationQuaternion, item.quaternion);
 

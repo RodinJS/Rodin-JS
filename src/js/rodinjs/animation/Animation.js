@@ -1,29 +1,52 @@
 import {TWEEN} from '../Tween.js';
 import {Event} from '../Event.js';
 import {EVENT_NAMES} from '../constants/constants.js';
+import {ErrorProtectedMethodCall} from '../error/CustomErrors.js';
+import {Sculpt} from '../sculpt/Sculpt.js';
+
+function enforce () {
+}
+//TODO: Gor jan, mi hat nkaragri inch parametra astanum u inchi hamar
 
 /**
- * Class Animation
+ * Animation Class, used to create animations on Sculpt objects
+ * @param {!String} name
+ * @param {Object} params
  */
 export class Animation {
-    /**
-     * @param name {string}
-     * @param params {Object}
-     */
     constructor (name, params) {
-        this._loop  = false;
+        this._loop = false;
+        /**
+         * The host Sculpt object.
+         * @type {Sculpt}
+         */
         this.sculpt = {};
+        //TODO: Gor mi hat nkaragri
+        /**
+         * Animation parameters.
+         * @type {Object}
+         */
         this.params = Object.clone(params);
+        //TODO: Gor es inchi hamara ?
+        /**
+         * Animation name.
+         * @type {string}
+         */
         this.name = name;
         this._duration = 2000;
         this._delay = 0;
         this._easing = TWEEN.Easing.Linear.None;
 
+        /**
+         * Shows the current state of animation.
+         * @type {boolean}
+         */
         this.playing = false;
     }
 
+    //TODO: rename this function to clone()
     /**
-     * copy animation
+     * Get a cloned animation object
      * @returns {Animation}
      */
     copy () {
@@ -31,13 +54,14 @@ export class Animation {
         return newAnimation.duration(this.duration()).easing(this.easing()).delay(this.delay()).loop(this.loop());
     }
 
+    //TODO: Gor incha veradarcnum, es inch booleana
     /**
      * Start animation
-     * @param forceStart {boolean}
+     * @param {boolean} [forceStart] - stops this animation (if currently playing) and starts again
      * @returns {boolean}
      */
     start (forceStart = false) {
-        if (!this.sculpt.isSculpt) {
+        if (!this.sculpt instanceof Sculpt) {
             return console.warn('animation cannot be played without adding in object');
         }
 
@@ -51,7 +75,7 @@ export class Animation {
             }
         }
 
-        let normalizedParams = Animation.normalizeParams(this.params, this.sculpt.object3D);
+        let normalizedParams = Animation.normalizeParams(enforce, this.params, this.sculpt.object3D);
         let startValues = normalizedParams.from;
         let endValues = normalizedParams.to;
 
@@ -74,7 +98,7 @@ export class Animation {
             .easing(this._easing)
             .start()
             .onComplete(function () {
-                if (_this._loop ) {
+                if (_this._loop) {
                     _this.playing = false;
                     _this.reset();
                     _this.start();
@@ -88,10 +112,10 @@ export class Animation {
                 _this.sculpt.emit(EVENT_NAMES.ANIMATION_COMPLETE, evt);
             });
     }
-
+    //TODO: Gor incha veradarcnum, es inch booleana
     /**
      * Play animation
-     * @param forceStart {boolean}
+     * @param {boolean} [forceStart] - stops this animation (if currently playing) and starts again
      * @returns {boolean}
      */
     play (forceStart = false) {
@@ -100,6 +124,8 @@ export class Animation {
 
     /**
      * Stop animation
+     * @param {boolean} [reset] - run reset() method after stopping the animation.
+     * @returns {boolean} - success
      */
     stop (reset = true) {
         if (this.isPlaying()) {
@@ -121,9 +147,8 @@ export class Animation {
     }
 
     /**
-     * reset all initial props
-     * when animation start, it will save all properties that he change.
-     * this function returns values before animation start
+     * Reset all to initial values.
+     * <p>This function reverts all affected values to "before animation" state</p>
      */
     reset () {
         for (let i in this.initialProps) {
@@ -138,27 +163,27 @@ export class Animation {
     isPlaying () {
         return this.playing;
     }
-
+    //TODO: Gor es incha
     /**
-     * Set loop
-     * Set value if parameter given, otherwise returns current value
-     * @param loop
-     * @returns {boolean, Animation}
+     * set/get loop
+     * <p>Sets loop value if provided as param, otherwise returns current loop value</p>
+     * @param [loop]
+     * @returns {Animation}
      */
     loop (loop = null) {
         if (loop === null) {
-            return this._loop ;
+            return this._loop;
         }
 
-        this._loop  = loop;
+        this._loop = loop;
         return this;
     }
 
     /**
-     * Set duration
-     * Set value if parameter given, otherwise returns current value
-     * @param duration
-     * @returns {boolean, Animation}
+     * set/get duration
+     * <p>Sets duration value if provided as param, otherwise returns current duration value</p>
+     * @param {number} [duration]
+     * @returns {Animation}
      */
     duration (duration = null) {
         if (duration === null) {
@@ -170,25 +195,24 @@ export class Animation {
     }
 
     /**
-     * Set delay
-     * Set value if parameter given, otherwise returns current value
-     * @param delay
-     * @returns {boolean, Animation}
+     * set/get delay.
+     * <p>Sets delay value if provided as param, otherwise returns current delay value</p>
+     * @param {number} [delay]
+     * @returns {Animation}
      */
     delay (delay = null) {
         if (delay === null) {
             return this._delay;
         }
-
         this._delay = delay;
         return this;
     }
 
     /**
-     * Set easing
-     * Set value if parameter given, otherwise returns current value
-     * @param easing
-     * @returns {boolean, Animation}
+     * set/get easing.
+     * <p>Sets easing value if provided as param, otherwise returns current easing value</p>
+     * @param {TWEEN.Easing} [easing]
+     * @returns {Animation}
      */
     easing (easing = null) {
         if (easing === null) {
@@ -201,8 +225,8 @@ export class Animation {
 
 
     /**
-     * Set sculpt
-     * @param sculpt {Sculpt}
+     * Set sculpt object for this animation to play on.
+     * @param {!Sculpt}  sculpt
      * @returns {Animation}
      */
     setSculpt (sculpt) {
@@ -211,14 +235,19 @@ export class Animation {
         return this;
     }
 
-    /**
-     * Converts animation parameters to normalized
-     * parameters containing {from: , to: }
-     * @param {Object} params
-     * @param {Sculpt} obj
-     * @return {Object} normalized params
-     */
-    static normalizeParams (params, obj) {
+    // /**
+    //  * Converts animation parameters to normalized
+    //  * <p>parameters containing {from: , to: }</p>
+    //  * @param {Function} e enforce
+    //  * @param {Object} params
+    //  * @param {Sculpt} obj
+    //  * @returns {Object} normalized params
+    //  */
+    static normalizeParams (e, params, obj) {
+        if (e !== enforce) {
+            throw new ErrorProtectedMethodCall('normalizeParams');
+        }
+
         let _params = Object.joinParams(params, ['from', 'to']);
         let res = { from: {}, to: {} };
         for (let i in _params) {

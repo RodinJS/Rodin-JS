@@ -19,6 +19,7 @@ SceneManager.addController(mouseController);
 SceneManager.addController(oculusController);
 
 scene.setCameraProperty("far", 350);
+scene.setCameraProperty("fov", 70);
 
 let player = new MaterialPlayer({
     HD: "video/test.mp4",
@@ -42,8 +43,8 @@ scene.preRender(function () {
 
 let controlPanel = new VPcontrolPanel({
     player : player,
-    title: "A sample 360° video",
-    distance: 2,
+    title: "A sample 360° drone video",
+    distance: 3,
     width: 3,
     controllers: [mouseController, oculusController]
 });

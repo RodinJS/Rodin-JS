@@ -34,7 +34,7 @@
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
-    "gulp-clean-css": "^2.3.1",
+    "gulp-clean-css": "^2.3.2",
     "gulp-concat": "^2.6.0",
     "gulp-connect": "^5.0.0",
     "gulp-jsdoc3": "^1.0.1",
@@ -47,6 +47,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-watch": "^4.3.11",
     "minami": "^1.1.1",
+    "esdoc": "^0.4.8",
     "run-sequence": "^1.2.2"
   },
   "dependencies": {
@@ -54,9 +55,11 @@
     "dat-gui": "^0.5.0",
     "es6-promise": "^4.0.0",
     "jsdoc": "^3.4.3",
+    "esdoc-es7-plugin": "0.0.3",
     "socket.io-client": "^1.6.0",
-    "three": "^0.81.2",
+    "three": "^0.83.0",
     "tween.js": "^16.3.5",
-    "webvr-boilerplate": "^0.4.9"
+    "webvr-boilerplate": "^0.4.9",
+    "webvr-polyfill": "git+https://github.com/RodinJS/webvr-polyfill#master"
   }
 }
