@@ -80,7 +80,7 @@ let geometries = [
     new THREE.BoxGeometry(0.2, 0.2, 0.2),
     new THREE.ConeGeometry(0.2, 0.2, 64),
     new THREE.CylinderGeometry(0.1, 0.1, 0.1, 64),
-    new THREE.IcosahedronGeometry(0.2, 1),
+    new THREE.IcosahedronGeometry(0.2, 3),
     new THREE.TorusGeometry(0.2, 0.08, 12, 12)
 ];
 
