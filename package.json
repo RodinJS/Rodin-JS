@@ -57,7 +57,7 @@
     "jsdoc": "^3.4.3",
     "esdoc-es7-plugin": "0.0.3",
     "socket.io-client": "^1.6.0",
-    "three": "^0.83.0",
+    "three": "^0.84.0",
     "tween.js": "^16.3.5",
     "webvr-boilerplate": "^0.4.9",
     "webvr-polyfill": "git+https://github.com/RodinJS/webvr-polyfill#master"
