@@ -18,25 +18,18 @@ const objectKeyDown = (evt) => {
     let target = evt.target;
     let item = target.object3D;
 
-    if (!item.initialParent){
+    if (!item.initialParent) {
         item.initialParent = item.parent;
     }
     let initialParent = item.initialParent;
 
     if (controller instanceof MouseController) {
-
-        console.log('objectKeyDown',item);
-        console.log('item',item.getWorldPosition().x,item.getWorldPosition().y,item.getWorldPosition().z);
-        console.log('item',item.position.x,item.position.y,item.position.z);
         changeParent(item, originalScene);
 
-        console.log('item',item.getWorldPosition().x,item.getWorldPosition().y,item.getWorldPosition().z);
-        console.log('item',item.position.x,item.position.y,item.position.z);
         item.raycastCameraPlane = new THREE.Plane();
         item.intersection = new THREE.Vector3();
         item.offset = new THREE.Vector3();
 
-        // console.log('item.getWorldPosition()', item.getWorldPosition());
         item.raycastCameraPlane.setFromNormalAndCoplanarPoint(
             camera.getWorldDirection(item.raycastCameraPlane.normal),
             item.getWorldPosition()
@@ -45,8 +38,6 @@ const objectKeyDown = (evt) => {
 
         if (controller.raycaster.ray.intersectPlane(item.raycastCameraPlane, item.intersection)) {
             item.offset.copy(item.intersection).sub(item.getWorldPosition());
-            console.log('item.intersection', item.intersection);
-            console.log('offset', item.offset);
             if (evt.keyCode === 3) {
                 let initParent = item.parent;
                 changeParent(item, camera);
@@ -60,12 +51,12 @@ const objectKeyDown = (evt) => {
     if (controller instanceof ViveController) {
         if (controller.intersected && controller.intersected.length > 0) {
             controller.intersected.map(intersect => {
-                if(item !== intersect.object) {
+                if (item !== intersect.object) {
                     return;
                 }
                 /*if (item.parent != item.initialParent) {
-                    return;
-                }*/
+                 return;
+                 }*/
                 changeParent(item, controller.raycastingLine.object3D);
                 let holder = new THREE.Object3D();
                 holder.position.copy(item.position);
@@ -84,7 +75,7 @@ const objectKeyDown = (evt) => {
     if (controller instanceof OculusController) {
         if (controller.intersected && controller.intersected.length > 0) {
             controller.intersected.map(intersect => {
-                if(item !== intersect.object) {
+                if (item !== intersect.object) {
                     return;
                 }
                 changeParent(item, camera);
@@ -107,7 +98,7 @@ const objectKeyDown = (evt) => {
     if (controller instanceof CardboardController) {
         if (controller.intersected && controller.intersected.length > 0) {
             controller.intersected.map(intersect => {
-                if(item !== intersect.object) {
+                if (item !== intersect.object) {
                     return;
                 }
                 changeParent(item, camera);
@@ -135,7 +126,7 @@ const objectKeyUp = (evt) => {
     let controller = evt.controller;
     let target = evt.target;
     let item = target.object3D;
-    if (!item.initialParent){
+    if (!item.initialParent) {
         item.initialParent = item.parent;
     }
     let initialParent = item.initialParent;
@@ -199,47 +190,34 @@ const objectValueChange = (evt) => {
     if (controller instanceof MouseController) {
         let gamePad = MouseController.getGamepad();
         let target = evt.target;
+        let item = target.object3D;
         if (evt.keyCode === 2) {
-            let initParent = target.object3D.parent;
-            changeParent(target.object3D, camera);
-            if (gamePad.buttons[evt.keyCode - 1].value > 0) {
-                if (target.object3D.rigidBody) {
-                    target.object3D.rigidBody.body.position.z += (camera.position.z - target.object3D.rigidBody.body.position.z) * 0.05;
+            let coef = 0.95;
+            coef = gamePad.buttons[evt.keyCode - 1].value > 0 ? coef : 1 / coef;
+            let directionVector = item.getWorldPosition().sub(camera.getWorldPosition());
 
-                } else {
-                    target.object3D.position.z += (camera.position.z - target.object3D.position.z) * 0.05;
-                }
+            if (item.rigidBody) {
+                //let initParent = item.parent;
+                //changeParent(item, camera);
+                //console.log(directionVector.multiplyScalar(coef).add(camera.getWorldPosition()));
+                //let vec = directionVector.multiplyScalar(coef).add(camera.getWorldPosition());
+                //item.rigidBody.body.setPosition(directionVector.multiplyScalar(coef).add(camera.getWorldPosition()));
+
+
+                let pointerShift = directionVector.multiplyScalar(coef).add(camera.getWorldPosition()).multiplyScalar(100);
+                console.log(pointerShift);
+                let vec = new OIMO.Vec3(pointerShift.x, pointerShift.y, pointerShift.z);
+                item.rigidBody.body.sleeping = false;
+                item.rigidBody.body.setPosition(vec);
+
+                //item.rigidBody.body.position.z += (camera.position.z - item.rigidBody.body.position.z) * 0.05;
+                //changeParent(item, initParent);
             } else {
-                if (target.object3D.rigidBody) {
-                    target.object3D.rigidBody.body.position.z -= (camera.position.z - target.object3D.rigidBody.body.position.z) * 0.05;
-
-                } else {
-                    target.object3D.position.z -= (camera.position.z - target.object3D.position.z) * 0.05;
-                }
+                item.Sculpt.setGlobalPosition(directionVector.multiplyScalar(coef).add(camera.getWorldPosition()));
             }
+
             gamePad.buttons[evt.keyCode - 1].value = 0;
-            changeParent(target.object3D, initParent);
         }
-        /*let item;
-         if (target.object3D.rigidBody) {
-         item = target.object3D.rigidBody.body;
-         } else {
-         item = target.object3D;
-         }
-
-         let initParent = item.parent;
-         changeParent(item, camera);
-         if (gamePad.buttons[evt.keyCode - 1].value > 0) {
-
-         item.position.z += (camera.position.z - item.position.z) * 0.05;
-
-         } else {
-         item.position.z -= (camera.position.z - item.position.z) * 0.05;
-
-         }
-         gamePad.buttons[evt.keyCode - 1].value = 0;
-         changeParent(item, initParent);
-         */
     }
 };
 
@@ -251,35 +229,30 @@ const objectUpdate = function () {
             this.pickedItems.map(item => {
                 if (this.raycaster.ray.intersectPlane(item.raycastCameraPlane, item.intersection)) {
 
-
                     if (this.keyCode === 1) {
-                        let initParent = item.parent;
-
-                        console.log('objectUpdate',item.getWorldPosition());
-                        changeParent(item, originalScene);
-                        console.log('objectUpdate1',item.getWorldPosition());
                         if (item.rigidBody) {
+                            let initParent = item.parent;
+                            changeParent(item, originalScene);
                             let pointerShift = item.intersection.sub(item.offset).multiplyScalar(100);
                             let vec = new OIMO.Vec3(pointerShift.x, pointerShift.y, pointerShift.z);
                             item.rigidBody.body.sleeping = false;
                             item.rigidBody.body.setPosition(vec);
+                            changeParent(item, initParent);
                         } else {
-                            item.position.copy(item.intersection.sub(item.offset));
+                            item.Sculpt.setGlobalPosition(item.intersection.sub(item.offset));
                         }
-
-                        changeParent(item, initParent);
-                        console.log('_____________________');
                     } else if (this.keyCode === 3) {
                         let shift = {x: this.axes[0] - item.initMousePos.x, y: this.axes[1] - item.initMousePos.y};
                         item.initMousePos = {x: this.axes[0], y: this.axes[1]};
-                        let initParent = item.parent;
-                        changeParent(item, camera);
+
                         let deltaRotationQuaternion = new THREE.Quaternion()
                             .setFromEuler(
                                 new THREE.Euler(-shift.y * Math.PI, shift.x * Math.PI, 0, 'XYZ')
                             );
 
                         if (item.rigidBody) {
+                            let initParent = item.parent;
+                            changeParent(item, camera);
                             item.rigidBody.body.sleeping = false;
                             let pointerShift = new THREE.Quaternion();
                             let bodyQuat = PhysicsUtils.oimoToThree(item.rigidBody.body.getQuaternion());
@@ -292,11 +265,13 @@ const objectUpdate = function () {
                                 pointerShift.w);
 
                             item.rigidBody.body.setQuaternion(quat);
+                            changeParent(item, initParent);
                         } else {
-                            item.quaternion.multiplyQuaternions(deltaRotationQuaternion, item.quaternion);
+                            let pointerShift = new THREE.Quaternion();
+                            pointerShift.multiplyQuaternions(deltaRotationQuaternion, item.getWorldQuaternion());
+                            item.Sculpt.setGlobalQuaternion(pointerShift);
+                            //item.quaternion.multiplyQuaternions(deltaRotationQuaternion, item.quaternion);
                         }
-
-                        changeParent(item, initParent);
                     }
                 }
             });

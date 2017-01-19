@@ -277,7 +277,8 @@ vases.on('ready', () => {
     createRaycastableRigidBody(vases, 'box', 0.02, true);
 });*/
 
-let a = new RODIN.THREEObject(new THREE.Mesh(new THREE.BoxGeometry(0.2,0.2,0.2)));
+let a = new RODIN.THREEObject(new THREE.Mesh(new THREE.BoxGeometry(0.2,0.2,0.2),
+new THREE.MeshLambertMaterial({color:0x556611})));
 a.on('ready', ()=>{
     a.object3D.position.set(1.5,0.5,0);
     //a.object3D.initialParent = a.object3D.parent;
@@ -290,7 +291,7 @@ a.on('ready', ()=>{
 let b = new RODIN.THREEObject(new THREE.Object3D());
 b.on('ready', ()=>{
     scene.add(b.object3D);
-    b.object3D.position.set(1,0,0);
+    b.object3D.position.set(0,0,0);
 });
 
 b.object3D.add(a.object3D);
@@ -313,7 +314,6 @@ function createRaycastableRigidBody(model, type, mass, move) {
                 });
                 rigitBody.name = mesh.name;
                 mesh.rigidBody = rigitBody;
-
             }
 
             let raycastableObj = new RODIN.THREEObject(mesh);
