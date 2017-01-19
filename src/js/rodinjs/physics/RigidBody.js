@@ -86,8 +86,6 @@ export class RigidBody {
                 mass: this.mass,
                 world: RodinPhysics.world
             };
-            console.log('name',this.owner.name);
-            console.log('objectUpdate',this.owner.getWorldPosition());
         }
         RodinPhysics.getInstance(this.physicsEngine).addRigidBodyToWorld(this);
     }
@@ -130,9 +128,9 @@ export class RigidBody {
                     let bBox = this.owner.geometry.boundingBox;
                     param.width = Math.abs(bBox.max.x) + Math.abs(bBox.min.x) + 0.01;
                     param.height = Math.abs(bBox.max.y) + Math.abs(bBox.min.y) + 0.01;
-                    param.depth = 0.002;
-                }
 
+                }
+                param.depth = 0.002;
                 if (this.physicsEngine === 'cannon') {
                     //
                     // todo 0.00001 find a better solution
