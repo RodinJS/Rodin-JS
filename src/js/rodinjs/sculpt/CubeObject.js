@@ -91,7 +91,7 @@ export class CubeObject extends Sculpt {
                 }));
             }
 
-            let cube = new THREE.Mesh(new THREE.CubeGeometry(size, size, size), new THREE.MeshFaceMaterial(materials));
+            let cube = new THREE.Mesh(new THREE.CubeGeometry(size, size, size), new THREE.MultiMaterial(materials));
             cube.applyMatrix(new THREE.Matrix4().makeScale(1, 1, -1));
 
             super.init(cube);

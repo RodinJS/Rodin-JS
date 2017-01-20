@@ -1,0 +1,923 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>Knox</author>
+      <authoring_tool>OpenCOLLADA for 3ds Max;  ;  </authoring_tool>
+      <source_data>file:///E:/3dScene/RoomExample/Room_for_export.max</source_data>
+    </contributor>
+    <created>2017-01-11T14:48:07</created>
+    <modified>2017-01-11T14:48:07</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect id="Material__1">
+      <profile_COMMON>
+        <newparam sid="floor_jpg-surface">
+          <surface type="2D">
+            <init_from>floor_jpg</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="floor_jpg-sampler">
+          <sampler2D>
+            <source>floor_jpg-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.588 0.588 0.588 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="floor_jpg-sampler" texcoord="CHANNEL1"/>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0.26</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__2">
+      <profile_COMMON>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.588 0.588 0.588 1</color>
+            </ambient>
+            <diffuse>
+              <color>0.588 0.588 0.588 1</color>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0.5</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>0.36</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__3">
+      <profile_COMMON>
+        <newparam sid="wall_jpg-surface">
+          <surface type="2D">
+            <init_from>wall_jpg</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="wall_jpg-sampler">
+          <sampler2D>
+            <source>wall_jpg-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.588 0.588 0.588 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="wall_jpg-sampler" texcoord="CHANNEL1"/>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0.54</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__4">
+      <profile_COMMON>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.1215686 0.1215686 0.1215686 1</color>
+            </ambient>
+            <diffuse>
+              <color>0.1215686 0.1215686 0.1215686 1</color>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0.88</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__5">
+      <profile_COMMON>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.0509804 0.0509804 0.0627451 1</color>
+            </ambient>
+            <diffuse>
+              <color>0.0509804 0.0509804 0.0627451 1</color>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0.25</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__6">
+      <profile_COMMON>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.2078432 0.1960784 0.1843137 1</color>
+            </ambient>
+            <diffuse>
+              <color>0.2078432 0.1960784 0.1843137 1</color>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__7">
+      <profile_COMMON>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.6509804 0.6 0.572549 1</color>
+            </ambient>
+            <diffuse>
+              <color>0.6509804 0.6 0.572549 1</color>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__8">
+      <profile_COMMON>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.8156863 0.8156863 0.8156863 1</color>
+            </ambient>
+            <diffuse>
+              <color>0.8156863 0.8156863 0.8156863 1</color>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__9">
+      <profile_COMMON>
+        <newparam sid="paint_diff_jpg-surface">
+          <surface type="2D">
+            <init_from>paint_diff_jpg</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="paint_diff_jpg-sampler">
+          <sampler2D>
+            <source>paint_diff_jpg-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.588 0.588 0.588 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="paint_diff_jpg-sampler" texcoord="CHANNEL1"/>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__10">
+      <profile_COMMON>
+        <newparam sid="testbild16-9_jpg-surface">
+          <surface type="2D">
+            <init_from>testbild16-9_jpg</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="testbild16-9_jpg-sampler">
+          <sampler2D>
+            <source>testbild16-9_jpg-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.588 0.588 0.588 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="testbild16-9_jpg-sampler" texcoord="CHANNEL1"/>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__11">
+      <profile_COMMON>
+        <newparam sid="frame_phot_jpg-surface">
+          <surface type="2D">
+            <init_from>frame_phot_jpg</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="frame_phot_jpg-sampler">
+          <sampler2D>
+            <source>frame_phot_jpg-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.588 0.588 0.588 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="frame_phot_jpg-sampler" texcoord="CHANNEL1"/>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+    <effect id="Material__12">
+      <profile_COMMON>
+        <technique sid="common">
+          <blinn>
+            <emission>
+              <color>0 0 0 1</color>
+            </emission>
+            <ambient>
+              <color>0.09803922 0.4784314 0.01176471 1</color>
+            </ambient>
+            <diffuse>
+              <color>0.09803922 0.4784314 0.01176471 1</color>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="OpenCOLLADA3dsMax">
+          <extended_shader>
+            <apply_reflection_dimming>0</apply_reflection_dimming>
+            <dim_level>0</dim_level>
+            <falloff_type>0</falloff_type>
+            <index_of_refraction>1.5</index_of_refraction>
+            <opacity_type>0</opacity_type>
+            <reflection_level>3</reflection_level>
+            <wire_size>1</wire_size>
+            <wire_units>0</wire_units>
+          </extended_shader>
+          <shader>
+            <ambient_diffuse_lock>1</ambient_diffuse_lock>
+            <ambient_diffuse_texture_lock>1</ambient_diffuse_texture_lock>
+            <diffuse_specular_lock>0</diffuse_specular_lock>
+            <soften>0.1</soften>
+            <use_self_illum_color>0</use_self_illum_color>
+          </shader>
+        </technique>
+      </extra>
+    </effect>
+  </library_effects>
+  <library_materials>
+    <material id="Material__1-material" name="Material__1">
+      <instance_effect url="#Material__1"/>
+    </material>
+    <material id="Material__2-material" name="Material__2">
+      <instance_effect url="#Material__2"/>
+    </material>
+    <material id="Material__3-material" name="Material__3">
+      <instance_effect url="#Material__3"/>
+    </material>
+    <material id="Material__4-material" name="Material__4">
+      <instance_effect url="#Material__4"/>
+    </material>
+    <material id="Material__5-material" name="Material__5">
+      <instance_effect url="#Material__5"/>
+    </material>
+    <material id="Material__6-material" name="Material__6">
+      <instance_effect url="#Material__6"/>
+    </material>
+    <material id="Material__7-material" name="Material__7">
+      <instance_effect url="#Material__7"/>
+    </material>
+    <material id="Material__8-material" name="Material__8">
+      <instance_effect url="#Material__8"/>
+    </material>
+    <material id="Material__9-material" name="Material__9">
+      <instance_effect url="#Material__9"/>
+    </material>
+    <material id="Material__10-material" name="Material__10">
+      <instance_effect url="#Material__10"/>
+    </material>
+    <material id="Material__11-material" name="Material__11">
+      <instance_effect url="#Material__11"/>
+    </material>
+    <material id="Material__12-material" name="Material__12">
+      <instance_effect url="#Material__12"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="geom-FirePlace_01" name="FirePlace_01">
+      <mesh>
+        <source id="geom-FirePlace_01-positions">
+          <float_array id="geom-FirePlace_01-positions-array" count="174">-0.7220901 3.476171 -2.14783e-4 0.7434921 3.47539 5.44431e-7 -0.7222459 4.000335 -2.14783e-4 0.7445564 3.999708 5.44431e-7 -0.7228075 3.476171 0.07006808 0.7439942 3.47539 0.07006799 -0.7222457 4.000849 0.07006799 0.7445564 4.000068 0.07006808 -0.7220901 3.476171 1.236287 0.7434921 3.47539 1.236502 -0.7222459 4.000335 1.236287 0.7445564 3.999708 1.236502 -0.7228075 3.476171 1.306569 0.7439942 3.47539 1.306569 -0.7222457 4.000849 1.306569 0.7445564 4.000068 1.306569 -0.3429615 3.480938 0.3648998 -0.3429544 3.544952 0.3648998 0.6246369 3.545072 0.3648998 0.6246867 4.001022 0.3648998 0.7197199 3.48107 0.9409429 -0.3429544 3.544952 0.9409429 0.6246369 3.545072 0.9409429 0.7197769 4.001039 0.9409429 -0.2489235 3.48095 0.5281929 0.528053 3.481046 0.8609042 0.7197199 3.48107 0.3648998 0.7197769 4.001039 0.3648998 -0.3429615 3.480938 0.9409429 0.6246867 4.001022 0.9409429 -0.2488687 3.977705 0.5281929 0.5283816 3.977801 0.5281929 0.5283816 3.977801 0.8609042 -0.2488687 3.977705 0.8609042 0.528053 3.481046 0.5281929 -0.2489235 3.48095 0.8609042 -0.1512992 3.651206 0.5281929 0.430618 3.650957 0.5281929 -0.151278 3.835457 0.5281929 0.4306381 3.835518 0.5281929 -0.151278 3.835457 0.4994798 -0.1512992 3.651206 0.4994798 0.430618 3.650957 0.4994798 0.4306381 3.835518 0.4994798 0.7058408 3.496471 0.9445083 0.7058408 3.496471 1.231243 -0.6772909 3.497062 1.231281 -0.676959 3.999063 1.231281 0.7061727 3.998472 1.231205 0.7061727 3.998472 0.9445083 -0.3484099 3.496922 0.3621891 0.7058408 3.496471 0.07562915 0.7058408 3.496471 0.3621891 -0.6772909 3.497062 0.0756674 -0.676959 3.999064 0.07566751 0.7061727 3.998472 0.3621891 0.7061727 3.998472 0.07559108 -0.3484099 3.496922 0.9445083</float_array>
+          <technique_common>
+            <accessor source="#geom-FirePlace_01-positions-array" count="58" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="geom-FirePlace_01-normals">
+          <float_array id="geom-FirePlace_01-normals-array" count="702">6.08629e-8 -1.70469e-7 0.9999999 6.08629e-8 -1.70469e-7 1 6.08629e-8 -1.70469e-7 1 -6.08629e-8 1.70469e-7 1 -6.08629e-8 1.70469e-7 1 -6.08629e-8 1.70469e-7 1 -5.3261e-4 -0.9999999 3.81673e-6 -5.3261e-4 -0.9999998 3.81673e-6 -5.3261e-4 -0.9999998 3.81673e-6 -5.32491e-4 -0.9999998 1.34922e-6 -5.32491e-4 -0.9999998 1.34922e-6 -5.32491e-4 -0.9999999 1.34922e-6 0.999998 -0.002029875 1.04296e-5 0.9999979 -0.002029875 1.04296e-5 0.999998 -0.002029875 1.04296e-5 0.9999737 -0.001071469 -0.0071659 0.9999738 -0.001071469 -0.007165901 0.9999737 -0.001071469 -0.0071659 -0.9999479 -2.97232e-4 -0.01020681 -0.9999478 -2.97232e-4 -0.01020681 -0.9999478 -2.97232e-4 -0.01020681 -0.9999995 0.001070817 -4.43941e-6 -0.9999995 0.001070816 -4.43941e-6 -0.9999994 0.001070816 -4.43941e-6 1.46776e-4 4.3629e-8 -1 1.46776e-4 4.3629e-8 -0.9999999 1.46776e-4 4.3629e-8 -1 1.46898e-4 -2.98186e-7 -1 1.46898e-4 -2.98186e-7 -1 1.46898e-4 -2.98186e-7 -1 8.11506e-8 -2.27292e-7 0.9999999 8.11506e-8 -2.27292e-7 1 8.11506e-8 -2.27292e-7 1 -8.11505e-8 2.27292e-7 1 -8.11505e-8 2.27292e-7 1 -8.11505e-8 2.27292e-7 1 -5.3261e-4 -0.9999999 3.81673e-6 -5.3261e-4 -0.9999999 3.81673e-6 -5.3261e-4 -0.9999998 3.81673e-6 -5.32491e-4 -0.9999998 1.34922e-6 -5.32491e-4 -0.9999998 1.34922e-6 -5.32491e-4 -0.9999998 1.34922e-6 0.9999979 -0.002029874 1.04296e-5 0.9999979 -0.002029874 1.04296e-5 0.999998 -0.002029875 1.04296e-5 0.9999737 -0.001071469 -0.007165905 0.9999738 -0.001071469 -0.007165905 0.9999737 -0.001071469 -0.007165904 -0.9999479 -2.97232e-4 -0.01020682 -0.9999478 -2.97232e-4 -0.01020682 -0.9999478 -2.97232e-4 -0.01020682 -0.9999994 0.001070816 -4.43941e-6 -0.9999994 0.001070816 -4.43941e-6 -0.9999994 0.001070816 -4.43941e-6 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 0.9999999 0 0 1 0 0 1 1.26767e-4 -1 0 1.26767e-4 -1 0 1.26767e-4 -1 0 1.26767e-4 -1 0 1.26767e-4 -1 0 1.26767e-4 -1 0 1.23925e-4 -1 0 1.23925e-4 -1 0 1.23925e-4 -1 0 1.23925e-4 -1 0 1.23925e-4 -1 0 1.23925e-4 -1 0 -1.7551e-4 1 0 -1.7551e-4 1 0 -1.7551e-4 1 0 -1.7551e-4 1 0 -1.7551e-4 1 0 -1.7551e-4 1 0 -1 1.11734e-4 0 -1 1.11734e-4 0 -1 1.11734e-4 0 -1 1.11734e-4 0 -1 1.11734e-4 0 -1 1.11734e-4 0 1 -1.09587e-4 0 1 -1.09587e-4 0 0.9999999 -1.09587e-4 0 1 -1.09587e-4 0 1 -1.09587e-4 0 0.9999999 -1.09587e-4 0 0 0 1 0 0 1 0 0 1 0 0 0.9999999 0 0 1 0 0 1 -0.9999999 6.61373e-4 0 -0.9999998 6.61373e-4 0 -0.9999998 6.61373e-4 0 -0.9999999 6.61373e-4 0 -0.9999998 6.61373e-4 0 -0.9999998 6.61373e-4 0 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 1 -1.10389e-4 0 1 -1.10389e-4 0 1 -1.10389e-4 0 1 -1.10389e-4 0 1 -1.10389e-4 0 1 -1.10389e-4 0 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 1 -1.15165e-4 0 1 -1.15165e-4 0 1 -1.15165e-4 0 1 -1.15165e-4 0 1 -1.15165e-4 0 1 -1.15165e-4 0 4.2692e-4 0.9999998 0 4.2692e-4 0.9999999 0 4.2692e-4 0.9999999 0 4.2692e-4 0.9999998 0 4.2692e-4 0.9999999 0 4.2692e-4 0.9999999 0 -1 1.08512e-4 0 -1 1.08512e-4 0 -1 1.08512e-4 0 -1 1.08512e-4 0 -1 1.08512e-4 0 -1 1.08512e-4 0 1.05706e-4 -1 0 1.05706e-4 -1 0 1.05706e-4 -1 0 1.05706e-4 -1 0 1.05706e-4 -1 0 1.05706e-4 -1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0.9999999 0 0 0.9999999 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 1.22742e-4 -1 -1.93728e-6 1.22742e-4 -1 -1.93728e-6 1.22742e-4 -1 -1.93728e-6 1.23396e-4 -1 1.94161e-6 1.23396e-4 -1 1.94161e-6 1.23396e-4 -1 1.94161e-6 1.22742e-4 -0.9999999 3.9524e-6 1.22742e-4 -1 3.9524e-6 1.22742e-4 -1 3.9524e-6 1.23396e-4 -0.9999999 -3.96123e-6 1.23396e-4 -0.9999999 -3.96123e-6 1.23396e-4 -1 -3.96123e-6 0 0 1 0 0 1 0 0 1 0 0 0.9999999 0 0 0.9999999 0 0 1 1.24392e-4 -1 0 1.24392e-4 -1 0 1.24392e-4 -1 0 1.24392e-4 -0.9999999 0 1.24392e-4 -1 0 1.24392e-4 -1 0 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -0.9999999 0 0 -0.9999999 -4.27147e-4 -0.9999999 0 -4.27147e-4 -0.9999999 0 -4.27147e-4 -0.9999999 0 -4.26971e-4 -0.9999999 8.52137e-7 -4.26971e-4 -0.9999999 8.52137e-7 -4.26971e-4 -0.9999999 8.52137e-7 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 -0.9999998 6.61111e-4 2.72792e-10 -0.9999998 6.61111e-4 2.72792e-10 -0.9999998 6.61111e-4 2.72792e-10 -0.9999998 6.6111e-4 0 -0.9999998 6.6111e-4 0 -0.9999998 6.6111e-4 0 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 0.9999998 -6.61112e-4 0 -4.27714e-4 -0.9999999 0 -4.27714e-4 -0.9999999 0 -4.27714e-4 -0.9999999 0 -4.27714e-4 -0.9999999 0 -4.27714e-4 -0.9999999 0 -4.27714e-4 -1 0 -4.26971e-4 -0.9999999 0 -4.26971e-4 -0.9999999 0 -4.26971e-4 -0.9999999 0 -4.27148e-4 -0.9999999 -6.50065e-7 -4.27148e-4 -0.9999999 -6.50065e-7 -4.27148e-4 -0.9999999 -6.50065e-7</float_array>
+          <technique_common>
+            <accessor source="#geom-FirePlace_01-normals-array" count="234" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="geom-FirePlace_01-map1">
+          <float_array id="geom-FirePlace_01-map1-array" count="408">-0.03180213 0.4743021 0.233771 0.234802 0.4743021 -0.03287494 -0.03236464 0.525198 0.2337918 0.234302 0.5251979 1.032875 0.234302 0.5251979 -0.03287494 -0.03177088 0.2343335 0.5261877 1.032333 0.2348957 0.5261875 -0.03233328 0.7651043 0.5261875 1.031771 0.7656666 0.5261877 1.03199 0.4744583 0.2338437 0.7653228 0.4744583 1.032823 0.2348176 0.4743958 1.032849 1.031833 0.5254167 0.2337499 0.7651666 0.5254169 1.032917 0.7651666 0.5254169 -0.03291672 0.7656041 0.4748177 -0.03284901 -0.03180213 0.4743021 0.233771 -0.031802 0.234302 0.4737708 0.234802 0.4743021 -0.03287494 -0.03236461 0.7651353 0.4737708 -0.03236464 0.525198 0.2337918 0.234302 0.5251979 1.032875 0.234302 0.5251979 -0.03287494 -0.03177088 0.2343335 0.5261877 1.032333 0.2348957 0.5261875 -0.03233328 0.7651043 0.5261875 1.031771 0.7656666 0.5261877 1.03199 0.2344584 0.4738438 1.03199 0.4744583 0.2338437 1.032208 0.765323 0.4738438 0.7653228 0.4744583 1.032823 0.2348176 0.4743958 1.032849 1.031833 0.5254167 0.2337499 0.7651666 0.5254169 1.032917 0.7651666 0.5254169 -0.03291672 0.7656041 0.4748177 -0.03284901 0.003939658 0.006822288 4.99845e-4 0.87624 0.006822288 4.99547e-4 0.09131789 0.1237597 4.99487e-4 0.09131777 0.9969788 0.003660887 0.9960601 0.9931777 4.99487e-4 0.002219617 0.12376 0.9963391 0.9086821 0.1237597 0.9995005 0.9995005 0.9931777 0.9995005 0.08959767 0.2827669 4.99785e-4 0.8195839 0.8599474 4.99547e-4 0.9960601 0.006822288 4.99487e-4 0.09131777 0.006822288 0.9995005 0.9995005 0.006822288 0.9995005 0.003939658 0.9931777 4.99845e-4 0.87624 0.9931777 4.99547e-4 0.09131777 0.9931777 0.9995005 0.09131789 0.2859283 0.9528149 0.8178639 0.2859283 0.9528147 0.8178639 0.8567861 0.9528147 0.09131789 0.8567861 0.9528149 0.8190106 0.2838207 0.002180725 0.09017103 0.8588936 0.002180974 0.9944569 0.8567861 0.8178638 0.1821361 0.3270976 0.2859284 0.7270456 0.3270974 0.2859284 0.1821361 0.6803151 0.2859284 0.7270457 0.6803149 0.2859284 0.1821361 0.6803151 0.2359995 0.1821361 0.3270976 0.2359995 0.7270456 0.3270974 0.2359995 0.7270457 0.6803149 0.2359995 4.99487e-4 0.006822288 0.9995005 4.99487e-4 0.9931777 0.9995005 0.9977804 0.12376 0.003660887 0.9960604 4.99845e-4 0.006822288 0.003939867 4.99487e-4 0.006822288 4.99487e-4 0.9995005 0.006822288 0.003939658 4.99845e-4 0.9931777 0.9960601 4.99487e-4 0.9931777 0.9995005 0.9995005 0.9931777 0.9086822 0.9969788 0.9963391 0.9944569 0.2859283 0.8178638 0.1821362 0.005543083 0.8567861 0.005543351 0.8567861 0.09131774 0.005543351 0.2859283 0.09131774 0.09131774 0.003021568 0.2827669 0.8190106 0.002180725 0.2838207 0.909829 0.002180974 0.8588938 0.09131789 0.9528149 0.2859283 0.8178639 0.9528147 0.2859283 0.0471853 0.2859283 0.8178639 0.0471853 0.8567861 0.8178639 0.1821361 0.9528147 0.8567861 0.9086821 0.9528149 0.8567861 0.9528149 0.8567861 0.09131789 0.9528149 0.2859283 0.09131789 0.6803151 0.2859284 0.1821361 0.3270976 0.2859284 0.1821361 0.3270976 0.2359995 0.1821361 0.6803151 0.2359995 0.1821361 0.8178639 0.2859284 0.3270976 0.8178639 0.2359995 0.3270976 0.2729544 0.2859284 0.3270974 0.2729544 0.2359995 0.3270974 0.6729026 0.2859284 0.7270456 0.3196851 0.2859284 0.7270457 0.3196851 0.2359995 0.7270457 0.6729026 0.2359995 0.7270456 0.7270457 0.2859284 0.6803149 0.7270457 0.2359995 0.6803149 0.1821361 0.2859284 0.6803151 0.1821361 0.2359995 0.6803151 0.9995002 0.006822288 4.99515e-4 4.99489e-4 0.006822289 0.9995003 0.9995002 0.9931777 4.99515e-4 4.99489e-4 0.9931777 0.9995003 0.2930205 0.006588816 0 0.523024 0.01932496 0 1.041958 0.3535647 0 0.8119542 0.3408327 0 1.343311 0.4046464 0 0.7719293 1.089209 0 0.5419273 1.076478 0 0.2930205 0.3718581 0 0.5230231 0.3845954 0 0.8841738 0.3445555 0 0.8677176 -0.6611669 0 1.084454 -0.4101807 0 1.538427 0.6726778 0 0.4947762 0.5273229 0 0.2647725 0.5145882 0 0.4818659 0.03186527 0 0.4536108 0.5398642 0 0.6272677 0.5534281 0 0.5843793 0.312731 0 0.8276262 0.08720574 0 -0.4584855 0.4893446 0 -0.4302315 -0.01865407 0 0.4947605 0.8925921 0 0.2647564 0.8798537 0</float_array>
+          <technique_common>
+            <accessor source="#geom-FirePlace_01-map1-array" count="136" stride="3">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+              <param name="P" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="geom-FirePlace_01-vertices">
+          <input semantic="POSITION" source="#geom-FirePlace_01-positions"/>
+        </vertices>
+        <triangles material="Material__5_1" count="66">
+          <input semantic="VERTEX" source="#geom-FirePlace_01-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#geom-FirePlace_01-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#geom-FirePlace_01-map1" offset="2" set="0"/>
+          <p>4 0 5 5 1 6 7 2 8 7 3 8 6 4 7 4 5 5 0 6 0 1 7 9 5 8 12 5 9 12 4 10 2 0 11 0 1 12 11 3 13 10 7 14 13 7 15 13 5 16 3 1 17 11 2 18 1 0 19 15 4 20 14 4 21 14 6 22 4 2 23 1 8 24 27 10 25 29 11 26 19 11 27 19 9 28 17 8 29 27 12 30 23 13 31 24 15 32 26 15 33 26 14 34 25 12 35 23 8 36 16 9 37 28 13 38 32 13 39 32 12 40 20 8 41 16 9 42 31 11 43 30 15 44 33 15 45 33 13 46 21 9 47 31 10 48 18 8 49 35 12 50 34 12 51 34 14 52 22 10 53 18 18 54 38 26 55 71 16 56 70 16 57 70 17 58 69 18 59 38 20 60 74 22 61 42 21 62 41 21 63 41 28 64 73 20 65 74 24 66 44 35 67 57 28 68 49 28 69 49 16 70 36 24 71 44 31 72 53 32 73 54 33 74 55 33 75 55 30 76 52 31 77 53 27 78 67 19 79 47 29 80 51 29 81 51 23 82 68 27 83 67 28 84 110 21 85 50 17 86 37 17 87 37 16 88 108 28 89 110 27 90 48 23 91 43 20 92 111 20 93 111 26 94 109 27 95 48 24 96 81 36 97 59 38 98 61 38 99 61 30 100 84 24 101 81 34 102 77 25 103 58 32 104 87 32 105 87 31 106 86 34 107 77 25 108 78 35 109 83 33 110 89 33 111 89 32 112 88 25 113 78 35 114 79 24 115 80 30 116 91 30 117 91 33 118 90 35 119 79 42 120 65 43 121 66 40 122 63 40 123 63 41 124 64 42 125 65 38 126 92 36 127 93 41 128 94 41 129 94 40 130 95 38 131 92 36 132 96 37 133 98 42 134 99 42 135 99 41 136 97 36 137 96 37 138 100 39 139 101 43 140 102 43 141 102 42 142 103 37 143 100 39 144 104 38 145 106 40 146 107 40 147 107 43 148 105 39 149 104 34 150 82 31 151 85 39 152 62 39 153 62 37 154 60 34 155 82 39 156 62 31 157 85 30 158 84 30 159 84 38 160 61 39 161 62 34 162 82 37 163 60 36 164 59 36 165 59 24 166 81 34 167 82 26 168 46 34 169 56 24 170 44 24 171 44 16 172 36 26 173 46 35 174 57 25 175 45 20 176 40 20 177 40 28 178 49 35 179 57 23 180 75 29 181 76 22 182 42 22 183 42 20 184 74 23 185 75 20 186 40 25 187 45 34 188 56 34 189 56 26 190 46 20 191 40 18 192 38 19 193 39 27 194 72 27 195 72 26 196 71 18 197 38</p>
+        </triangles>
+        <triangles material="Material__8_1" count="12">
+          <input semantic="VERTEX" source="#geom-FirePlace_01-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#geom-FirePlace_01-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#geom-FirePlace_01-map1" offset="2" set="0"/>
+          <p>44 198 114 45 199 115 46 200 122 46 201 122 57 202 123 44 203 114 45 204 112 44 205 113 49 206 125 49 207 125 48 208 126 45 209 112 46 210 127 47 211 128 54 212 132 54 213 132 53 214 133 46 215 127 52 216 119 51 217 120 56 218 134 56 219 134 55 220 135 52 221 119 46 222 124 53 223 129 50 224 121 50 225 121 57 226 116 46 227 124 51 228 117 52 229 118 50 230 130 50 231 130 53 232 131 51 233 117</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="geom-FirePlace_02" name="FirePlace_02">
+      <mesh>
+        <source id="geom-FirePlace_02-positions">
+          <float_array id="geom-FirePlace_02-positions-array" count="96">-0.6679771 4.001914 1.309617 -0.6679957 3.764035 2.93327 0.6954284 3.764153 2.93327 -0.6679702 4.001908 2.93327 0.6954541 4.002026 2.93327 0.6954613 4.002031 1.309617 0.69543 3.764152 1.309617 -0.6679975 3.764034 1.309617 -0.3461626 3.735681 1.70207 0.3457758 3.735324 1.70207 -0.3461537 3.749125 1.70207 0.3457847 3.748769 1.70207 -0.3461626 3.735681 2.638768 0.3457758 3.735324 2.638768 -0.3461537 3.749125 2.638768 0.3457847 3.748769 2.638768 0.3524201 3.726011 2.647531 0.3412831 3.726017 2.636391 0.3413053 3.759501 2.636391 0.3524423 3.759495 2.647531 -0.3554223 3.726375 2.647531 -0.344285 3.726369 2.636391 -0.3442628 3.759853 2.636391 -0.3553998 3.759859 2.647531 -0.3554223 3.726375 1.69512 -0.344285 3.726369 1.70626 -0.3442628 3.759854 1.70626 -0.3553998 3.75986 1.69512 0.3524201 3.726011 1.69512 0.3412831 3.726017 1.70626 0.3413053 3.759501 1.70626 0.3524423 3.759495 1.69512</float_array>
+          <technique_common>
+            <accessor source="#geom-FirePlace_02-positions-array" count="32" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="geom-FirePlace_02-normals">
+          <float_array id="geom-FirePlace_02-normals-array" count="378">8.60348e-5 -1 5.87269e-7 8.60348e-5 -1 5.87269e-7 8.60348e-5 -1 5.87269e-7 8.60346e-5 -1 5.87452e-7 8.60346e-5 -0.9999999 5.87452e-7 8.60346e-5 -1 5.87452e-7 1 -1.08248e-4 1.02795e-6 1 -1.08248e-4 1.02795e-6 1 -1.08248e-4 1.02795e-6 1 -1.31297e-4 4.40476e-6 0.9999999 -1.31297e-4 4.40476e-6 1 -1.31297e-4 4.40476e-6 -1 8.56937e-5 1.10126e-6 -1 8.56937e-5 1.10126e-6 -1 8.56937e-5 1.10126e-6 -1 1.07245e-4 4.25876e-6 -1 1.07245e-4 4.25876e-6 -1 1.07245e-4 4.25876e-6 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 -5.14782e-4 -0.9999998 0 -5.14782e-4 -0.9999998 0 -5.14782e-4 -0.9999998 0 -5.14782e-4 -0.9999998 0 -5.14782e-4 -0.9999998 0 -5.14782e-4 -0.9999998 0 0.9999999 -6.56121e-4 0 0.9999999 -6.56121e-4 0 0.9999998 -6.56121e-4 0 0.9999999 -6.56121e-4 0 0.9999999 -6.56121e-4 0 0.9999998 -6.56121e-4 0 5.14093e-4 0.9999998 0 5.14093e-4 0.9999998 0 5.14093e-4 0.9999998 0 5.14093e-4 0.9999998 0 5.14093e-4 0.9999998 0 5.14093e-4 0.9999998 0 -0.9999999 6.56145e-4 0 -0.9999998 6.56145e-4 0 -0.9999998 6.56145e-4 0 -0.9999999 6.56145e-4 0 -0.9999998 6.56145e-4 0 -0.9999998 6.56145e-4 0 -5.14001e-4 -0.9999999 2.1429e-7 -5.14001e-4 -0.9999999 2.1429e-7 -5.14001e-4 -0.9999998 2.1429e-7 -5.13994e-4 -0.9999999 -2.18389e-7 -5.13994e-4 -0.9999998 -2.18389e-7 -5.13994e-4 -0.9999999 -2.18389e-7 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 -5.13776e-4 -0.9999999 0 -5.13776e-4 -0.9999999 0 -5.13776e-4 -0.9999998 0 -5.13776e-4 -0.9999998 0 -5.13776e-4 -0.9999998 0 -5.13776e-4 -0.9999999 0 0.9999998 -6.62186e-4 -3.39474e-10 0.9999998 -6.62185e-4 -3.39474e-10 0.9999998 -6.62186e-4 -3.39474e-10 0.9999998 -6.62176e-4 0 0.9999998 -6.62176e-4 0 0.9999998 -6.62176e-4 0 -0.9999998 6.69306e-4 0 -0.9999998 6.69306e-4 0 -0.9999998 6.69306e-4 0 -0.9999998 6.69296e-4 3.35092e-10 -0.9999998 6.69296e-4 3.35092e-10 -0.9999998 6.69296e-4 3.35092e-10 -5.14001e-4 -0.9999999 2.25306e-7 -5.14001e-4 -0.9999999 2.25306e-7 -5.14001e-4 -0.9999998 2.25306e-7 -5.13994e-4 -0.9999999 -2.07374e-7 -5.13994e-4 -0.9999999 -2.07374e-7 -5.13994e-4 -0.9999999 -2.07374e-7 0 0 1 0 0 0.9999999 0 0 1 0 0 1 0 0 1 0 0 1 0 0 -1 0 0 -0.9999999 0 0 -1 0 0 -0.9999999 0 0 -1 0 0 -1 -5.13787e-4 -0.9999999 0 -5.13787e-4 -0.9999999 0 -5.13787e-4 -0.9999999 0 -5.13787e-4 -0.9999999 0 -5.13787e-4 -0.9999998 0 -5.13787e-4 -0.9999999 0 -0.9999998 6.62195e-4 0 -0.9999998 6.62195e-4 0 -0.9999998 6.62195e-4 0 -0.9999998 6.62195e-4 0 -0.9999998 6.62195e-4 0 -0.9999998 6.62195e-4 0 0.9999998 -6.62195e-4 0 0.9999998 -6.62195e-4 0 0.9999998 -6.62195e-4 0 0.9999998 -6.62195e-4 0 0.9999998 -6.62195e-4 0 0.9999998 -6.62195e-4 0</float_array>
+          <technique_common>
+            <accessor source="#geom-FirePlace_02-normals-array" count="126" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="geom-FirePlace_02-map1">
+          <float_array id="geom-FirePlace_02-map1-array" count="156">1.983496 3.6955 0.1930004 0.7648702 -1.987164 1.986496 1.983496 0.1513453 0.1915004 0.8084989 0.151345 -0.9834966 0.1945004 3.697 1.983496 0.1945004 3.697 -0.9834965 0.1945004 0.1513453 1.986496 -0.9804966 0.151345 0.1885011 0.2351291 -1.987164 -0.9864964 0.8074989 3.696 -0.9824966 0.8074989 3.696 1.982497 -0.9804966 3.697 0.1915011 1 0 0 0 0 0 1 1 0 0 1 0 0 0 0 1 0 0 0 1 0 1 1 0 0 0 0 1 0 0 0 1 0 1 1 0 0 0 0 1 0 0 0 1 0 1 1 0 0 0 0 1 0 0 0 1 0 1 1 0 0 0 0 1 0 0 0 1 0 1 1 0 385.3477 518.3309 18.27835 373.2218 506.2049 18.27835 373.2218 506.2049 -18.27835 385.3477 518.3309 -18.27835 -385.3477 518.3309 18.27835 -373.2218 506.2049 18.27835 -373.2218 506.2049 -18.27835 -385.3477 518.3309 -18.27835 -385.3477 -518.3309 18.27835 -373.2218 -506.2049 18.27835 -373.2218 -506.2049 -18.27835 -385.3477 -518.3309 -18.27835 385.3477 -518.3309 18.27835 373.2218 -506.2049 18.27835 373.2218 -506.2049 -18.27835 385.3477 -518.3309 -18.27835</float_array>
+          <technique_common>
+            <accessor source="#geom-FirePlace_02-map1-array" count="52" stride="3">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+              <param name="P" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="geom-FirePlace_02-vertices">
+          <input semantic="POSITION" source="#geom-FirePlace_02-positions"/>
+        </vertices>
+        <triangles material="Material__4" count="6">
+          <input semantic="VERTEX" source="#geom-FirePlace_02-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#geom-FirePlace_02-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#geom-FirePlace_02-map1" offset="2" set="0"/>
+          <p>2 0 0 1 1 11 7 2 7 7 3 7 6 4 2 2 5 0 4 6 10 2 7 4 6 8 6 6 9 6 5 10 1 4 11 10 0 12 8 7 13 3 1 14 9 1 15 9 3 16 5 0 17 8</p>
+        </triangles>
+        <triangles material="Material__9" count="12">
+          <input semantic="VERTEX" source="#geom-FirePlace_02-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#geom-FirePlace_02-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#geom-FirePlace_02-map1" offset="2" set="0"/>
+          <p>8 18 12 10 19 14 11 20 15 11 21 15 9 22 13 8 23 12 12 24 16 13 25 17 15 26 19 15 27 19 14 28 18 12 29 16 8 30 20 9 31 21 13 32 23 13 33 23 12 34 22 8 35 20 9 36 24 11 37 25 15 38 27 15 39 27 13 40 26 9 41 24 11 42 28 10 43 29 14 44 31 14 45 31 15 46 30 11 47 28 10 48 32 8 49 33 12 50 35 12 51 35 14 52 34 10 53 32</p>
+        </triangles>
+        <triangles material="Material__5" count="24">
+          <input semantic="VERTEX" source="#geom-FirePlace_02-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#geom-FirePlace_02-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#geom-FirePlace_02-map1" offset="2" set="0"/>
+          <p>21 54 41 17 55 37 16 56 36 16 57 36 20 58 40 21 59 41 22 60 42 18 61 38 17 62 37 17 63 37 21 64 41 22 65 42 20 66 40 16 67 36 19 68 39 19 69 39 23 70 43 20 71 40 25 72 45 21 73 41 20 74 40 20 75 40 24 76 44 25 77 45 26 78 46 22 79 42 21 80 41 21 81 41 25 82 45 26 83 46 24 84 44 20 85 40 23 86 43 23 87 43 27 88 47 24 89 44 29 90 49 25 91 45 24 92 44 24 93 44 28 94 48 29 95 49 30 96 50 26 97 46 25 98 45 25 99 45 29 100 49 30 101 50 28 102 48 24 103 44 27 104 47 27 105 47 31 106 51 28 107 48 17 108 37 29 109 49 28 110 48 28 111 48 16 112 36 17 113 37 18 114 38 30 115 50 29 116 49 29 117 49 17 118 37 18 119 38 16 120 36 28 121 48 31 122 51 31 123 51 19 124 39 16 125 36</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_lights>
+    <light id="EnvironmentAmbientLight" name="EnvironmentAmbientLight">
+      <technique_common>
+        <ambient>
+          <color>0.309804 0.309804 0.309804</color>
+        </ambient>
+      </technique_common>
+    </light>
+  </library_lights>
+  <library_images>
+    <image id="floor_jpg">
+      <init_from>./textures/floor.jpg</init_from>
+    </image>
+    <image id="frame_phot_jpg">
+      <init_from>./textures/frame_phot.jpg</init_from>
+    </image>
+    <image id="paint_diff_jpg">
+      <init_from>./textures/paint_diff.jpg</init_from>
+    </image>
+    <image id="testbild16-9_jpg">
+      <init_from>./textures/testbild16-9.jpg</init_from>
+    </image>
+    <image id="wall_jpg">
+      <init_from>./textures/wall.jpg</init_from>
+    </image>
+  </library_images>
+  <library_visual_scenes>
+    <visual_scene id="MaxScene">
+      <node name="EnvironmentAmbientLight">
+        <instance_light url="#EnvironmentAmbientLight"/>
+      </node>
+      <node id="node-FirePlace_01" name="FirePlace_01">
+        <matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#geom-FirePlace_01">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material__8_1" target="#Material__8-material"/>
+              <instance_material symbol="Material__5_1" target="#Material__5-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+        <extra>
+          <technique profile="OpenCOLLADA">
+            <cast_shadows>1</cast_shadows>
+            <primary_visibility>1</primary_visibility>
+            <receive_shadows>1</receive_shadows>
+            <secondary_visibility>1</secondary_visibility>
+          </technique>
+        </extra>
+      </node>
+      <node id="node-FirePlace_02" name="FirePlace_02">
+        <matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#geom-FirePlace_02">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Material__9" target="#Material__9-material">
+                <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+              <instance_material symbol="Material__4" target="#Material__4-material"/>
+              <instance_material symbol="Material__5" target="#Material__5-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+        <extra>
+          <technique profile="OpenCOLLADA">
+            <cast_shadows>1</cast_shadows>
+            <primary_visibility>1</primary_visibility>
+            <receive_shadows>1</receive_shadows>
+            <secondary_visibility>1</secondary_visibility>
+          </technique>
+        </extra>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#MaxScene"/>
+  </scene>
+</COLLADA>

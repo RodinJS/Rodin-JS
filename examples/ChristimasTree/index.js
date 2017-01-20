@@ -379,7 +379,6 @@ function controllerKeyUp(keyCode) {
 }
 
 function controllerTouchDown(keyCode, gamepad) {
-
     if (!this.engaged || keyCode !== RODIN.CONSTANTS.KEY_CODES.KEY1) return;
 
     if (this.intersected && this.intersected.length > 0) {

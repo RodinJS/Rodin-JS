@@ -1,0 +1,3 @@
+[submodule "Oimo.js"]
+    path = node_modules/Oimo.js
+    url = https://github.com/RodinJS/Oimo.js.git#gh-pages
