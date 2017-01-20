@@ -6,7 +6,7 @@ import * as PhysicsUtils from '../utils/physicsUtils.js';
 
 import {RodinPhysics} from './RodinPhysics.js';
 
-import {SceneManager} from '../../../../_build/js/rodinjs/scene/SceneManager.js';
+import {SceneManager} from '../scene/SceneManager.js';
 let scene = SceneManager.get();
 
 export class RigidBody {
