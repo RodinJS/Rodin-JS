@@ -10,14 +10,13 @@ export default function changeParent(object = null, targetParent = null) {
     // TODO change as rodinphysics update
 
     if (object instanceof THREE.Object3D) {
-        let globalMatrix = object.matrixWorld;
+        /*let globalMatrix = object.matrixWorld;
         let currParent = object.parent;
         currParent && currParent.remove(object);
         targetParent.add(object);
-        setGlobalMatrix(object, globalMatrix);
+        setGlobalMatrix(object, globalMatrix);*/
 
-
-        /*let currParent = object.parent;
+        let currParent = object.parent;
         let initPos = object.getWorldPosition();
         let initQuat = object.getWorldQuaternion();
         let initScale = object.getWorldScale();
@@ -30,7 +29,7 @@ export default function changeParent(object = null, targetParent = null) {
 
         targetParent.updateMatrixWorld();
         object.applyMatrix(new THREE.Matrix4().getInverse(targetParent.matrixWorld));
-        targetParent.add(object);*/
+        targetParent.add(object);
     }
 
 }
