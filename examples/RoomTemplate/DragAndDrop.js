@@ -46,18 +46,13 @@ const objectKeyDown = (evt) => {
                 if (item !== intersect.object) {
                     return;
                 }
-                changeParent(item, controller.raycastingLine.object3D);
-                let holder = new THREE.Object3D();
-                holder.position.copy(item.position);
-                holder.quaternion.copy(item.quaternion);
-                holder.name = 'holder';
-                controller.raycastingLine.object3D.add(holder);
-
-                if (item.rigidBody) {
-                    changeParent(item, initialParent);
-                } else {
-                    changeParent(item, holder);
-                }
+                let holder = new RODIN.THREEObject(new THREE.Object3D());
+                holder.on('ready', ()=>{
+                    holder.object3D.name = 'holder';
+                    controller.raycastingLine.object3D.add(holder.object3D);
+                    holder.object3D.Sculpt.setGlobalPosition(item.getWorldPosition());
+                    holder.object3D.Sculpt.setGlobalQuaternion(item.getWorldQuaternion());
+                });
             });
         }
     }
@@ -67,20 +62,30 @@ const objectKeyDown = (evt) => {
                 if (item !== intersect.object) {
                     return;
                 }
-                changeParent(item, camera);
+                //changeParent(item, camera);
 
-                let holder = new THREE.Object3D();
-                holder.position.copy(item.position);
-                holder.name = 'holder';
+                let holder = new RODIN.THREEObject(new THREE.Mesh(new THREE.BoxGeometry(0.2,0.2,0.2)));
+                holder.on('ready', ()=>{
+                    holder.object3D.name = 'holder';
+                    camera.add(holder.object3D);
+                    item.objectHolder = holder.object3D;
+                    holder.object3D.Sculpt.setGlobalPosition(item.getWorldPosition());
+                    holder.object3D.Sculpt.setGlobalQuaternion(item.getWorldQuaternion());
+                });
 
-                camera.add(holder);
-                item.objectHolder = holder;
 
-                if (item.rigidBody) {
+                // let holder = new THREE.Object3D();
+                // holder.position.copy(item.position);
+                // holder.name = 'holder';
+                //
+                // camera.add(holder);
+                // item.objectHolder = holder;
+
+                /*if (item.rigidBody) {
                     changeParent(item, initialParent);
                 } else {
                     changeParent(item, holder);
-                }
+                }*/
             })
         }
     }
@@ -90,7 +95,7 @@ const objectKeyDown = (evt) => {
                 if (item !== intersect.object) {
                     return;
                 }
-                changeParent(item, camera);
+                /*changeParent(item, camera);
 
                 let holder = new THREE.Object3D();
                 holder.position.copy(item.position);
@@ -103,7 +108,17 @@ const objectKeyDown = (evt) => {
                     changeParent(item, initialParent);
                 } else {
                     changeParent(item, holder);
-                }
+                }*/
+
+                //let holder = new RODIN.THREEObject(new THREE.Object3D());
+                let holder = new RODIN.THREEObject(new THREE.Mesh(new THREE.BoxGeometry(0.2,0.2,0.2)));
+                holder.on('ready', ()=>{
+                    holder.object3D.name = 'holder';
+                    camera.add(holder.object3D);
+                    item.objectHolder = holder.object3D;
+                    holder.object3D.Sculpt.setGlobalPosition(item.getWorldPosition());
+                    holder.object3D.Sculpt.setGlobalQuaternion(item.getWorldQuaternion());
+                });
             })
         }
     }
@@ -118,20 +133,16 @@ const objectKeyUp = (evt) => {
     if (!item.initialParent) {
         item.initialParent = item.parent;
     }
-    let initialParent = item.initialParent;
 
     if (controller instanceof MouseController) {
     }
     if (controller instanceof ViveController) {
         if (controller.pickedItems && controller.pickedItems.length > 0) {
-            controller.pickedItems.map(item => {
-                let holder = item.parent;
-                changeParent(item, initialParent);
-                controller.raycastingLine.object3D.remove(holder);
-            });
             if (controller.raycastingLine.object3D.children.length > 0) {
-                controller.raycastingLine.object3D.children.map(item => {
-                    controller.raycastingLine.object3D.remove(item);
+                controller.raycastingLine.object3D.children.map(child => {
+                    if (child.name === "holder") {
+                        controller.raycastingLine.object3D.remove(child);
+                    }
                 });
             }
             controller.raycastingLine.object3D.children = [];
@@ -140,13 +151,23 @@ const objectKeyUp = (evt) => {
     if (controller instanceof OculusController) {
         if (controller.pickedItems && controller.pickedItems.length > 0) {
             controller.pickedItems.map(item => {
-                changeParent(item, initialParent);
+                /*changeParent(item, initialParent);
                 item.objectHolder = null;
 
                 if (camera.children.length > 0) {
-                    camera.children.map(item => {
-                        if (item.name === "holder") {
-                            camera.remove(item);
+                    camera.children.map(child => {
+                        if (child.name === "holder") {
+                            camera.remove(child);
+                        }
+                    });
+                }*/
+
+                // todo check objectHolder is null time to time
+                if (camera.children.length > 0) {
+                    camera.children.map(child => {
+                        if (child.name === "holder") {
+                            item.objectHolder = null;
+                            camera.remove(child);
                         }
                     });
                 }
@@ -156,13 +177,12 @@ const objectKeyUp = (evt) => {
     if (controller instanceof CardboardController) {
         if (controller.pickedItems && controller.pickedItems.length > 0) {
             controller.pickedItems.map(item => {
-                changeParent(item, initialParent);
-                item.objectHolder = null;
 
                 if (camera.children.length > 0) {
-                    camera.children.map(item => {
-                        if (item.name === "holder") {
-                            camera.remove(item);
+                    camera.children.map(child => {
+                        if (child.name === "holder") {
+                            item.objectHolder = null;
+                            camera.remove(child);
                         }
                     });
                 }
@@ -252,17 +272,20 @@ const objectUpdate = function () {
     if (this instanceof ViveController) {
         if (this.pickedItems && this.pickedItems.length > 0) {
             this.pickedItems.map(item => {
+                let holderPos = this.raycastingLine.object3D.children[0].getWorldPosition();
+                let holderQuat = this.raycastingLine.object3D.children[0].getWorldQuaternion();
                 if (item.rigidBody) {
                     if (item.rigidBody.body instanceof OIMO.RigidBody) {
                         item.rigidBody.body.sleeping = false;
-                        let holderPos = this.raycastingLine.object3D.children[0].getWorldPosition();
                         let vecPos = new OIMO.Vec3(holderPos.x * 100, holderPos.y * 100, holderPos.z * 100);
                         item.rigidBody.body.setPosition(vecPos);
 
-                        let holderQuat = this.raycastingLine.object3D.children[0].getWorldQuaternion();
                         let vecQuat = new OIMO.Quaternion(holderQuat.x * 100, holderQuat.y * 100, holderQuat.z * 100, holderQuat.w * 100);
                         item.rigidBody.body.setQuaternion(vecQuat);
                     }
+                } else {
+                    item.Sculpt.setGlobalPosition(holderPos);
+                    item.Sculpt.setGlobalQuaternion(holderQuat);
                 }
             });
         }
@@ -270,13 +293,29 @@ const objectUpdate = function () {
     if (this instanceof OculusController) {
         if (this.pickedItems && this.pickedItems.length > 0) {
             this.pickedItems.map(item => {
-                if (item.rigidBody) {
+                /*if (item.rigidBody) {
                     if (item.rigidBody.body instanceof OIMO.RigidBody) {
                         item.rigidBody.body.sleeping = false;
                         let targetPos = item.objectHolder.getWorldPosition();
                         let vec = new OIMO.Vec3(targetPos.x * 100, targetPos.y * 100, targetPos.z * 100);
                         item.rigidBody.body.setPosition(vec);
                     }
+                }*/
+                let targetPos = item.objectHolder.getWorldPosition();
+                let holderQuat = item.objectHolder.getWorldQuaternion();
+
+                if (item.rigidBody) {
+                    if (item.rigidBody.body instanceof OIMO.RigidBody) {
+                        item.rigidBody.body.sleeping = false;
+                        let vec = new OIMO.Vec3(targetPos.x * 100, targetPos.y * 100, targetPos.z * 100);
+                        item.rigidBody.body.setPosition(vec);
+
+                        let vecQuat = new OIMO.Quaternion(holderQuat.x * 100, holderQuat.y * 100, holderQuat.z * 100, holderQuat.w * 100);
+                        item.rigidBody.body.setQuaternion(vecQuat);
+                    }
+                } else {
+                    item.Sculpt.setGlobalPosition(targetPos);
+                    item.Sculpt.setGlobalQuaternion(holderQuat);
                 }
             });
         }
@@ -284,13 +323,16 @@ const objectUpdate = function () {
     if (this instanceof CardboardController) {
         if (this.pickedItems && this.pickedItems.length > 0) {
             this.pickedItems.map(item => {
+                let targetPos = item.objectHolder.getWorldPosition();
                 if (item.rigidBody) {
                     if (item.rigidBody.body instanceof OIMO.RigidBody) {
                         item.rigidBody.body.sleeping = false;
-                        let targetPos = item.objectHolder.getWorldPosition();
                         let vec = new OIMO.Vec3(targetPos.x * 100, targetPos.y * 100, targetPos.z * 100);
                         item.rigidBody.body.setPosition(vec);
                     }
+                } else {
+                    //item.Sculpt.setGlobalPosition(targetPos);
+                    //item.Sculpt.setGlobalQuaternion(holderQuat);
                 }
             });
         }

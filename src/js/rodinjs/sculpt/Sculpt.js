@@ -189,19 +189,23 @@ export class Sculpt {
     globalPosition() {
         return new THREE.Vector3().setFromMatrixPosition(this.object3D.matrixWorld);
     }
+
     /**
      * Sets the global matrix of the object
      * @param {THREE.Matrix4} matrix
      */
-    setGlobalMatrix(matrix){
+    setGlobalMatrix(matrix) {
         let inverseParentMatrix = new THREE.Matrix4();
         let newGlobalMatrix = matrix.clone();
 
-        inverseParentMatrix.getInverse(this.object3D.parent.matrixWorld);
-        newGlobalMatrix.multiplyMatrices(inverseParentMatrix, newGlobalMatrix);
+        if (this.object3D.parent) {
+            inverseParentMatrix.getInverse(this.object3D.parent.matrixWorld);
+            newGlobalMatrix.multiplyMatrices(inverseParentMatrix, newGlobalMatrix);
+        }
 
         this.object3D.matrixAutoUpdate = false;
         this.object3D.matrix = newGlobalMatrix;
+        this.object3D.updateMatrixWorld(true);
     }
 
     //todo: join set global position and global quat almost the same thing
@@ -210,16 +214,16 @@ export class Sculpt {
      * Sets the global position of the object
      * @param {THREE.Vector3} newPosition
      */
-    setGlobalPosition(newPosition){
+    setGlobalPosition(newPosition) {
         let globalMatrix = this.object3D.matrixWorld;
         let initialPosition = new THREE.Vector3();
-        let intialQuaternion = new THREE.Quaternion();
+        let initialQuaternion = new THREE.Quaternion();
         let initialScale = new THREE.Vector3();
 
-        globalMatrix.decompose(initialPosition, intialQuaternion, initialScale);
+        globalMatrix.decompose(initialPosition, initialQuaternion, initialScale);
 
         let newGlobalMatrix = new THREE.Matrix4();
-        newGlobalMatrix.compose(newPosition, intialQuaternion, initialScale);
+        newGlobalMatrix.compose(newPosition, initialQuaternion, initialScale);
 
         this.setGlobalMatrix(newGlobalMatrix)
     }
@@ -228,7 +232,7 @@ export class Sculpt {
      * Sets the global quaternion of the object
      * @param {THREE.Quaternion} newQuaternion
      */
-    setGlobalQuaternion(newQuaternion){
+    setGlobalQuaternion(newQuaternion) {
         let globalMatrix = this.object3D.matrixWorld;
         let initialPosition = new THREE.Vector3();
         let initialScale = new THREE.Vector3();

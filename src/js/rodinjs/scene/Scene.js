@@ -127,6 +127,9 @@ export class Scene extends Sculpt {
 
     // TODO: tanel esi scenemanager
     get render() {
+        if (Scene.presentedOnce && !this.webVRmanager.hmd.isPresenting)
+            return;
+
         return (timestamp) => {
             if (this._render) {
 
@@ -153,14 +156,18 @@ export class Scene extends Sculpt {
             }
             // check! if HMD is connected and active,
             // rendering is passed to HMD's animation frame loop, instead of the browser window's.
+
             if (this.webVRmanager.hmd && this.webVRmanager.hmd.isPresenting) {
                 this.webVRmanager.hmd.requestAnimationFrame(this.render.bind(this));
+                Scene.presentedOnce = true;
             } else {
                 requestAnimationFrame(this.render.bind(this));
             }
 
         }
     }
+
+    static presentedOnce = false;
 
     /**
      * Set camera property
