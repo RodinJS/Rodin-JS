@@ -31,7 +31,7 @@ SceneManager.addController(mouseController);
 
 /// vive controllers
 
-let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, threeScene, null, 2);
+let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, threeScene, camera, 2);
 controllerL.standingMatrix = controls.getStandingMatrix();
 
 controllerL.onKeyDown = controllerKeyDown;
@@ -42,7 +42,7 @@ controllerL.onTouchDown = controllerTouchDown;
 SceneManager.addController(controllerL);
 scene.add(controllerL);
 
-let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, threeScene, null, 3);
+let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, threeScene, camera, 2);
 controllerR.standingMatrix = controls.getStandingMatrix();
 
 controllerR.onKeyDown = controllerKeyDown;
@@ -183,7 +183,14 @@ let toyURLS = [
     './models/star.json',
 ];
 let toyReady = function () {
-    let obj = new RODIN.THREEObject(this.object3D);
+
+    let obj;
+    if(this.object3D instanceof THREE.Group){
+        obj = new RODIN.THREEObject(this.object3D.children[0]);
+        console.log(obj);
+    }else{
+        obj = new RODIN.THREEObject(this.object3D);
+    }
     let k = Math.randomFloatIn(-0.1, -1.0);
     let alpha = Math.randomFloatIn(-Math.PI, Math.PI);
 
@@ -196,8 +203,9 @@ let toyReady = function () {
     obj.object3D.castShadow = true;
     obj.object3D.receiveShadow = true;
 
-    scene.add(obj.object3D);
+
     RODIN.Raycastables.push(obj.object3D);
+
     obj.object3D.initialParent = obj.object3D.parent;
 
     // hover
@@ -340,6 +348,8 @@ for (let i = 0; i < 10; i++) {
             if (url !== toyURLS[1]) {
                 toy.object3D.children[0].material.materials[0].color = new THREE.Color(colors[Math.randomIntIn(0, colors.length - 1)]);
             }
+
+            scene.add(toy.object3D.children[0]);
         }
     )
 }
@@ -360,6 +370,8 @@ toy.on('ready', () => {
     toyGlow.scale.multiplyScalar(1.5);
     toyGlow.geometry.center();
     toy.object3D.add(toyGlow);
+
+    scene.add(toy.object3D.children[0]);
 });
 
 function controllerKeyDown(keyCode) {

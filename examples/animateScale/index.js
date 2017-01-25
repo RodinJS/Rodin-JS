@@ -73,9 +73,9 @@ function generateGUI() {
         })
     );
 
-    gui.add(text, 'x', -5, 5);
-    gui.add(text, 'y', -5, 5);
-    gui.add(text, 'z', -5, 5);
-    gui.add(text, 'duration', 1, 20000);
+    gui.add(text, 'x', 0, 0.05);
+    gui.add(text, 'y', 0, 0.05);
+    gui.add(text, 'z', 0, 0.05);
+    gui.add(text, 'duration', 100, 12000);
     gui.add(text, 'start');
 }
