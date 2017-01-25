@@ -105,7 +105,7 @@ sofa_02.on('ready', () => {
 });
 // table
 
-export const table = ModelLoader.load('./models/table.obj');
+/*export const table = ModelLoader.load('./models/table.obj');
 table.on('ready', () => {
     for (let i = 0; i < table.object3D.children.length; i++) {
         let child = table.object3D.children[i];
@@ -228,15 +228,18 @@ fire_place.on('ready', () => {
     scene.add(fire_place.object3D);
     createRaycastableRigidBody(fire_place, 'box', 0, false);
 });
+*/
 
 // picture_table
 export const picture_table = ModelLoader.load('./models/picture_table.obj');
 picture_table.on('ready', () => {
+    picture_table.object3D.position.set(1, 0, 0);
+
     for (let i = 0; i < picture_table.object3D.children.length; i++) {
         let child = picture_table.object3D.children[i];
         switch (child.name) {
             case 'picture_table':
-                child.position.set(2.835, 0.759, 0.991);
+                child.position.set(1.835, 0.759, 0.991);
                 break;
             default:
                 return
@@ -248,7 +251,7 @@ picture_table.on('ready', () => {
     createRaycastableRigidBody(picture_table, 'box', 0.02, true);
 });
 
-// vases
+/*// vases
 export const vases = ModelLoader.load('./models/vases.obj');
 vases.on('ready', () => {
     for (let i = 0; i < vases.object3D.children.length; i++) {
@@ -272,7 +275,27 @@ vases.on('ready', () => {
     }
     scene.add(vases.object3D);
     createRaycastableRigidBody(vases, 'box', 0.02, true);
+});*/
+
+let a = new RODIN.THREEObject(new THREE.Mesh(new THREE.BoxGeometry(0.2,0.2,0.2),
+new THREE.MeshLambertMaterial({color:0x556611})));
+a.on('ready', ()=>{
+    a.object3D.position.set(1.5,0.5,0);
+    //a.object3D.initialParent = a.object3D.parent;
+    a.raycastable = true;
+    a.on(EVENT_NAMES.CONTROLLER_KEY_DOWN, DragAndDrop.objectKeyDown);
+    a.on(EVENT_NAMES.CONTROLLER_KEY_UP, DragAndDrop.objectKeyUp);
+    a.on(EVENT_NAMES.CONTROLLER_VALUE_CHANGE, DragAndDrop.objectValueChange)
 });
+
+let b = new RODIN.THREEObject(new THREE.Object3D());
+b.on('ready', ()=>{
+    scene.add(b.object3D);
+    b.object3D.position.set(0,0,0);
+});
+
+b.object3D.add(a.object3D);
+
 
 function createRaycastableRigidBody(model, type, mass, move) {
 
