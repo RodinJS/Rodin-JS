@@ -1,7 +1,7 @@
 'use strict';
 
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {Sculpt} from './Sculpt.js';
 import {timeout} from '../utils/timeout.js';
 import {Interval} from '../utils/interval.js';
@@ -87,7 +87,7 @@ export class Snow extends Sculpt {
         super.init(pointCloud);
 
         timeout(() => {
-            this.emit("ready", new Event(this));
+            this.emit("ready", new RodinEvent(this));
         }, 0);
 
         this.on("update", (evt) => {

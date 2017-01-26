@@ -1,5 +1,5 @@
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {Sculpt} from './Sculpt.js';
 import {ModelLoader} from './ModelLoader.js';
 
@@ -20,13 +20,13 @@ export class CubeMapFromModel extends Sculpt {
                     cube.object3D.scale.set(size, size, size);
                     cube.object3D.material = material;
                     super.init(cube.object3D);
-                    return this.emit("ready", new Event(this));
+                    return this.emit("ready", new RodinEvent(this));
                 });
             } else if (material) {
                 cube.object3D.material = material;
                 cube.object3D.scale.set(size, size, size);
                 super.init(cube.object3D);
-                return this.emit("ready", new Event(this));
+                return this.emit("ready", new RodinEvent(this));
             }
         });
     }

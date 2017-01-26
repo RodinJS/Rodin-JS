@@ -2,7 +2,7 @@ import {Element} from "../../../_build/js/rodinjs/sculpt/elements/Element.js";
 import {SceneManager} from '../../../_build/js/rodinjs/scene/SceneManager.js';
 import {EVENT_NAMES} from '../../../_build/js/rodinjs/constants/constants.js';
 import * as RODIN from '../../../_build/js/rodinjs/RODIN.js';
-import {Event} from '../../../_build/js/rodinjs/Event.js';
+import {RodinEvent} from '../../../_build/js/rodinjs/RodinEvent.js';
 
 import {HoverableElement} from './HoverableElement_c.js';
 
@@ -84,12 +84,12 @@ export class Popup extends Element {
 
     close () {
         this.object3D.scale.set(0, 0, 0);
-        this.emit('close', new Event(this));
+        this.emit('close', new RodinEvent(this));
     }
 
     open () {
         this.object3D.scale.set(1, 1, 1);
-        this.emit('open', new Event(this));
+        this.emit('open', new RodinEvent(this));
     }
 }
 

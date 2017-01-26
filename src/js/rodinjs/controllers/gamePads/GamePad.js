@@ -2,7 +2,7 @@ import {THREE} from '../../../vendor/three/THREE.GLOBAL.js';
 import {Raycaster} from '../../raycaster/Raycaster.js';
 import {EVENT_NAMES, KEY_CODES} from '../../constants/constants.js';
 import {ErrorAbstractClassInstance, ErrorProtectedFieldChange} from '../../error/CustomErrors.js';
-import {Event} from '../../Event.js';
+import {RodinEvent} from '../../RodinEvent.js';
 
 import {MouseGamePad} from './MouseGamePad.js';
 import {CardboardGamePad} from './CardboardGamePad.js';
@@ -385,7 +385,7 @@ export class GamePad extends THREE.Object3D {
                     return;
 
                 doGamePadHoverOut = true;
-                currentEvent = new Event(intersect.object.Sculpt, null, null, "", this);
+                currentEvent = new RodinEvent(intersect.object.Sculpt, null, null, "", this);
                 intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT, currentEvent);
             }
         });
@@ -400,7 +400,7 @@ export class GamePad extends THREE.Object3D {
                         return;
 
                     doGamePadHovered = true;
-                    currentEvent = new Event(intersect.object.Sculpt, null, null, "", this);
+                    currentEvent = new RodinEvent(intersect.object.Sculpt, null, null, "", this);
                     currentEvent.distance = intersect.distance;
                     currentEvent.uv = intersect.uv;
                     intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER, currentEvent);
@@ -424,7 +424,7 @@ export class GamePad extends THREE.Object3D {
             let i = 0;
             do {
                 let intersect = this.intersected[i++];
-                currentEvent = new Event(intersect.object.Sculpt, DOMEvent, keyCode, this.hand, controller);
+                currentEvent = new RodinEvent(intersect.object.Sculpt, DOMEvent, keyCode, this.hand, controller);
                 currentEvent.distance = intersect.distance;
                 currentEvent.uv = intersect.uv;
                 intersect.object.Sculpt.emit(eventName, currentEvent);

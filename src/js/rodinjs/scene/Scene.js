@@ -4,7 +4,7 @@ import {Time} from "../time/Time.js";
 import {timeout} from '../utils/timeout.js';
 import {Set} from '../utils/Set.js';
 import {Objects} from '../objects.js';
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {TWEEN} from '../Tween.js';
 
 import '../../vendor/three/examples/js/controls/VRControls.js';
@@ -102,7 +102,7 @@ export class Scene extends Sculpt {
         }
 
         timeout(() => {
-            this.emit("ready", new Event(this));
+            this.emit("ready", new RodinEvent(this));
         }, 0);
     }
 
@@ -141,7 +141,7 @@ export class Scene extends Sculpt {
                 this.controls.update();
 
                 // Render the scene through the webVRmanager.
-                Objects.map(i => i.emit('update', new Event(i)));
+                Objects.map(i => i.emit('update', new RodinEvent(i)));
                 this.preRenderFunctions.map(i => i());
                 this.webVRmanager.render(this.scene, this.camera, timestamp);
                 this.postRenderFunctions.map(i => i());

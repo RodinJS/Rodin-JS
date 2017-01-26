@@ -2,7 +2,7 @@ import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
 import {Objects, Raycastables, LoadingObjects} from '../objects.js';
 import {ANIMATION_TYPES} from '../constants/constants.js';
 import {TWEEN} from '../Tween.js';
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {Animator} from '../animation/Animator.js';
 import {ErrorAbstractClassInstance, ErrorProtectedMethodCall} from '../error/CustomErrors.js';
 
@@ -73,7 +73,7 @@ export class Sculpt {
         this.on('ready', () => {
             LoadingObjects.remove(this);
             if (LoadingObjects.length === 0) {
-                window.onLoadingComplete && window.onLoadingComplete(new Event(this));
+                window.onLoadingComplete && window.onLoadingComplete(new RodinEvent(this));
             }
         });
     }

@@ -3,7 +3,7 @@
 import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
-import {Event} from '../../_build/js/rodinjs/Event.js';
+import {RodinEvent} from '../../_build/js/rodinjs/RodinEvent.js';
 import {Sculpt} from '../../_build/js/rodinjs/sculpt/Sculpt.js';
 import {timeout} from '../../_build/js/rodinjs/utils/timeout.js';
 import {Interval} from '../../_build/js/rodinjs/utils/interval.js';
@@ -128,7 +128,7 @@ export class VPcontrolPanel extends Sculpt {
         if (!this.elementsPending) {
             super.init(this.object);
             timeout(() => {
-                this.emit("ready", new Event(this));
+                this.emit("ready", new RodinEvent(this));
             }, 0);
         }
     }

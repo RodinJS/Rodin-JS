@@ -1,6 +1,6 @@
 import { Sculpt } from './Sculpt.js';
 import { timeout } from '../utils/timeout.js';
-import { Event } from '../Event.js';
+import { RodinEvent } from '../RodinEvent.js';
 import { ErrorNoObjectProvided } from '../error/CustomErrors.js';
 /**
  * Make a Sculpt object from a THREE.Object3D
@@ -14,7 +14,7 @@ export class THREEObject extends Sculpt {
         super();
         this.init(threeObject);
         timeout(() => {
-            this.emit('ready', new Event(this));
+            this.emit('ready', new RodinEvent(this));
         }, 0);
     }
 }
