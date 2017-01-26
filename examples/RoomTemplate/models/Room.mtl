@@ -1,7 +1,7 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 15.12.2016 17:45:15
+# File Created: 11.01.2017 19:07:37
 
-newmtl Material__12731
+newmtl Material__1
 	Ns 42.0000
 	Ni 1.5000
 	d 1.0000
@@ -15,7 +15,7 @@ newmtl Material__12731
 	map_Ka textures\floor.jpg
 	map_Kd textures\floor.jpg
 
-newmtl Material__12743
+newmtl Material__2
 	Ns 44.0000
 	Ni 1.5000
 	d 0.3600
@@ -27,7 +27,7 @@ newmtl Material__12743
 	Ks 0.4500 0.4500 0.4500
 	Ke 0.0000 0.0000 0.0000
 
-newmtl Material__12779
+newmtl Material__3
 	Ns 32.0000
 	Ni 1.5000
 	d 1.0000
@@ -41,19 +41,7 @@ newmtl Material__12779
 	map_Ka textures\wall.jpg
 	map_Kd textures\wall.jpg
 
-newmtl Material__63
-	Ns 54.0000
-	Ni 1.5000
-	d 1.0000
-	Tr 0.0000
-	Tf 1.0000 1.0000 1.0000 
-	illum 2
-	Ka 0.1216 0.1216 0.1216
-	Kd 0.1216 0.1216 0.1216
-	Ks 0.7920 0.7920 0.7920
-	Ke 0.0000 0.0000 0.0000
-
-newmtl Material__62
+newmtl Material__5
 	Ns 46.0000
 	Ni 1.5000
 	d 1.0000
@@ -65,7 +53,7 @@ newmtl Material__62
 	Ks 0.2250 0.2250 0.2250
 	Ke 0.0000 0.0000 0.0000
 
-newmtl Material__12804
+newmtl Material__7
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
@@ -77,14 +65,28 @@ newmtl Material__12804
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
 
-newmtl Material__60
+newmtl Material__4
+	Ns 54.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.1216 0.1216 0.1216
+	Kd 0.1216 0.1216 0.1216
+	Ks 0.7920 0.7920 0.7920
+	Ke 0.0000 0.0000 0.0000
+
+newmtl Material__10
 	Ns 10.0000
 	Ni 1.5000
 	d 1.0000
 	Tr 0.0000
 	Tf 1.0000 1.0000 1.0000 
 	illum 2
-	Ka 0.8157 0.8157 0.8157
-	Kd 0.8157 0.8157 0.8157
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
+	map_Ka textures\testbild16-9.jpg
+	map_Kd textures\testbild16-9.jpg

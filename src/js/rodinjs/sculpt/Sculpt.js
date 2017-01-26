@@ -189,6 +189,58 @@ export class Sculpt {
     globalPosition() {
         return new THREE.Vector3().setFromMatrixPosition(this.object3D.matrixWorld);
     }
+    /**
+     * Sets the global matrix of the object
+     * @param {THREE.Matrix4} matrix
+     */
+    setGlobalMatrix(matrix){
+        let inverseParentMatrix = new THREE.Matrix4();
+        let newGlobalMatrix = matrix.clone();
+
+        inverseParentMatrix.getInverse(this.object3D.parent.matrixWorld);
+        newGlobalMatrix.multiplyMatrices(inverseParentMatrix, newGlobalMatrix);
+
+        this.object3D.matrixAutoUpdate = false;
+        this.object3D.matrix = newGlobalMatrix;
+    }
+
+    //todo: join set global position and global quat almost the same thing
+
+    /**
+     * Sets the global position of the object
+     * @param {THREE.Vector3} newPosition
+     */
+    setGlobalPosition(newPosition){
+        let globalMatrix = this.object3D.matrixWorld;
+        let initialPosition = new THREE.Vector3();
+        let intialQuaternion = new THREE.Quaternion();
+        let initialScale = new THREE.Vector3();
+
+        globalMatrix.decompose(initialPosition, intialQuaternion, initialScale);
+
+        let newGlobalMatrix = new THREE.Matrix4();
+        newGlobalMatrix.compose(newPosition, intialQuaternion, initialScale);
+
+        this.setGlobalMatrix(newGlobalMatrix)
+    }
+
+    /**
+     * Sets the global quaternion of the object
+     * @param {THREE.Quaternion} newQuaternion
+     */
+    setGlobalQuaternion(newQuaternion){
+        let globalMatrix = this.object3D.matrixWorld;
+        let initialPosition = new THREE.Vector3();
+        let initialScale = new THREE.Vector3();
+        let initialQuaternion = new THREE.Quaternion();
+
+        globalMatrix.decompose(initialPosition, initialQuaternion, initialScale);
+
+        let newGlobalMatrix = new THREE.Matrix4();
+        newGlobalMatrix.compose(initialPosition, newQuaternion, initialScale);
+
+        this.setGlobalMatrix(newGlobalMatrix)
+    }
 
     /**
      * animate a parameter change

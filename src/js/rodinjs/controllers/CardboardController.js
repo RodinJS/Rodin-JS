@@ -17,13 +17,16 @@ export class CardboardController extends GamePad {
             throw new ErrorCardboardControllerAlreadyExists();
         }
         controllerCreated = true;
-        super("cardboard", null, scene, camera, 2);
+        super("cardboard", null, scene, camera, 1);
 
         this.setRaycasterScene(scene);
         this.setRaycasterCamera(camera);
-        this.setGazePoint(new GazePoint());
+        let gp = new GazePoint();
         this.vrOnly = true;
-		this.disable();
+        gp.Sculpt.on("ready", () => {
+            this.setGazePoint(gp);
+            this.disable();
+        });
     }
 
     /**

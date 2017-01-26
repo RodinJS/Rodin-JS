@@ -20,9 +20,12 @@ export class OculusController extends GamePad {
 
         controllerCreated = true;
         super('oculus', null, scene, camera);
-		this.setGazePoint(new GazePoint());
+		let gp = new GazePoint();
 		this.vrOnly = true;
-		this.disable();
+		gp.Sculpt.on("ready", () => {
+			this.setGazePoint(gp);
+			this.disable();
+		});
     }
 
     /**
@@ -45,4 +48,6 @@ export class OculusController extends GamePad {
 			this.camera.add(this.gazePoint.Sculpt.object3D);
 		}
 	}
+
+
 }
