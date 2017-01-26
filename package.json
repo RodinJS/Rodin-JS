@@ -58,7 +58,7 @@
     "esdoc-es7-plugin": "0.0.3",
     "socket.io-client": "^1.6.0",
     "three": "^0.83.0",
-    "tween.js": "^16.3.5",
+    "tween.js": "^16.6.0",
     "Oimo.js": "git+https://github.com/RodinJS/Oimo.js.git#gh-pages",
     "webvr-boilerplate": "^0.4.9",
     "webvr-polyfill": "git+https://github.com/RodinJS/webvr-polyfill#master"
