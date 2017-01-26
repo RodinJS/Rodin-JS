@@ -34,14 +34,15 @@ floor.on('ready', (e) => {
     scene.add(floor.object3D);
     floor.object3D.rotation.x = -Math.PI / 2;
     floor.raycastable = true;
+    floor.object3D.name = 'floor';
 });
 
 let a = new RODIN.THREEObject(new THREE.Mesh(new THREE.BoxGeometry(2, 1, 2), new THREE.MeshLambertMaterial({color: 0xf15245})));
- a.on('ready', (e) => {
- scene.add(a.object3D);
- a.object3D.position.set(3, 0.5, 3);
- a.raycastable = true;
- });
+a.on('ready', (e) => {
+    scene.add(a.object3D);
+    a.object3D.position.set(2, 0.5, 2);
+    a.raycastable = true;
+});
 
 
 // todo change line points position
@@ -51,20 +52,18 @@ function addPoint(direction) {
             scene.scene.remove(child);
         }
     });
-    //console.log(controllerL);
 
     let splinepts = [];
     let n = 1;
     let g = -9.8;
     let l = 0.1;
     direction = direction.normalize();
-    direction.y = 1 - direction.y;
+    direction.multiplyScalar(2);
     for (let i = 0; i < n; i += l) {
         let x = i * Math.sqrt(direction.x * direction.x + direction.z * direction.z);
-        let y = direction.y * i + g * i * i / 2;
+        let y = (-direction.y) * i + g * i * i / 2;
         splinepts.push(new THREE.Vector2(x, y));
     }
-
     let splineShape = new THREE.Shape();
     splineShape.moveTo(0, 0);
     splineShape.splineThru(splinepts);
@@ -73,30 +72,36 @@ function addPoint(direction) {
     let line = new THREE.Line(points, new THREE.LineBasicMaterial({color: 0x808080}));
     line.name = 'line';
     line.position.copy(controllerL.getWorldPosition());
-    line.rotation.y = - getAngle(
+    line.rotation.y = -getAngle(
         new THREE.Vector2(0, 0),
         new THREE.Vector2(controllerL.getWorldDirection().x, controllerL.getWorldDirection().z)
     );
     scene.add(line);
-    console.log(controllerL);
-    console.log(line);
-    createPointsRaycaster(line.geometry.vertices);
+    createPointsRaycaster(line);
 
 }
-function createPointsRaycaster(vertices) {
-    for (let i = 0; i < vertices.length; i++){
-        let ray = new Raycaster();
-        //console.log(vertices[i]);
+function createPointsRaycaster(line) {
 
-        getRaycaster();
+    let vert = line.geometry.vertices;
+    let raycaster = new Raycaster();
+    for (let i = 0; i < vert.length - 1; i++) {
+        raycaster.setScene(scene.scene);
+        raycaster.ray.origin.copy(line.getWorldPosition().add(vert[i]));
+
+        let curVertex = vert[i].clone();
+        let nextVertex = vert[i + 1].clone();
+
+        raycaster.ray.direction = nextVertex.sub(curVertex);
+        //nextVertex is now the difference
+        //vector of two points in our line
+        raycaster.far = nextVertex.length();
+        line.raycaster = raycaster;
+        let objs = raycaster.raycast();
+        if (objs.length) {
+            console.log(objs);
+            break;
+        }
     }
-}
-
-function getRaycaster() {
-    //this.tempMatrix.identity().extractRotation(this.matrixWorld);
-    //this.raycaster.ray.origin.setFromMatrixPosition(this.matrixWorld);
-    //this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
-    //return this.raycaster.raycast();
 }
 
 function dotAngle(a, b) {
