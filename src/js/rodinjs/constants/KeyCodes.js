@@ -1,3 +1,7 @@
+import * as OCULUS_TOUCH from './gamePads/OculusTouch.js';
+import * as OCULUS_REMOTE from './gamePads/OculusRemote.js';
+import * as VIVE from './gamePads/Vive.js';
+
 export const KEY0 = 0;
 export const KEY1 = 1;
 export const KEY2 = 2;
@@ -116,3 +120,9 @@ export const OPEN_BRACKET = 219;
 export const BACK_SLASH = 220;
 export const CLOSE_BRACKET = 221;
 export const SINGLE_QUOTE = 222;
+
+export {
+    VIVE,
+    OCULUS_TOUCH,
+    OCULUS_REMOTE
+}

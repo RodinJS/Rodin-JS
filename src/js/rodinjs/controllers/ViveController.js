@@ -4,6 +4,7 @@ import {CONTROLLER_HANDS} from '../constants/constants.js';
 import {ModelLoader} from '../sculpt/ModelLoader.js';
 import {THREEObject} from '../sculpt/THREEObject.js';
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
+import {KEY_CODES} from '../constants/constants.js';
 
 let leftHandControllerCreated = false;
 let rightHandControllerCreated = false;
@@ -39,6 +40,13 @@ export class ViveController extends GamePad {
          * @type {THREE.Line}
          */
         this.raycastingLine = null;
+
+        this.buttons = [
+            KEY_CODES.VIVE.TRACKPAD,
+            KEY_CODES.VIVE.TRIGGER,
+            KEY_CODES.VIVE.GRIP,
+            KEY_CODES.VIVE.MENU
+        ]
     }
 
     /**

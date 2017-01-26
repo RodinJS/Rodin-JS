@@ -1,6 +1,7 @@
 import {GamePad} from './gamePads/GamePad.js';
 import {GazePoint} from '../sculpt/GazePoint.js';
 import {ErrorOculusControllerAlreadyExists} from '../error/CustomErrors.js';
+import {KEY_CODES} from '../constants/constants.js';
 
 let controllerCreated = false;
 
@@ -26,6 +27,15 @@ export class OculusController extends GamePad {
 			this.setGazePoint(gp);
 			this.disable();
 		});
+
+		this.buttons = [
+			KEY_CODES.OCULUS_REMOTE.ENTER,
+			KEY_CODES.OCULUS_REMOTE.BACK,
+			KEY_CODES.OCULUS_REMOTE.UP,
+			KEY_CODES.OCULUS_REMOTE.DOWN,
+			KEY_CODES.OCULUS_REMOTE.LEFT,
+			KEY_CODES.OCULUS_REMOTE.RIGHT
+		]
     }
 
     /**
