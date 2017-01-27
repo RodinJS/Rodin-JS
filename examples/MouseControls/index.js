@@ -1,17 +1,17 @@
 import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
+import {ControllerManager} from '../../_build/js/rodinjs/controllers/ControllerManager';
 import {CubeObject} from '../../_build/js/rodinjs/sculpt/CubeObject.js';
-import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 import changeParent  from '../../_build/js/rodinjs/utils/ChangeParent.js';
 
 let scene = SceneManager.get();
 let camera = scene.camera;
-let controls = scene.controls;
-let renderer = scene.renderer;
 let originalScene = scene.scene;
 
-let mouseController = new MouseController();
+let mouseController = ControllerManager.create("mouse",scene, camera);
+let mc2 = ControllerManager.getController(1);
+console.log(mc2, mouseController);
 mouseController.onControllerUpdate = controllerUpdate;
 SceneManager.addController(mouseController);
 
