@@ -11,7 +11,7 @@ let controls = scene.controls;
 let controllerL = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.LEFT, scene, scene.camera, 1);
 controllerL.standingMatrix = controls.getStandingMatrix();
 controllerL.initControllerModel();
-controllerL.initRaycastingLine();
+//controllerL.initRaycastingLine();
 
 //controllerL.onKeyDown = DragAndDrop.ViveControllerKeyDown;
 //controllerL.onKeyUp   = DragAndDrop.ViveControllerKeyUp;
@@ -22,7 +22,7 @@ scene.add(controllerL);
 let controllerR = new ViveController(RODIN.CONSTANTS.CONTROLLER_HANDS.RIGHT, scene, scene.camera, 1);
 controllerR.standingMatrix = controls.getStandingMatrix();
 controllerR.initControllerModel();
-controllerR.initRaycastingLine();
+//controllerR.initRaycastingLine();
 
 //controllerR.onKeyDown = DragAndDrop.ViveControllerKeyDown;
 //controllerR.onKeyUp   = DragAndDrop.ViveControllerKeyUp;

@@ -3,13 +3,14 @@ import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 
 import {Raycaster} from '../../_build/js/rodinjs/raycaster/Raycaster.js';
+import {ModelLoader} from '../../_build/js/rodinjs/sculpt/ModelLoader.js';
 
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
 import {controllerL, controllerR} from './DnDVive_c.js';
 
 let scene = SceneManager.get();
 scene.scene.background = new THREE.Color(0xb5b5b5);
-
+let camera = scene.camera;
 let controls = scene.controls;
 
 let mouseController = new MouseController();
@@ -25,6 +26,16 @@ scene.add(new THREE.AmbientLight(0xaaaaaa));
 let light2 = new THREE.DirectionalLight(0xb5b5b5);
 light2.position.set(-3, -3, -3);
 scene.add(light2);
+
+let character = new RODIN.THREEObject(new THREE.Object3D());
+character.on('ready', (e) => {
+    let matrix = new THREE.Matrix4();
+    character.object3D.Sculpt.setGlobalMatrix(matrix);
+    character.object3D.add(camera);
+    character.object3D.add(controllerL);
+    character.object3D.add(controllerR);
+    scene.add(character.object3D);
+});
 
 let floor = new RODIN.THREEObject(new THREE.Mesh(new THREE.PlaneGeometry(25, 25, 50, 50), new THREE.MeshLambertMaterial({
     color: 0x676d6f,
@@ -44,13 +55,40 @@ a.on('ready', (e) => {
     a.raycastable = true;
 });
 
-// todo check if raycaster.raycast().length is null always and line didn't change position
+let texture = new THREE.TextureLoader().load('texture/gradient.png');
+let materialGradient = new THREE.MeshBasicMaterial({
+    map: texture,
+    transparent: true,
+    side: THREE.DoubleSide
+});
+let textureVertical = new THREE.TextureLoader().load('texture/gradient_vertical.png');
+let materialGradientVertical = new THREE.MeshBasicMaterial({
+    map: textureVertical,
+    transparent: true,
+    side: THREE.DoubleSide
+});
+let textureRadial = new THREE.TextureLoader().load('texture/gradientRadial.png');
+let materialGradientRadial = new THREE.MeshBasicMaterial({
+    map: textureRadial,
+    transparent: true,
+    side: THREE.DoubleSide
+});
 let raycaster = new Raycaster();
 raycaster.setScene(scene.scene);
-let cylinderHeight = 0.3;
-let raycastPoint = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, cylinderHeight, 10));
-scene.add(raycastPoint);
-let n = 1;
+let cylinderHeight = 0.25;
+ /*let raycastPoint = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, cylinderHeight, 10), materialGradient);
+scene.add(raycastPoint);*/
+
+let raycastPoint = ModelLoader.load('./model/raycastPoint.obj');
+raycastPoint.on('ready', () => {
+    console.log(raycastPoint.object3D);
+    raycastPoint.object3D.position.y = controls.userHeight;
+    raycastPoint.object3D.position.z = -0.5;
+    scene.add(raycastPoint.object3D);
+    raycastPoint.object3D.children[0].material = materialGradientVertical;
+    raycastPoint.object3D.children[1].material = materialGradientRadial;
+});
+let n = 2;
 let g = -9.8;
 let l = 0.01;
 function addPoint(direction) {
@@ -75,12 +113,19 @@ function addPoint(direction) {
             //vector of two points in our line
             raycaster.far = nextVertex.length();
             let objs = raycaster.raycast();
-            if (objs.length) {
+            controllerL.raycastObject = objs;
+            if (objs.length && raycastPoint.object3D) {
                 createLine(points);
-                raycastPoint.position.copy(controllerL.getWorldPosition().add(points[i]));
-                console.log(raycaster.far);
-                raycastPoint.position.y += raycaster.far;
+                if (!raycastPoint.object3D.visible) {
+                    raycastPoint.object3D.visible = true;
+                }
+                raycastPoint.object3D.position.copy(objs[0].point);
+                raycastPoint.object3D.position.y += cylinderHeight / 2;
                 break;
+            }
+            if (time == (n - l) && raycastPoint.object3D) {
+                createLine(points);
+                raycastPoint.object3D.visible = false;
             }
         }
         ++i;
@@ -93,13 +138,9 @@ function createLine(points) {
             scene.scene.remove(child);
         }
     });
-
     let splineShape = new THREE.CatmullRomCurve3(points);
     let tube = new THREE.TubeBufferGeometry(splineShape, 25, 0.01, 4);
-    let line = THREE.SceneUtils.createMultiMaterialObject(tube, [
-        new THREE.MeshLambertMaterial({
-            color: 0x32c5f3
-        })]);
+    let line = THREE.SceneUtils.createMultiMaterialObject(tube, [materialGradient]);
     line.name = 'line';
     line.position.copy(controllerL.getWorldPosition());
     scene.add(line);
@@ -107,30 +148,14 @@ function createLine(points) {
 
 controllerL.onKeyDown = controllerKeyDown;
 function controllerKeyDown(keyCode) {
-    /*if (controllerL.intersected.length) {
-     //console.log('controllerL', controllerL);
-     //console.log('intersected', controllerL.intersected);
-     //console.log('distance', controllerL.intersected[0].distance);
-     //console.log('point', controllerL.intersected[0].point);
-     let pointerObj = new RODIN.THREEObject(new THREE.Mesh(new THREE.SphereGeometry(0.2, 10, 10)));
-     pointerObj.on('ready', (e) => {
-     controllerL.add(pointerObj.object3D);
-     pointerObj.object3D.name = 'pointerObj';
-     pointerObj.object3D.Sculpt.setGlobalPosition(controllerL.intersected[0].point);
-     });
-     }*/
+    if (controllerL.raycastObject) {
+        let cameraPos = new THREE.Vector3(camera.position.x, 0, camera.position.z);
+        character.object3D.Sculpt.setGlobalPosition(raycastPoint.object3D.getWorldPosition().sub(cameraPos));
+    }
 }
 
 scene.preRender(() => {
-
     if (controllerL) {
         addPoint(controllerL.getWorldDirection());
     }
-    /*if (controllerL.intersected.length) {
-     controllerL.children.map(child => {
-     if (child.name == 'pointerObj') {
-     child.Sculpt.setGlobalPosition(controllerL.intersected[0].point);
-     }
-     });
-     }*/
 });

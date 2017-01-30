@@ -286,7 +286,7 @@ export class GamePad extends THREE.Object3D {
         }
 
         this.deviceDetected = true;
-        if (this.controllerModel && this.raycastingLine.ready && !this.controllerModel.parent) {
+        if (this.controllerModel && this.controllerModel.ready && !this.controllerModel.parent) {
             this.add(this.controllerModel.object3D);
         }
 
