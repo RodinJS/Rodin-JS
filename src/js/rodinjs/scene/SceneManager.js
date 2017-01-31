@@ -88,6 +88,8 @@ function initListeners() {
                     if (instance.get().webVRmanager.hmd && !instance.get().webVRmanager.hmd.isPresenting) {
                         window.mustShowRotateInstructions = false;
                         instance.get().webVRmanager.enterVRMode_();
+                        instance.get().webVRmanager.hmd.resetPose();
+
                     }
                     break;
                 case 'exitVR':
