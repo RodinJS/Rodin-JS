@@ -1,7 +1,7 @@
 'use strict';
 
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {Sculpt} from './Sculpt.js';
 import {Time} from './../time/Time.js';
 
@@ -50,7 +50,7 @@ export class JSONModelObject extends Sculpt {
 
             group.add(mesh);
             this.init(group);
-            this.emit('ready', new Event(this));
+            this.emit('ready', new RodinEvent(this));
 
             console.log("JSON file was loaded");
         }, onProgress, onError);

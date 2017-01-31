@@ -1,7 +1,7 @@
 'use strict';
 
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {Sculpt} from './Sculpt.js';
 import {Time} from '../time/Time.js';
 import {WTF} from '../logger/Logger.js';
@@ -54,7 +54,7 @@ export class FBXModelObject extends Sculpt {
             });
 
             this.init(mesh);
-            this.emit('ready', new Event(this));
+            this.emit('ready', new RodinEvent(this));
 
             WTF.is("FBX file was loaded");
         }, onProgress, onError);

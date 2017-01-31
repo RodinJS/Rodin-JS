@@ -1,7 +1,7 @@
 'use strict';
 
 import {THREE} from '../../vendor/three/THREE.GLOBAL.js';
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {Sculpt} from './Sculpt.js';
 /**
  * Class for creating cubeMap skybox objects.
@@ -96,7 +96,7 @@ export class CubeObject extends Sculpt {
 
             super.init(cube);
 
-            return this.emit("ready", new Event(this));
+            return this.emit("ready", new RodinEvent(this));
         };
 
         imageObj.src = textureURL;

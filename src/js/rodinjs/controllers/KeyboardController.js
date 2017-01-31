@@ -1,7 +1,7 @@
 import {GamePad} from './gamePads/GamePad.js';
 import {ErrorKeyboardControllerAlreadyExists} from '../error/CustomErrors.js';
 import {Objects} from '../objects.js';
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {EVENT_NAMES} from '../constants/constants.js';
 import {Set} from '../utils/Set.js';
 
@@ -74,7 +74,7 @@ export class KeyboardController extends GamePad {
      */
     raycastAndEmitEvent (eventName, DOMEvent, keyCode, controller = this) {
         Objects.map(object => {
-            let evt = new Event(object.object3D.Sculpt, DOMEvent, keyCode, null, controller);
+            let evt = new RodinEvent(object.object3D.Sculpt, DOMEvent, keyCode, null, controller);
             // evt.keys = [...keys];
             object.object3D.Sculpt.emit(eventName, evt);
         });

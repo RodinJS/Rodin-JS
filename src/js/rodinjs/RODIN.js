@@ -5,7 +5,7 @@ import * as UTILS from './utils/utils.js';
 
 export { WTF } from './logger/Logger.js';
 
-export { Event } from './Event.js';
+export { RodinEvent } from './RodinEvent.js';
 export { Sculpt } from './sculpt/Sculpt.js';
 export { THREEObject } from './sculpt/THREEObject.js';
 export { Raycaster } from './raycaster/Raycaster.js';

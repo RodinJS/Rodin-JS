@@ -2,7 +2,7 @@
 
 import {THREE} from '../../../vendor/three/THREE.GLOBAL.js';
 import '../../vendor/JDLoader.min.js';
-import {Event} from '../../Event.js';
+import {RodinEvent} from '../../RodinEvent.js';
 import {Time} from '../../time/Time.js';
 import {ModelObject} from './ModelObject.js';
 
@@ -46,7 +46,7 @@ export class JDModelObject extends ModelObject {
             }
 
             this.init(meshes);
-            this.emit('ready', new Event(this));
+            this.emit('ready', new RodinEvent(this));
 
             console.log("JD file was loaded");
         }, onProgress, onError);

@@ -10,7 +10,7 @@ import '../../vendor/three/examples/js/loaders/OBJLoader.js';
 import '../../vendor/three/examples/js/loaders/DDSLoader.js';
 import '../../vendor/three/examples/js/loaders/MTLLoader.js';
 
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {Sculpt} from './Sculpt.js';
 
 
@@ -52,7 +52,7 @@ export class OBJModelObject extends Sculpt {
                 objLoader.setMaterials(materials);
                 objLoader.load(URL, mesh => {
                     this.init(mesh);
-                    this.emit('ready', new Event(this));
+                    this.emit('ready', new RodinEvent(this));
 
                 }, onProgress, onError);
             });

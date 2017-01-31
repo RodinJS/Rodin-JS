@@ -1,7 +1,7 @@
 'use strict';
 
 import {THREE} from '../../../vendor/three/THREE.GLOBAL.js';
-import {Event} from '../../Event.js';
+import {RodinEvent} from '../../RodinEvent.js';
 import {Sculpt} from './../Sculpt.js';
 import {timeout} from './../../utils/timeout.js';
 import {utils3D} from './../../utils/utils.js';
@@ -50,7 +50,7 @@ export class DynamicText extends Sculpt {
         this.draw();
         super.init(this.textMesh);
         timeout(() => {
-            this.emit("ready", new Event(this));
+            this.emit("ready", new RodinEvent(this));
         }, 0);
     };
 

@@ -1,6 +1,6 @@
 'use strict';
 import {THREE} from '../../../vendor/three/THREE.GLOBAL.js';
-import {Event} from '../../Event.js';
+import {RodinEvent} from '../../RodinEvent.js';
 import {WTF} from '../../logger/Logger.js';
 import {Time} from '../../time/Time.js';
 import {ModelObject} from './ModelObject.js';
@@ -50,7 +50,7 @@ export class ColladaModelObject extends ModelObject {
             this.init(mesh.scene);
 
             WTF.is("COLLADA file was loaded");
-            this.emit('ready', new Event(this));
+            this.emit('ready', new RodinEvent(this));
         }, onProgress, onError);
 
         this.on("update", (evt) => {

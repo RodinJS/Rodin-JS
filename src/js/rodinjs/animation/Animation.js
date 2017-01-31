@@ -1,5 +1,5 @@
 import {TWEEN} from '../Tween.js';
-import {Event} from '../Event.js';
+import {RodinEvent} from '../RodinEvent.js';
 import {EVENT_NAMES} from '../constants/constants.js';
 import {ErrorProtectedMethodCall} from '../error/CustomErrors.js';
 import {Sculpt} from '../sculpt/Sculpt.js';
@@ -86,7 +86,7 @@ export class Animation {
             .to(endValues, this._duration)
             .delay(this._delay)
             .onStart(function () {
-                let evt = new Event(_this.sculpt);
+                let evt = new RodinEvent(_this.sculpt);
                 evt.animation = _this.name;
                 _this.sculpt.emit(EVENT_NAMES.ANIMATION_START, evt);
             })
@@ -107,7 +107,7 @@ export class Animation {
                     delete this.tween;
                 }
 
-                let evt = new Event(_this.sculpt);
+                let evt = new RodinEvent(_this.sculpt);
                 evt.animation = _this.name;
                 _this.sculpt.emit(EVENT_NAMES.ANIMATION_COMPLETE, evt);
             });
@@ -137,7 +137,7 @@ export class Animation {
                 this.reset();
             }
 
-            let evt = new Event(this.sculpt);
+            let evt = new RodinEvent(this.sculpt);
             evt.animation = this.name;
             this.sculpt.emit(EVENT_NAMES.ANIMATION_STOP, evt);
             return true;

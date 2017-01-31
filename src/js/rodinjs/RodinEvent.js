@@ -1,6 +1,6 @@
 'use strict';
 
-export class Event {
+export class RodinEvent {
 	/**
 	 * Event Class
 	 * @param {Sculpt} target
