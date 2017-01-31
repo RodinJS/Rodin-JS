@@ -85,8 +85,10 @@ function initListeners() {
 
             switch (event.data) {
                 case 'enterVR':
-                    if (instance.get().webVRmanager.hmd && !instance.get().webVRmanager.hmd.isPresenting)
+                    if (instance.get().webVRmanager.hmd && !instance.get().webVRmanager.hmd.isPresenting) {
+                        window.mustShowRotateInstructions = false;
                         instance.get().webVRmanager.enterVRMode_();
+                    }
                     break;
                 case 'exitVR':
                     if (instance.get().webVRmanager.hmd && instance.get().webVRmanager.hmd.isPresenting)
