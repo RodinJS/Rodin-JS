@@ -55,17 +55,21 @@ a.on('ready', (e) => {
     a.raycastable = true;
 });
 
+// todo find better solution for textures
 let texture = new THREE.TextureLoader().load('texture/gradient.png');
 let materialGradient = new THREE.MeshBasicMaterial({
     map: texture,
     transparent: true,
-    side: THREE.DoubleSide
+    alphaTest: 0.05,
+    side: THREE.FrontSide
 });
 let textureVertical = new THREE.TextureLoader().load('texture/gradient_vertical.png');
 let materialGradientVertical = new THREE.MeshBasicMaterial({
     map: textureVertical,
     transparent: true,
-    side: THREE.DoubleSide
+    side: THREE.BackSide,
+    alphaTest: 0.05,
+    //transparent: false
 });
 let textureRadial = new THREE.TextureLoader().load('texture/gradientRadial.png');
 let materialGradientRadial = new THREE.MeshBasicMaterial({
@@ -75,29 +79,27 @@ let materialGradientRadial = new THREE.MeshBasicMaterial({
 });
 let raycaster = new Raycaster();
 raycaster.setScene(scene.scene);
-let cylinderHeight = 0.25;
- /*let raycastPoint = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, cylinderHeight, 10), materialGradient);
-scene.add(raycastPoint);*/
-
-let raycastPoint = ModelLoader.load('./model/raycastPoint.obj');
+let cylinderHeight = 0.2;
+let raycastPoint = new RODIN.THREEObject(new THREE.Mesh(
+    new THREE.CylinderGeometry(0.1, 0.1, cylinderHeight, 12, 1, true),
+    materialGradientVertical
+));
+//let raycastPoint = ModelLoader.load('./model/raycastPoint.obj');
 raycastPoint.on('ready', () => {
-    console.log(raycastPoint.object3D);
-    raycastPoint.object3D.position.y = controls.userHeight;
-    raycastPoint.object3D.position.z = -0.5;
     scene.add(raycastPoint.object3D);
-    raycastPoint.object3D.children[0].material = materialGradientVertical;
-    raycastPoint.object3D.children[1].material = materialGradientRadial;
+    //raycastPoint.object3D.children[0].material = materialGradientVertical;
+    //raycastPoint.object3D.children[1].material = materialGradientRadial;
+    raycastPoint.object3D.visible = false;
 });
-let n = 2;
+let n = 200;
 let g = -9.8;
-let l = 0.01;
+let m = 0.01;
 function addPoint(direction) {
     let points = [];
     direction = direction.normalize();
     direction.multiplyScalar(6);
 
-    let i = 0;
-    for (let time = 0; time < n; time += l) {
+    for (let time = 0, i = 0; i < n; i++, time = m * i) {
         let x = time * (-direction.x);
         let y = time * (-direction.y) + g * time * time / 2;
         let z = time * (-direction.z);
@@ -123,12 +125,11 @@ function addPoint(direction) {
                 raycastPoint.object3D.position.y += cylinderHeight / 2;
                 break;
             }
-            if (time == (n - l) && raycastPoint.object3D) {
+            if (i == n-1 && raycastPoint.object3D) {
                 createLine(points);
                 raycastPoint.object3D.visible = false;
             }
         }
-        ++i;
     }
 }
 
@@ -138,9 +139,16 @@ function createLine(points) {
             scene.scene.remove(child);
         }
     });
+    if (points.length > 3){
+        points.pop();
+        points.pop();
+    }
+
     let splineShape = new THREE.CatmullRomCurve3(points);
-    let tube = new THREE.TubeBufferGeometry(splineShape, 25, 0.01, 4);
-    let line = THREE.SceneUtils.createMultiMaterialObject(tube, [materialGradient]);
+    let tube = new THREE.TubeBufferGeometry(splineShape, 15, 0.01, 3, false);
+    let line = new THREE.Mesh(tube, materialGradient);
+    //let line = THREE.SceneUtils.createMultiMaterialObject(tube, [materialGradient]);
+    //console.log(line);
     line.name = 'line';
     line.position.copy(controllerL.getWorldPosition());
     scene.add(line);
