@@ -19,8 +19,14 @@ class SceneManager extends Manager {
         let scene = this.create();
         this.go(scene);
         initListeners();
-//// TODO: fix this grdon later
         window.onLoadingComplete = this.loadingComplete.bind(this);
+
+        window.addEventListener('vrdisplaypresentchange', (e) => {
+            const display = e.display || e.detail.display;
+            if (display) {
+                window.isVRMode = display.isPresenting;
+            }
+        }, true);
     }
 
     /**
