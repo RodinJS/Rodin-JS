@@ -60,37 +60,60 @@ let texture = new THREE.TextureLoader().load('texture/gradient.png');
 let materialGradient = new THREE.MeshBasicMaterial({
     map: texture,
     transparent: true,
-    alphaTest: 0.05,
+    //alphaTest: 0.05,
     side: THREE.FrontSide
 });
 let textureVertical = new THREE.TextureLoader().load('texture/gradient_vertical.png');
 let materialGradientVertical = new THREE.MeshBasicMaterial({
     map: textureVertical,
     transparent: true,
-    side: THREE.BackSide,
-    alphaTest: 0.05,
+    side: THREE.DoubleSide,
+    //alphaTest: 0.05
+   // blending: THREE.AdditiveBlending,
+    depthTest: false,
+    shading: THREE.SmoothShading
     //transparent: false
 });
 let textureRadial = new THREE.TextureLoader().load('texture/gradientRadial.png');
 let materialGradientRadial = new THREE.MeshBasicMaterial({
     map: textureRadial,
     transparent: true,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
+    //alphaTest: 0.05
+    //blending: THREE.AdditiveBlending,
+    depthTest: false
 });
 let raycaster = new Raycaster();
 raycaster.setScene(scene.scene);
-let cylinderHeight = 0.2;
-let raycastPoint = new RODIN.THREEObject(new THREE.Mesh(
-    new THREE.CylinderGeometry(0.1, 0.1, cylinderHeight, 12, 1, true),
-    materialGradientVertical
-));
-//let raycastPoint = ModelLoader.load('./model/raycastPoint.obj');
+let cylinderHeight = 0.25;
+let raycastPoint = new RODIN.THREEObject(new THREE.Object3D());
 raycastPoint.on('ready', () => {
-    scene.add(raycastPoint.object3D);
-    //raycastPoint.object3D.children[0].material = materialGradientVertical;
-    //raycastPoint.object3D.children[1].material = materialGradientRadial;
+    let raycastPointRadius = 0.1;
+    let raycastPointSegments = 16;
+
+    // create geometry of raycast point
+    let raycastPointCylinder = new RODIN.THREEObject(new THREE.Mesh(
+        new THREE.CylinderGeometry(raycastPointRadius, raycastPointRadius, cylinderHeight, raycastPointSegments, 1, true),
+        materialGradientVertical
+    ));
+    raycastPointCylinder.on('ready', () => {
+        raycastPointCylinder.object3D.position.y = cylinderHeight / 2;
+        raycastPoint.object3D.add(raycastPointCylinder.object3D);
+    });
+
+    let raycastPointCircle = new RODIN.THREEObject(new THREE.Mesh(
+        new THREE.CircleGeometry( raycastPointRadius, raycastPointSegments ),
+        materialGradientRadial
+    ));
+    raycastPointCircle.on('ready', () => {
+        raycastPointCircle.object3D.rotation.x = Math.PI/2;
+        //raycastPoint.object3D.add(raycastPointCircle.object3D);
+    });
+
     raycastPoint.object3D.visible = false;
+    scene.add(raycastPoint.object3D);
 });
+
 let n = 200;
 let g = -9.8;
 let m = 0.01;
@@ -122,7 +145,6 @@ function addPoint(direction) {
                     raycastPoint.object3D.visible = true;
                 }
                 raycastPoint.object3D.position.copy(objs[0].point);
-                raycastPoint.object3D.position.y += cylinderHeight / 2;
                 break;
             }
             if (i == n-1 && raycastPoint.object3D) {
