@@ -69,6 +69,12 @@ export class Scene extends Sculpt {
          * @type {WebVRManager}
          */
         this.webVRmanager = new WebVRManager(this.renderer, this.effect, {hideButton: false, isUndistorted: false});
+        if(/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            this.webVRmanager.vrCallback = () => {
+                this.webVRmanager.enterVRMode_();
+                this.webVRmanager.hmd.resetPose();
+            };
+        }
 
         /**
          * A set of functions to be called BEFORE main rendering action on each animation frame.
