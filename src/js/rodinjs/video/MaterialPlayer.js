@@ -28,6 +28,7 @@ export class MaterialPlayer {
         let sourceMP4 = document.createElement("source");
         let currDelta = 0;
         let frameDuration = 1000 / fps;
+        let userPaused = true;
         sourceMP4.type = "video/" + format;
         sourceMP4.src = url[url.default];
         video.appendChild(sourceMP4);
@@ -127,14 +128,16 @@ export class MaterialPlayer {
         /**
          * play
          */
-        this.play = () => {
-            video.play();
+        this.play = (e) => {
+            userPaused = false;
+            video.play(e);
         };
 
         /**
          * pause
          */
         this.pause = () => {
+            userPaused = true;
             video.pause();
         };
 
@@ -169,14 +172,13 @@ export class MaterialPlayer {
             if (currDelta < frameDuration) {
                 return;
             }
-            //console.log(currDelta);
             currDelta -= frameDuration;
             this.buffer = video.buffered;
             if (video.readyState !== video.HAVE_ENOUGH_DATA) {
                 //this.pause();
                 return;
             } else {
-                if (this.isPlaying()) {
+                if (this.isPlaying() || !userPaused && !this.isPlaying() ) {
                     this.play();
                 }
             }

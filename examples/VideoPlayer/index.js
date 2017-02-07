@@ -17,7 +17,8 @@ SceneManager.addController(mouseController);
 
 camera.far = 150;
 
-let player = new MaterialPlayer("video/test2.mp4");
+let player = new MaterialPlayer("video/test2k.mp4");
+
 let material = new THREE.MeshBasicMaterial({
     map: player.getTextureL()
 });
