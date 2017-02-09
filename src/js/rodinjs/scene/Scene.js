@@ -133,7 +133,8 @@ export class Scene extends Sculpt {
 
     // TODO: tanel esi scenemanager
     get render() {
-        if (Scene.presentedOnce && !this.webVRmanager.hmd.isPresenting)
+        // todo : check this fix non-vr devices
+        if (!navigator.userAgent.match(/Android/i) && !navigator.userAgent.match(/iPhone|iPad|iPod/i) && Scene.presentedOnce && !this.webVRmanager.hmd.isPresenting)
             return;
 
         return (timestamp) => {
