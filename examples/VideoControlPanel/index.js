@@ -46,6 +46,7 @@ scene.preRender(function () {
 let controlPanel = new VPcontrolPanel({
     player : player,
     title: "A sample 360° drone video",
+    cover: "img/pedraBonitabg.jpg",
     distance: 3,
     width: 3,
     controllers: [mouseController, oculusController, cardboardController]

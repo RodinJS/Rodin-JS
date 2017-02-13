@@ -63,15 +63,17 @@ scaleInAnimation.duration(150);
 
 export class VPcontrolPanel extends Sculpt {
 
-    constructor({ player, title = "Untitled Video", distance = 1, width = 1.5, controllers }) {
+    constructor({ player, title = "Untitled Video", cover = null, distance = 1, width = 1.5, controllers }) {
 
         super(0);
         this.object = new THREE.Object3D();
         this.panel = new THREE.Object3D();
         this.player = player;
+        this.cover = cover;
         this.width = width;
         this.elementsPending = 0;
         this.timeBarButton = null;
+        this.coverEl = null;
         this.title = title;
         this.controllers = controllers;
         this.createTitle();
@@ -91,6 +93,7 @@ export class VPcontrolPanel extends Sculpt {
         this.object.add(this.panel);
 
         this.createBufferingLogo(distance);
+        this.cover && this.createCover(distance, width);
 
         this.hideControls = (now) => {
             secsToFade -= now ? secsToFade: 1;
@@ -184,6 +187,22 @@ export class VPcontrolPanel extends Sculpt {
         sphere.geometry.applyMatrix(new THREE.Matrix4().makeTranslation( 0, 0, -distance));
         sphere.position.z = distance;
         this.object.add(sphere);
+    }
+
+
+    createCover(distance, width) {
+        let r = Math.sqrt(distance * distance + width * width / 4) * 3;
+
+        this.coverEl = new THREE.Mesh(
+            new THREE.SphereBufferGeometry(r, 720, 4),
+            new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                map: new THREE.TextureLoader().load(this.cover),
+                side: THREE.DoubleSide
+            })
+        );
+        this.coverEl.scale.set(-1, 1, 1);
+        this.scene.add(this.coverEl);
     }
 
 
@@ -313,6 +332,9 @@ export class VPcontrolPanel extends Sculpt {
                 pauseButton.animator.start("scaleInAnimation");
                 this.player.play();
                 this.hideControls(true);
+                if(this.cover && this.coverEl) {
+                    this.scene.scene.remove(this.coverEl);
+                }
             }
         });
 
