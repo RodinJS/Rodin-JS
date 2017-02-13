@@ -12,6 +12,19 @@ import {Element} from '../../_build/js/rodinjs/sculpt/elements/Element.js';
 import {Text} from '../../_build/js/rodinjs/sculpt/elements/Text.js';
 import {Animation} from '../../_build/js/rodinjs/animation/Animation.js';
 
+let bufferAnimation = new Animation("bufferAnimation", {
+    rotation: {
+        x: 0,
+        y: {
+            from: -Math.PI/2,
+            to: Math.PI/2,
+        },
+        z: 0
+    }
+});
+bufferAnimation.loop(true);
+bufferAnimation.duration(1000);
+
 let hoverAnimation = new Animation("hoverAnimation", {
     scale: {
         x: 1.1,
@@ -77,22 +90,40 @@ export class VPcontrolPanel extends Sculpt {
 
         this.object.add(this.panel);
 
+        this.createBufferingLogo(distance);
+
+        this.hideControls = (now) => {
+            secsToFade -= now ? secsToFade: 1;
+            if(secsToFade == 0){
+                this.object.visible = false;
+            }
+        };
+
+        let doShow = true;
+        let secsToFade = 3;
+
+        this.fadeTimeOut = setInterval(this.hideControls, 1000);
+
+
         for(let ci = 0; ci < this.controllers.length; ci++){
 
             let controller = this.controllers[ci];
 
             controller.onKeyDown = (keyCode) => {
-                this.showTimeOut =  timeout(() => {
-                    this.showTimeOut = null;
+                doShow = true;
+                this.showTimeOut =  setTimeout(() => {
+                    doShow = false;
                 }, 200);
+                if(this.object.visible && (!controller.intersected || controller.intersected.length == 0)){
+                    this.object.visible = false;
+                    doShow = false;
+                    this.hideControls(true);
+
+                }
             };
 
             controller.onKeyUp = (keyCode) => {
-                if(this.showTimeOut){
-                    if (this.fadeTimeOut) {
-                        clearTimeout(this.fadeTimeOut);
-                    }
-
+                if(doShow){
                     this.scene.scene.updateMatrixWorld();
                     let vector = new THREE.Vector3();
                     vector.setFromMatrixPosition(target.matrixWorld);
@@ -103,25 +134,29 @@ export class VPcontrolPanel extends Sculpt {
                         }
 
                     }
-
                     this.object.visible = true;
-                    this.fadeTimeOut = timeout(() => {
-                        this.object.visible = false;
-                    }, 5000);
+                    secsToFade = 3;
                 }
             };
 
 
             controller.gamepadHover = (intersect) => {
-                clearTimeout(this.fadeTimeOut);
+                secsToFade = 3;
             };
 
             controller.gamepadHoverOut = (intersect) => {
-                this.fadeTimeOut = timeout(() => {
-                    this.object.visible = false;
-                }, 5000);
+                secsToFade = 3;
             };
         }
+
+
+
+        this.player.onBufferStart = () => {
+            this.scene.camera.add(this.bufferEl.object3D);
+        };
+        this.player.onBufferEnd = () => {
+            this.scene.camera.remove(this.bufferEl.object3D);
+        };
     }
 
     readyCheck() {
@@ -174,6 +209,58 @@ export class VPcontrolPanel extends Sculpt {
 
     }
 
+
+
+
+
+
+    createBufferingLogo(distance) {
+        let bufferingParams = {name: "buffering", width: this.width / 6, height: this.width / 6};
+
+        bufferingParams.background = {
+            color: 0x666666,
+            opacity: 0.3
+        };
+
+        bufferingParams.border = {
+            radius: this.width / 12,
+            width: this.width / 500,
+            color: 0xffffff
+        };
+
+        bufferingParams.image = {
+            url: "./img/rodin.png",
+            width: this.width / 30,
+            height: this.width / 25,
+            position: {h: 54, v: 35}
+        };
+        bufferingParams.label = {
+            text: "loading",
+                fontSize: this.width / 37.5,
+                color: 0xffffff,
+                position: {
+                h: 50,
+                v: 65
+            }
+        };
+
+        this.bufferEl = new Element(bufferingParams);
+        this.elementsPending++;
+
+        this.bufferEl.on('ready', (evt) => {
+            let object = evt.target.object3D;
+            object.position.z = -distance + bufferingParams.width/2;
+            evt.target.animator.add(bufferAnimation);
+            evt.target.animator.start("bufferAnimation");
+            this.elementsPending--;
+            this.readyCheck();
+        });
+    }
+
+
+
+
+
     createPlayPauseButtons() {
         let playParams = {name: "play", width: this.width / 5, height: this.width / 5};
 
@@ -225,7 +312,7 @@ export class VPcontrolPanel extends Sculpt {
                 this.panel.add(pauseButton.object3D);
                 pauseButton.animator.start("scaleInAnimation");
                 this.player.play();
-                this.object.visible = false;
+                this.hideControls(true);
             }
         });
 

@@ -389,7 +389,7 @@ export class GamePad extends THREE.Object3D {
                 intersect.object.Sculpt.emit(EVENT_NAMES.CONTROLLER_HOVER_OUT, currentEvent);
             }
         });
-        doGamePadHoverOut && this.gamepadHoverOut();
+        doGamePadHoverOut && this.gamepadHoverOut(this.intersected);
 
         if (intersections.length > 0) {
             let currentEvent = null;

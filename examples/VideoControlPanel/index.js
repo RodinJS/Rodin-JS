@@ -2,6 +2,7 @@ import {THREE} from '../../_build/js/vendor/three/THREE.GLOBAL.js';
 import * as RODIN from '../../_build/js/rodinjs/RODIN.js';
 import {SceneManager} from '../../_build/js/rodinjs/scene/SceneManager.js';
 import {MouseController} from '../../_build/js/rodinjs/controllers/MouseController.js';
+import {CardboardController} from '../../_build/js/rodinjs/controllers/CardboardController.js';
 import {OculusController} from '../../_build/js/rodinjs/controllers/OculusController.js';
 import {MaterialPlayer} from '../../_build/js/rodinjs/video/MaterialPlayer.js';
 import {VPcontrolPanel} from './VPcontrolPanel_c.js';
@@ -14,22 +15,23 @@ let controls = scene.controls;
 let renderer = scene.renderer;
 let mouseController = new MouseController();
 let oculusController = new OculusController();
+let cardboardController = new CardboardController();
 
 SceneManager.addController(mouseController);
 SceneManager.addController(oculusController);
+SceneManager.addController(cardboardController);
 
 scene.setCameraProperty("far", 350);
 scene.setCameraProperty("fov", 70);
 
 let player = new MaterialPlayer({
-    HD: "video/test.mp4",
-    SD: "video/test1.mp4",
-    LD: "video/test2.mp4",
-    default: "SD"
+    HD: "video/test1.mp4",
+    SD: "video/test2.mp4",
+    default: "HD"
 });
 
 let material = new THREE.MeshBasicMaterial({
-    map: player.getTextureL()
+    map: player.getTexture()
 });
 
 
@@ -46,7 +48,7 @@ let controlPanel = new VPcontrolPanel({
     title: "A sample 360° drone video",
     distance: 3,
     width: 3,
-    controllers: [mouseController, oculusController]
+    controllers: [mouseController, oculusController, cardboardController]
 });
 
 controlPanel.on('ready', (evt) => {

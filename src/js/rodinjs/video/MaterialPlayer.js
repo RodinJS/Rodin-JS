@@ -102,6 +102,12 @@ export class MaterialPlayer {
         /**
          * returns the Left eye (the main - if non stereoscopic) texture object
          */
+        this.getTexture = () => {
+            return textureL;
+        };
+        /**
+         * returns the Left eye (the main - if non stereoscopic) texture object
+         */
         this.getTextureL = () => {
             return textureL;
         };
@@ -174,14 +180,7 @@ export class MaterialPlayer {
             }
             currDelta -= frameDuration;
             this.buffer = video.buffered;
-            if (video.readyState !== video.HAVE_ENOUGH_DATA) {
-                //this.pause();
-                return;
-            } else {
-                if (this.isPlaying() || !userPaused && !this.isPlaying() ) {
-                    this.play();
-                }
-            }
+
 
             if (bufferCounter == 0 && !this.isBuffering && this.isPlaying()) {
                 this.isBuffering = true;
@@ -191,6 +190,7 @@ export class MaterialPlayer {
                 this.onBufferEnd();
             }
 
+
             if (lastTime == video.currentTime) {
                 bufferCounter -= bufferCounter > 0 ? 1 : 0;
                 return;
@@ -198,6 +198,15 @@ export class MaterialPlayer {
 
             bufferCounter += bufferCounter < this.framesToLoader ? 1 : 0;
             lastTime = video.currentTime;
+
+            if (video.readyState !== video.HAVE_ENOUGH_DATA) {
+                return;
+            } else {
+                if (this.isPlaying() || !userPaused && !this.isPlaying() ) {
+                    this.play();
+                }
+            }
+
             textureL.needsUpdate = true;
             if (stereoscopic) {
                 textureR.needsUpdate = true;
@@ -218,5 +227,14 @@ export class MaterialPlayer {
                 video.playbackRate = time.speed * speed;
             }
         });
+
+        let touchTrigger = function(e){
+            video.play();
+            video.pause();
+            window.removeEventListener("touchstart", touchTrigger);
+        };
+
+
+        window.addEventListener("touchstart", touchTrigger);
     }
 }
