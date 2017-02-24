@@ -231,10 +231,10 @@ export class MaterialPlayer {
         let touchTrigger = function(e){
             video.play();
             video.pause();
-            window.removeEventListener("touchstart", touchTrigger);
+            window.removeEventListener("mousedown", touchTrigger);
         };
 
 
-        window.addEventListener("touchstart", touchTrigger);
+        window.addEventListener("mousedown", touchTrigger);
     }
 }
