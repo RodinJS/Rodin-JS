@@ -53,7 +53,7 @@
   "dependencies": {
     "cannon": "^0.6.2",
     "dat-gui": "^0.5.0",
-    "es6-promise": "^4.0.0",
+    "es6-promise": "^4.1.0",
     "jsdoc": "^3.4.3",
     "esdoc-es7-plugin": "0.0.3",
     "socket.io-client": "^1.6.0",
