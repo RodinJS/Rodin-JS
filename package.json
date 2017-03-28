@@ -43,7 +43,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.0.0",
     "gulp-size": "^2.1.0",
-    "gulp-sourcemaps": "^2.2.1",
+    "gulp-sourcemaps": "^2.5.0",
     "gulp-uglify": "^2.0.0",
     "gulp-watch": "^4.3.11",
     "minami": "^1.1.1",
