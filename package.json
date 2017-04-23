@@ -47,7 +47,7 @@
     "gulp-uglify": "^2.0.0",
     "gulp-watch": "^4.3.11",
     "minami": "^1.1.1",
-    "esdoc": "^0.4.8",
+    "esdoc": "^1.0.0-alpha.2",
     "run-sequence": "^1.2.2"
   },
   "dependencies": {
